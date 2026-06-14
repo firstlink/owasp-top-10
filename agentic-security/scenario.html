@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASI Scenario</title>
+<link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body data-page="scenario">
+  <div class="site-shell">
+    <header class="page-hero">
+      <nav class="breadcrumbs">
+        <a href="./index.html">Agentic Top 10</a>
+        <span>/</span>
+        <a href="./asi01.html" id="scenario-asi-link">ASI</a>
+        <span>/</span>
+        <span id="scenario-breadcrumb-title">Scenario</span>
+      </nav>
+      <p class="eyebrow" id="scenario-type">Scenario</p>
+      <h1 id="scenario-title">Scenario title</h1>
+      <p class="hero-copy" id="scenario-description"></p>
+    </header>
+
+    <main class="page-layout page-layout-wide">
+      <aside class="page-sidebar">
+        <section class="sidebar-card">
+          <p class="eyebrow">Business Context</p>
+          <h2>Why This Scenario Matters</h2>
+          <p id="scenario-context"></p>
+          <p class="sidebar-note" id="scenario-relates"></p>
+        </section>
+
+        <section class="sidebar-card">
+          <p class="eyebrow">Trainer Notes</p>
+          <h2>Key Teaching Points</h2>
+          <ul class="sidebar-list" id="scenario-lessons"></ul>
+        </section>
+
+        <section class="sidebar-card">
+          <p class="eyebrow">Controls</p>
+          <h2>What Stops This</h2>
+          <div class="sidebar-control-list" id="scenario-control-list"></div>
+        </section>
+      </aside>
+
+      <section class="page-content">
+        <section class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Scenario View</p>
+            <h2 id="scenario-view-title">Attack vs Defense</h2>
+            <p class="section-copy" id="scenario-view-caption"></p>
+          </div>
+
+          <div class="scenario-tabs" id="scenario-tabs">
+            <button class="scenario-tab is-active" data-view="attack" type="button">Attack view</button>
+            <button class="scenario-tab" data-view="defense" type="button">Defense view</button>
+          </div>
+
+          <div class="diagram-stage">
+            <div id="scenario-diagram-root"></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Narrative</p>
+            <h2>Problem and Solution Framing</h2>
+          </div>
+          <div class="controls-grid two-up">
+            <article class="control-card">
+              <h3>How the issue appears</h3>
+              <p id="scenario-attack-summary"></p>
+            </article>
+            <article class="control-card">
+              <h3>How the enterprise contains it</h3>
+              <p id="scenario-defense-summary"></p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="scenario-detailed-section" hidden>
+          <div class="section-heading">
+            <p class="eyebrow">Detailed Walkthrough</p>
+            <h2>Interactive Version</h2>
+            <p class="section-copy">Use this when you want the team to step through the attack chain interactively after the higher-level training diagram.</p>
+          </div>
+          <div class="diagram-frame">
+            <iframe id="scenario-detailed-frame" title="Detailed scenario walkthrough" loading="lazy"></iframe>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="./assets/asi-data.js"></script>
+  <script src="./assets/site.js"></script>
+</body>
+</html>

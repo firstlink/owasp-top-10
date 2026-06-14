@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OWASP Agentic Security Top 10</title>
+<link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body data-page="home">
+  <div class="site-shell">
+    <header class="hero">
+      <p class="eyebrow">OWASP Agentic Security Initiative</p>
+      <h1>Top 10 for Agentic Applications</h1>
+      <p class="hero-copy">
+        A trainer-first website for explaining the OWASP ASI Top 10 one concept at a time.
+        Each category gets its own landing page, and each attack variation can be taught through
+        a separate, focused diagram instead of one overloaded visual.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="./asi01.html">Start with ASI01</a>
+        <a class="button button-secondary" href="./blueprint.html">View training blueprint</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="section section-intro">
+        <div class="section-heading">
+          <p class="eyebrow">Design Direction</p>
+          <h2>What This Site Should Optimize For</h2>
+        </div>
+        <div class="principles-grid">
+          <article class="principle-card">
+            <h3>One concept per diagram</h3>
+            <p>Separate attack variations into focused scenarios so trainers can explain one path clearly.</p>
+          </article>
+          <article class="principle-card">
+            <h3>Category page, then scenarios</h3>
+            <p>Each ASI gets a landing page that frames the risk, then links to multiple scenario walk-throughs.</p>
+          </article>
+          <article class="principle-card">
+            <h3>Operational lessons, not just visuals</h3>
+            <p>Every page should connect the attack story to intent validation, guardrails, least privilege, and logging.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="asi-grid">
+        <div class="section-heading">
+          <p class="eyebrow">Coverage Map</p>
+          <h2>All 10 ASI Categories</h2>
+          <p class="section-copy">Use ASI01 as the reference implementation, then replicate the pattern for the remaining categories.</p>
+        </div>
+        <div class="asi-grid" id="asi-grid-root"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Execution Model</p>
+          <h2>How the Full Website Should Scale</h2>
+          <p class="section-copy">
+            The honest design answer is to avoid one giant “OWASP wall.” Each category should have a landing page,
+            then multiple scenario pages, and each scenario should show both the attack and the architectural fix.
+          </p>
+        </div>
+        <div class="controls-grid">
+          <article class="control-card">
+            <h3>One scenario at a time</h3>
+            <p>Keep every primary diagram focused on one variation so the audience can follow the intent shift, impact, and control point without noise.</p>
+          </article>
+          <article class="control-card">
+            <h3>Problem and defense together</h3>
+            <p>Show the failure first, then switch the same flow into a guarded architecture so the training always ends with a fix.</p>
+          </article>
+          <article class="control-card">
+            <h3>Business-first storytelling</h3>
+            <p>Use finance, operations, support, admin, and executive workflows so the team recognizes the risk in systems they actually use.</p>
+          </article>
+          <article class="control-card">
+            <h3>Common control language</h3>
+            <p>Close every scenario with the same three ideas: validate intent, least privilege, and observe drift or abuse.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./assets/asi-data.js"></script>
+  <script src="./assets/site.js"></script>
+</body>
+</html>

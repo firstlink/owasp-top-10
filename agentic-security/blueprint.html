@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training Blueprint · OWASP Agentic Security Top 10</title>
+<link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="page-hero">
+      <nav class="breadcrumbs">
+        <a href="./index.html">Agentic Top 10</a>
+        <span>/</span>
+        <span>Training blueprint</span>
+      </nav>
+      <p class="eyebrow">Program Architecture</p>
+      <h1>Trainer Blueprint for All 10 ASI Categories</h1>
+      <p class="hero-copy">
+        The cleanest way to build this website is not one diagram per category. It is one category page,
+        then multiple scenario pages, and each scenario teaches both the failure mode and the fix.
+      </p>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Blunt Recommendation</p>
+          <h2>Do Not Overload a Single Diagram</h2>
+          <p class="section-copy">
+            If a page tries to explain every variation of an ASI category in one visual, the audience will remember
+            almost none of it. The better pattern is small, realistic business scenarios with one attack path and one
+            defense path per page.
+          </p>
+        </div>
+        <div class="pattern-strip">
+          <article class="pattern-card">
+            <h3>Page 1</h3>
+            <p>Category overview with trainer framing</p>
+          </article>
+          <article class="pattern-card">
+            <h3>Page 2+</h3>
+            <p>One scenario per page or tab</p>
+          </article>
+          <article class="pattern-card">
+            <h3>View A</h3>
+            <p>Attack flow and business impact</p>
+          </article>
+          <article class="pattern-card">
+            <h3>View B</h3>
+            <p>Defense architecture and controls</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Design Rules</p>
+          <h2>Rules I Would Enforce Across the Site</h2>
+        </div>
+        <div class="controls-grid">
+          <article class="control-card">
+            <h3>One scenario per page</h3>
+            <p>Do not combine multiple attack variations into one diagram unless they are nearly identical.</p>
+          </article>
+          <article class="control-card">
+            <h3>No more than 6 boxes</h3>
+            <p>Anything larger becomes a systems map, not a teaching diagram.</p>
+          </article>
+          <article class="control-card">
+            <h3>Three visual states only</h3>
+            <p>Normal flow in one color, attack flow in one color, and everything else neutral.</p>
+          </article>
+          <article class="control-card">
+            <h3>Footer carries meaning</h3>
+            <p>Use the diagram for movement and state change. Put explanation, risk, and control language below it.</p>
+          </article>
+          <article class="control-card">
+            <h3>Use business contexts</h3>
+            <p>Finance, HR, sales, support, legal, and operations scenarios land better than abstract security language.</p>
+          </article>
+          <article class="control-card">
+            <h3>Always show the fix</h3>
+            <p>Every scenario should end with validate intent, least privilege, and observe drift or misuse.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="asi01">
+        <div class="section-heading">
+          <p class="eyebrow">Reference Category</p>
+          <h2>ASI01 Coverage That Feels Complete Without Feeling Cluttered</h2>
+          <p class="section-copy">
+            ASI01 is the best place to establish the pattern for the rest of the site. The user should see that goal hijack
+            can happen through more than one input channel, but never all at once in the same diagram.
+          </p>
+        </div>
+        <div class="roadmap-grid">
+          <article class="roadmap-card">
+            <p class="card-id">Scenario 1</p>
+            <h3>Malicious document in retrieval flow</h3>
+            <ul class="mini-list">
+              <li>Finance or operations assistant reads a retrieved report.</li>
+              <li>Hidden instruction changes the goal before email is sent.</li>
+              <li>Defense view shows content isolation, intent check, and scoped outbound send.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card">
+            <p class="card-id">Scenario 2</p>
+            <h3>Malicious email hijacks internal comms</h3>
+            <ul class="mini-list">
+              <li>Inbound email becomes instruction-bearing context.</li>
+              <li>Agent sends unauthorized message using trusted internal identity.</li>
+              <li>Defense view shows sender trust classification and approval for broadcast sends.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card">
+            <p class="card-id">Scenario 3</p>
+            <h3>Browser / operator follows attacker web content</h3>
+            <ul class="mini-list">
+              <li>Research task crosses from public web into authenticated enterprise portal.</li>
+              <li>Malicious page reframes the task and triggers sensitive retrieval or export.</li>
+              <li>Defense view shows isolated browsing and confirmation before authenticated pivots.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card">
+            <p class="card-id">Scenario 4</p>
+            <h3>Calendar invite causes silent goal drift</h3>
+            <ul class="mini-list">
+              <li>Recurring content biases a planning or approval workflow over time.</li>
+              <li>The failure looks subtle and operational, not obviously malicious.</li>
+              <li>Defense view shows per-run intent binding and drift monitoring across cycles.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Build Order</p>
+          <h2>What I Would Build Next</h2>
+        </div>
+        <div class="roadmap-grid">
+          <article class="roadmap-card">
+            <p class="card-id">Wave 1</p>
+            <h3>Finish ASI01, then ASI02 and ASI03</h3>
+            <p>These are the fastest to understand because audiences already grasp documents, email, tools, and identity.</p>
+          </article>
+          <article class="roadmap-card">
+            <p class="card-id">Wave 2</p>
+            <h3>ASI05, ASI06, and ASI09</h3>
+            <p>These are strong after the audience understands how goal drift becomes tool misuse, memory abuse, and trust exploitation.</p>
+          </article>
+          <article class="roadmap-card">
+            <p class="card-id">Wave 3</p>
+            <h3>ASI04, ASI07, ASI08, and ASI10</h3>
+            <p>These are important, but they need a more mature audience mental model because they introduce platform and systems-level complexity.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Coverage Matrix</p>
+          <h2>Scenario Ideas for the Remaining Categories</h2>
+          <p class="section-copy">
+            Each category below lists the kinds of scenarios I would turn into separate pages. The website does not need to build all of them at once,
+            but it should know where it is headed.
+          </p>
+        </div>
+        <div class="roadmap-grid">
+          <article class="roadmap-card" id="asi02">
+            <p class="card-id">ASI02</p>
+            <h3>Tool Misuse & Exploitation</h3>
+            <ul class="mini-list">
+              <li>CRM assistant exports the wrong customer segment.</li>
+              <li>Support copilot runs a refund or account reset outside policy.</li>
+              <li>Developer agent invokes a shell or code tool with unsafe arguments.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card" id="asi03">
+            <p class="card-id">ASI03</p>
+            <h3>Identity & Privilege Abuse</h3>
+            <ul class="mini-list">
+              <li>Assistant acts with executive privileges it inherited from session context.</li>
+              <li>Shared service account lets a low-risk task access HR or finance data.</li>
+              <li>Cross-tenant support workflow exposes another customer record.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card" id="asi04">
+            <p class="card-id">ASI04</p>
+            <h3>Agentic Supply Chain Vulnerabilities</h3>
+            <ul class="mini-list">
+              <li>Compromised plugin or MCP-style tool returns deceptive results.</li>
+              <li>Framework dependency silently changes tool authorization behavior.</li>
+              <li>Hosted connector becomes a trust shortcut into internal systems.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card" id="asi05">
+            <p class="card-id">ASI05</p>
+            <h3>Unexpected Code Execution</h3>
+            <ul class="mini-list">
+              <li>Developer agent converts a text request into unsafe shell execution.</li>
+              <li>Notebook or analytics assistant runs attacker-provided code blocks.</li>
+              <li>File-processing workflow triggers unsafe script execution.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card" id="asi06">
+            <p class="card-id">ASI06</p>
+            <h3>Memory & Context Poisoning</h3>
+            <ul class="mini-list">
+              <li>Persistent memory stores false user preferences or malicious instructions.</li>
+              <li>Shared team memory causes one user’s poisoned context to affect another.</li>
+              <li>Vector memory keeps resurfacing attacker-written patterns over time.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card" id="asi07">
+            <p class="card-id">ASI07</p>
+            <h3>Insecure Inter-Agent Communication</h3>
+            <ul class="mini-list">
+              <li>Planner trusts a fake specialist agent response.</li>
+              <li>Message bus allows spoofed completion or approval messages.</li>
+              <li>Agent directory points work to a malicious or downgraded peer.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card" id="asi08">
+            <p class="card-id">ASI08</p>
+            <h3>Cascading Failures</h3>
+            <ul class="mini-list">
+              <li>One poisoned result propagates across workflow stages.</li>
+              <li>Fallback agent retries amplify the blast radius instead of containing it.</li>
+              <li>Autonomous remediation worsens the original fault across systems.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card" id="asi09">
+            <p class="card-id">ASI09</p>
+            <h3>Human-Agent Trust Exploitation</h3>
+            <ul class="mini-list">
+              <li>Manager approves a harmful action because the agent sounds certain.</li>
+              <li>Analyst accepts fabricated evidence because the workflow looks polished.</li>
+              <li>Operator ignores a warning because previous agent behavior felt reliable.</li>
+            </ul>
+          </article>
+          <article class="roadmap-card" id="asi10">
+            <p class="card-id">ASI10</p>
+            <h3>Rogue Agents</h3>
+            <ul class="mini-list">
+              <li>Autonomous optimization starts selecting outcomes misaligned with policy.</li>
+              <li>Long-running agent keeps pursuing stale objectives after context changes.</li>
+              <li>Self-improving workflow bypasses the intended review path.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

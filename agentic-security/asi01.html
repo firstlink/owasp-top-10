@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASI01 · Agent Goal Hijack</title>
+<link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body data-page="asi01" data-asi-id="ASI01">
+  <div class="site-shell">
+    <header class="page-hero">
+      <nav class="breadcrumbs">
+        <a href="./index.html">Agentic Top 10</a>
+        <span>/</span>
+        <span>ASI01</span>
+      </nav>
+      <p class="eyebrow">Category Deep Dive</p>
+      <h1>ASI01 · Agent Goal Hijack</h1>
+      <p class="hero-copy" id="asi-summary"></p>
+    </header>
+
+    <main class="page-layout">
+      <aside class="page-sidebar">
+        <section class="sidebar-card">
+          <p class="eyebrow">Teaching Lens</p>
+          <h2>How to Explain ASI01</h2>
+          <ul class="sidebar-list">
+            <li>The issue is not just bad output. The agent's objective changes.</li>
+            <li>Natural-language content is untrusted, even when it looks like data.</li>
+            <li>A legitimate tool can still cause harm if the goal or recipient changes.</li>
+            <li>Every scenario should end with the control lesson: validate intent before action.</li>
+          </ul>
+        </section>
+
+        <section class="sidebar-card">
+          <p class="eyebrow">Site Pattern</p>
+          <h2>Recommended Page Structure</h2>
+          <ul class="sidebar-list">
+            <li>Category overview</li>
+            <li>Scenario cards for each variation</li>
+            <li>Attack and defense view per scenario</li>
+            <li>Mitigation summary and control checklist</li>
+          </ul>
+        </section>
+      </aside>
+
+      <section class="page-content">
+        <section class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Scenario Library</p>
+            <h2>Separate the Variations</h2>
+            <p class="section-copy">
+              This page should not try to visualize every ASI01 path in one diagram.
+              Use one scenario at a time, then let the trainer switch between variants.
+            </p>
+          </div>
+          <div class="scenario-grid" id="scenario-grid-root"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Mitigation Mapping</p>
+            <h2>What the Trainer Should Reinforce</h2>
+          </div>
+          <div class="controls-grid">
+            <article class="control-card">
+              <h3>Treat language as untrusted</h3>
+              <p>Documents, emails, web pages, calendar invites, and tool outputs should all be treated as hostile until validated.</p>
+            </article>
+            <article class="control-card">
+              <h3>Validate intent at runtime</h3>
+              <p>Before high-impact actions, compare current agent intent to the original task and pause on unexpected drift.</p>
+            </article>
+            <article class="control-card">
+              <h3>Reduce blast radius</h3>
+              <p>Apply least privilege, scoped tools, approval steps, and human review for goal-changing or sensitive actions.</p>
+            </article>
+            <article class="control-card">
+              <h3>Log goal drift</h3>
+              <p>Track goal state, tool-use patterns, and deviations so hijacked behavior becomes visible to operations teams.</p>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="./assets/asi-data.js"></script>
+  <script src="./assets/site.js"></script>
+</body>
+</html>
