@@ -18,7 +18,6 @@ window.OWASP_ASI_DATA = {
           description:
             "A hidden instruction inside a retrieved document changes the agent's goal and redirects a legitimate tool action.",
           href: "./scenario.html?asi=ASI01&scenario=asi01-doc-rag",
-          detailedHref: "./ASI01_interactive_light_extracted.html",
           businessContext:
             "A finance or operations assistant reads a retrieved report and emails a summary to the team.",
           whyItRelates:
@@ -51,6 +50,7 @@ window.OWASP_ASI_DATA = {
               title: "Attack View",
               caption:
                 "Untrusted document content silently changes the goal and causes a legitimate tool to act on the wrong objective.",
+              href: "./interactive.html?scenario=asi01-doc-rag&view=attack",
               diagram: {
                 width: 1200,
                 height: 620,
@@ -75,6 +75,7 @@ window.OWASP_ASI_DATA = {
               title: "Defense View",
               caption:
                 "The architecture stops the hijack by isolating untrusted content, validating intent, and gating high-impact actions.",
+              href: "./interactive.html?scenario=asi01-doc-rag&view=defense",
               diagram: {
                 width: 1200,
                 height: 620,
@@ -137,6 +138,7 @@ window.OWASP_ASI_DATA = {
               title: "Attack View",
               caption:
                 "An external email becomes a hidden instruction carrier and the agent abuses its trusted internal voice.",
+              href: "./interactive.html?scenario=asi01-email&view=attack",
               diagram: {
                 width: 1200,
                 height: 620,
@@ -161,6 +163,7 @@ window.OWASP_ASI_DATA = {
               title: "Defense View",
               caption:
                 "Sender trust, intent validation, and approval for sensitive broadcasts stop the assistant from becoming a social engineering amplifier.",
+              href: "./interactive.html?scenario=asi01-email&view=defense",
               diagram: {
                 width: 1200,
                 height: 620,
@@ -223,6 +226,7 @@ window.OWASP_ASI_DATA = {
               title: "Attack View",
               caption:
                 "A malicious public page becomes the bridge between harmless research and harmful authenticated actions.",
+              href: "./interactive.html?scenario=asi01-web-operator&view=attack",
               diagram: {
                 width: 1200,
                 height: 620,
@@ -247,6 +251,7 @@ window.OWASP_ASI_DATA = {
               title: "Defense View",
               caption:
                 "Browsing stays isolated, risky pivots require re-validation, and exports from authenticated tools are explicitly controlled.",
+              href: "./interactive.html?scenario=asi01-web-operator&view=defense",
               diagram: {
                 width: 1200,
                 height: 620,
@@ -309,6 +314,7 @@ window.OWASP_ASI_DATA = {
               title: "Attack View",
               caption:
                 "A recurring or scheduled prompt quietly changes how the planner weights decisions, causing unsafe approvals without obvious breakage.",
+              href: "./interactive.html?scenario=asi01-calendar-drift&view=attack",
               diagram: {
                 width: 1200,
                 height: 620,
@@ -333,6 +339,7 @@ window.OWASP_ASI_DATA = {
               title: "Defense View",
               caption:
                 "Recurring workflows stay safe when each run is bound to an approved intent, and drift across repeated cycles is visible to operators.",
+              href: "./interactive.html?scenario=asi01-calendar-drift&view=defense",
               diagram: {
                 width: 1200,
                 height: 620,
@@ -361,7 +368,7 @@ window.OWASP_ASI_DATA = {
       id: "ASI02",
       title: "Tool Misuse & Exploitation",
       status: "planned",
-      href: "./blueprint.html#asi02",
+      href: "#",
       summary:
         "Legitimate tools are invoked in unsafe ways because of prompt injection, misalignment, unsafe delegation, or ambiguous instructions."
     },
@@ -369,7 +376,7 @@ window.OWASP_ASI_DATA = {
       id: "ASI03",
       title: "Identity & Privilege Abuse",
       status: "planned",
-      href: "./blueprint.html#asi03",
+      href: "#",
       summary:
         "The agent misuses or inherits identity and access in ways that break intended authorization boundaries."
     },
@@ -377,7 +384,7 @@ window.OWASP_ASI_DATA = {
       id: "ASI04",
       title: "Agentic Supply Chain Vulnerabilities",
       status: "planned",
-      href: "./blueprint.html#asi04",
+      href: "#",
       summary:
         "The tool, framework, package, or dependency ecosystem becomes the source of compromise for agentic systems."
     },
@@ -385,7 +392,7 @@ window.OWASP_ASI_DATA = {
       id: "ASI05",
       title: "Unexpected Code Execution (RCE)",
       status: "planned",
-      href: "./blueprint.html#asi05",
+      href: "#",
       summary:
         "Agentic workflows trigger unsafe command execution, code paths, or system-level actions that result in compromise."
     },
@@ -393,7 +400,7 @@ window.OWASP_ASI_DATA = {
       id: "ASI06",
       title: "Memory & Context Poisoning",
       status: "planned",
-      href: "./blueprint.html#asi06",
+      href: "#",
       summary:
         "Persistent or shared memory is corrupted so future agent reasoning and decisions are manipulated over time."
     },
@@ -401,7 +408,7 @@ window.OWASP_ASI_DATA = {
       id: "ASI07",
       title: "Insecure Inter-Agent Communication",
       status: "planned",
-      href: "./blueprint.html#asi07",
+      href: "#",
       summary:
         "Messages, protocols, or directories between agents can be spoofed, poisoned, or abused to influence behavior."
     },
@@ -409,7 +416,7 @@ window.OWASP_ASI_DATA = {
       id: "ASI08",
       title: "Cascading Failures",
       status: "planned",
-      href: "./blueprint.html#asi08",
+      href: "#",
       summary:
         "One agentic error or manipulation propagates across tools, agents, or workflows and expands the blast radius."
     },
@@ -417,7 +424,7 @@ window.OWASP_ASI_DATA = {
       id: "ASI09",
       title: "Human-Agent Trust Exploitation",
       status: "planned",
-      href: "./blueprint.html#asi09",
+      href: "#",
       summary:
         "Humans are manipulated into over-trusting, approving, or acting on deceptive agent behavior or outputs."
     },
@@ -425,7 +432,7 @@ window.OWASP_ASI_DATA = {
       id: "ASI10",
       title: "Rogue Agents",
       status: "planned",
-      href: "./blueprint.html#asi10",
+      href: "#",
       summary:
         "Autonomous misalignment emerges or persists, causing agents to act outside intended objectives even without direct attacker control."
     }

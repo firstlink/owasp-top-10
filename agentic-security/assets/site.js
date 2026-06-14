@@ -25,21 +25,13 @@
   function createCard(category) {
     const link = category.href && category.href !== "#" ? category.href : "#";
     const disabled = link === "#";
-    const actionLabel = disabled
-      ? "Planned"
-      : category.status === "planned"
-        ? "View roadmap"
-        : "Open category";
     return `
       <article class="asi-card">
-        <div class="card-topline">
-          <p class="card-id">${category.id}</p>
-          <span class="status-pill status-${category.status}">${category.status.replace("-", " ")}</span>
-        </div>
+        <p class="card-id">${category.id}</p>
         <h3>${category.title}</h3>
         <p>${category.summary}</p>
         <a class="card-link ${disabled ? "is-disabled" : ""}" href="${link}">
-          ${actionLabel}
+          ${disabled ? "Coming soon" : "Open"}
         </a>
       </article>
     `;
@@ -50,14 +42,11 @@
     const disabled = !scenario.href;
     return `
       <article class="scenario-card">
-        <div class="card-topline">
-          <p class="scenario-type">${scenario.type}</p>
-          <span class="status-pill status-${scenario.status}">${scenario.status}</span>
-        </div>
+        <p class="scenario-type">${scenario.type}</p>
         <h3>${scenario.title}</h3>
         <p>${scenario.description}</p>
         <a class="card-link ${disabled ? "is-disabled" : ""}" href="${link}">
-          ${disabled ? "Not built yet" : "Open scenario"}
+          ${disabled ? "Coming soon" : "Open"}
         </a>
       </article>
     `;
@@ -93,46 +82,18 @@
     document.title = `${category.id} · ${scenarioData.title}`;
 
     const title = document.getElementById("scenario-title");
-    const desc = document.getElementById("scenario-description");
     const type = document.getElementById("scenario-type");
     const bc = document.getElementById("scenario-breadcrumb-title");
     const asiLink = document.getElementById("scenario-asi-link");
-    const context = document.getElementById("scenario-context");
-    const relates = document.getElementById("scenario-relates");
-    const lessons = document.getElementById("scenario-lessons");
-    const attackSummary = document.getElementById("scenario-attack-summary");
-    const defenseSummary = document.getElementById("scenario-defense-summary");
-    const controlList = document.getElementById("scenario-control-list");
-    const detailedSection = document.getElementById("scenario-detailed-section");
-    const detailedFrame = document.getElementById("scenario-detailed-frame");
+    const frame = document.getElementById("scenario-frame");
+    const root = document.getElementById("scenario-diagram-root");
 
     if (title) title.textContent = `${category.id} · ${scenarioData.title}`;
-    if (desc) desc.textContent = scenarioData.description;
     if (type) type.textContent = scenarioData.type;
     if (bc) bc.textContent = scenarioData.title;
     if (asiLink) {
       asiLink.textContent = category.id;
       asiLink.href = category.href;
-    }
-    if (context) context.textContent = scenarioData.businessContext;
-    if (relates) relates.textContent = scenarioData.whyItRelates;
-    if (attackSummary) attackSummary.textContent = scenarioData.attackSummary;
-    if (defenseSummary) defenseSummary.textContent = scenarioData.defenseSummary;
-    if (lessons) {
-      lessons.innerHTML = scenarioData.lessons.map((lesson) => `<li>${lesson}</li>`).join("");
-    }
-    if (controlList) {
-      controlList.innerHTML = scenarioData.controls.map((control) => `
-        <article class="sidebar-control-card">
-          <h3>${control.name}</h3>
-          <p>${control.detail}</p>
-        </article>
-      `).join("");
-    }
-
-    if (scenarioData.detailedHref && detailedSection && detailedFrame) {
-      detailedSection.hidden = false;
-      detailedFrame.src = scenarioData.detailedHref;
     }
 
     let activeView = "attack";
@@ -145,10 +106,15 @@
 
     function updateView() {
       const viewData = scenarioData.views[activeView];
-      document.getElementById("scenario-view-title").textContent = viewData.title;
-      document.getElementById("scenario-view-caption").textContent = viewData.caption;
-      const root = document.getElementById("scenario-diagram-root");
-      root.innerHTML = renderDiagram(viewData.diagram);
+      if (viewData.href && frame) {
+        frame.hidden = false;
+        root.hidden = true;
+        frame.src = viewData.href;
+      } else if (root) {
+        frame.hidden = true;
+        root.hidden = false;
+        root.innerHTML = renderDiagram(viewData.diagram);
+      }
       updateTabs();
     }
 
