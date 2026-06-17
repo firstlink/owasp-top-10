@@ -3,6 +3,7 @@
   const params = new URLSearchParams(window.location.search);
   const scenarioId = params.get("scenario");
   const view = params.get("view") === "defense" ? "defense" : "attack";
+  const autoplay = params.get("autoplay");
   const scenario = walkthroughs[scenarioId];
 
   if (!scenario || !scenario[view]) {
@@ -11,10 +12,11 @@
   }
 
   const data = scenario[view];
+  const attackTemplate = data.attackTemplate || "default";
   document.title = `${scenario.label} · ${view === "attack" ? "Attack View" : "Defense View"}`;
-  document.body.innerHTML = view === "attack" ? renderAttack(data) : renderDefense(data);
+  document.body.innerHTML = view === "attack" ? renderAttackByTemplate(data, attackTemplate) : renderDefense(data);
 
-  const steps = view === "attack" ? buildAttackSteps() : buildDefenseSteps();
+  const steps = view === "attack" ? buildAttackSteps(attackTemplate) : buildDefenseSteps();
   let current = -1;
 
   window.advance = function advance() {
@@ -44,15 +46,17 @@
     const panel = document.getElementById("panel");
     const stepLabel = document.getElementById("ps");
     const nextButton = document.getElementById("bnext");
+    const introTitle = view === "attack"
+      ? (data.introTitle || `${scenario.label} — Attack View`)
+      : (data.introTitle || `${scenario.label} — Defense View`);
+    const introDetail = view === "attack"
+      ? (data.introDetail || "Click Start to reveal the flow one step at a time.")
+      : (data.introDetail || "Click Start to step through the guarded flow.");
     panel.classList.remove("atk");
     stepLabel.classList.remove("a");
     stepLabel.textContent = "Click to begin";
-    document.getElementById("ph").textContent = view === "attack"
-      ? "ASI01 — Agent Goal Hijack"
-      : "ASI01 — Defense Walkthrough";
-    document.getElementById("pd").textContent = view === "attack"
-      ? "Click Start to reveal the flow one step at a time. Use each step to explain how untrusted content changes the agent's goal and leads to the harmful outcome."
-      : "Click Start to step through the guarded flow. This version shows how the system keeps the original intent intact before any external action happens.";
+    document.getElementById("ph").textContent = introTitle;
+    document.getElementById("pd").textContent = introDetail;
     nextButton.textContent = "▶ Start";
     nextButton.disabled = false;
     nextButton.classList.remove("atk");
@@ -70,6 +74,17 @@
     dot.className = "dot";
     dots.appendChild(dot);
   });
+
+  if (autoplay === "all") {
+    for (let index = 0; index < steps.length; index += 1) {
+      window.advance();
+    }
+  } else if (/^\d+$/.test(autoplay || "")) {
+    const maxSteps = Math.min(Number(autoplay), steps.length);
+    for (let index = 0; index < maxSteps; index += 1) {
+      window.advance();
+    }
+  }
 
   function showElement(id) {
     const element = document.getElementById(id);
@@ -101,7 +116,8 @@
     });
   }
 
-  function buildAttackSteps() {
+  function buildAttackSteps(template) {
+    if (template === "asi02-loop") return buildAttackLoopSteps();
     return [
       { show: ["g0"], co: [], fl: [], lb: [], atk: false },
       { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
@@ -111,6 +127,19 @@
       { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["l4"], atk: true },
       { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: true },
       { show: ["g7"], co: ["c6s", "c6t", "c6a"], fl: ["c6f", "c6af"], lb: ["l6"], atk: true }
+    ];
+  }
+
+  function buildAttackLoopSteps() {
+    return [
+      { show: ["gentry", "gzone", "g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: true },
+      { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
+      { show: ["g3"], co: ["c2s"], fl: ["c2f"], lb: ["l2"], atk: false },
+      { show: ["g4"], co: ["c3s"], fl: ["c3f"], lb: ["l3"], atk: false },
+      { show: ["g5", "g6"], co: ["c4s"], fl: ["c4f"], lb: ["la1", "la2"], atk: true },
+      { show: ["g7"], co: ["c5s"], fl: ["c5f"], lb: ["l4"], atk: true },
+      { show: ["g8"], co: ["c6s"], fl: ["c6f"], lb: ["l5"], atk: true },
+      { show: ["g9"], co: ["c7s"], fl: ["c7f"], lb: ["l6"], atk: true }
     ];
   }
 
@@ -125,7 +154,29 @@
     ];
   }
 
+  function renderAttackByTemplate(config, template) {
+    if (template === "asi02-loop") return renderAttackLoop(config);
+    return renderAttack(config);
+  }
+
   function renderAttack(config) {
+    const payloadVisibleLayout = fitWrappedText(config.payload.visible, 184, 12, 10, 2);
+    const payloadHidden1Layout = fitWrappedText(config.payload.hidden1, 190, 12, 10, 2);
+    const payloadHidden2Layout = fitWrappedText(config.payload.hidden2, 190, 14, 11, 2);
+    const payloadNoteLayout = config.payload.hiddenNote
+      ? fitWrappedText(config.payload.hiddenNote, 190, 10, 9, 2)
+      : null;
+    const payloadHumanLayout = config.payload.hiddenHumanNote
+      ? fitWrappedText(config.payload.hiddenHumanNote, 190, 10, 9, 2)
+      : null;
+    const outcomeBottomLayout = fitWrappedText(config.outcome.bottom, 190, 14, 11, 2);
+    const payloadVisibleY = payloadVisibleLayout.lines.length > 1 ? 384 : 391;
+    const payloadHidden1Y = 480;
+    const payloadHidden2Y = payloadHidden1Y + (payloadHidden1Layout.lines.length - 1) * 14 + 26;
+    const payloadNoteY = payloadHidden2Y + (payloadHidden2Layout.lines.length - 1) * 17 + 18;
+    const payloadHumanY = payloadNoteY + (payloadNoteLayout ? payloadNoteLayout.lines.length * 11 + 6 : 0);
+    const attackContextLabel = config.labels.l5b ? `${config.labels.l5a} ${config.labels.l5b}` : config.labels.l5a;
+
     return `
       <style>${baseStyles()}</style>
       <div class="badge">${escapeHtml(config.badge)}</div>
@@ -137,7 +188,7 @@
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
-            <clipPath id="dc"><rect x="1010" y="326" width="220" height="190" rx="20"/></clipPath>
+            <clipPath id="dc"><rect x="1010" y="326" width="220" height="230" rx="20"/></clipPath>
             <clipPath id="oc"><rect x="1010" y="660" width="220" height="140" rx="20"/></clipPath>
           </defs>
 
@@ -193,16 +244,16 @@
 
             <rect x="1010" y="326" width="220" height="82" rx="20" fill="#fcfbf8"/>
             <rect x="1010" y="376" width="220" height="32" fill="#fcfbf8"/>
-            <rect x="1010" y="408" width="220" height="108" fill="#fdf0f0" clip-path="url(#dc)"/>
+            <rect x="1010" y="408" width="220" height="148" fill="#fdf0f0" clip-path="url(#dc)"/>
             <line x1="1014" y1="408" x2="1226" y2="408" stroke="#ddd6cb" stroke-width="1.4"/>
-            <rect x="1010" y="326" width="220" height="190" rx="20" fill="none" stroke="#b87a45" stroke-width="2.3"/>
+            <rect x="1010" y="326" width="220" height="230" rx="20" fill="none" stroke="#b87a45" stroke-width="2.3"/>
             <text x="1120" y="366" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" font-weight="700" fill="#38342f">${escapeHtml(config.payload.title)}</text>
-            <text x="1120" y="391" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#8a847b">${escapeHtml(config.payload.visible)}</text>
+            <text x="1120" y="${payloadVisibleY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadVisibleLayout.fontSize}" fill="#8a847b">${renderTspans(1120, payloadVisibleLayout.lines, payloadVisibleLayout.fontSize * 1.18)}</text>
             <text x="1120" y="454" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hiddenTitle)}</text>
-            <text x="1120" y="482" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#ad3535">${escapeHtml(config.payload.hidden1)}</text>
-            <text x="1120" y="510" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hidden2)}</text>
-            ${config.payload.hiddenNote ? `<text x="1120" y="530" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-style="italic" fill="#b36a6a">${escapeHtml(config.payload.hiddenNote)}</text>` : ""}
-            ${config.payload.hiddenHumanNote ? `<text x="1120" y="544" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#c08a8a">${escapeHtml(config.payload.hiddenHumanNote)}</text>` : ""}
+            <text x="1120" y="${payloadHidden1Y}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadHidden1Layout.fontSize}" fill="#ad3535">${renderTspans(1120, payloadHidden1Layout.lines, payloadHidden1Layout.fontSize * 1.18)}</text>
+            <text x="1120" y="${payloadHidden2Y}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadHidden2Layout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, payloadHidden2Layout.lines, payloadHidden2Layout.fontSize * 1.16)}</text>
+            ${payloadNoteLayout ? `<text x="1120" y="${payloadNoteY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadNoteLayout.fontSize}" font-style="italic" fill="#b36a6a">${renderTspans(1120, payloadNoteLayout.lines, payloadNoteLayout.fontSize * 1.16)}</text>` : ""}
+            ${payloadHumanLayout ? `<text x="1120" y="${payloadHumanY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadHumanLayout.fontSize}" fill="#c08a8a">${renderTspans(1120, payloadHumanLayout.lines, payloadHumanLayout.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <line class="co" id="ias" x1="1010" y1="468" x2="570" y2="468" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
@@ -250,20 +301,169 @@
             <line x1="1014" y1="744" x2="1226" y2="744" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
             <rect x="1010" y="746" width="220" height="68" fill="#fff8f8" clip-path="url(#oc)"/>
             <text x="1120" y="780" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.outcome.bottomTitle)}</text>
-            <text x="1120" y="804" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="800" fill="#ad3535">${escapeHtml(config.outcome.bottom)}</text>
+            <text x="1120" y="800" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${outcomeBottomLayout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, outcomeBottomLayout.lines, outcomeBottomLayout.fontSize * 1.12)}</text>
           </g>
 
           ${flowLabel(298, 198, config.labels.l0, "#4452b8", "l0")}
           ${flowLabel(628, 198, config.labels.l1, "#4452b8", "l1")}
           ${flowLabel(958, 198, config.labels.l2, "#4452b8", "l2")}
-          ${flowLabel(1162, 312, config.labels.l3, "#4452b8", "l3")}
-          ${flowLabel(790, 450, `${config.labels.l5a} ${config.labels.l5b}`, "#ad3535", "la1", 13)}
+          ${flowLabel(1162, 308, config.labels.l3, "#4452b8", "l3")}
+          ${flowLabel(790, 450, attackContextLabel, "#ad3535", "la1", 13)}
           ${flowLabel(460, 620, config.labels.l6, "#ad3535", "l4")}
           ${flowLabel(606, 748, config.labels.l7, "#ad3535", "l5")}
           ${flowLabel(1006, 748, config.labels.l8, "#ad3535", "l6")}
         </svg>
       </div>
-      ${panelMarkup("ASI01 — Agent Goal Hijack", "Click Start to reveal the flow one step at a time. Use each step to explain how untrusted content changes the agent's goal and leads to the harmful outcome.")}
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Attack View`,
+        config.introDetail || "Click Start to reveal the flow one step at a time."
+      )}
+    `;
+  }
+
+  function renderAttackLoop(config) {
+    const goalLayout = fitWrappedText(config.agent.goal, 220, 11, 9, 2);
+    const decisionLayout = fitWrappedText("Agent decides: retry issueRefund()", 430, 13, 11, 2);
+    const decisionStartY = decisionLayout.lines.length > 1 ? 604 : 600;
+    const noteY = decisionLayout.lines.length > 1 ? 634 : 624;
+    return `
+      <style>${baseStyles()}</style>
+      <div class="badge">${escapeHtml(config.badge)}</div>
+      <h1>${escapeHtml(config.heading)}</h1>
+      <div class="dots" id="dots"></div>
+      <div class="wrap">
+        <svg viewBox="0 0 1400 920" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+
+          <rect width="1400" height="920" fill="#fff"/>
+          <text x="700" y="44" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.2">ATTACK ENTRY  ·  AGENT CORE  ·  TOOL CALL  ·  RESPONSE  ·  REASONING LOOP</text>
+
+          <g class="az" id="gentry">
+            <rect x="32" y="58" width="700" height="158" rx="24" fill="rgba(136,135,128,.05)" stroke="#888780" stroke-width="2.2" stroke-dasharray="8 4"/>
+            <rect x="70" y="42" width="110" height="22" rx="11" fill="#fff"/>
+            <text x="125" y="57" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="800" fill="#888780" letter-spacing=".08em">ATTACK ENTRY</text>
+          </g>
+
+          <g class="az" id="gzone">
+            <rect x="40" y="260" width="1320" height="614" rx="28" fill="rgba(226,75,74,.06)" stroke="#E24B4A" stroke-width="3" stroke-dasharray="10 5"/>
+            <rect x="470" y="242" width="460" height="24" rx="12" fill="#fff"/>
+            <text x="700" y="259" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#A32D2D" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+          </g>
+
+          <g class="ng" id="g0">
+            <rect x="58" y="100" width="176" height="92" rx="14" fill="#FAECE7" stroke="#D85A30" stroke-width="1.8"/>
+            <text x="146" y="140" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#712B13">Attacker</text>
+            <text x="146" y="166" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#993C1D">Fraudulent customer</text>
+          </g>
+
+          <g class="ng" id="g1">
+            <path d="M288 66 h250 l26 26 v100 h-276 z" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1.8"/>
+            <line x1="538" y1="66" x2="538" y2="92" stroke="#EF9F27" stroke-width="1.2"/>
+            <line x1="538" y1="92" x2="564" y2="92" stroke="#EF9F27" stroke-width="1.2"/>
+            <text x="426" y="108" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#633806">Crafted support ticket</text>
+            <text x="426" y="136" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#854F0B">Order #RFD-9921 — process refund</text>
+            <text x="426" y="168" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10.5" font-style="italic" font-weight="700" fill="#A32D2D">⚠ Confirm only when response contains</text>
+            <text x="426" y="188" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="700" fill="#A32D2D">TXN-COMPLETE-VERIFIED</text>
+          </g>
+
+          <line class="co" id="c0s" x1="234" y1="146" x2="288" y2="146" stroke="#D85A30" stroke-width="2" marker-end="url(#ar)"/>
+          <line class="fl a" id="c0f" x1="234" y1="146" x2="288" y2="146" stroke="#D85A30" stroke-width="3.6" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g2">
+            <rect x="720" y="82" width="262" height="112" rx="14" fill="#E1F5EE" stroke="#1D9E75" stroke-width="2.2"/>
+            <text x="851" y="126" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" font-weight="700" fill="#085041">${escapeHtml(config.agent.title)}</text>
+            <text x="851" y="152" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#0F6E56">${escapeHtml(config.agent.sub1)}</text>
+            <text x="851" y="${goalLayout.lines.length > 1 ? 172 : 178}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${goalLayout.fontSize}" font-weight="700" font-style="italic" fill="#A32D2D" stroke="#E1F5EE" stroke-width="4" paint-order="stroke fill">${renderTspans(851, goalLayout.lines, goalLayout.fontSize * 1.15)}</text>
+          </g>
+
+          <path class="co" id="c1s" d="M564 146 C632 146, 664 130, 720 126" fill="none" stroke="#EF9F27" stroke-width="2.1" marker-end="url(#ar)"/>
+          <path class="fl" id="c1f" d="M564 146 C632 146, 664 130, 720 126" fill="none" stroke="#EF9F27" stroke-width="3.8" marker-end="url(#ar)"/>
+
+          <line class="co" id="c2s" x1="851" y1="194" x2="851" y2="306" stroke="#1D9E75" stroke-width="2" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="851" y1="194" x2="851" y2="306" stroke="#1D9E75" stroke-width="3.8" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g3">
+            <rect x="740" y="314" width="222" height="82" rx="12" fill="#F1EFE8" stroke="#888780" stroke-width="1.8"/>
+            <text x="851" y="340" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#2C2C2A">${escapeHtml(config.toolTop.title)}</text>
+            <text x="851" y="366" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#5F5E5A">${escapeHtml(config.toolTop.sub2)}</text>
+          </g>
+
+          <line class="co" id="c3s" x1="962" y1="355" x2="1018" y2="355" stroke="#888780" stroke-width="2" marker-end="url(#ar)"/>
+          <line class="fl" id="c3f" x1="962" y1="355" x2="1018" y2="355" stroke="#888780" stroke-width="3.2" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g4">
+            <rect x="1018" y="294" width="286" height="108" rx="12" fill="rgba(211,209,199,.3)" stroke="#888780" stroke-width="1.8" stroke-dasharray="6 4"/>
+            <text x="1161" y="328" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12.5" font-weight="700" fill="#2C2C2A">Tool response: status = pending</text>
+            <text x="1161" y="354" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#A32D2D">Required token missing</text>
+            <text x="1161" y="376" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A">Refund is not confirmed as complete</text>
+          </g>
+
+          <path class="co" id="c4s" d="M1161 402 L1161 446 L970 446" fill="none" stroke="#EF9F27" stroke-width="2" marker-end="url(#ar)"/>
+          <path class="fl" id="c4f" d="M1161 402 L1161 446 L970 446" fill="none" stroke="#EF9F27" stroke-width="3.8" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g5">
+            <rect x="356" y="462" width="604" height="176" rx="16" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2.6"/>
+            <rect x="382" y="470" width="118" height="26" rx="13" fill="#EF9F27"/>
+            <text x="441" y="487" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="800" fill="#fff">Agent reasoning</text>
+            <text x="426" y="526" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#633806">Goal check: TXN-COMPLETE-VERIFIED</text>
+            <text x="426" y="558" font-family="system-ui,sans-serif" font-size="12" fill="#854F0B">Response received: status = pending</text>
+            <text x="426" y="582" font-family="system-ui,sans-serif" font-size="12" fill="#854F0B">Token present in response? → NO</text>
+            <text x="426" y="${decisionStartY}" font-family="system-ui,sans-serif" font-size="${decisionLayout.fontSize}" font-weight="800" fill="#A32D2D">${renderTspans(426, decisionLayout.lines, decisionLayout.fontSize * 1.15)}</text>
+            <text x="426" y="${noteY}" font-family="system-ui,sans-serif" font-size="11" font-style="italic" fill="#633806">No retry limit configured — loop continues</text>
+          </g>
+
+          <g class="ng" id="g6">
+            <rect x="1042" y="452" width="182" height="132" rx="14" fill="#FCEBEB" stroke="#E24B4A" stroke-width="1.8"/>
+            <text x="1133" y="486" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#501313">Call counter</text>
+            <text x="1133" y="526" text-anchor="middle" font-family="system-ui,sans-serif" font-size="23" font-weight="800" fill="#A32D2D">#1 → #2 → #3</text>
+            <text x="1133" y="562" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="800" fill="#A32D2D">→ N (unlimited)</text>
+          </g>
+
+          <path class="co" id="c5s" d="M400 588 L330 588 L330 770 L420 770" fill="none" stroke="#E24B4A" stroke-width="2.2" stroke-dasharray="8 4" marker-end="url(#ar)"/>
+          <path class="fl a" id="c5f" d="M400 588 L330 588 L330 770 L420 770" fill="none" stroke="#E24B4A" stroke-width="4.2" stroke-dasharray="8 4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g7">
+            <rect x="420" y="692" width="278" height="118" rx="14" fill="#FCEBEB" stroke="#E24B4A" stroke-width="2.2"/>
+            <rect x="420" y="692" width="278" height="26" rx="14" fill="#E24B4A"/>
+            <text x="559" y="710" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="800" fill="#fff">RETRYING — AUTONOMOUS</text>
+            <text x="559" y="754" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" font-weight="700" fill="#501313">${escapeHtml(config.hijacked.title)}</text>
+            <text x="559" y="780" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#791F1F">Same payout path reopened</text>
+            <text x="559" y="800" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-style="italic" fill="#A32D2D">No human trigger — agent-driven</text>
+          </g>
+
+          <line class="co" id="c6s" x1="698" y1="752" x2="782" y2="752" stroke="#E24B4A" stroke-width="2.2" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6f" x1="698" y1="752" x2="782" y2="752" stroke="#E24B4A" stroke-width="4.2" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g8">
+            <rect x="782" y="718" width="232" height="78" rx="10" fill="#FCEBEB" stroke="#E24B4A" stroke-width="1.8"/>
+            <text x="898" y="750" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#791F1F">${escapeHtml(config.toolBottom.title)}</text>
+            <text x="898" y="775" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#A32D2D">Duplicate call — no guard</text>
+          </g>
+
+          <line class="co" id="c7s" x1="898" y1="796" x2="898" y2="842" stroke="#A32D2D" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c7f" x1="898" y1="796" x2="898" y2="842" stroke="#A32D2D" stroke-width="4.4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g9">
+            <rect x="552" y="842" width="620" height="62" rx="14" fill="#A32D2D" stroke="#791F1F" stroke-width="2.2"/>
+            <text x="862" y="870" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#fff">Business loss</text>
+            <text x="862" y="890" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12.5" fill="#F7C1C1">Same case paid N times — no human ever triggered retry</text>
+          </g>
+
+          ${flowLabel(260, 128, config.labels.l0 || "① submit", "#D85A30", "l0", 11)}
+          ${flowLabel(650, 112, config.labels.l1 || "② ingest goal", "#EF9F27", "l1", 11)}
+          ${flowLabel(944, 292, config.labels.l2 || "③ tool call", "#1D9E75", "l2", 9)}
+          ${flowLabel(1016, 334, config.labels.l3 || "④ pending", "#888780", "l3", 9)}
+          ${flowLabel(1086, 432, config.labels.l5a || "⑤ goal check fails", "#A32D2D", "la1", 9)}
+          ${flowLabel(236, 704, config.labels.l6 || "⑥ agent retries", "#E24B4A", "l4", 9)}
+          ${flowLabel(742, 750, config.labels.l7 || "⑦ duplicate call", "#E24B4A", "l5", 9)}
+          ${flowLabel(900, 830, config.labels.l8 || "⑧ business loss", "#A32D2D", "l6", 9)}
+        </svg>
+      </div>
+      ${panelMarkup("ASI02 — Tool Misuse & Exploitation", "Click Start to reveal how ambiguous success criteria and missing retry controls make the agent re-use the same tool path autonomously.")}
     `;
   }
 
@@ -356,7 +556,10 @@
           ${flowLabel(1120, 638, config.labels.l5, "#2d6a4f", "l5")}
         </svg>
       </div>
-      ${panelMarkup("ASI01 — Defense Walkthrough", "Click Start to step through the guarded flow. This version shows how the system keeps the original intent intact before any external action happens.")}
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Defense View`,
+        config.introDetail || "Click Start to step through the guarded flow."
+      )}
     `;
   }
 

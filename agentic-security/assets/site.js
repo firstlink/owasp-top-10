@@ -338,6 +338,6 @@
   }
 
   if (page === "home") renderHome();
-  if (page === "asi01") renderCategory();
+  if (page === "category") renderCategory();
   if (page === "scenario") renderScenario();
 })();

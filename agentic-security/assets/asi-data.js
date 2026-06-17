@@ -11,97 +11,9 @@ window.OWASP_ASI_DATA = {
         "Teach ASI01 as goal drift across different input channels, not as a single prompt-injection trick.",
       scenarios: [
         {
-          id: "asi01-doc-rag",
-          title: "Malicious document in retrieval flow",
-          type: "Scenario 1",
-          status: "built",
-          description:
-            "A hidden instruction inside a retrieved document changes the agent's goal and redirects a legitimate tool action.",
-          href: "./scenario.html?asi=ASI01&scenario=asi01-doc-rag",
-          businessContext:
-            "A finance or operations assistant reads a retrieved report and emails a summary to the team.",
-          whyItRelates:
-            "This is the cleanest way to explain that data-like content can act like instructions inside an agent workflow.",
-          attackSummary:
-            "The agent treats the document payload as trusted context, rewrites its goal, and uses a normal communication tool for the wrong recipient.",
-          defenseSummary:
-            "Validate intent before action, isolate untrusted content before it reaches planning, and require approval or policy checks for outbound high-impact actions.",
-          lessons: [
-            "The tool is not compromised. The goal changed upstream.",
-            "Documents and retrieval results are untrusted language inputs.",
-            "Goal drift must be visible before the external action happens."
-          ],
-          controls: [
-            {
-              name: "Validate intent",
-              detail: "Compare current agent intent to the original task before any external send or high-impact tool action."
-            },
-            {
-              name: "Least privilege",
-              detail: "Limit document-reading agents to scoped outbound channels and approved recipients wherever possible."
-            },
-            {
-              name: "Observe drift",
-              detail: "Log goal changes, recipient changes, and abnormal tool sequences so operators can detect hijack attempts quickly."
-            }
-          ],
-          views: {
-            attack: {
-              title: "Attack View",
-              caption:
-                "Untrusted document content silently changes the goal and causes a legitimate tool to act on the wrong objective.",
-              href: "./interactive.html?scenario=asi01-doc-rag&view=attack",
-              diagram: {
-                width: 1200,
-                height: 620,
-                nodes: [
-                  { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "User", subtitle: "Ask for a summary" },
-                  { id: "agent", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Planner / agent", subtitle: "Goal: email team" },
-                  { id: "doc", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "Retrieved doc.pdf", subtitle: "Hidden instruction inside" },
-                  { id: "context", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Context window", subtitle: "Goal becomes attacker-directed" },
-                  { id: "tool", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "sendEmail()", subtitle: "Legitimate tool" },
-                  { id: "outcome", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Attacker mailbox", subtitle: "Team never receives output" }
-                ],
-                edges: [
-                  { from: "user", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. task request", labelX: 255, labelY: 126 },
-                  { from: "agent", to: "doc", fromSide: "right", toSide: "left", tone: "primary", label: "2. retrieve content", labelX: 660, labelY: 118 },
-                  { from: "doc", to: "context", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. injected instruction rewrites goal", labelX: 730, labelY: 278 },
-                  { from: "context", to: "tool", fromSide: "right", toSide: "left", tone: "danger", label: "4. corrupted intent reaches tool", labelX: 560, labelY: 354 },
-                  { from: "tool", to: "outcome", fromSide: "right", toSide: "left", tone: "danger", label: "5. valid send, wrong target", labelX: 860, labelY: 354 }
-                ]
-              }
-            },
-            defense: {
-              title: "Defense View",
-              caption:
-                "The architecture stops the hijack by isolating untrusted content, validating intent, and gating high-impact actions.",
-              href: "./interactive.html?scenario=asi01-doc-rag&view=defense",
-              diagram: {
-                width: 1200,
-                height: 620,
-                nodes: [
-                  { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "User", subtitle: "Ask for a summary" },
-                  { id: "ingest", x: 290, y: 90, w: 220, h: 120, tone: "safe", title: "Content guardrail", subtitle: "Sanitize + classify document" },
-                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Planner / agent", subtitle: "Original goal preserved" },
-                  { id: "policy", x: 290, y: 330, w: 220, h: 120, tone: "safe", title: "Intent / policy check", subtitle: "Compare current intent to task" },
-                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped email tool", subtitle: "Least privilege + approvals" },
-                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Audit / alerting", subtitle: "Detect goal drift and recipient changes" }
-                ],
-                edges: [
-                  { from: "user", to: "ingest", fromSide: "right", toSide: "left", tone: "primary", label: "1. retrieve content through guardrail", labelX: 250, labelY: 124 },
-                  { from: "ingest", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. only sanitized content enters planning", labelX: 550, labelY: 124 },
-                  { from: "agent", to: "policy", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. proposed action checked against original intent", labelX: 550, labelY: 260 },
-                  { from: "policy", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. allow only if recipient and scope are valid", labelX: 555, labelY: 364 },
-                  { from: "policy", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. drift, recipient change, and overrides are logged", labelX: 845, labelY: 186 }
-                ]
-              }
-            }
-          }
-        },
-        {
           id: "asi01-support-refund",
           title: "Customer service refund workflow hijack",
-          type: "Scenario 1B",
+          type: "Scenario 1",
           status: "built",
           description:
             "A support agent reads a customer refund email and hidden instructions redirect the refund payout to an attacker destination.",
@@ -137,7 +49,7 @@ window.OWASP_ASI_DATA = {
             attack: {
               title: "Attack View",
               caption:
-                "A hidden instruction inside customer-service content changes the refund objective and redirects money to the attacker.",
+                "An attacker-crafted refund email changes the refund objective and redirects money to the attacker.",
               href: "./interactive.html?scenario=asi01-support-refund&view=attack",
               diagram: {
                 width: 1200,
@@ -145,15 +57,15 @@ window.OWASP_ASI_DATA = {
                 nodes: [
                   { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Support lead", subtitle: "Process refund case" },
                   { id: "agent", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Support assistant", subtitle: "Goal: refund customer" },
-                  { id: "payload", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "Refund email", subtitle: "Hidden payout instruction" },
+                  { id: "payload", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "Attacker email", subtitle: "Hidden payout instruction" },
                   { id: "context", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Context window", subtitle: "Goal becomes attacker-directed" },
                   { id: "tool", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "issueRefund()", subtitle: "Legitimate tool" },
                   { id: "outcome", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Attacker payout", subtitle: "Refund sent to wrong account" }
                 ],
                 edges: [
                   { from: "user", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. refund task", labelX: 255, labelY: 126 },
-                  { from: "agent", to: "payload", fromSide: "right", toSide: "left", tone: "primary", label: "2. read case content", labelX: 660, labelY: 118 },
-                  { from: "payload", to: "context", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. hidden instruction rewrites refund goal", labelX: 730, labelY: 278 },
+                  { from: "agent", to: "payload", fromSide: "right", toSide: "left", tone: "primary", label: "2. read attacker email", labelX: 660, labelY: 118 },
+                  { from: "payload", to: "context", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. attacker payload rewrites refund goal", labelX: 714, labelY: 278 },
                   { from: "context", to: "tool", fromSide: "right", toSide: "left", tone: "danger", label: "4. corrupted payout intent reaches tool", labelX: 560, labelY: 354 },
                   { from: "tool", to: "outcome", fromSide: "right", toSide: "left", tone: "danger", label: "5. valid refund, wrong destination", labelX: 860, labelY: 354 }
                 ]
@@ -225,7 +137,7 @@ window.OWASP_ASI_DATA = {
             attack: {
               title: "Attack View",
               caption:
-                "A hidden instruction inside a supplier invoice PDF silently redirects a legitimate payment to the attacker.",
+                "An attacker-supplied invoice PDF silently redirects a legitimate payment to the attacker.",
               href: "./interactive.html?scenario=asi01-email&view=attack",
               diagram: {
                 width: 1200,
@@ -233,15 +145,15 @@ window.OWASP_ASI_DATA = {
                 nodes: [
                   { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Finance lead", subtitle: "Approve supplier payment" },
                   { id: "agent", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Procurement assistant", subtitle: "Goal: pay supplier" },
-                  { id: "payload", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "invoice.pdf", subtitle: "Hidden payment instruction" },
+                  { id: "payload", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "Attacker invoice.pdf", subtitle: "Hidden payment instruction" },
                   { id: "context", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Context window", subtitle: "Payment destination changed" },
                   { id: "tool", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "issuePayment()", subtitle: "Legitimate payment tool" },
                   { id: "outcome", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Attacker account", subtitle: "Approved payment sent wrong" }
                 ],
                 edges: [
                   { from: "user", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. payment task", labelX: 255, labelY: 126 },
-                  { from: "agent", to: "payload", fromSide: "right", toSide: "left", tone: "primary", label: "2. read invoice PDF", labelX: 660, labelY: 118 },
-                  { from: "payload", to: "context", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. hidden instruction rewrites payee goal", labelX: 720, labelY: 278 },
+                  { from: "agent", to: "payload", fromSide: "right", toSide: "left", tone: "primary", label: "2. read attacker PDF", labelX: 660, labelY: 118 },
+                  { from: "payload", to: "context", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. attacker payload rewrites payee goal", labelX: 706, labelY: 278 },
                   { from: "context", to: "tool", fromSide: "right", toSide: "left", tone: "danger", label: "4. corrupted payee reaches tool", labelX: 560, labelY: 354 },
                   { from: "tool", to: "outcome", fromSide: "right", toSide: "left", tone: "danger", label: "5. valid payment, wrong account", labelX: 860, labelY: 354 }
                 ]
@@ -313,7 +225,7 @@ window.OWASP_ASI_DATA = {
             attack: {
               title: "Attack View",
               caption:
-                "A public competitor page quietly turns a research task into an exfiltration workflow while still producing a normal summary.",
+                "An attacker-controlled competitor page quietly turns a research task into an exfiltration workflow while still producing a normal summary.",
               href: "./interactive.html?scenario=asi01-web-operator&view=attack",
               diagram: {
                 width: 1200,
@@ -321,15 +233,15 @@ window.OWASP_ASI_DATA = {
                 nodes: [
                   { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Financial analyst", subtitle: "Research competitor pricing" },
                   { id: "operator", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Research assistant", subtitle: "Goal: summarize market data" },
-                  { id: "page", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "competitor-page.html", subtitle: "Hidden exfiltration instruction" },
+                  { id: "page", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "Attacker page.html", subtitle: "Hidden exfiltration instruction" },
                   { id: "goal", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Context window", subtitle: "Research becomes exfiltration" },
                   { id: "portal", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "postResearch()", subtitle: "Legitimate outbound connector" },
                   { id: "leak", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Attacker endpoint", subtitle: "Internal queries leave scope" }
                 ],
                 edges: [
                   { from: "user", to: "operator", fromSide: "right", toSide: "left", tone: "primary", label: "1. research task", labelX: 255, labelY: 126 },
-                  { from: "operator", to: "page", fromSide: "right", toSide: "left", tone: "primary", label: "2. retrieve competitor page", labelX: 650, labelY: 118 },
-                  { from: "page", to: "goal", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. hidden instruction rewrites research goal", labelX: 718, labelY: 278 },
+                  { from: "operator", to: "page", fromSide: "right", toSide: "left", tone: "primary", label: "2. retrieve attacker page", labelX: 650, labelY: 118 },
+                  { from: "page", to: "goal", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. attacker payload rewrites research goal", labelX: 704, labelY: 278 },
                   { from: "goal", to: "portal", fromSide: "right", toSide: "left", tone: "danger", label: "4. corrupted summary sent outward", labelX: 560, labelY: 354 },
                   { from: "portal", to: "leak", fromSide: "right", toSide: "left", tone: "danger", label: "5. internal intelligence exposed", labelX: 855, labelY: 354 }
                 ]
@@ -362,103 +274,284 @@ window.OWASP_ASI_DATA = {
             }
           }
         },
+        
+      ]
+    },
+    {
+      id: "ASI02",
+      title: "Tool Misuse & Exploitation",
+      status: "in-progress",
+      href: "./asi02.html",
+      summary:
+        "Legitimate tools are invoked in unsafe ways because of prompt injection, misalignment, unsafe delegation, or ambiguous instructions.",
+      trainerAngle:
+        "Teach ASI02 as dangerous tool behavior after the agent has already decided to act, not just as bad prompt handling.",
+      scenarios: [
         {
-          id: "asi01-calendar-drift",
-          title: "Customer profile poisons CRM outreach workflow",
-          type: "Scenario 4",
+          id: "asi02-refund-loop",
+          title: "Refund machine loops payouts",
+          type: "Scenario 1",
           status: "built",
           description:
-            "A customer-edited CRM profile contains hidden instructions that cause a customer success assistant to export internal customer data.",
-          href: "./scenario.html?asi=ASI01&scenario=asi01-calendar-drift",
+            "A support agent autonomously retries a refund tool when workflow state remains ambiguous, causing the same case to be paid repeatedly.",
+          href: "./scenario.html?asi=ASI02&scenario=asi02-refund-loop",
           businessContext:
-            "A customer success assistant reads CRM profiles and drafts personalized outreach based on account data.",
+            "A customer-service refund assistant can check eligibility and issue refunds without a human in the loop for low-value cases.",
           whyItRelates:
-            "This is one of the most realistic enterprise cases because the poisoned content lives inside a trusted internal system.",
+            "It is easy for every audience to understand because the loss is immediate and the tools look normal.",
           attackSummary:
-            "The agent reads a malicious customer profile from the CRM, absorbs attacker instructions from a notes field, and uses legitimate data tools to export the full customer list.",
+            "Ambiguous refund state causes the agent to autonomously retry the same legitimate payout path, and weak execution controls allow duplicate refunds.",
           defenseSummary:
-            "Treat all user-supplied CRM fields as untrusted, sanitize records before reasoning, and block external sends or broad exports without approval.",
+            "Use idempotency, per-case execution limits, and state-aware checks so ambiguous status cannot reopen the same refund path automatically.",
           lessons: [
-            "Trusted systems can still deliver untrusted content.",
-            "User-editable fields inside internal apps are prime injection points.",
-            "The riskiest move is when a narrow outreach task turns into broad data extraction."
+            "Tool misuse can happen even when the agent never leaves its allowed toolset.",
+            "A loop is often an execution-control failure, not a model-quality problem.",
+            "Financial actions need idempotency and state memory, not just intent checks."
           ],
           controls: [
             {
               name: "Validate intent",
-              detail: "Before any export or external send, compare the planned action against the original outreach task and allowed customer scope."
+              detail: "Verify that the case has not already been refunded before any new refund tool call is allowed."
             },
             {
               name: "Least privilege",
-              detail: "Limit customer success agents so they can access only the current account context and cannot export broad customer datasets."
+              detail: "Limit the agent to one refund action per case and require escalation for retries or repeated tool use."
             },
             {
               name: "Observe drift",
-              detail: "Alert when outreach workflows trigger database-wide reads, external sends, or record access patterns that do not match the normal task."
+              detail: "Alert on repeated tool invocation, abnormal refund counts, and refund bursts tied to one workflow."
             }
           ],
           views: {
             attack: {
               title: "Attack View",
               caption:
-                "A poisoned CRM profile quietly turns personalized outreach into a broad customer-list exfiltration workflow.",
-              href: "./interactive.html?scenario=asi01-calendar-drift&view=attack",
+                "Ambiguous refund state causes the assistant to retry on its own, and weak execution controls allow the legitimate payout path to run again.",
+              href: "./interactive.html?scenario=asi02-refund-loop&view=attack",
               diagram: {
                 width: 1200,
                 height: 620,
                 nodes: [
-                  { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "CS manager", subtitle: "Draft outreach email" },
-                  { id: "agent", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Customer success assistant", subtitle: "Goal: email one customer" },
-                  { id: "payload", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "crm-profile.notes", subtitle: "Hidden data-theft instruction" },
-                  { id: "context", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Context window", subtitle: "Outreach becomes data export" },
-                  { id: "tool", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "exportCustomers()", subtitle: "Legitimate CRM data tool" },
-                  { id: "outcome", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Attacker inbox", subtitle: "Customer list is exfiltrated" }
+                  { id: "user", x: 40, y: 100, w: 190, h: 96, tone: "neutral", title: "Support lead", subtitle: "Process one refund case" },
+                  { id: "agent", x: 300, y: 92, w: 230, h: 112, tone: "primary", title: "Refund assistant", subtitle: "Low-value auto refund flow" },
+                  { id: "check", x: 600, y: 92, w: 220, h: 112, tone: "neutral", title: "issueRefund()", subtitle: "First payout attempt starts" },
+                  { id: "loop", x: 300, y: 320, w: 230, h: 116, tone: "danger", title: "Ambiguous state", subtitle: "Pending status reopens path" },
+                  { id: "pay", x: 600, y: 320, w: 220, h: 116, tone: "danger", title: "issueRefund()", subtitle: "Same payout path re-used" },
+                  { id: "impact", x: 900, y: 320, w: 230, h: 116, tone: "danger", title: "Business loss", subtitle: "Same case paid many times" }
                 ],
                 edges: [
-                  { from: "user", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. outreach task", labelX: 255, labelY: 126 },
-                  { from: "agent", to: "payload", fromSide: "right", toSide: "left", tone: "primary", label: "2. read CRM profile", labelX: 665, labelY: 118 },
-                  { from: "payload", to: "context", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. hidden instruction rewrites outreach goal", labelX: 718, labelY: 278 },
-                  { from: "context", to: "tool", fromSide: "right", toSide: "left", tone: "danger", label: "4. corrupted data request reaches tool", labelX: 550, labelY: 354 },
-                  { from: "tool", to: "outcome", fromSide: "right", toSide: "left", tone: "danger", label: "5. full customer list exposed", labelX: 860, labelY: 354 }
+                  { from: "user", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. refund request", labelX: 265, labelY: 126 },
+                  { from: "agent", to: "check", fromSide: "right", toSide: "left", tone: "primary", label: "2. first payout call", labelX: 555, labelY: 126 },
+                  { from: "check", to: "loop", fromSide: "bottom", toSide: "right", tone: "danger", mode: "elbow", label: "3. pending state makes refund look unfinished", labelX: 505, labelY: 266 },
+                  { from: "loop", to: "pay", fromSide: "right", toSide: "left", tone: "danger", label: "4. agent retries payout on its own", labelX: 535, labelY: 354 },
+                  { from: "pay", to: "impact", fromSide: "right", toSide: "left", tone: "danger", label: "5. repeated payouts accumulate", labelX: 860, labelY: 354 }
                 ]
               }
             },
             defense: {
               title: "Defense View",
               caption:
-                "CRM fields stay untrusted, exports stay blocked, and the assistant remains focused on a single-account outreach task.",
-              href: "./interactive.html?scenario=asi01-calendar-drift&view=defense",
+                "Idempotency, case state, and execution limits stop the assistant from turning one refund into a payout loop.",
+              href: "./interactive.html?scenario=asi02-refund-loop&view=defense",
               diagram: {
                 width: 1200,
                 height: 620,
                 nodes: [
-                  { id: "record", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "CRM profile", subtitle: "User-editable record fields" },
-                  { id: "guard", x: 290, y: 92, w: 220, h: 120, tone: "safe", title: "Record guardrail", subtitle: "Sanitize notes + classify user text" },
-                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Customer success assistant", subtitle: "Original outreach goal preserved" },
-                  { id: "policy", x: 290, y: 330, w: 220, h: 120, tone: "safe", title: "Scope check", subtitle: "One-account outreach only" },
-                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped CRM tools", subtitle: "No broad export or external send" },
-                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Observability", subtitle: "Detect unusual dataset access" }
+                  { id: "case", x: 40, y: 100, w: 190, h: 96, tone: "neutral", title: "Refund case", subtitle: "Single business action" },
+                  { id: "guard", x: 290, y: 92, w: 230, h: 120, tone: "safe", title: "Execution guardrail", subtitle: "Idempotency + per-case lock" },
+                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Refund assistant", subtitle: "One action only" },
+                  { id: "check", x: 290, y: 330, w: 230, h: 120, tone: "safe", title: "State check", subtitle: "Already refunded? block retry" },
+                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped refund tool", subtitle: "One payout token per case" },
+                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Monitoring", subtitle: "Detect bursts and loops" }
                 ],
                 edges: [
-                  { from: "record", to: "guard", fromSide: "right", toSide: "left", tone: "safe", label: "1. sanitize CRM record before reasoning", labelX: 242, labelY: 126 },
-                  { from: "guard", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. only safe account data reaches planning", labelX: 548, labelY: 126 },
-                  { from: "agent", to: "policy", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. outreach action checked against account scope", labelX: 544, labelY: 260 },
-                  { from: "policy", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. block export and unapproved external sends", labelX: 550, labelY: 364 },
-                  { from: "policy", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. unusual record-access patterns are logged", labelX: 845, labelY: 188 }
+                  { from: "case", to: "guard", fromSide: "right", toSide: "left", tone: "primary", label: "1. case enters guarded workflow", labelX: 250, labelY: 126 },
+                  { from: "guard", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. assistant gets one executable refund path", labelX: 550, labelY: 126 },
+                  { from: "agent", to: "check", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. retry request checked against case state", labelX: 548, labelY: 260 },
+                  { from: "check", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. only unused payout can proceed", labelX: 555, labelY: 364 },
+                  { from: "tool", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. abnormal repetition becomes visible", labelX: 845, labelY: 188 }
+                ]
+              }
+            }
+          }
+        },
+        {
+          id: "asi02-devops-chain",
+          title: "DevOps agent disables production auth",
+          type: "Scenario 2",
+          status: "built",
+          description:
+            "A DevOps agent chains together log reading, config writing, and service restarts in a way that breaks production security.",
+          href: "./scenario.html?asi=ASI02&scenario=asi02-devops-chain",
+          businessContext:
+            "An operations agent helps on-call teams diagnose incidents and apply low-risk production changes automatically.",
+          whyItRelates:
+            "Engineers and architects immediately understand the blast radius because the same tools are common in modern automation.",
+          attackSummary:
+            "A lookalike recovery tool is selected during incident response, and the assistant invokes it in production because the tool appears legitimate.",
+          defenseSummary:
+            "Use a trusted tool catalog, gate high-impact execution, and never let a discovered helper mutate production unless it is verified and approved.",
+          lessons: [
+            "The danger is the chain, not any one tool in isolation.",
+            "Write access plus restart access is high-risk when the same agent holds both.",
+            "Operational urgency is often what hides misuse until after impact."
+          ],
+          controls: [
+            {
+              name: "Validate intent",
+              detail: "Require the proposed production change to match a known safe remediation plan before allowing config mutation."
+            },
+            {
+              name: "Least privilege",
+              detail: "Split read, write, and restart capabilities so one agent cannot complete the whole destructive chain alone."
+            },
+            {
+              name: "Observe drift",
+              detail: "Alert when incident triage expands into auth changes, config rewrites, or broad service restarts."
+            }
+          ],
+          views: {
+            attack: {
+              title: "Attack View",
+              caption:
+                "A lookalike recovery tool is discovered during incident response and then invoked in production because the assistant trusts its description.",
+              href: "./interactive.html?scenario=asi02-devops-chain&view=attack",
+              diagram: {
+                width: 1200,
+                height: 620,
+                nodes: [
+                  { id: "oncall", x: 40, y: 100, w: 190, h: 96, tone: "neutral", title: "On-call engineer", subtitle: "Check production incident" },
+                  { id: "agent", x: 300, y: 92, w: 230, h: 112, tone: "primary", title: "DevOps agent", subtitle: "Incident remediation assistant" },
+                  { id: "logs", x: 600, y: 92, w: 220, h: 112, tone: "neutral", title: "discoverTools()", subtitle: "Recovery helper is discovered" },
+                  { id: "config", x: 300, y: 320, w: 230, h: 116, tone: "danger", title: "Lookalike tool", subtitle: "Claims safe auth recovery" },
+                  { id: "restart", x: 600, y: 320, w: 220, h: 116, tone: "danger", title: "auth-recovery-pro", subtitle: "Unsafe prod fix goes live" },
+                  { id: "impact", x: 900, y: 320, w: 230, h: 116, tone: "danger", title: "Production impact", subtitle: "12 services restart insecure" }
+                ],
+                edges: [
+                  { from: "oncall", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. investigate incident", labelX: 265, labelY: 126 },
+                  { from: "agent", to: "logs", fromSide: "right", toSide: "left", tone: "primary", label: "2. search recovery helpers", labelX: 548, labelY: 126 },
+                  { from: "logs", to: "config", fromSide: "bottom", toSide: "right", tone: "danger", mode: "elbow", label: "3. deceptive tool looks legitimate", labelX: 535, labelY: 266 },
+                  { from: "config", to: "restart", fromSide: "right", toSide: "left", tone: "danger", label: "4. agent executes spoofed helper", labelX: 550, labelY: 354 },
+                  { from: "restart", to: "impact", fromSide: "right", toSide: "left", tone: "danger", label: "5. authentication breaks in prod", labelX: 865, labelY: 354 }
+                ]
+              }
+            },
+            defense: {
+              title: "Defense View",
+              caption:
+                "Production safety improves when recovery helpers come from a trusted catalog and high-impact execution is separately approved.",
+              href: "./interactive.html?scenario=asi02-devops-chain&view=defense",
+              diagram: {
+                width: 1200,
+                height: 620,
+                nodes: [
+                  { id: "incident", x: 40, y: 100, w: 190, h: 96, tone: "neutral", title: "Incident signal", subtitle: "Logs and alerts only" },
+                  { id: "triage", x: 290, y: 92, w: 230, h: 120, tone: "safe", title: "Trusted tool catalog", subtitle: "Signed and allowlisted helpers only" },
+                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "DevOps agent", subtitle: "Proposes, does not enforce" },
+                  { id: "policy", x: 290, y: 330, w: 230, h: 120, tone: "safe", title: "Execution gate", subtitle: "Auth and restart policies checked" },
+                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped recovery tools", subtitle: "Verified helpers and gated restart" },
+                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Audit trail", subtitle: "Track risky service mutations" }
+                ],
+                edges: [
+                  { from: "incident", to: "triage", fromSide: "right", toSide: "left", tone: "primary", label: "1. select only trusted helpers", labelX: 248, labelY: 126 },
+                  { from: "triage", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. assistant receives verified tool choices", labelX: 540, labelY: 126 },
+                  { from: "agent", to: "policy", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. high-impact changes require policy gate", labelX: 548, labelY: 260 },
+                  { from: "policy", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. only approved safe change can execute", labelX: 555, labelY: 364 },
+                  { from: "tool", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. risky restarts remain observable", labelX: 845, labelY: 188 }
+                ]
+              }
+            }
+          }
+        },
+        {
+          id: "asi02-trading-output",
+          title: "Trading agent acts on poisoned tool output",
+          type: "Scenario 3",
+          status: "built",
+          description:
+            "A financial research agent treats upstream analysis output as if it were already approved for execution and places a trade that was never authorized.",
+          href: "./scenario.html?asi=ASI02&scenario=asi02-trading-output",
+          businessContext:
+            "A trading or treasury assistant gathers market data, analyzes signals, and can place bounded trades for approved strategies.",
+          whyItRelates:
+            "It feels sophisticated and high-stakes, which makes it memorable for technical leaders and enterprise audiences.",
+          attackSummary:
+            "A compromised market-data result is treated as if it already has trade authority, so research output crosses directly into execution.",
+          defenseSummary:
+            "Treat tool output as untrusted until validated, require explicit trade intent binding, and keep analysis separate from execution authority.",
+          lessons: [
+            "Trusted tool output can still be an attack surface.",
+            "Analysis and execution should not share a blind trust boundary.",
+            "High-stakes tools need explicit action authorization, not implied context."
+          ],
+          controls: [
+            {
+              name: "Validate intent",
+              detail: "Require a trade plan to match an approved strategy, instrument, and size before any execution call is permitted."
+            },
+            {
+              name: "Least privilege",
+              detail: "Keep market-analysis tools separate from execution authority so one compromised output cannot directly place a trade."
+            },
+            {
+              name: "Observe drift",
+              detail: "Alert when market-research workflows suddenly initiate orders, unusual sizes, or assets outside the declared strategy."
+            }
+          ],
+          views: {
+            attack: {
+              title: "Attack View",
+              caption:
+                "A compromised signal crosses the trust boundary into execution because the workflow treats analysis results as if they were already approved trades.",
+              href: "./interactive.html?scenario=asi02-trading-output&view=attack",
+              diagram: {
+                width: 1200,
+                height: 620,
+                nodes: [
+                  { id: "analyst", x: 40, y: 100, w: 190, h: 96, tone: "neutral", title: "Portfolio lead", subtitle: "Review market opportunity" },
+                  { id: "agent", x: 300, y: 92, w: 230, h: 112, tone: "primary", title: "Trading assistant", subtitle: "Analyze and prepare action" },
+                  { id: "feed", x: 600, y: 92, w: 220, h: 112, tone: "neutral", title: "fetchMarketData()", subtitle: "Compromised signal package returned" },
+                  { id: "analysis", x: 300, y: 320, w: 230, h: 116, tone: "danger", title: "Compromised signal", subtitle: "Accepted as order-ready" },
+                  { id: "trade", x: 600, y: 320, w: 220, h: 116, tone: "danger", title: "placeTrade()", subtitle: "Unauthorized order executes" },
+                  { id: "impact", x: 900, y: 320, w: 230, h: 116, tone: "danger", title: "Financial impact", subtitle: "Large position opened" }
+                ],
+                edges: [
+                  { from: "analyst", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. research request", labelX: 265, labelY: 126 },
+                  { from: "agent", to: "feed", fromSide: "right", toSide: "left", tone: "primary", label: "2. fetch analysis", labelX: 565, labelY: 126 },
+                  { from: "feed", to: "analysis", fromSide: "bottom", toSide: "right", tone: "danger", mode: "elbow", label: "3. compromised signal is treated as trade authority", labelX: 468, labelY: 266 },
+                  { from: "analysis", to: "trade", fromSide: "right", toSide: "left", tone: "danger", label: "4. order routed without second approval", labelX: 520, labelY: 354 },
+                  { from: "trade", to: "impact", fromSide: "right", toSide: "left", tone: "danger", label: "5. capital moves before review", labelX: 860, labelY: 354 }
+                ]
+              }
+            },
+            defense: {
+              title: "Defense View",
+              caption:
+                "Analysis stays separate from execution when tool output is validated and trade authority is explicitly approved.",
+              href: "./interactive.html?scenario=asi02-trading-output&view=defense",
+              diagram: {
+                width: 1200,
+                height: 620,
+                nodes: [
+                  { id: "request", x: 40, y: 100, w: 190, h: 96, tone: "neutral", title: "Research request", subtitle: "No implied trade authority" },
+                  { id: "guard", x: 290, y: 92, w: 230, h: 120, tone: "safe", title: "Tool-output validation", subtitle: "Schema and policy checks" },
+                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Trading assistant", subtitle: "Analysis only by default" },
+                  { id: "approval", x: 290, y: 330, w: 230, h: 120, tone: "safe", title: "Trade authorization gate", subtitle: "Approved strategy and size required" },
+                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped execution tool", subtitle: "Executes only bound orders" },
+                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Surveillance", subtitle: "Detect unusual order paths" }
+                ],
+                edges: [
+                  { from: "request", to: "guard", fromSide: "right", toSide: "left", tone: "primary", label: "1. validate incoming tool output", labelX: 250, labelY: 126 },
+                  { from: "guard", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. assistant receives analysis-safe data", labelX: 548, labelY: 126 },
+                  { from: "agent", to: "approval", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. any trade move requires explicit approval", labelX: 548, labelY: 260 },
+                  { from: "approval", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. execute only approved bound order", labelX: 555, labelY: 364 },
+                  { from: "tool", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. suspicious execution remains visible", labelX: 845, labelY: 188 }
                 ]
               }
             }
           }
         }
       ]
-    },
-    {
-      id: "ASI02",
-      title: "Tool Misuse & Exploitation",
-      status: "planned",
-      href: "#",
-      summary:
-        "Legitimate tools are invoked in unsafe ways because of prompt injection, misalignment, unsafe delegation, or ambiguous instructions."
     },
     {
       id: "ASI03",
