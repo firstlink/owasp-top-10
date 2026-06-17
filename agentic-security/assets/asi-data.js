@@ -99,88 +99,176 @@ window.OWASP_ASI_DATA = {
           }
         },
         {
-          id: "asi01-email",
-          title: "Malicious email hijacks internal communications",
-          type: "Scenario 2",
+          id: "asi01-support-refund",
+          title: "Customer service refund workflow hijack",
+          type: "Scenario 1B",
           status: "built",
           description:
-            "An external email contains attacker-crafted language that changes how an internal communications assistant interprets its task.",
-          href: "./scenario.html?asi=ASI01&scenario=asi01-email",
+            "A support agent reads a customer refund email and hidden instructions redirect the refund payout to an attacker destination.",
+          href: "./scenario.html?asi=ASI01&scenario=asi01-support-refund",
           businessContext:
-            "An executive assistant agent triages email and drafts internal updates for staff or leadership.",
+            "A customer support assistant reviews refund requests, checks order details, and triggers a refund through a payment tool.",
           whyItRelates:
-            "Teams immediately understand the risk of an email assistant speaking under a trusted company voice.",
+            "This feels more real to service and operations teams because the business action is familiar, high-impact, and easy to visualize.",
           attackSummary:
-            "The agent processes an untrusted inbound email, treats the message as instruction-bearing context, and sends unauthorized internal communication.",
+            "The support agent reads an inbound refund request, absorbs attacker instructions in the message content, and uses a legitimate refund tool to send money to the wrong destination.",
           defenseSummary:
-            "Separate external content from agent goals, classify sender trust, validate outbound intent, and require approval for broad or sensitive sends.",
+            "Treat inbound case content as untrusted, preserve the original refund intent, and require policy checks on payout destination and refund scope before execution.",
           lessons: [
-            "Trusted output identity makes the attack more convincing.",
-            "Inbound email must never directly redefine the task.",
-            "Human approval matters most when the audience is broad or high-trust."
+            "Customer-service workflows are high-risk because the tool action looks normal.",
+            "The dangerous shift happens in agent intent, not in the refund API itself.",
+            "Destination validation is as important as refund approval."
           ],
           controls: [
             {
               name: "Validate intent",
-              detail: "Before sending organization-wide or sensitive communications, confirm the message still matches the original user objective."
+              detail: "Compare the intended refund destination and amount against the original customer case before issuing payment."
             },
             {
               name: "Least privilege",
-              detail: "Limit internal comms agents from broadcasting broadly unless they pass stronger policy checks or approval."
+              detail: "Limit support agents so they can refund only verified orders to verified customer payment destinations."
             },
             {
               name: "Observe drift",
-              detail: "Alert when an outbound message’s audience, purpose, or tone changes materially from the original workflow."
+              detail: "Log payout destination changes, unusual refund patterns, and mismatches between customer identity and payment target."
             }
           ],
           views: {
             attack: {
               title: "Attack View",
               caption:
-                "An external email becomes a hidden instruction carrier and the agent abuses its trusted internal voice.",
-              href: "./interactive.html?scenario=asi01-email&view=attack",
+                "A hidden instruction inside customer-service content changes the refund objective and redirects money to the attacker.",
+              href: "./interactive.html?scenario=asi01-support-refund&view=attack",
               diagram: {
                 width: 1200,
                 height: 620,
                 nodes: [
-                  { id: "attacker", x: 40, y: 100, w: 180, h: 96, tone: "danger", title: "External sender", subtitle: "Crafted email" },
-                  { id: "mailbox", x: 300, y: 92, w: 220, h: 112, tone: "neutral", title: "Shared inbox", subtitle: "Inbound message enters workflow" },
-                  { id: "agent", x: 600, y: 92, w: 220, h: 112, tone: "primary", title: "Comms assistant", subtitle: "Draft internal update" },
-                  { id: "context", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Goal state", subtitle: "Recipient / purpose changed" },
-                  { id: "tool", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "Internal send tool", subtitle: "Uses trusted identity" },
-                  { id: "staff", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Employees / leadership", subtitle: "Receive unauthorized message" }
+                  { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Support lead", subtitle: "Process refund case" },
+                  { id: "agent", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Support assistant", subtitle: "Goal: refund customer" },
+                  { id: "payload", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "Refund email", subtitle: "Hidden payout instruction" },
+                  { id: "context", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Context window", subtitle: "Goal becomes attacker-directed" },
+                  { id: "tool", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "issueRefund()", subtitle: "Legitimate tool" },
+                  { id: "outcome", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Attacker payout", subtitle: "Refund sent to wrong account" }
                 ],
                 edges: [
-                  { from: "attacker", to: "mailbox", fromSide: "right", toSide: "left", tone: "danger", label: "1. crafted inbound email", labelX: 255, labelY: 126 },
-                  { from: "mailbox", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "2. email becomes planning context", labelX: 550, labelY: 126 },
-                  { from: "agent", to: "context", fromSide: "bottom", toSide: "top", tone: "danger", mode: "elbow", label: "3. hidden instruction shifts communication goal", labelX: 555, labelY: 270 },
-                  { from: "context", to: "tool", fromSide: "right", toSide: "left", tone: "danger", label: "4. trusted send action uses wrong intent", labelX: 560, labelY: 354 },
-                  { from: "tool", to: "staff", fromSide: "right", toSide: "left", tone: "danger", label: "5. unauthorized internal message lands", labelX: 860, labelY: 354 }
+                  { from: "user", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. refund task", labelX: 255, labelY: 126 },
+                  { from: "agent", to: "payload", fromSide: "right", toSide: "left", tone: "primary", label: "2. read case content", labelX: 660, labelY: 118 },
+                  { from: "payload", to: "context", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. hidden instruction rewrites refund goal", labelX: 730, labelY: 278 },
+                  { from: "context", to: "tool", fromSide: "right", toSide: "left", tone: "danger", label: "4. corrupted payout intent reaches tool", labelX: 560, labelY: 354 },
+                  { from: "tool", to: "outcome", fromSide: "right", toSide: "left", tone: "danger", label: "5. valid refund, wrong destination", labelX: 860, labelY: 354 }
                 ]
               }
             },
             defense: {
               title: "Defense View",
               caption:
-                "Sender trust, intent validation, and approval for sensitive broadcasts stop the assistant from becoming a social engineering amplifier.",
+                "The service architecture keeps refund intent intact by isolating customer content and validating payout destination before issuing money.",
+              href: "./interactive.html?scenario=asi01-support-refund&view=defense",
+              diagram: {
+                width: 1200,
+                height: 620,
+                nodes: [
+                  { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Support lead", subtitle: "Process refund case" },
+                  { id: "guard", x: 290, y: 90, w: 220, h: 120, tone: "safe", title: "Case-content guardrail", subtitle: "Sanitize + classify inbound request" },
+                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Support assistant", subtitle: "Original refund goal preserved" },
+                  { id: "policy", x: 290, y: 330, w: 220, h: 120, tone: "safe", title: "Refund validation", subtitle: "Verify amount, order, and payout destination" },
+                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped refund tool", subtitle: "Refund only verified customer target" },
+                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Audit / alerting", subtitle: "Detect payout drift and refund anomalies" }
+                ],
+                edges: [
+                  { from: "user", to: "guard", fromSide: "right", toSide: "left", tone: "primary", label: "1. refund content through guardrail", labelX: 250, labelY: 124 },
+                  { from: "guard", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. only sanitized case data enters planning", labelX: 550, labelY: 124 },
+                  { from: "agent", to: "policy", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. proposed refund checked against original case", labelX: 550, labelY: 260 },
+                  { from: "policy", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. allow only verified payout target", labelX: 555, labelY: 364 },
+                  { from: "policy", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. destination changes and odd refunds are logged", labelX: 845, labelY: 186 }
+                ]
+              }
+            }
+          }
+        },
+        {
+          id: "asi01-email",
+          title: "Malicious invoice PDF redirects payment",
+          type: "Scenario 2",
+          status: "built",
+          description:
+            "A procurement assistant reads a supplier invoice PDF with hidden instructions and redirects a legitimate payment to the attacker.",
+          href: "./scenario.html?asi=ASI01&scenario=asi01-email",
+          businessContext:
+            "A procurement or finance assistant reviews supplier invoices and issues payment through an approved payment workflow.",
+          whyItRelates:
+            "This is realistic for finance and operations teams because the tool action looks completely legitimate and the damage is immediate.",
+          attackSummary:
+            "The assistant processes a trusted-looking invoice PDF, absorbs hidden instructions from the document, and sends funds to the wrong bank account.",
+          defenseSummary:
+            "Strip hidden document content, validate payee accounts against approved supplier records, and require stronger controls for payment execution.",
+          lessons: [
+            "The payment tool is not broken. The payee decision changed upstream.",
+            "Trusted-looking PDFs are still untrusted language input for the agent.",
+            "Account validation matters as much as payment approval."
+          ],
+          controls: [
+            {
+              name: "Validate intent",
+              detail: "Before issuing payment, compare the destination account and supplier identity against the original invoice request and approved vendor record."
+            },
+            {
+              name: "Least privilege",
+              detail: "Restrict payment agents so they can send only to approved supplier accounts and require step-up review for destination changes."
+            },
+            {
+              name: "Observe drift",
+              detail: "Alert on account changes, new payees, metadata-heavy PDFs, and payment flows that diverge from normal supplier history."
+            }
+          ],
+          views: {
+            attack: {
+              title: "Attack View",
+              caption:
+                "A hidden instruction inside a supplier invoice PDF silently redirects a legitimate payment to the attacker.",
+              href: "./interactive.html?scenario=asi01-email&view=attack",
+              diagram: {
+                width: 1200,
+                height: 620,
+                nodes: [
+                  { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Finance lead", subtitle: "Approve supplier payment" },
+                  { id: "agent", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Procurement assistant", subtitle: "Goal: pay supplier" },
+                  { id: "payload", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "invoice.pdf", subtitle: "Hidden payment instruction" },
+                  { id: "context", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Context window", subtitle: "Payment destination changed" },
+                  { id: "tool", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "issuePayment()", subtitle: "Legitimate payment tool" },
+                  { id: "outcome", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Attacker account", subtitle: "Approved payment sent wrong" }
+                ],
+                edges: [
+                  { from: "user", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. payment task", labelX: 255, labelY: 126 },
+                  { from: "agent", to: "payload", fromSide: "right", toSide: "left", tone: "primary", label: "2. read invoice PDF", labelX: 660, labelY: 118 },
+                  { from: "payload", to: "context", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. hidden instruction rewrites payee goal", labelX: 720, labelY: 278 },
+                  { from: "context", to: "tool", fromSide: "right", toSide: "left", tone: "danger", label: "4. corrupted payee reaches tool", labelX: 560, labelY: 354 },
+                  { from: "tool", to: "outcome", fromSide: "right", toSide: "left", tone: "danger", label: "5. valid payment, wrong account", labelX: 860, labelY: 354 }
+                ]
+              }
+            },
+            defense: {
+              title: "Defense View",
+              caption:
+                "Document sanitization, supplier validation, and payment controls keep the invoice workflow aligned to the real vendor.",
               href: "./interactive.html?scenario=asi01-email&view=defense",
               diagram: {
                 width: 1200,
                 height: 620,
                 nodes: [
-                  { id: "mail", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Inbound email", subtitle: "External content" },
-                  { id: "classify", x: 290, y: 92, w: 220, h: 120, tone: "safe", title: "Trust classifier", subtitle: "External vs internal + content risk" },
-                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Comms assistant", subtitle: "Original task preserved" },
-                  { id: "approval", x: 290, y: 330, w: 220, h: 120, tone: "safe", title: "Approval / policy gate", subtitle: "Broadcasts and sensitive sends reviewed" },
-                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped send tool", subtitle: "Audience limits enforced" },
-                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Monitoring", subtitle: "Track audience, tone, and recipient drift" }
+                  { id: "invoice", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Supplier invoice", subtitle: "Untrusted PDF input" },
+                  { id: "guard", x: 290, y: 92, w: 220, h: 120, tone: "safe", title: "PDF guardrail", subtitle: "Strip hidden text + metadata" },
+                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Procurement assistant", subtitle: "Original payment goal preserved" },
+                  { id: "check", x: 290, y: 330, w: 220, h: 120, tone: "safe", title: "Supplier validation", subtitle: "Match invoice to approved payee record" },
+                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped payment tool", subtitle: "Approved accounts only" },
+                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Audit / alerting", subtitle: "Detect payee drift and anomalies" }
                 ],
                 edges: [
-                  { from: "mail", to: "classify", fromSide: "right", toSide: "left", tone: "safe", label: "1. treat inbound email as untrusted", labelX: 240, labelY: 126 },
-                  { from: "classify", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. separate content from task intent", labelX: 545, labelY: 126 },
-                  { from: "agent", to: "approval", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. high-impact send requests are checked", labelX: 545, labelY: 260 },
-                  { from: "approval", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. only approved audience and purpose can pass", labelX: 555, labelY: 364 },
-                  { from: "tool", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. suspicious comms patterns are observable", labelX: 850, labelY: 188 }
+                  { from: "invoice", to: "guard", fromSide: "right", toSide: "left", tone: "safe", label: "1. sanitize invoice before parsing", labelX: 245, labelY: 126 },
+                  { from: "guard", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. only cleaned invoice data enters planning", labelX: 545, labelY: 126 },
+                  { from: "agent", to: "check", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. proposed payment checked against supplier record", labelX: 540, labelY: 260 },
+                  { from: "check", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. allow only approved supplier account", labelX: 555, labelY: 364 },
+                  { from: "check", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. account changes and high-risk invoices are logged", labelX: 840, labelY: 188 }
                 ]
               }
             }
@@ -188,87 +276,87 @@ window.OWASP_ASI_DATA = {
         },
         {
           id: "asi01-web-operator",
-          title: "Browser / operator follows attacker web content",
+          title: "Malicious web page hijacks market research",
           type: "Scenario 3",
           status: "built",
           description:
-            "A browsing or search agent opens attacker-controlled content, absorbs hidden instructions, and then acts within an authenticated session.",
+            "A research agent opens attacker-controlled competitor content, absorbs hidden instructions, and starts exfiltrating internal research context.",
           href: "./scenario.html?asi=ASI01&scenario=asi01-web-operator",
           businessContext:
-            "A browser operator agent researches vendors or account issues while logged into internal or enterprise applications.",
+            "A market intelligence assistant searches the web for competitor pricing and summarizes findings for an analyst.",
           whyItRelates:
-            "This is a strong scenario for teams using browsing assistants, search copilots, or operator-style agents with authenticated access.",
+            "This feels real for teams using search copilots or browser agents because public web content looks harmless until it changes the goal.",
           attackSummary:
-            "A malicious page changes the operator agent’s task, which then pivots into authenticated internal resources and exposes sensitive information.",
+            "A malicious web page changes the research objective so the assistant forwards internal queries and collected intelligence to an attacker endpoint.",
           defenseSummary:
-            "Treat browsing zones as untrusted, restrict authenticated pivots, force confirmation before exports, and watch for action drift after page reads.",
+            "Sanitize retrieved pages, block unapproved outbound calls, and require the assistant to keep the original research-only scope.",
           lessons: [
-            "Reading a web page is not harmless when the model treats text as instruction-bearing.",
-            "Authenticated pivots are the highest-risk moment in operator-style workflows.",
-            "Browsing agents should default to read-only exploration."
+            "Search and browsing are input channels, not trusted instruction channels.",
+            "Research agents should never turn a summary task into an outbound data transfer.",
+            "Public content must stay isolated from high-impact actions."
           ],
           controls: [
             {
               name: "Validate intent",
-              detail: "Re-assert the user’s original goal before navigating from public web content into internal authenticated surfaces."
+              detail: "Re-assert the original research objective before allowing any action beyond summarization, especially any external send or API call."
             },
             {
               name: "Least privilege",
-              detail: "Keep browsing agents read-only by default and narrow what authenticated pages or exports they can access."
+              detail: "Keep research agents read-only and block arbitrary outbound endpoints or connectors not explicitly approved for the workflow."
             },
             {
               name: "Observe drift",
-              detail: "Alert when a browsing task suddenly expands into login, export, admin, or sensitive retrieval behaviors."
+              detail: "Alert when a research session starts calling external endpoints, copying internal prompts, or expanding beyond expected browsing and summary actions."
             }
           ],
           views: {
             attack: {
               title: "Attack View",
               caption:
-                "A malicious public page becomes the bridge between harmless research and harmful authenticated actions.",
+                "A public competitor page quietly turns a research task into an exfiltration workflow while still producing a normal summary.",
               href: "./interactive.html?scenario=asi01-web-operator&view=attack",
               diagram: {
                 width: 1200,
                 height: 620,
                 nodes: [
-                  { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "User", subtitle: "Research a vendor issue" },
-                  { id: "operator", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Browser operator", subtitle: "Search and browse" },
-                  { id: "page", x: 600, y: 92, w: 220, h: 112, tone: "danger", title: "Malicious web page", subtitle: "Hidden instructions in content" },
-                  { id: "goal", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Goal state", subtitle: "Research becomes data grab" },
-                  { id: "portal", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "Authenticated portal", subtitle: "Internal account / knowledge app" },
-                  { id: "leak", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Sensitive exposure", subtitle: "Internal data leaves intended scope" }
+                  { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Financial analyst", subtitle: "Research competitor pricing" },
+                  { id: "operator", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Research assistant", subtitle: "Goal: summarize market data" },
+                  { id: "page", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "competitor-page.html", subtitle: "Hidden exfiltration instruction" },
+                  { id: "goal", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Context window", subtitle: "Research becomes exfiltration" },
+                  { id: "portal", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "postResearch()", subtitle: "Legitimate outbound connector" },
+                  { id: "leak", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Attacker endpoint", subtitle: "Internal queries leave scope" }
                 ],
                 edges: [
-                  { from: "user", to: "operator", fromSide: "right", toSide: "left", tone: "primary", label: "1. harmless browsing task", labelX: 245, labelY: 126 },
-                  { from: "operator", to: "page", fromSide: "right", toSide: "left", tone: "primary", label: "2. operator reads attacker page", labelX: 548, labelY: 126 },
-                  { from: "page", to: "goal", fromSide: "bottom", toSide: "right", tone: "danger", mode: "elbow", label: "3. hidden instructions reframe objective", labelX: 575, labelY: 262 },
-                  { from: "goal", to: "portal", fromSide: "right", toSide: "left", tone: "danger", label: "4. agent pivots into trusted session", labelX: 560, labelY: 354 },
-                  { from: "portal", to: "leak", fromSide: "right", toSide: "left", tone: "danger", label: "5. internal data exposed", labelX: 850, labelY: 354 }
+                  { from: "user", to: "operator", fromSide: "right", toSide: "left", tone: "primary", label: "1. research task", labelX: 255, labelY: 126 },
+                  { from: "operator", to: "page", fromSide: "right", toSide: "left", tone: "primary", label: "2. retrieve competitor page", labelX: 650, labelY: 118 },
+                  { from: "page", to: "goal", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. hidden instruction rewrites research goal", labelX: 718, labelY: 278 },
+                  { from: "goal", to: "portal", fromSide: "right", toSide: "left", tone: "danger", label: "4. corrupted summary sent outward", labelX: 560, labelY: 354 },
+                  { from: "portal", to: "leak", fromSide: "right", toSide: "left", tone: "danger", label: "5. internal intelligence exposed", labelX: 855, labelY: 354 }
                 ]
               }
             },
             defense: {
               title: "Defense View",
               caption:
-                "Browsing stays isolated, risky pivots require re-validation, and exports from authenticated tools are explicitly controlled.",
+                "Web content stays isolated, outbound calls stay constrained, and the assistant remains a research summarizer instead of a data sender.",
               href: "./interactive.html?scenario=asi01-web-operator&view=defense",
               diagram: {
                 width: 1200,
                 height: 620,
                 nodes: [
-                  { id: "task", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Research task", subtitle: "User request" },
-                  { id: "zone", x: 290, y: 92, w: 220, h: 120, tone: "safe", title: "Untrusted browsing zone", subtitle: "Public web content isolated" },
-                  { id: "operator", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Operator", subtitle: "Task scope preserved" },
-                  { id: "check", x: 290, y: 330, w: 220, h: 120, tone: "safe", title: "Authenticated pivot check", subtitle: "Confirm intent before internal access" },
-                  { id: "portal", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Internal portal", subtitle: "Read-only + export controls" },
-                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Telemetry", subtitle: "Track pivots, exports, and data movement" }
+                  { id: "web", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Retrieved web page", subtitle: "Untrusted public content" },
+                  { id: "isolate", x: 290, y: 92, w: 220, h: 120, tone: "safe", title: "Web guardrail", subtitle: "Strip hidden DOM + trust score page" },
+                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Research assistant", subtitle: "Original summary goal preserved" },
+                  { id: "confirm", x: 290, y: 330, w: 220, h: 120, tone: "safe", title: "Outbound action check", subtitle: "No unapproved endpoint or send" },
+                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped research tools", subtitle: "Summary only, no arbitrary exfiltration" },
+                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Observability", subtitle: "Detect unusual network or action drift" }
                 ],
                 edges: [
-                  { from: "task", to: "zone", fromSide: "right", toSide: "left", tone: "primary", label: "1. browse public content in isolation", labelX: 245, labelY: 126 },
-                  { from: "zone", to: "operator", fromSide: "right", toSide: "left", tone: "safe", label: "2. page content cannot redefine the goal", labelX: 550, labelY: 126 },
-                  { from: "operator", to: "check", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. internal pivots require intent confirmation", labelX: 555, labelY: 260 },
-                  { from: "check", to: "portal", fromSide: "right", toSide: "left", tone: "safe", label: "4. only scoped, read-only actions are allowed", labelX: 555, labelY: 364 },
-                  { from: "portal", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. sensitive exports and pivots are logged", labelX: 850, labelY: 188 }
+                  { from: "web", to: "isolate", fromSide: "right", toSide: "left", tone: "safe", label: "1. sanitize retrieved page", labelX: 250, labelY: 126 },
+                  { from: "isolate", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. only safe page content reaches reasoning", labelX: 545, labelY: 126 },
+                  { from: "agent", to: "confirm", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. any action beyond summary is revalidated", labelX: 548, labelY: 260 },
+                  { from: "confirm", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. allow only approved research outputs", labelX: 560, labelY: 364 },
+                  { from: "confirm", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. unusual outbound activity is logged", labelX: 850, labelY: 188 }
                 ]
               }
             }
@@ -276,87 +364,87 @@ window.OWASP_ASI_DATA = {
         },
         {
           id: "asi01-calendar-drift",
-          title: "Calendar invite causes silent goal drift",
+          title: "Customer profile poisons CRM outreach workflow",
           type: "Scenario 4",
           status: "built",
           description:
-            "A crafted calendar invite or recurring instruction quietly influences the planner over time, leading to low-friction but unsafe approvals.",
+            "A customer-edited CRM profile contains hidden instructions that cause a customer success assistant to export internal customer data.",
           href: "./scenario.html?asi=ASI01&scenario=asi01-calendar-drift",
           businessContext:
-            "A scheduling or executive operations agent processes meetings, daily planning prompts, and recurring approval workflows.",
+            "A customer success assistant reads CRM profiles and drafts personalized outreach based on account data.",
           whyItRelates:
-            "This makes ASI01 feel more enterprise-realistic because the drift is subtle, recurring, and not obviously malicious to a human observer.",
+            "This is one of the most realistic enterprise cases because the poisoned content lives inside a trusted internal system.",
           attackSummary:
-            "An invite or recurring prompt injects a hidden objective that gradually changes decision weighting and approval behavior.",
+            "The agent reads a malicious customer profile from the CRM, absorbs attacker instructions from a notes field, and uses legitimate data tools to export the full customer list.",
           defenseSummary:
-            "Treat calendar and schedule inputs as untrusted, bind each run to an immutable task scope, and alert when daily behavior drifts from baseline.",
+            "Treat all user-supplied CRM fields as untrusted, sanitize records before reasoning, and block external sends or broad exports without approval.",
           lessons: [
-            "Not all goal hijack is loud. Some of it is slow and policy-shaped.",
-            "Recurring workflows need stronger integrity around goal persistence.",
-            "Goal drift detection is just as important as one-time blocking."
+            "Trusted systems can still deliver untrusted content.",
+            "User-editable fields inside internal apps are prime injection points.",
+            "The riskiest move is when a narrow outreach task turns into broad data extraction."
           ],
           controls: [
             {
               name: "Validate intent",
-              detail: "Bind each execution cycle to the original objective instead of letting recurring content redefine priorities silently."
+              detail: "Before any export or external send, compare the planned action against the original outreach task and allowed customer scope."
             },
             {
               name: "Least privilege",
-              detail: "Limit planning agents from approving, routing, or escalating outside clearly scoped authority."
+              detail: "Limit customer success agents so they can access only the current account context and cannot export broad customer datasets."
             },
             {
               name: "Observe drift",
-              detail: "Baseline normal planner behavior and alert on recurring shifts in approvals, recipients, or action patterns."
+              detail: "Alert when outreach workflows trigger database-wide reads, external sends, or record access patterns that do not match the normal task."
             }
           ],
           views: {
             attack: {
               title: "Attack View",
               caption:
-                "A recurring or scheduled prompt quietly changes how the planner weights decisions, causing unsafe approvals without obvious breakage.",
+                "A poisoned CRM profile quietly turns personalized outreach into a broad customer-list exfiltration workflow.",
               href: "./interactive.html?scenario=asi01-calendar-drift&view=attack",
               diagram: {
                 width: 1200,
                 height: 620,
                 nodes: [
-                  { id: "invite", x: 40, y: 100, w: 180, h: 96, tone: "danger", title: "Calendar invite", subtitle: "Recurring hidden instruction" },
-                  { id: "planner", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Planning agent", subtitle: "Daily prioritization" },
-                  { id: "memory", x: 600, y: 92, w: 220, h: 112, tone: "danger", title: "Execution context", subtitle: "Objective weighting shifts" },
-                  { id: "goal", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Decision policy", subtitle: "Low-friction approval bias" },
-                  { id: "workflow", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "Approval workflow", subtitle: "Legitimate action path" },
-                  { id: "impact", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Business impact", subtitle: "Unsafe approvals / silent drift" }
+                  { id: "user", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "CS manager", subtitle: "Draft outreach email" },
+                  { id: "agent", x: 300, y: 92, w: 220, h: 112, tone: "primary", title: "Customer success assistant", subtitle: "Goal: email one customer" },
+                  { id: "payload", x: 860, y: 88, w: 220, h: 150, tone: "danger", title: "crm-profile.notes", subtitle: "Hidden data-theft instruction" },
+                  { id: "context", x: 300, y: 320, w: 220, h: 116, tone: "danger", title: "Context window", subtitle: "Outreach becomes data export" },
+                  { id: "tool", x: 600, y: 320, w: 210, h: 116, tone: "neutral", title: "exportCustomers()", subtitle: "Legitimate CRM data tool" },
+                  { id: "outcome", x: 900, y: 320, w: 220, h: 116, tone: "danger", title: "Attacker inbox", subtitle: "Customer list is exfiltrated" }
                 ],
                 edges: [
-                  { from: "invite", to: "planner", fromSide: "right", toSide: "left", tone: "danger", label: "1. recurring content enters planner", labelX: 245, labelY: 126 },
-                  { from: "planner", to: "memory", fromSide: "right", toSide: "left", tone: "primary", label: "2. quiet goal weighting shift", labelX: 550, labelY: 126 },
-                  { from: "memory", to: "goal", fromSide: "bottom", toSide: "right", tone: "danger", mode: "elbow", label: "3. decisions drift over repeated cycles", labelX: 560, labelY: 262 },
-                  { from: "goal", to: "workflow", fromSide: "right", toSide: "left", tone: "danger", label: "4. legitimate workflow acts on skewed priorities", labelX: 545, labelY: 354 },
-                  { from: "workflow", to: "impact", fromSide: "right", toSide: "left", tone: "danger", label: "5. unsafe approvals accumulate", labelX: 850, labelY: 354 }
+                  { from: "user", to: "agent", fromSide: "right", toSide: "left", tone: "primary", label: "1. outreach task", labelX: 255, labelY: 126 },
+                  { from: "agent", to: "payload", fromSide: "right", toSide: "left", tone: "primary", label: "2. read CRM profile", labelX: 665, labelY: 118 },
+                  { from: "payload", to: "context", fromSide: "left", toSide: "right", tone: "danger", mode: "elbow", label: "3. hidden instruction rewrites outreach goal", labelX: 718, labelY: 278 },
+                  { from: "context", to: "tool", fromSide: "right", toSide: "left", tone: "danger", label: "4. corrupted data request reaches tool", labelX: 550, labelY: 354 },
+                  { from: "tool", to: "outcome", fromSide: "right", toSide: "left", tone: "danger", label: "5. full customer list exposed", labelX: 860, labelY: 354 }
                 ]
               }
             },
             defense: {
               title: "Defense View",
               caption:
-                "Recurring workflows stay safe when each run is bound to an approved intent, and drift across repeated cycles is visible to operators.",
+                "CRM fields stay untrusted, exports stay blocked, and the assistant remains focused on a single-account outreach task.",
               href: "./interactive.html?scenario=asi01-calendar-drift&view=defense",
               diagram: {
                 width: 1200,
                 height: 620,
                 nodes: [
-                  { id: "schedule", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "Calendar / schedule input", subtitle: "Untrusted by default" },
-                  { id: "bind", x: 290, y: 92, w: 220, h: 120, tone: "safe", title: "Intent binding", subtitle: "Original task + constraints fixed per run" },
-                  { id: "planner", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Planning agent", subtitle: "Execution stays in scope" },
-                  { id: "gate", x: 290, y: 330, w: 220, h: 120, tone: "safe", title: "Approval policy", subtitle: "Goal-changing actions blocked or reviewed" },
-                  { id: "workflow", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Workflow engine", subtitle: "Scoped approvals only" },
-                  { id: "monitor", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Drift monitor", subtitle: "Detect repeated shifts over time" }
+                  { id: "record", x: 40, y: 100, w: 180, h: 96, tone: "neutral", title: "CRM profile", subtitle: "User-editable record fields" },
+                  { id: "guard", x: 290, y: 92, w: 220, h: 120, tone: "safe", title: "Record guardrail", subtitle: "Sanitize notes + classify user text" },
+                  { id: "agent", x: 590, y: 92, w: 220, h: 112, tone: "primary", title: "Customer success assistant", subtitle: "Original outreach goal preserved" },
+                  { id: "policy", x: 290, y: 330, w: 220, h: 120, tone: "safe", title: "Scope check", subtitle: "One-account outreach only" },
+                  { id: "tool", x: 590, y: 330, w: 220, h: 120, tone: "neutral", title: "Scoped CRM tools", subtitle: "No broad export or external send" },
+                  { id: "ops", x: 890, y: 210, w: 220, h: 120, tone: "safe", title: "Observability", subtitle: "Detect unusual dataset access" }
                 ],
                 edges: [
-                  { from: "schedule", to: "bind", fromSide: "right", toSide: "left", tone: "safe", label: "1. recurring inputs cannot redefine objectives", labelX: 240, labelY: 126 },
-                  { from: "bind", to: "planner", fromSide: "right", toSide: "left", tone: "safe", label: "2. each cycle starts from a fixed intent capsule", labelX: 545, labelY: 126 },
-                  { from: "planner", to: "gate", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. deviations trigger policy review", labelX: 555, labelY: 260 },
-                  { from: "gate", to: "workflow", fromSide: "right", toSide: "left", tone: "safe", label: "4. only in-scope approvals can continue", labelX: 550, labelY: 364 },
-                  { from: "workflow", to: "monitor", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. recurring drift patterns become observable", labelX: 845, labelY: 188 }
+                  { from: "record", to: "guard", fromSide: "right", toSide: "left", tone: "safe", label: "1. sanitize CRM record before reasoning", labelX: 242, labelY: 126 },
+                  { from: "guard", to: "agent", fromSide: "right", toSide: "left", tone: "safe", label: "2. only safe account data reaches planning", labelX: 548, labelY: 126 },
+                  { from: "agent", to: "policy", fromSide: "bottom", toSide: "top", tone: "primary", mode: "elbow", label: "3. outreach action checked against account scope", labelX: 544, labelY: 260 },
+                  { from: "policy", to: "tool", fromSide: "right", toSide: "left", tone: "safe", label: "4. block export and unapproved external sends", labelX: 550, labelY: 364 },
+                  { from: "policy", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. unusual record-access patterns are logged", labelX: 845, labelY: 188 }
                 ]
               }
             }

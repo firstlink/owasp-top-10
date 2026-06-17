@@ -201,6 +201,8 @@
             <text x="1120" y="454" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hiddenTitle)}</text>
             <text x="1120" y="482" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#ad3535">${escapeHtml(config.payload.hidden1)}</text>
             <text x="1120" y="510" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hidden2)}</text>
+            ${config.payload.hiddenNote ? `<text x="1120" y="530" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-style="italic" fill="#b36a6a">${escapeHtml(config.payload.hiddenNote)}</text>` : ""}
+            ${config.payload.hiddenHumanNote ? `<text x="1120" y="544" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#c08a8a">${escapeHtml(config.payload.hiddenHumanNote)}</text>` : ""}
           </g>
 
           <line class="co" id="ias" x1="1010" y1="468" x2="570" y2="468" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
