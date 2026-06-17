@@ -178,11 +178,15 @@
       }
     };
     const tone = toneMap[node.tone] || toneMap.neutral;
+    const titleLayout = fitSingleLine(node.title, node.w - 36, 18, 15);
+    const subtitleLayout = fitWrappedText(node.subtitle, node.w - 42, 14, 12, 2);
     return `
       <g class="diagram-node">
         <rect x="${node.x}" y="${node.y}" width="${node.w}" height="${node.h}" rx="22" fill="${tone.fill}" stroke="${tone.stroke}" stroke-width="2.8"></rect>
-        <text x="${node.x + node.w / 2}" y="${node.y + 46}" text-anchor="middle" font-family="Avenir Next, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="${tone.title}">${escapeHtml(node.title)}</text>
-        <text x="${node.x + node.w / 2}" y="${node.y + 76}" text-anchor="middle" font-family="Avenir Next, Segoe UI, sans-serif" font-size="14" fill="${tone.subtitle}">${escapeHtml(node.subtitle)}</text>
+        <text x="${node.x + node.w / 2}" y="${node.y + 46}" text-anchor="middle" font-family="Avenir Next, Segoe UI, sans-serif" font-size="${titleLayout.fontSize}" font-weight="700" fill="${tone.title}">${escapeHtml(titleLayout.text)}</text>
+        <text x="${node.x + node.w / 2}" y="${node.y + 76}" text-anchor="middle" font-family="Avenir Next, Segoe UI, sans-serif" font-size="${subtitleLayout.fontSize}" fill="${tone.subtitle}">
+          ${renderTspans(node.x + node.w / 2, subtitleLayout.lines, subtitleLayout.fontSize * 1.25)}
+        </text>
       </g>
     `;
   }
@@ -206,12 +210,14 @@
       ? elbowPath(fromPoint, toPoint, edge.fromSide)
       : `M ${fromPoint.x} ${fromPoint.y} L ${toPoint.x} ${toPoint.y}`;
 
-    const label = edge.label
+    const labelLayout = edge.label
+      ? fitWrappedText(edge.label, edge.labelWidth || 220, 14, 11, 2)
+      : null;
+    const label = labelLayout
       ? `
         <g class="diagram-label">
-          <rect x="${edge.labelX - 90}" y="${edge.labelY - 18}" width="180" height="34" rx="17" fill="${tone.labelFill}" stroke="${tone.labelStroke}" stroke-width="2"></rect>
-          <text x="${edge.labelX}" y="${edge.labelY + 4}" text-anchor="middle" font-family="Avenir Next, Segoe UI, sans-serif" font-size="14" font-weight="800" fill="${tone.labelText}">
-            ${escapeHtml(edge.label)}
+          <text x="${edge.labelX}" y="${edge.labelY}" text-anchor="middle" font-family="Avenir Next, Segoe UI, sans-serif" font-size="${labelLayout.fontSize}" font-weight="800" fill="${tone.labelText}" stroke="#fffdf8" stroke-width="6" paint-order="stroke" stroke-linejoin="round">
+            ${renderTspans(edge.labelX, labelLayout.lines, labelLayout.fontSize * 1.2)}
           </text>
         </g>
       `
@@ -247,6 +253,81 @@
     }
     const midX = (fromPoint.x + toPoint.x) / 2;
     return `M ${fromPoint.x} ${fromPoint.y} L ${midX} ${fromPoint.y} L ${midX} ${toPoint.y} L ${toPoint.x} ${toPoint.y}`;
+  }
+
+  function fitSingleLine(text, maxWidth, startFontSize, minFontSize) {
+    const value = String(text || "");
+    for (let fontSize = startFontSize; fontSize >= minFontSize; fontSize -= 1) {
+      if (estimateTextWidth(value, fontSize) <= maxWidth) {
+        return { text: value, fontSize };
+      }
+    }
+
+    let shortened = value;
+    while (shortened.length > 1 && estimateTextWidth(`${shortened}\u2026`, minFontSize) > maxWidth) {
+      shortened = shortened.slice(0, -1).trimEnd();
+    }
+    return { text: `${shortened}\u2026`, fontSize: minFontSize };
+  }
+
+  function fitWrappedText(text, maxWidth, startFontSize, minFontSize, maxLines) {
+    const value = String(text || "");
+    for (let fontSize = startFontSize; fontSize >= minFontSize; fontSize -= 1) {
+      const lines = wrapText(value, maxWidth, fontSize, maxLines);
+      if (lines.length <= maxLines && !lines.truncated) {
+        return { lines, fontSize };
+      }
+    }
+    return { lines: wrapText(value, maxWidth, minFontSize, maxLines, true), fontSize: minFontSize };
+  }
+
+  function wrapText(text, maxWidth, fontSize, maxLines, forceEllipsis) {
+    const words = String(text || "").split(/\s+/).filter(Boolean);
+    if (!words.length) return Object.assign([""], { truncated: false });
+
+    const lines = [];
+    let current = words.shift();
+
+    words.forEach((word) => {
+      const candidate = `${current} ${word}`;
+      if (estimateTextWidth(candidate, fontSize) <= maxWidth) {
+        current = candidate;
+        return;
+      }
+      lines.push(current);
+      current = word;
+    });
+    lines.push(current);
+
+    if (lines.length <= maxLines && !forceEllipsis) {
+      return Object.assign(lines, { truncated: false });
+    }
+
+    const trimmed = lines.slice(0, maxLines);
+    const lastIndex = trimmed.length - 1;
+    let lastLine = trimmed[lastIndex] || "";
+    if (lines.length > maxLines || forceEllipsis) {
+      while (lastLine.length > 1 && estimateTextWidth(`${lastLine}\u2026`, fontSize) > maxWidth) {
+        lastLine = lastLine.slice(0, -1).trimEnd();
+      }
+      trimmed[lastIndex] = `${lastLine}\u2026`;
+    }
+    return Object.assign(trimmed, { truncated: true });
+  }
+
+  function estimateTextWidth(text, fontSize) {
+    return Array.from(String(text || "")).reduce((width, char) => {
+      if (char === " ") return width + fontSize * 0.33;
+      if ("ilI1.,:'".includes(char)) return width + fontSize * 0.28;
+      if ("mwMW@#".includes(char)) return width + fontSize * 0.9;
+      return width + fontSize * 0.56;
+    }, 0);
+  }
+
+  function renderTspans(x, lines, lineHeight) {
+    return lines
+      .map((line, index) => `<tspan x="${x}" dy="${index === 0 ? 0 : lineHeight}">${escapeHtml(line)}</tspan>`)
+      .join("");
   }
 
   function escapeHtml(value) {

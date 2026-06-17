@@ -373,58 +373,90 @@
   }
 
   function flowLabel(x, y, text, color, id, fontSize) {
+    const layout = fitWrappedText(text, 210, fontSize || 13, 11, 2);
     return `
       <g class="lb" id="${id}">
-        <text x="${x}" y="${y}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${fontSize || 13}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill">${escapeHtml(text)}</text>
+        <text x="${x}" y="${y}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${layout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
+          ${renderTspans(x, layout.lines, layout.fontSize * 1.18)}
+        </text>
       </g>
     `;
   }
 
   function innerPill(centerX, centerY, width, text, fill, stroke, textColor, fontSize, fontWeight) {
-    const adjustedFontSize = shouldShrinkLine(text, width, fontSize) ? Math.max(11, fontSize - 2) : fontSize;
-    const lines = wrapText(text, width, adjustedFontSize);
-    const lineHeight = Math.round(adjustedFontSize * 1.18);
+    const layout = fitWrappedText(text, width - 20, fontSize, 11, 2);
+    const lineHeight = Math.round(layout.fontSize * 1.18);
+    const lines = layout.lines;
     const height = lines.length === 1 ? 34 : 48;
     const x = centerX - width / 2;
     const y = centerY - height / 2;
     const radius = lines.length === 1 ? 10 : 12;
     const firstLineY = lines.length === 1
-      ? centerY + Math.round(adjustedFontSize * 0.32)
+      ? centerY + Math.round(layout.fontSize * 0.32)
       : centerY - 4;
     const secondLineY = centerY + lineHeight - 4;
 
     return `
       <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${radius}" fill="${fill}" stroke="${stroke}" stroke-width="1.2"/>
-      <text x="${centerX}" y="${firstLineY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${adjustedFontSize}" font-weight="${fontWeight}" fill="${textColor}">${escapeHtml(lines[0])}</text>
-      ${lines[1] ? `<text x="${centerX}" y="${secondLineY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${Math.max(11, adjustedFontSize - 1)}" font-weight="${fontWeight}" fill="${textColor}">${escapeHtml(lines[1])}</text>` : ""}
+      <text x="${centerX}" y="${firstLineY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${layout.fontSize}" font-weight="${fontWeight}" fill="${textColor}">${escapeHtml(lines[0])}</text>
+      ${lines[1] ? `<text x="${centerX}" y="${secondLineY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${Math.max(11, layout.fontSize - 1)}" font-weight="${fontWeight}" fill="${textColor}">${escapeHtml(lines[1])}</text>` : ""}
     `;
   }
 
-  function shouldShrinkLine(text, width, fontSize) {
-    const estimatedChars = Math.floor(width / (fontSize * 0.62));
-    return text.length > estimatedChars - 2 && text.length <= estimatedChars + 6;
+  function fitWrappedText(text, width, startFontSize, minFontSize, maxLines) {
+    const value = String(text || "");
+    for (let size = startFontSize; size >= minFontSize; size -= 1) {
+      const lines = wrapText(value, width, size, maxLines);
+      if (!lines.truncated) return { lines, fontSize: size };
+    }
+    return { lines: wrapText(value, width, minFontSize, maxLines, true), fontSize: minFontSize };
   }
 
-  function wrapText(text, width, fontSize) {
-    const maxChars = Math.max(12, Math.floor(width / (fontSize * 0.62)));
-    if (text.length <= maxChars) return [text];
+  function wrapText(text, width, fontSize, maxLines, forceEllipsis) {
+    const words = String(text || "").split(/\s+/).filter(Boolean);
+    if (!words.length) return Object.assign([""], { truncated: false });
 
-    const words = text.split(" ");
-    const lines = [""];
-    for (const word of words) {
-      const current = lines[lines.length - 1];
-      const next = current ? `${current} ${word}` : word;
-      if (next.length <= maxChars || lines.length === 2) {
-        lines[lines.length - 1] = next;
-      } else {
-        lines.push(word);
+    const lines = [];
+    let current = words.shift();
+
+    words.forEach((word) => {
+      const candidate = `${current} ${word}`;
+      if (estimateTextWidth(candidate, fontSize) <= width) {
+        current = candidate;
+        return;
       }
+      lines.push(current);
+      current = word;
+    });
+    lines.push(current);
+
+    if (lines.length <= maxLines && !forceEllipsis) {
+      return Object.assign(lines, { truncated: false });
     }
 
-    if (lines.length > 2) {
-      return [lines[0], lines.slice(1).join(" ")];
+    const trimmed = lines.slice(0, maxLines);
+    const lastIndex = trimmed.length - 1;
+    let lastLine = trimmed[lastIndex] || "";
+    while (lastLine.length > 1 && estimateTextWidth(`${lastLine}\u2026`, fontSize) > width) {
+      lastLine = lastLine.slice(0, -1).trimEnd();
     }
-    return lines;
+    trimmed[lastIndex] = `${lastLine}\u2026`;
+    return Object.assign(trimmed, { truncated: true });
+  }
+
+  function estimateTextWidth(text, fontSize) {
+    return Array.from(String(text || "")).reduce((width, char) => {
+      if (char === " ") return width + fontSize * 0.33;
+      if ("ilI1.,:'".includes(char)) return width + fontSize * 0.28;
+      if ("mwMW@#".includes(char)) return width + fontSize * 0.9;
+      return width + fontSize * 0.56;
+    }, 0);
+  }
+
+  function renderTspans(x, lines, lineHeight) {
+    return lines
+      .map((line, index) => `<tspan x="${x}" dy="${index === 0 ? 0 : lineHeight}">${escapeHtml(line)}</tspan>`)
+      .join("");
   }
 
   function escapeHtml(value) {
