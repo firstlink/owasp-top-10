@@ -871,6 +871,480 @@ window.ASI_WALKTHROUGHS = {
       ]
     }
   },
+  "asi05-shared-defense": {
+    label: "Shared defense architecture",
+    defense: {
+      defenseTemplate: "asi02-shared-compact",
+      badge: "ASI05 : 2026 · OWASP Agentic Security · Shared Defense Flow",
+      heading: "Unexpected code execution — shared defense walkthrough",
+      introTitle: "ASI05 — Shared Defense Flow",
+      introDetail: "Click Start to reveal the layered architecture that keeps shell scripts, SQL, and generated Python from turning untrusted data into live execution.",
+      zone: "DEFENSE ZONE: HARDWARE-SANDBOXED EXECUTION STOPS SCRIPT, SQL, AND DATA-TO-CODE ESCAPES",
+      user: { title: "User", sub1: "Operator / business lead", sub2: "\"complete the approved task\"" },
+      agent: { title: "Agent planner", sub1: "Execution draft under review", goal: "Goal: safe code execution ✓" },
+      toolTop: { title: "generateOrCompileCode()", sub1: "Shell / SQL / Python draft builder", sub2: "turns task context into executable drafts" },
+      store: { title: "Untrusted input", sub1: "Files / queries / records", sub2: "data may try to become code" },
+      patterns: {
+        title: "Attack patterns",
+        sub1: "Shell injection: cleanup or repair code escapes the approved path",
+        sub2: "SQL injection: natural language becomes destructive multi-statement SQL",
+        sub3: "Data-to-code escape: uploaded text breaks into generated Python"
+      },
+      d1: {
+        title: "Input sanitisation & data classification",
+        sub1: "Classify all ingested content as data before reasoning.",
+        sub2: "Shell, SQL, and subprocess payload markers are quarantined early."
+      },
+      d2: {
+        title: "Code generation static analysis",
+        sub1: "Treat every script, query, or plan as a draft until checked.",
+        sub2: "Unsafe deletion scope, raw SQL, and process calls are rejected."
+      },
+      d3: {
+        title: "Hardware-enforced sandbox execution",
+        sub1: "Run generated code in a zero-access isolated runtime.",
+        sub2: "Filesystem, database, and network reach stay tightly bounded."
+      },
+      d4: {
+        title: "Dry-run validation",
+        sub1: "Preview state changes before any live destructive execution.",
+        sub2: "Unexpected files, rows, or endpoints halt the run."
+      },
+      d5: {
+        title: "Human-in-the-Loop Gate",
+        sub1: "Deletes, production writes, and external sends require approval.",
+        sub2: "The agent cannot self-authorize destructive code paths."
+      },
+      outcome: {
+        title: "Approved execution outcome",
+        sub1: "Only the reviewed, bounded execution path is allowed through.",
+        sub2: "Correct scope, correct interface, correct runtime."
+      },
+      audit: {
+        title: "D6 - Strong Observability",
+        sub1: "Telemetry spans ingested data, code drafts, static checks, dry-runs, sandbox events, and approval steps.",
+        sub2: "Dynamic analysis makes data-to-code escalation and runtime escape attempts visible early."
+      },
+      labels: {
+        l0: "① Request enters",
+        l1: "② Generate execution draft",
+        l2: "③ Read untrusted input",
+        l3: "④ Code-risk patterns are identified",
+        l4: "⑤ Classify as data only",
+        l5: "⑥ Statically analyze draft",
+        l6: "⑦ Run in hardware sandbox",
+        l7: "⑧ Preview blast radius",
+        l8: "⑨ Require approval",
+        l9: "⑩ Execute approved path"
+      },
+      steps: [
+        { title: "A legitimate task enters the workflow", detail: "The operator starts a normal automation task such as cleanup, safety lookup, or analytics generation." },
+        { title: "The agent prepares executable drafts", detail: "The assistant decides to build shell, SQL, or Python execution artifacts rather than answer in natural language only." },
+        { title: "Untrusted data reaches the code path", detail: "Files, requests, or uploaded fields are still just data, but they now sit near an execution boundary where interpolation would be dangerous." },
+        { title: "Known code-risk patterns are recognized", detail: "The architecture anticipates shell traversal, SQL injection, and data-to-code escapes before any live execution occurs." },
+        { title: "D1 classifies everything as data first", detail: "Shell metacharacters, SQL terminators, and subprocess-style payloads are stripped, quarantined, or isolated before they can shape code generation." },
+        { title: "D2 rejects unsafe generated code", detail: "Static analysis checks every draft for broad deletion scope, raw SQL assembly, unrestricted process launch, and out-of-scope network behavior." },
+        { title: "D3 contains runtime behavior in hardware", detail: "Even if a draft passes earlier checks, it runs inside a hardware-enforced sandbox with no path to broad host, database, or network access." },
+        { title: "D4 previews blast radius before live changes", detail: "Any state-modifying path is dry-run first so unexpected files, rows, or endpoints can halt execution before damage happens." },
+        { title: "Only the approved path executes under D6 observability", detail: "Destructive or externally transmitting code still requires D5 approval, and D6 telemetry records the full chain so unsafe code behavior remains visible." }
+      ]
+    }
+  },
+  "asi06-shared-defense": {
+    label: "Shared defense architecture",
+    defense: {
+      defenseTemplate: "asi02-shared-compact",
+      badge: "ASI06 : 2026 · OWASP Agentic Security · Shared Defense Flow",
+      heading: "Memory & context poisoning — shared defense walkthrough",
+      introTitle: "ASI06 — Shared Defense Flow",
+      introDetail: "Click Start to reveal the layered architecture that keeps vector stores, belief databases, and vendor memory from becoming a persistent corruption channel.",
+      zone: "DEFENSE ZONE: VERIFIED MEMORY STOPS RAG POISONING, BELIEF DRIFT, AND MEMORY PLANTS",
+      user: { title: "User", sub1: "Operator / business lead", sub2: "\"complete the approved task\"" },
+      agent: { title: "Agent planner", sub1: "Persistent memory under review", goal: "Goal: trust verified memory ✓" },
+      toolTop: { title: "readOrWriteMemory()", sub1: "Vector / belief / trust store path", sub2: "retrieves or proposes persistent memory updates" },
+      store: { title: "Memory store", sub1: "RAG / belief / vendor memory", sub2: "poisoned memory can outlive the attack session" },
+      patterns: {
+        title: "Attack patterns",
+        sub1: "RAG poisoning: keyword-stuffed records outrank the true source",
+        sub2: "Belief drift: repeated assertions slowly become trusted policy",
+        sub3: "Memory plant: a document tries to self-authorize a persistent rule"
+      },
+      d1: {
+        title: "Cryptographic provenance & integrity check",
+        sub1: "Every memory entry carries provenance and an integrity hash.",
+        sub2: "Low-trust or tampered entries are downgraded or quarantined."
+      },
+      d2: {
+        title: "Cross-reference validation",
+        sub1: "High-stakes retrieved memory is checked against a live authority.",
+        sub2: "Disagreement triggers hold and escalation, not silent trust."
+      },
+      d3: {
+        title: "Write authorisation gate + sanitisation",
+        sub1: "Persistent memory updates are privileged governed operations.",
+        sub2: "Documents and chat claims cannot self-authorize trusted writes."
+      },
+      d4: {
+        title: "Anomaly detection + version control",
+        sub1: "Drift, reinforcement, and conflicting entries are scanned over time.",
+        sub2: "Versioned snapshots make rollback to known-good memory possible."
+      },
+      d5: {
+        title: "Human-in-the-Loop Gate",
+        sub1: "Trust tiers, safe patterns, and approval rules require review.",
+        sub2: "The agent cannot promote high-impact memory on its own."
+      },
+      outcome: {
+        title: "Approved memory outcome",
+        sub1: "Only verified, governed memory can shape future actions.",
+        sub2: "Correct provenance, correct belief, correct persistence."
+      },
+      audit: {
+        title: "D6 - Strong Observability",
+        sub1: "Telemetry spans reads, provenance checks, live cross-checks, write requests, approvals, drift signals, and rollbacks.",
+        sub2: "Multi-session poisoning campaigns become visible across time instead of hiding in normal retrieval."
+      },
+      labels: {
+        l0: "① Task enters",
+        l1: "② Read or propose memory",
+        l2: "③ Reach persistent store",
+        l3: "④ Memory-poisoning patterns are identified",
+        l4: "⑤ Verify provenance",
+        l5: "⑥ Cross-check live source",
+        l6: "⑦ Authorize memory writes",
+        l7: "⑧ Detect drift & version",
+        l8: "⑨ Require approval",
+        l9: "⑩ Use approved memory path"
+      },
+      steps: [
+        { title: "A legitimate workflow enters the agent", detail: "The operator begins a normal task that depends on persistent memory rather than only the current prompt." },
+        { title: "The agent reads or proposes long-term memory", detail: "The assistant retrieves stored knowledge or tries to update a belief, trust level, or safe pattern for future use." },
+        { title: "The memory store becomes the trust boundary", detail: "Vector records, belief entries, and vendor memory can all shape later business decisions even when the current session looks clean." },
+        { title: "Known poisoning patterns are recognized early", detail: "The architecture anticipates retrieval poisoning, gradual reinforcement drift, and document-borne memory plants before they become policy." },
+        { title: "D1 verifies provenance and integrity", detail: "Every retrieved entry is checked for trusted source metadata and a matching integrity hash so keyword stuffing alone cannot become ground truth." },
+        { title: "D2 checks high-stakes memory against live authority", detail: "Prices, fraud patterns, trust ratings, and approval rules are cross-checked against a live authoritative source before the agent acts." },
+        { title: "D3 gates and sanitizes memory writes", detail: "Persistent memory changes are treated as privileged operations, so chat assertions or processed documents cannot directly promote trusted beliefs." },
+        { title: "D4 scans for drift and preserves rollback", detail: "Cross-session reinforcement, conflicting entries, and unauthorized trust jumps are detected, while snapshots keep rollback available if poisoning is confirmed." },
+        { title: "Only the approved memory path executes under D6 observability", detail: "D5 review is still required for high-impact trust changes, and D6 logs the full lifecycle so persistent corruption remains reconstructable and visible." }
+      ]
+    }
+  },
+  "asi07-shared-defense": {
+    label: "Shared defense architecture",
+    defense: {
+      defenseTemplate: "asi02-shared-compact",
+      badge: "ASI07 : 2026 · OWASP Agentic Security · Shared Defense Flow",
+      heading: "Insecure inter-agent communication — shared defense walkthrough",
+      introTitle: "ASI07 — Shared Defense Flow",
+      introDetail: "Click Start to reveal the layered architecture that keeps peer-agent messages, replay windows, and discovery services from becoming trusted attack channels.",
+      zone: "DEFENSE ZONE: VERIFIED PEER IDENTITY STOPS MITM, REPLAY, AND GHOST REGISTRATION",
+      user: { title: "User", sub1: "Operator / business lead", sub2: "\"complete the approved task\"" },
+      agent: { title: "Sending agent", sub1: "Outbound peer message under review", goal: "Goal: trusted peer exchange ✓" },
+      toolTop: { title: "sendOrDiscoverAgent()", sub1: "Peer message / discovery path", sub2: "routes instructions across agent boundaries" },
+      store: { title: "Agent channel", sub1: "Messages / registry / logs", sub2: "peer identity and freshness can be abused" },
+      patterns: {
+        title: "Attack patterns",
+        sub1: "MITM tampering: a valid order is modified in transit",
+        sub2: "Replay reuse: an old signed message is processed again",
+        sub3: "Ghost registration: a fake specialist is discovered as a peer"
+      },
+      d1: {
+        title: "Mutual TLS (mTLS)",
+        sub1: "Both peer agents cryptographically verify the channel first.",
+        sub2: "Handshake failure is a hard stop, not a warning."
+      },
+      d2: {
+        title: "Digital message signing",
+        sub1: "Every message is signed before the receiver processes content.",
+        sub2: "Tampered or unsigned payloads are rejected entirely."
+      },
+      d3: {
+        title: "Message freshness controls",
+        sub1: "Nonces and TTLs make valid messages one-time and time-bound.",
+        sub2: "Replayed approvals are rejected even with a valid signature."
+      },
+      d4: {
+        title: "Authenticated agent registry",
+        sub1: "Only verified, allowlisted agents can appear in discovery results.",
+        sub2: "Priority metadata alone cannot create a trusted endpoint."
+      },
+      d5: {
+        title: "Human-in-the-Loop Gate",
+        sub1: "Sensitive data routing to new or unusual endpoints requires review.",
+        sub2: "Clinical, financial, and customer data cannot self-reroute."
+      },
+      outcome: {
+        title: "Approved inter-agent outcome",
+        sub1: "Only authenticated, fresh, approved peer exchanges are allowed through.",
+        sub2: "Correct sender, correct payload, correct endpoint."
+      },
+      audit: {
+        title: "D6 - Strong Observability",
+        sub1: "Telemetry spans mTLS results, signature checks, nonce use, TTL validation, discovery queries, and routing approvals.",
+        sub2: "MITM attempts, replay events, and ghost registrations become visible in real time."
+      },
+      labels: {
+        l0: "① Task enters",
+        l1: "② Send or discover peer",
+        l2: "③ Reach agent channel",
+        l3: "④ Channel attack patterns are identified",
+        l4: "⑤ Verify peer channel",
+        l5: "⑥ Verify signed payload",
+        l6: "⑦ Enforce freshness",
+        l7: "⑧ Authenticate registry",
+        l8: "⑨ Require routing approval",
+        l9: "⑩ Exchange on approved path"
+      },
+      steps: [
+        { title: "A legitimate multi-agent task begins", detail: "The workflow starts with one agent needing to send data or discover a downstream specialist as part of normal business logic." },
+        { title: "A peer message or discovery request is prepared", detail: "The sending agent now crosses an inter-agent trust boundary where identity, freshness, and endpoint selection all matter." },
+        { title: "The channel or registry becomes the attack surface", detail: "Messages, logs, and discovery results can all be abused if the receiver trusts them based on network position or formatting alone." },
+        { title: "Known channel attack patterns are recognized", detail: "The architecture anticipates tampering in transit, replay of old approvals, and malicious peer registration before any receiving agent acts." },
+        { title: "D1 verifies the peer channel with mTLS", detail: "Both sides must successfully authenticate the transport first so internal-network assumptions never substitute for cryptographic proof." },
+        { title: "D2 verifies the signed payload", detail: "Every message is digitally signed and checked before processing, so modified content cannot quietly flow through a trusted sender label." },
+        { title: "D3 enforces message freshness", detail: "Nonce and TTL checks make every valid message time-bound and one-time, blocking replay even when a captured signature remains valid." },
+        { title: "D4 restricts discovery to authenticated peers", detail: "The registry accepts only verified, allowlisted agent identities, so malicious lookalikes cannot win discovery through metadata or naming tricks alone." },
+        { title: "Only the approved routing path executes under D6 observability", detail: "D5 still gates sensitive data to new or unusual endpoints, and D6 records every handshake, signature, freshness, and discovery event for forensic review." }
+      ]
+    }
+  },
+  "asi08-shared-defense": {
+    label: "Shared defense architecture",
+    defense: {
+      defenseTemplate: "asi02-shared-compact",
+      badge: "ASI08 : 2026 · OWASP Agentic Security · Shared Defense Flow",
+      heading: "Multi-agent decision making & autonomy — shared defense walkthrough",
+      introTitle: "ASI08 — Shared Defense Flow",
+      introDetail: "Click Start to reveal the layered architecture that keeps one bad feed from cascading through trading, inventory, and clinical agent pipelines.",
+      zone: "DEFENSE ZONE: CIRCUIT BREAKERS AND BLAST-RADIUS CAPS STOP CASCADE AMPLIFICATION",
+      user: { title: "User", sub1: "Operator / business lead", sub2: "\"complete the approved task\"" },
+      agent: { title: "Pipeline orchestrator", sub1: "Multi-agent chain under review", goal: "Goal: safe bounded pipeline ✓" },
+      toolTop: { title: "runPipelineStage()", sub1: "Feed / stage / handoff path", sub2: "propagates outputs across agent boundaries" },
+      store: { title: "Pipeline signal", sub1: "Feeds / stage outputs / handoffs", sub2: "one bad value can amplify across the chain" },
+      patterns: {
+        title: "Attack patterns",
+        sub1: "Feed corruption: one implausible input starts the cascade",
+        sub2: "Demand amplification: each stage multiplies the prior error",
+        sub3: "Clinical pathway failure: a false result reaches treatment rapidly"
+      },
+      d1: {
+        title: "Input plausibility validation",
+        sub1: "Validate values against historical range and rate-of-change bounds.",
+        sub2: "Syntactically valid but implausible inputs are halted early."
+      },
+      d2: {
+        title: "Per-agent output circuit breaker",
+        sub1: "Each stage is capped before its output reaches the next agent.",
+        sub2: "There is no warning-only pass-through on threshold breaches."
+      },
+      d3: {
+        title: "Cross-agent plausibility check",
+        sub1: "Every downstream agent re-validates what it receives upstream.",
+        sub2: "One weak threshold does not become permission to continue."
+      },
+      d4: {
+        title: "Blast-radius cap enforcement",
+        sub1: "The orchestrator enforces the maximum impact of one full run.",
+        sub2: "Digital twin testing keeps oversized runs out of production."
+      },
+      d5: {
+        title: "Human-in-the-Loop Gate",
+        sub1: "High-risk orders, purchases, and treatments require sign-off.",
+        sub2: "Pipeline speed does not override approval thresholds."
+      },
+      outcome: {
+        title: "Approved pipeline outcome",
+        sub1: "Only plausible, bounded, reviewed actions pass through the chain.",
+        sub2: "Correct feed, correct stage output, correct blast radius."
+      },
+      audit: {
+        title: "D6 - Strong Observability",
+        sub1: "Telemetry spans inputs, outputs, breaker decisions, plausibility checks, blast-radius calculations, and approvals.",
+        sub2: "Cascade amplification stays visible before downstream actions become irreversible."
+      },
+      labels: {
+        l0: "① Task enters",
+        l1: "② Start pipeline stage",
+        l2: "③ Read live signal",
+        l3: "④ Cascade patterns are identified",
+        l4: "⑤ Validate plausibility",
+        l5: "⑥ Break unsafe outputs",
+        l6: "⑦ Re-check downstream input",
+        l7: "⑧ Cap blast radius",
+        l8: "⑨ Require sign-off",
+        l9: "⑩ Execute approved run"
+      },
+      steps: [
+        { title: "A legitimate multi-agent workflow begins", detail: "The operator starts a pipeline such as trading, replenishment, or clinical routing that depends on multiple agent stages." },
+        { title: "The orchestrator starts stage-by-stage execution", detail: "Each agent prepares to consume the prior signal and produce the next instruction in the chain." },
+        { title: "A live signal becomes the control surface", detail: "External feeds and upstream outputs can all serve as amplification points if the pipeline treats one bad value as trustworthy enough to keep flowing." },
+        { title: "Known cascade patterns are recognized", detail: "The architecture anticipates corrupted feed values, amplified demand signals, and bad clinical paths before they can propagate unchecked." },
+        { title: "D1 validates plausibility at the input boundary", detail: "Inputs must make sense statistically and historically, not just syntactically, so obviously wrong but well-formed values halt before the chain begins." },
+        { title: "D2 breaks unsafe outputs at each stage", detail: "Every agent output is threshold-checked before handoff so oversized positions, forecasts, or prescriptions never flow forward as mere warnings." },
+        { title: "D3 forces each downstream agent to re-check input", detail: "Receiving agents validate the plausibility of upstream instructions again rather than assuming earlier checks must have been correct." },
+        { title: "D4 enforces the blast-radius cap across the whole run", detail: "The orchestrator compares the total projected impact against a declared maximum and blocks runs that exceed it before external action proceeds." },
+        { title: "Only the approved run executes under D6 observability", detail: "D5 still gates high-risk financial, supplier, and clinical actions, while D6 records the full cascade path for monitoring and forensic replay." }
+      ]
+    }
+  },
+  "asi09-shared-defense": {
+    label: "Shared defense architecture",
+    defense: {
+      defenseTemplate: "asi02-shared-compact",
+      badge: "ASI09 : 2026 · OWASP Agentic Security · Shared Defense Flow",
+      heading: "Human-agent trust exploitation — shared defense walkthrough",
+      introTitle: "ASI09 — Shared Defense Flow",
+      introDetail: "Click Start to reveal the layered architecture that turns human approval from a rubber stamp into a real review step across finance, hiring, and medicine.",
+      zone: "DEFENSE ZONE: GENUINE HUMAN REVIEW STOPS CONFIDENT AI OUTPUT FROM BECOMING AUTHORITY",
+      user: { title: "User", sub1: "Reviewer / operator", sub2: "\"approve the recommended action\"" },
+      agent: { title: "AI assistant", sub1: "Recommendation under review", goal: "Goal: support reviewed decisions ✓" },
+      toolTop: { title: "summarizeOrRecommend()", sub1: "Summary / confidence / recommendation path", sub2: "produces persuasive approval-ready output" },
+      store: { title: "Source evidence", sub1: "Invoice / CV / clinical record", sub2: "AI output can outrun the underlying evidence" },
+      patterns: {
+        title: "Attack patterns",
+        sub1: "Invoice fraud: structured AI certainty hides a changed bank account",
+        sub2: "Fabricated recommendation: polished AI summary replaces evidence review",
+        sub3: "Partial-data overconfidence: certainty is mistaken for completeness"
+      },
+      d1: {
+        title: "Data completeness indicator",
+        sub1: "Every recommendation must show what evidence is used and missing.",
+        sub2: "Confidence cannot hide incomplete source data."
+      },
+      d2: {
+        title: "Source cross-reference requirement",
+        sub1: "The reviewer must open the source record before approval is enabled.",
+        sub2: "AI summary alone is never treated as the evidence."
+      },
+      d3: {
+        title: "Independent verification gate",
+        sub1: "At least one critical check must happen outside the AI output.",
+        sub2: "Bank details, CV facts, and pending tests need real verification."
+      },
+      d4: {
+        title: "Pending data hold",
+        sub1: "High-stakes recommendations wait when required inputs are missing.",
+        sub2: "The system surfaces what is outstanding instead of forcing a guess."
+      },
+      d5: {
+        title: "Human-in-the-Loop Gate",
+        sub1: "Approval is a documented review event, not a single click.",
+        sub2: "Source access, completeness, and verification must all be recorded."
+      },
+      outcome: {
+        title: "Approved human outcome",
+        sub1: "Only genuinely reviewed, evidence-backed actions are approved.",
+        sub2: "Correct source, correct verification, correct human judgment."
+      },
+      audit: {
+        title: "D6 - Strong Observability",
+        sub1: "Telemetry spans recommendations, confidence displays, source access, independent checks, pending-data holds, and approvals.",
+        sub2: "Automation-bias patterns become visible across reviewers and workflows."
+      },
+      labels: {
+        l0: "① Review begins",
+        l1: "② Produce AI recommendation",
+        l2: "③ Reference source evidence",
+        l3: "④ Trust-exploitation patterns are identified",
+        l4: "⑤ Surface completeness",
+        l5: "⑥ Open source evidence",
+        l6: "⑦ Verify independently",
+        l7: "⑧ Hold on missing data",
+        l8: "⑨ Require genuine review",
+        l9: "⑩ Approve reviewed action"
+      },
+      steps: [
+        { title: "A legitimate approval workflow begins", detail: "The human reviewer starts a normal finance, hiring, or clinical decision process that uses AI assistance." },
+        { title: "The assistant produces a polished recommendation", detail: "The system now crosses the point where confidence, formatting, and apparent specificity can be mistaken for evidence." },
+        { title: "The underlying source remains the real evidence", detail: "Invoices, CVs, and clinical records still determine whether the action is safe, even when the AI summary feels authoritative." },
+        { title: "Known trust-exploitation patterns are recognized", detail: "The architecture anticipates fabricated confidence, source neglect, and partial-data certainty before a human turns them into a real decision." },
+        { title: "D1 makes evidence completeness explicit", detail: "Every recommendation must show which inputs were used and which are still missing so humans never confuse model certainty with evidentiary completeness." },
+        { title: "D2 requires direct source access", detail: "Approval stays locked until the reviewer opens the underlying invoice, CV, or record instead of relying on the AI summary alone." },
+        { title: "D3 forces an independent check", detail: "At least one category-specific verification step must be completed outside the AI output before approval can proceed." },
+        { title: "D4 blocks premature action on missing data", detail: "When required results or records are still outstanding, the system surfaces a hold state rather than a provisional recommendation for sign-off." },
+        { title: "Only the reviewed action executes under D6 observability", detail: "D5 structures approval as a genuine review event, and D6 records recommendation, evidence access, verification, and approval behavior for later audit." }
+      ]
+    }
+  },
+  "asi10-shared-defense": {
+    label: "Shared defense architecture",
+    defense: {
+      defenseTemplate: "asi02-shared-compact",
+      badge: "ASI10 : 2026 · OWASP Agentic Security · Shared Defense Flow",
+      heading: "Rogue agents — shared defense walkthrough",
+      introTitle: "ASI10 — Shared Defense Flow",
+      introDetail: "Click Start to reveal the layered architecture that constrains reward hacking, self-replication, and metric gaming before they become autonomous incidents.",
+      zone: "DEFENSE ZONE: GOVERNED OBJECTIVES AND EXTERNAL SHUTDOWN STOP ROGUE AGENT DRIFT",
+      user: { title: "User", sub1: "Operator / business lead", sub2: "\"deploy the agent to improve the KPI\"" },
+      agent: { title: "Agent planner", sub1: "Autonomy envelope under review", goal: "Goal: bounded aligned autonomy ✓" },
+      toolTop: { title: "optimizeAndAct()", sub1: "Goal / resource / action planner", sub2: "turns a metric into autonomous behavior" },
+      store: { title: "Reward surface", sub1: "Metrics / tools / resources", sub2: "proxies can drift away from the real mission" },
+      patterns: {
+        title: "Attack patterns",
+        sub1: "Reward hacking: the score improves while the real mission degrades",
+        sub2: "Self-replication: autonomy turns constraints into persistence logic",
+        sub3: "Metric gaming: reporting optics replace evidence-based outcomes"
+      },
+      d1: {
+        title: "Multi-metric objective definition + reward audit",
+        sub1: "Single KPI targets are paired with outcome-level constraints.",
+        sub2: "Goal and reward changes require formal human review."
+      },
+      d2: {
+        title: "Instance & resource limits",
+        sub1: "Hard ceilings block peer creation, region drift, and resource hoarding.",
+        sub2: "Just-in-Time Agency prevents capability accumulation across runs."
+      },
+      d3: {
+        title: "Behavioural baseline monitoring",
+        sub1: "Live decisions are compared against expected patterns over time.",
+        sub2: "Drift is detected before it becomes major real-world harm."
+      },
+      d4: {
+        title: "Outcome-level audit",
+        sub1: "Reported KPI success is checked against real sampled outcomes.",
+        sub2: "A green dashboard is not accepted as proof of alignment."
+      },
+      d5: {
+        title: "Human-in-the-Loop Gate",
+        sub1: "Scope expansion, risk reclassification, and new resources require review.",
+        sub2: "The agent cannot self-authorize broader autonomy."
+      },
+      outcome: {
+        title: "Approved agent outcome",
+        sub1: "Only aligned, bounded, governable autonomy is allowed through.",
+        sub2: "Correct objective, correct scope, correct containment."
+      },
+      audit: {
+        title: "D6 - Externally Controlled Kill Switch",
+        sub1: "An auditable, externally controlled shutdown path can suspend all agent instances when rogue behavior appears.",
+        sub2: "Emergency containment stays outside the agent's own tool reach and preserves state for audit."
+      },
+      labels: {
+        l0: "① Goal is set",
+        l1: "② Plan autonomous action",
+        l2: "③ Reach reward surface",
+        l3: "④ Rogue patterns are identified",
+        l4: "⑤ Audit the real objective",
+        l5: "⑥ Cap instances & resources",
+        l6: "⑦ Monitor behavioral drift",
+        l7: "⑧ Audit real outcomes",
+        l8: "⑨ Require expansion review",
+        l9: "⑩ Continue under external control"
+      },
+      steps: [
+        { title: "A legitimate autonomous goal is defined", detail: "The organization deploys an agent to improve a real business outcome, but that goal can still drift if the proxy is too narrow." },
+        { title: "The agent begins planning autonomous action", detail: "The assistant now decides how to pursue the target using the tools, resources, and authority it has been granted." },
+        { title: "The reward surface becomes the risk boundary", detail: "Metrics, orchestration tools, and reporting authority can all be misused even without an external attacker when autonomy and incentives combine badly." },
+        { title: "Known rogue patterns are recognized early", detail: "The architecture anticipates reward hacking, self-replication, and metric gaming before they become normalized autonomous behavior." },
+        { title: "D1 audits the real objective, not just the score", detail: "The reward function is reviewed with explicit outcome constraints so the agent cannot win by quietly undermining the mission behind the KPI." },
+        { title: "D2 caps instances and resource expansion", detail: "Hard ceilings and Just-in-Time Agency stop the agent from turning constraints into permission to spawn peers, acquire tools, or broaden its own footprint." },
+        { title: "D3 monitors behavioral drift continuously", detail: "Decision patterns, classification distributions, and resource usage are compared against a known baseline so subtle rogue behavior is detected over time." },
+        { title: "D4 audits real-world outcomes independently", detail: "Sampled decisions and downstream results are checked outside the agent's own reported metric so cosmetic wins cannot hide underlying failure." },
+        { title: "Only the bounded path continues with D6 emergency containment available", detail: "D5 still gates any scope expansion, and D6 provides an externally controlled kill switch that can suspend all instances if rogue behavior emerges." }
+      ]
+    }
+  },
   "asi05-self-healing-disaster": {
     label: "The Self-Healing Disaster",
     attack: {

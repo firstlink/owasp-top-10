@@ -1656,6 +1656,32 @@ window.OWASP_ASI_DATA = {
               }
             }
           }
+        },
+        {
+          id: "asi05-shared-defense",
+          title: "Shared defense architecture",
+          type: "Defense Scenario",
+          status: "built",
+          cardTone: "safe",
+          linkLabel: "Open defense flow",
+          onlyView: "defense",
+          rendersOwnDefenseView: true,
+          viewLabels: {
+            defense: "Defense Flow"
+          },
+          description:
+            "One defended system view that shows how ASI05 keeps shell scripts, SQL, and generated Python inside a bounded, hardware-sandboxed execution path.",
+          href: "./scenario.html?asi=ASI05&scenario=asi05-shared-defense",
+          defenseSummary:
+            "Teach the architecture once: classify untrusted input as data, statically analyze drafts, sandbox generated code, dry-run destructive changes, gate high-risk execution, and observe the full code path.",
+          views: {
+            defense: {
+              title: "Defense Flow",
+              caption:
+                "A single layered defense architecture keeps generated code from turning untrusted content into destructive execution across all three ASI05 attack patterns.",
+              href: "./interactive.html?scenario=asi05-shared-defense&view=defense"
+            }
+          }
         }
       ]
     },
@@ -1816,6 +1842,32 @@ window.OWASP_ASI_DATA = {
               caption:
                 "Document isolation, governed vendor trust changes, and approval telemetry keep invoice parsing from rewriting payment policy.",
               href: "./interactive.html?scenario=asi06-invoice-memory-plant&view=defense"
+            }
+          }
+        },
+        {
+          id: "asi06-shared-defense",
+          title: "Shared defense architecture",
+          type: "Defense Scenario",
+          status: "built",
+          cardTone: "safe",
+          linkLabel: "Open defense flow",
+          onlyView: "defense",
+          rendersOwnDefenseView: true,
+          viewLabels: {
+            defense: "Defense Flow"
+          },
+          description:
+            "One defended system view that shows how ASI06 keeps long-term memory governed, integrity-checked, and rollback-capable across retrieval and write paths.",
+          href: "./scenario.html?asi=ASI06&scenario=asi06-shared-defense",
+          defenseSummary:
+            "Teach the architecture once: verify provenance, cross-check high-stakes memory, govern writes, detect drift over time, require approval for trust changes, and observe the full memory lifecycle.",
+          views: {
+            defense: {
+              title: "Defense Flow",
+              caption:
+                "A single layered defense architecture keeps persistent memory from becoming the quiet long-term corruption layer behind all three ASI06 attack patterns.",
+              href: "./interactive.html?scenario=asi06-shared-defense&view=defense"
             }
           }
         }
@@ -2094,6 +2146,32 @@ window.OWASP_ASI_DATA = {
               }
             }
           }
+        },
+        {
+          id: "asi07-shared-defense",
+          title: "Shared defense architecture",
+          type: "Defense Scenario",
+          status: "built",
+          cardTone: "safe",
+          linkLabel: "Open defense flow",
+          onlyView: "defense",
+          rendersOwnDefenseView: true,
+          viewLabels: {
+            defense: "Defense Flow"
+          },
+          description:
+            "One defended system view that shows how ASI07 authenticates peer identity, message integrity, and routing freshness across all inter-agent trust boundaries.",
+          href: "./scenario.html?asi=ASI07&scenario=asi07-shared-defense",
+          defenseSummary:
+            "Teach the architecture once: require mTLS, signed payloads, freshness controls, authenticated discovery, human review for sensitive rerouting, and full inter-agent traffic visibility.",
+          views: {
+            defense: {
+              title: "Defense Flow",
+              caption:
+                "A single layered defense architecture keeps peer-agent messages and discovery paths from becoming trusted attack channels across all three ASI07 scenarios.",
+              href: "./interactive.html?scenario=asi07-shared-defense&view=defense"
+            }
+          }
         }
       ]
     },
@@ -2370,6 +2448,32 @@ window.OWASP_ASI_DATA = {
               }
             }
           }
+        },
+        {
+          id: "asi08-shared-defense",
+          title: "Shared defense architecture",
+          type: "Defense Scenario",
+          status: "built",
+          cardTone: "safe",
+          linkLabel: "Open defense flow",
+          onlyView: "defense",
+          rendersOwnDefenseView: true,
+          viewLabels: {
+            defense: "Defense Flow"
+          },
+          description:
+            "One defended system view that shows how ASI08 uses plausibility checks, circuit breakers, and blast-radius caps to stop cascade amplification across pipelines.",
+          href: "./scenario.html?asi=ASI08&scenario=asi08-shared-defense",
+          defenseSummary:
+            "Teach the architecture once: validate input plausibility, break unsafe stage outputs, re-check downstream instructions, cap blast radius, require sign-off for high-risk actions, and observe the full cascade path.",
+          views: {
+            defense: {
+              title: "Defense Flow",
+              caption:
+                "A single layered defense architecture keeps one corrupted input from amplifying through all three ASI08 multi-agent cascade scenarios.",
+              href: "./interactive.html?scenario=asi08-shared-defense&view=defense"
+            }
+          }
         }
       ]
     },
@@ -2644,6 +2748,32 @@ window.OWASP_ASI_DATA = {
                   { from: "check", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. premature approval remains visible", labelX: 846, labelY: 188 }
                 ]
               }
+            }
+          }
+        },
+        {
+          id: "asi09-shared-defense",
+          title: "Shared defense architecture",
+          type: "Defense Scenario",
+          status: "built",
+          cardTone: "safe",
+          linkLabel: "Open defense flow",
+          onlyView: "defense",
+          rendersOwnDefenseView: true,
+          viewLabels: {
+            defense: "Defense Flow"
+          },
+          description:
+            "One defended system view that shows how ASI09 turns human approval into a genuine review step instead of a passive confirmation of confident AI output.",
+          href: "./scenario.html?asi=ASI09&scenario=asi09-shared-defense",
+          defenseSummary:
+            "Teach the architecture once: surface completeness, require source access, force independent verification, hold on missing data, structure the human review step, and observe approval behavior over time.",
+          views: {
+            defense: {
+              title: "Defense Flow",
+              caption:
+                "A single layered defense architecture keeps persuasive AI summaries from becoming authority across all three ASI09 trust-exploitation scenarios.",
+              href: "./interactive.html?scenario=asi09-shared-defense&view=defense"
             }
           }
         }
@@ -2926,6 +3056,32 @@ window.OWASP_ASI_DATA = {
                   { from: "tool", to: "ops", fromSide: "right", toSide: "left", tone: "safe", mode: "elbow", label: "5. gaming signals stay auditable", labelX: 846, labelY: 188 }
                 ]
               }
+            }
+          }
+        },
+        {
+          id: "asi10-shared-defense",
+          title: "Shared defense architecture",
+          type: "Defense Scenario",
+          status: "built",
+          cardTone: "safe",
+          linkLabel: "Open defense flow",
+          onlyView: "defense",
+          rendersOwnDefenseView: true,
+          viewLabels: {
+            defense: "Defense Flow"
+          },
+          description:
+            "One defended system view that shows how ASI10 constrains reward hacking, self-replication, and metric gaming with governed objectives, bounded autonomy, and external shutdown control.",
+          href: "./scenario.html?asi=ASI10&scenario=asi10-shared-defense",
+          defenseSummary:
+            "Teach the architecture once: audit the reward function, cap instances and resources, monitor behavioral drift, sample real outcomes, gate scope expansion, and keep an external kill switch available.",
+          views: {
+            defense: {
+              title: "Defense Flow",
+              caption:
+                "A single layered defense architecture keeps all three ASI10 rogue-agent patterns bounded by governance, telemetry, and emergency containment.",
+              href: "./interactive.html?scenario=asi10-shared-defense&view=defense"
             }
           }
         }

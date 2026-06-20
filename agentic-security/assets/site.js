@@ -575,17 +575,9 @@
     const { width, height, nodes, edges } = diagram;
     return `
       <svg class="training-diagram" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Training scenario diagram">
-        <defs>
-          <marker id="arrow-primary" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M2 1L8 5L2 9" fill="none" stroke="#3650b3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
-          </marker>
-          <marker id="arrow-danger" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M2 1L8 5L2 9" fill="none" stroke="#a33333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
-          </marker>
-          <marker id="arrow-safe" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M2 1L8 5L2 9" fill="none" stroke="#2e6a4d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
-          </marker>
-        </defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </marker>
         <rect width="${width}" height="${height}" fill="#fffdf8"></rect>
         ${edges.map((edge) => renderEdge(edge, nodes)).join("")}
         ${nodes.map(renderNode).join("")}
@@ -596,28 +588,28 @@
   function renderNode(node) {
     const toneMap = {
       neutral: {
-        fill: "#fffdf8",
-        stroke: "#b9aa93",
-        title: "#302923",
-        subtitle: "#756c61"
+        fill: "#fcfbf8",
+        stroke: "#aba294",
+        title: "#38342f",
+        subtitle: "#6b655c"
       },
       primary: {
-        fill: "#eef1ff",
-        stroke: "#3650b3",
-        title: "#2f4299",
-        subtitle: "#4c5fb3"
+        fill: "#f7f8ff",
+        stroke: "#4452b8",
+        title: "#33429f",
+        subtitle: "#5360be"
       },
       danger: {
-        fill: "#fff4f4",
-        stroke: "#a33333",
-        title: "#7a2626",
-        subtitle: "#a33333"
+        fill: "#fff8f8",
+        stroke: "#ad3535",
+        title: "#7d2626",
+        subtitle: "#ad3535"
       },
       safe: {
-        fill: "#eef8f1",
-        stroke: "#2e6a4d",
-        title: "#275942",
-        subtitle: "#437a61"
+        fill: "#edf7f0",
+        stroke: "#2d6a4f",
+        title: "#24553f",
+        subtitle: "#3d735a"
       }
     };
     const tone = toneMap[node.tone] || toneMap.neutral;
@@ -626,9 +618,9 @@
     return `
       <g class="diagram-node">
         <rect x="${node.x}" y="${node.y}" width="${node.w}" height="${node.h}" rx="22" fill="${tone.fill}" stroke="${tone.stroke}" stroke-width="2.8"></rect>
-        <text x="${node.x + node.w / 2}" y="${node.y + 46}" text-anchor="middle" font-family="Avenir Next, Segoe UI, sans-serif" font-size="${titleLayout.fontSize}" font-weight="700" fill="${tone.title}">${escapeHtml(titleLayout.text)}</text>
-        <text x="${node.x + node.w / 2}" y="${node.y + 76}" text-anchor="middle" font-family="Avenir Next, Segoe UI, sans-serif" font-size="${subtitleLayout.fontSize}" fill="${tone.subtitle}">
-          ${renderTspans(node.x + node.w / 2, subtitleLayout.lines, subtitleLayout.fontSize * 1.25)}
+        <text x="${node.x + node.w / 2}" y="${node.y + 46}" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="${titleLayout.fontSize}" font-weight="700" fill="${tone.title}">${escapeHtml(titleLayout.text)}</text>
+        <text x="${node.x + node.w / 2}" y="${node.y + 76}" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="${subtitleLayout.fontSize}" fill="${tone.subtitle}">
+          ${renderTspans(node.x + node.w / 2, subtitleLayout.lines, subtitleLayout.fontSize * 1.18)}
         </text>
       </g>
     `;
@@ -643,9 +635,9 @@
     const toPoint = anchorPoint(to, edge.toSide);
 
     const toneMap = {
-      primary: { stroke: "#3650b3", marker: "url(#arrow-primary)", labelFill: "#ffffff", labelStroke: "#3650b3", labelText: "#3650b3" },
-      danger: { stroke: "#a33333", marker: "url(#arrow-danger)", labelFill: "#ffffff", labelStroke: "#a33333", labelText: "#a33333" },
-      safe: { stroke: "#2e6a4d", marker: "url(#arrow-safe)", labelFill: "#ffffff", labelStroke: "#2e6a4d", labelText: "#2e6a4d" }
+      primary: { stroke: "#4452b8", marker: "url(#ar)", labelFill: "#ffffff", labelStroke: "#4452b8", labelText: "#4452b8" },
+      danger: { stroke: "#ad3535", marker: "url(#ar)", labelFill: "#ffffff", labelStroke: "#ad3535", labelText: "#ad3535" },
+      safe: { stroke: "#2d6a4f", marker: "url(#ar)", labelFill: "#ffffff", labelStroke: "#2d6a4f", labelText: "#2d6a4f" }
     };
     const tone = toneMap[edge.tone] || toneMap.primary;
 
@@ -659,8 +651,8 @@
     const label = labelLayout
       ? `
         <g class="diagram-label">
-          <text x="${edge.labelX}" y="${edge.labelY}" text-anchor="middle" font-family="Avenir Next, Segoe UI, sans-serif" font-size="${labelLayout.fontSize}" font-weight="800" fill="${tone.labelText}" stroke="#fffdf8" stroke-width="6" paint-order="stroke" stroke-linejoin="round">
-            ${renderTspans(edge.labelX, labelLayout.lines, labelLayout.fontSize * 1.2)}
+          <text x="${edge.labelX}" y="${edge.labelY}" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="${labelLayout.fontSize}" font-weight="700" fill="${tone.labelText}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
+            ${renderTspans(edge.labelX, labelLayout.lines, labelLayout.fontSize * 1.18)}
           </text>
         </g>
       `
