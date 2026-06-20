@@ -17,6 +17,20 @@
     flowLabelMaxWidth: {
       horizontal: 170,
       vertical: 190
+    },
+    nodeTextMaxLines: {
+      title: 2,
+      body: 2
+    },
+    nodeTextSafeArea: {
+      compact: {
+        titleInsetX: 18,
+        bodyInsetX: 16
+      },
+      wide: {
+        titleInsetX: 42,
+        bodyInsetX: 41
+      }
     }
   };
   let pendingStateFrame = null;
@@ -2055,12 +2069,13 @@
 
     const stageMarkup = stageDefs.map((stage) => {
       const card = config[stage.key];
-      const titleLayout = fitWrappedText(card.title, 296, 17, 13, 2);
-      const sub1Layout = fitWrappedText(card.sub1, 298, 12.5, 10, 2);
-      const sub2Layout = fitWrappedText(card.sub2, 298, 11.5, 10, 2);
+      const stageWidth = 380;
+      const titleLayout = fitNodeTitleText(card.title, stageWidth, 17, 13, "wide");
+      const sub1Layout = fitNodeBodyText(card.sub1, stageWidth, 12.5, 10, "wide");
+      const sub2Layout = fitNodeBodyText(card.sub2, stageWidth, 11.5, 10, "wide");
       return `
         <g class="ng" id="${stage.groupId}">
-          <rect x="510" y="${stage.y}" width="380" height="138" rx="22" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+          <rect x="510" y="${stage.y}" width="${stageWidth}" height="138" rx="22" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
           <text x="542" y="${stage.y + 30}" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f">${stage.cardId}</text>
           <text x="700" y="${stage.y + 52}" text-anchor="middle" font-family="${getFontStack()}" font-size="${titleLayout.fontSize}" font-weight="700" fill="#24553f">${renderTspans(700, titleLayout.lines, titleLayout.fontSize * 1.14)}</text>
           <text x="700" y="${stage.y + 90}" text-anchor="middle" font-family="${getFontStack()}" font-size="${sub1Layout.fontSize}" fill="#3d735a">${renderTspans(700, sub1Layout.lines, sub1Layout.fontSize * 1.16)}</text>
@@ -2207,9 +2222,9 @@
     const auditSub1 = fitWrappedText(config.audit.sub1, 900, 10.5, 9, 2);
 
     function stageCard(x, y, id, card, tone = "safe", width = 220, height = 158) {
-      const title = fitWrappedText(card.title, width - 36, 17, 13, 2);
-      const sub1 = fitWrappedText(card.sub1, width - 32, 12.5, 10, 2);
-      const sub2 = fitWrappedText(card.sub2, width - 32, 11.5, 9.5, 2);
+      const title = fitNodeTitleText(card.title, width, 17, 13, "compact");
+      const sub1 = fitNodeBodyText(card.sub1, width, 12.5, 10, "compact");
+      const sub2 = fitNodeBodyText(card.sub2, width, 11.5, 9.5, "compact");
       const fill = tone === "primary" ? "#eef1ff" : "#edf7f0";
       const stroke = tone === "primary" ? "#4452b8" : "#2d6a4f";
       const idFill = tone === "primary" ? "#4452b8" : "#2d6a4f";
@@ -2374,9 +2389,9 @@
     const outcomeBottomY = outcomeY + 92;
 
     function stageCard(x, y, id, card, tone = "safe", width = stageCardWidth, height = stageCardHeight) {
-      const title = fitWrappedText(card.title, width - 36, 17, 13, 2);
-      const sub1 = fitWrappedText(card.sub1, width - 32, 12.5, 10, 2);
-      const sub2 = fitWrappedText(card.sub2, width - 32, 11.5, 9.5, 2);
+      const title = fitNodeTitleText(card.title, width, 17, 13, "compact");
+      const sub1 = fitNodeBodyText(card.sub1, width, 12.5, 10, "compact");
+      const sub2 = fitNodeBodyText(card.sub2, width, 11.5, 9.5, "compact");
       const fill = tone === "primary" ? "#eef1ff" : "#edf7f0";
       const stroke = tone === "primary" ? "#4452b8" : "#2d6a4f";
       const idFill = tone === "primary" ? "#4452b8" : "#2d6a4f";
@@ -2672,6 +2687,32 @@
       ? DIAGRAM_TOKENS.flowLabelMaxWidth.vertical
       : DIAGRAM_TOKENS.flowLabelMaxWidth.horizontal;
     return requestedWidth ? Math.min(requestedWidth, tokenWidth) : tokenWidth;
+  }
+
+  function getNodeTextWidth(nodeWidth, role, preset = "compact") {
+    const safeArea = DIAGRAM_TOKENS.nodeTextSafeArea[preset] || DIAGRAM_TOKENS.nodeTextSafeArea.compact;
+    const inset = role === "title" ? safeArea.titleInsetX : safeArea.bodyInsetX;
+    return Math.max(40, nodeWidth - inset * 2);
+  }
+
+  function fitNodeTitleText(text, nodeWidth, startFontSize, minFontSize, preset = "compact") {
+    return fitWrappedText(
+      text,
+      getNodeTextWidth(nodeWidth, "title", preset),
+      startFontSize,
+      minFontSize,
+      DIAGRAM_TOKENS.nodeTextMaxLines.title
+    );
+  }
+
+  function fitNodeBodyText(text, nodeWidth, startFontSize, minFontSize, preset = "compact") {
+    return fitWrappedText(
+      text,
+      getNodeTextWidth(nodeWidth, "body", preset),
+      startFontSize,
+      minFontSize,
+      DIAGRAM_TOKENS.nodeTextMaxLines.body
+    );
   }
 
   function innerPill(centerX, centerY, width, text, fill, stroke, textColor, fontSize, fontWeight) {
