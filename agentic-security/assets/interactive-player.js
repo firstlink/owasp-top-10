@@ -2449,14 +2449,14 @@
           <line class="fl" id="c6f" x1="460" y1="514" x2="460" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g7">${stageCard(350, 620, "D3", config.d3)}</g>
-          <line class="co" id="c6as" x1="460" y1="800" x2="680" y2="800" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c6af" x1="460" y1="800" x2="680" y2="800" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co v" id="c6as" x1="460" y1="800" x2="680" y2="800" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl v" id="c6af" x1="460" y1="800" x2="680" y2="800" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g8">${stageCard(680, 620, "D4", config.d4)}</g>
-          <line class="co" id="c8s" x1="790" y1="436" x2="790" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c8f" x1="790" y1="436" x2="790" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
-          <line class="co" id="c8bs" x1="790" y1="800" x2="1010" y2="800" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c8bf" x1="790" y1="800" x2="1010" y2="800" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co v" id="c8s" x1="790" y1="436" x2="790" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl v" id="c8f" x1="790" y1="436" x2="790" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co v" id="c8bs" x1="790" y1="800" x2="1010" y2="800" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl v" id="c8bf" x1="790" y1="800" x2="1010" y2="800" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g9">${stageCard(1010, 620, "D5", config.d5)}</g>
           <line class="co" id="c7s" x1="1120" y1="586" x2="1120" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
