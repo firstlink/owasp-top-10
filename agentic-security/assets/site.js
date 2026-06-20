@@ -1,7 +1,7 @@
 (function () {
   const data = window.OWASP_ASI_DATA;
   if (!data) return;
-  const ASSET_VERSION = "20260620e";
+  const ASSET_VERSION = "20260620f";
 
   const page = document.body.dataset.page;
 
@@ -76,6 +76,17 @@
 
     const summary = document.getElementById("asi-summary");
     if (summary) summary.textContent = category.summary;
+
+    const sharedDefenseRoot = document.getElementById("shared-defense-root");
+    if (sharedDefenseRoot) {
+      if (category.sharedDefense) {
+        sharedDefenseRoot.hidden = false;
+        sharedDefenseRoot.innerHTML = renderSharedDefense(category);
+      } else {
+        sharedDefenseRoot.hidden = true;
+        sharedDefenseRoot.innerHTML = "";
+      }
+    }
 
     const scenarioGrid = document.getElementById("scenario-grid-root");
     if (scenarioGrid && category.scenarios) {
@@ -395,6 +406,9 @@
   function renderSharedDefense(category) {
     const defense = category.sharedDefense;
     if (!defense) return "";
+    const flowHeading = defense.flow.heading || "How the System Preserves Protected Intent";
+    const flowIntro = defense.flow.intro || "The diagram reads top to bottom. The same layered checkpoints stop each variant of the attack without relying on one fragile prompt-only control.";
+    const focusCard = defense.flow.focusCard || defense.flow.protectedContext || null;
 
     const laneCards = defense.flow.lanes.map((lane) => `
       <article class="flow-lane-card">
@@ -417,13 +431,13 @@
           ${stage.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}
         </ul>
       </article>
-      ${index === 1 ? `
+      ${index === 1 && focusCard ? `
         <div class="flow-transition">
           <span>${escapeHtml(stage.afterLabel)}</span>
         </div>
         <article class="flow-context-card">
-          <p class="flow-context-title">${escapeHtml(defense.flow.protectedContext.title)}</p>
-          <p>${escapeHtml(defense.flow.protectedContext.detail)}</p>
+          <p class="flow-context-title">${escapeHtml(focusCard.title)}</p>
+          <p>${escapeHtml(focusCard.detail)}</p>
         </article>
       ` : `
         <div class="flow-transition">
@@ -451,9 +465,9 @@
         <section class="defense-flow-panel">
           <div class="defense-flow-header">
             <p class="eyebrow">Defended Flow</p>
-            <h2>How the System Preserves Protected Intent</h2>
+            <h2>${escapeHtml(flowHeading)}</h2>
             <p class="hero-copy">
-              The diagram reads top to bottom. The same layered checkpoints stop email, PDF, and web-based goal hijack attempts without relying on one fragile prompt-only control.
+              ${escapeHtml(flowIntro)}
             </p>
           </div>
 
@@ -531,13 +545,17 @@
     const coverage = category.sharedDefense && category.sharedDefense.coverage
       ? category.sharedDefense.coverage.find((item) => item.scenarioId === scenario.id)
       : null;
+    const defense = category.sharedDefense || {};
+    const teaserTitle = defense.teaserTitle || `${category.id} uses one defense architecture across all three scenarios`;
+    const teaserIntro = defense.teaserIntro || `${scenario.title} teaches how the attack begins. The defense lesson for ${category.id} is centralized so students learn one reusable architecture instead of memorizing three separate fixes.`;
+    const teaserLinkLabel = defense.teaserLinkLabel || `Open the ${category.id} shared defense architecture`;
 
     return `
       <article class="shared-defense-teaser-card">
         <p class="eyebrow">Shared Defense View</p>
-        <h2>ASI01 uses one defense architecture across all three scenarios</h2>
+        <h2>${escapeHtml(teaserTitle)}</h2>
         <p class="hero-copy">
-          ${escapeHtml(scenario.title)} teaches how the goal hijack begins. The defense lesson for ASI01 is centralized so students learn one protected-intent architecture instead of memorizing three separate fixes.
+          ${escapeHtml(teaserIntro)}
         </p>
         ${coverage ? `
           <div class="shared-defense-teaser-focus">
@@ -547,7 +565,7 @@
           </div>
         ` : ""}
         <div class="shared-defense-teaser-actions">
-          <a class="card-link" href="${category.href}#shared-defense">Open the ASI01 shared defense architecture</a>
+          <a class="card-link" href="${category.href}#shared-defense">${escapeHtml(teaserLinkLabel)}</a>
         </div>
       </article>
     `;

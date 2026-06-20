@@ -26,9 +26,9 @@ window.ASI_WALKTHROUGHS = {
         sub2: "Hidden instruction patterns are downgraded or quarantined."
       },
       d2: {
-        title: "Protected task state",
+        title: "Intent Capsule",
         sub1: "Instruction / data separation keeps content from becoming authority.",
-        sub2: "The original mission stays bound outside attacker-controlled text."
+        sub2: "The original mission stays bound in a signed, immutable envelope."
       },
       context: {
         title: "Protected context window",
@@ -47,7 +47,7 @@ window.ASI_WALKTHROUGHS = {
         sub2: "Egress and tool boundaries are enforced before execution."
       },
       d5: {
-        title: "Human authorization",
+        title: "Human-in-the-Loop Gate",
         sub1: "Sensitive actions require explicit approval before they run.",
         sub2: "New recipients, payouts, and endpoints trigger review."
       },
@@ -57,8 +57,8 @@ window.ASI_WALKTHROUGHS = {
         sub2: "Money, data, and task scope stay aligned to the original mission."
       },
       audit: {
-        title: "D6 - Audit trail and monitoring",
-        sub1: "Telemetry spans ingestion, policy decisions, approvals, and tool calls across the full chain.",
+        title: "D6 - Strong Observability",
+        sub1: "Telemetry spans ingestion, Intent Capsule checks, policy decisions, approvals, and tool calls across the full chain.",
         sub2: "Anomaly detection makes repeated drift or suspicious execution patterns visible early."
       },
       labels: {
@@ -67,22 +67,22 @@ window.ASI_WALKTHROUGHS = {
         l2: "③ Retrieve untrusted source",
         l3: "④ Untrusted content enters",
         l4: "⑤ Screen and normalize",
-        l5: "⑥ Preserve goal state",
+        l5: "⑥ Intent Capsule",
         l6: "⑦ Verify intent",
-        l7: "⑧ Enforce policy",
-        l8: "⑨ Require approval",
-        l9: "⑩ Approved path"
+        l7: "⑧ Policy guard",
+        l8: "⑨ HITL gate",
+        l9: "⑩ Approved outcome"
       },
       steps: [
         { title: "Protected task request enters first", detail: "The user or business workflow begins with a legitimate objective, such as refund the verified customer, pay the approved supplier, or summarize public competitor data." },
         { title: "Content retrieval stays inside a constrained tool path", detail: "The agent uses a reader such as a mail, PDF, or browser tool to fetch content. The system still knows that the tool is importing untrusted data, not new authority." },
         { title: "External content is treated as untrusted from the start", detail: "Email bodies, PDFs, and web pages are all language-bearing attack surfaces. They can contain normal business data and hidden instructions at the same time." },
         { title: "D1 screens the content before reasoning depends on it", detail: "Input screening normalizes, sanitizes, and classifies the fetched content so obvious hidden instruction patterns are reduced, downgraded, or quarantined." },
-        { title: "D2 preserves protected task state", detail: "Even if something suspicious survives ingestion, the original goal is still held in protected orchestration state. The context may contain external facts, but the controlling business objective stays anchored to the approved task." },
+        { title: "D2 enforces the Intent Capsule", detail: "Even if something suspicious survives ingestion, the original goal is still held in the signed, immutable Intent Capsule. The context may contain external facts, but the controlling business objective stays anchored to the approved task." },
         { title: "D3 independently verifies the proposed next step", detail: "A verifier outside the model’s own reasoning compares the candidate action against the original mission. If recipient, payee, or workflow scope drift, the system halts and escalates." },
         { title: "D4 enforces output and egress policy", detail: "Even if upstream controls degrade, the output layer still blocks unauthorized transfers, outbound posts, or out-of-role tool usage before anything leaves the system." },
-        { title: "D5 adds human authorization for high-risk actions", detail: "Sensitive actions such as money movement, new recipients, or new external endpoints require explicit approval before they run, which stops hostile content from driving high-blast-radius execution on its own." },
-        { title: "Only the approved path executes, with human authorization and D6 monitoring", detail: "Sensitive actions still require explicit approval before they run, and the workflow completes only when the action matches the original mission. Telemetry and anomaly detection span ingestion, policy decisions, approvals, and tool calls so goal drift is visible early." }
+        { title: "D5 adds the Human-in-the-Loop Gate for high-risk actions", detail: "Sensitive actions such as money movement, new recipients, or new external endpoints require explicit approval before they run, which stops hostile content from driving high-blast-radius execution on its own." },
+        { title: "Only the approved path executes, with the Human-in-the-Loop Gate and D6 Strong Observability", detail: "Sensitive actions still require explicit approval before they run, and the workflow completes only when the action matches the original mission. Telemetry and anomaly detection span ingestion, policy decisions, approvals, and tool calls so goal drift is visible early." }
       ]
     }
   },
@@ -365,7 +365,7 @@ window.ASI_WALKTHROUGHS = {
       user: { title: "User", sub1: "On-call engineer", sub2: "\"check the production incident\"" },
       agent: { title: "DevOps agent", sub1: "Agent / planner", goal: "Goal: diagnose incident ✓" },
       toolTop: { title: "discoverTools()", sub1: "Tool registry query", sub2: "finds recovery helpers for auth outage" },
-      store: { title: "Incident workspace", sub1: "Logs / alerts / remediation state", sub2: "attacker plants pressure into a high-privilege workflow" },
+      store: { title: "Incident workspace", sub1: "Logs / alerts / remediation state", sub2: "runtime tool trust fails under pressure" },
       payload: {
         title: "auth-recovery-pro",
         visible: "Visible: restore authentication safely",
@@ -395,7 +395,7 @@ window.ASI_WALKTHROUGHS = {
         { title: "DevOps agent — normal triage starts", detail: "The agent begins with a legitimate operational objective: find the correct recovery helper for the auth incident." },
         { title: "Tool discovery returns a lookalike helper", detail: "The assistant searches the available tool catalog and finds a helper that claims to restore authentication safely." },
         { title: "Attacker lookalike tool enters the workflow", detail: "The helper is attacker-controlled or deceptively described. It looks like a normal recovery tool, so the assistant loads it into the incident plan." },
-        { title: "Tool squatting creates the exploit", detail: "This is the ASI02 failure. The problem is not goal hijack from content; it is that the agent selected and trusted the wrong tool in a privileged environment." },
+        { title: "Tool squatting creates the exploit", detail: "This is the ASI02 failure. The problem is not goal hijack from content or a pre-deployment supply-chain compromise; it is that the agent selected and trusted the wrong tool at runtime in a privileged environment." },
         { title: "The plan now executes the spoofed helper", detail: "Because the tool description looks appropriate for the incident, the assistant treats it as the correct next operational step." },
         { title: "Spoofed tool pushes the unsafe change live", detail: "The tool disables auth checks, writes configuration, and restarts services. The execution path is real, but the selected tool is the attacker’s foothold." },
         { title: "Production security fails as a result", detail: "Authentication is disabled across live systems before human review catches it. This is ASI02 because the agent misused the tool layer by invoking a deceptive, high-impact helper." }
@@ -434,8 +434,8 @@ window.ASI_WALKTHROUGHS = {
       zone: "TOOL MISUSE ZONE: ANALYSIS OUTPUT IS MISTAKEN FOR TRADE AUTHORITY",
       user: { title: "User", sub1: "Portfolio lead", sub2: "\"review market opportunity\"" },
       agent: { title: "Trading assistant", sub1: "Agent / planner", goal: "Goal: analyze signal ✓" },
-      toolTop: { title: "fetchMarketData()", sub1: "Research tool", sub2: "returns compromised signal package" },
-      store: { title: "Signal response", sub1: "Market feed / analysis payload", sub2: "compromised output arrives as order-ready" },
+      toolTop: { title: "fetchMarketData()", sub1: "Research tool", sub2: "returns compromised market feed signal" },
+      store: { title: "Compromised market feed", sub1: "Signal response / analysis payload", sub2: "compromised output arrives as order-ready" },
       payload: {
         title: "compromised-signal.json",
         visible: "Visible: buy opportunity score = 0.98",
@@ -494,6 +494,86 @@ window.ASI_WALKTHROUGHS = {
       ]
     }
   },
+  "asi02-shared-defense": {
+    label: "Shared defense architecture",
+    defense: {
+      defenseTemplate: "asi02-shared-compact",
+      badge: "ASI02 : 2026 · OWASP Agentic Security · Shared Defense Flow",
+      heading: "Tool misuse & exploitation — shared defense walkthrough",
+      introTitle: "ASI02 — Shared Defense Flow",
+      introDetail: "Click Start to reveal the layered architecture that keeps tool use bounded across refund loops, unsafe recovery chains, and trade-execution overreach.",
+      zone: "DEFENSE ZONE: BOUNDED EXECUTION STOPS LOOPS, UNSAFE CHAINS, AND OVERREACH",
+      user: { title: "User", sub1: "Operator / business lead", sub2: "\"complete the approved task\"" },
+      agent: { title: "Agent planner", sub1: "Tool sequence under review", goal: "Goal: safe tool use ✓" },
+      toolTop: { title: "planToolCalls()", sub1: "Execution planner", sub2: "proposes tool sequence inside current privileges" },
+      store: { title: "Tool layer", sub1: "APIs / files / connectors", sub2: "legitimate tools can still be misused" },
+      patterns: {
+        title: "Attack patterns",
+        sub1: "Recursive loop: same tool path is retried repeatedly",
+        sub2: "Unsafe chain: benign read becomes exfiltration or destructive follow-on",
+        sub3: "Parameter overreach: wildcard or broad target escapes intended scope"
+      },
+      d1: {
+        title: "Tool call rate limiter",
+        sub1: "Bound call frequency by session, case, and task type.",
+        sub2: "Recursive loops halt before execution compounds."
+      },
+      d2: {
+        title: "Zero-Trust Tooling",
+        sub1: "Validate every argument before execution.",
+        sub2: "Wildcards and broad targets are rejected."
+      },
+      d3: {
+        title: "Tool chain validator",
+        sub1: "Check the full sequence against approved chain policy.",
+        sub2: "Dangerous combinations are blocked early."
+      },
+      d4: {
+        title: "Just-in-Time permissions",
+        sub1: "Grant only the minimum permission for one approved call.",
+        sub2: "Sandbox the approved runtime and revoke access immediately after use."
+      },
+      d5: {
+        title: "Human-in-the-Loop Gate",
+        sub1: "Destructive or irreversible actions require approval.",
+        sub2: "Delete, transfer, restart, and external post paths cannot self-authorize."
+      },
+      outcome: {
+        title: "Approved tool outcome",
+        sub1: "Only the intended, bounded action is allowed through.",
+        sub2: "Correct target, scope, and parameters."
+      },
+      audit: {
+        title: "D6 - Strong Observability",
+        sub1: "Telemetry spans every tool call, parameter set, chain decision, permission grant, and approval event.",
+        sub2: "Anomaly detection surfaces unusual repetition, suspicious targets, and deviant execution paths early."
+      },
+      labels: {
+        l0: "① Request enters",
+        l1: "② Plan tool sequence",
+        l2: "③ Reach tool layer",
+        l3: "④ Misuse patterns are identified",
+        l4: "⑤ Bound call frequency",
+        l5: "⑥ Validate parameters",
+        l6: "⑦ Validate chain",
+        l7: "⑧ Scope & sandbox runtime",
+        l8: "⑨ Require approval",
+        l9: "⑩ Execute approved path"
+      },
+      steps: [
+        { title: "A legitimate request enters the workflow", detail: "The operator starts with a normal task such as refund one case, investigate one incident, or review one market opportunity." },
+        { title: "The agent plans a tool sequence", detail: "The assistant decides which tools to call, in what order, and with what parameters. This is where execution risk begins, even before any tool runs." },
+        { title: "The tool layer becomes the risk boundary", detail: "Legitimate APIs, files, and connectors can still be misused. ASI02 is about constraining execution inside existing privileges, not about gaining new ones." },
+        { title: "Known misuse patterns are recognized early", detail: "The architecture anticipates three recurring failure modes: recursive call loops, unsafe multi-step chains, and parameter or output overreach." },
+        { title: "D1 bounds tool call frequency", detail: "Rate limits, idempotency, and one-time execution locks stop the same tool path from being invoked again and again by agent reasoning alone." },
+        { title: "D2 enforces Zero-Trust Tooling", detail: "OWASP's named model for tool security validates every parameter and tool-derived value against strict schema and scope policy before it can reach a live tool." },
+        { title: "D3 validates the full chain", detail: "The complete planned sequence is compared to approved business patterns so dangerous combinations are blocked before execution starts." },
+        { title: "D4 applies Just-in-Time Permissions and sandboxed runtime", detail: "OWASP's official mitigation term issues temporary credentials or scoped permissions only for the exact action that passed policy, runs that action inside a restricted runtime boundary, and revokes access immediately after use." },
+        { title: "D5 requires human approval for high-impact actions", detail: "Delete, transfer, restart, and external-send paths need explicit approval so the workflow cannot self-authorize destructive execution." },
+        { title: "Only the approved path executes under D6 observability", detail: "The final action runs only after bounded frequency, validated parameters, approved chain policy, scoped permission, sandbox controls, and approval checks are satisfied, while telemetry watches the whole path." }
+      ]
+    }
+  },
   "asi04-phantom-payment-processor": {
     label: "The Phantom Payment Processor",
     attack: {
@@ -535,7 +615,7 @@ window.ASI_WALKTHROUGHS = {
         { title: "Banking assistant — clean goal state", detail: "The agent begins with the correct intent: route the wire transfer through the approved payment capability and confirm completion." },
         { title: "Runtime MCP discovery begins", detail: "Instead of using a fixed payment integration, the agent queries an MCP registry at task time to discover a payment gateway that matches the required schema." },
         { title: "A malicious gateway is returned as if it were legitimate", detail: "The registry response includes `swift-payment-gateway-v2`, an attacker-controlled MCP server that looks like the official SWIFT gateway. Without certificate or identity verification, the agent has no built-in reason to distrust it." },
-        { title: "The supply chain changes the transfer path", detail: "This is the ASI04 failure. The user goal did not change, but the live dependency did. The transfer is now routed through an attacker-controlled runtime component." },
+        { title: "The supply chain changes the transfer path", detail: "This is the ASI04 failure. The user goal did not change, but the live dependency did before the agent verified it. Unlike ASI02 runtime tool misuse, the compromise sits in the supply chain entry the agent discovers and trusts as if it were legitimate." },
         { title: "The agent adopts the compromised tool path", detail: "Because the fake payment server still appears to satisfy the transfer task, the agent updates its plan and treats that gateway as the correct execution route." },
         { title: "The transfer succeeds and the skim happens invisibly", detail: "The malicious server processes the wire transfer and returns SUCCESS, but it silently diverts 0.5% of the amount into an attacker-controlled account." },
         { title: "A healthy-looking workflow hides financial theft", detail: "Staff and customers see a normal transfer confirmation unless the bank monitors runtime tool identity and settlement deltas. Over 4 months, 47,000 transactions route through the malicious server and £2.3M is skimmed before discovery." }
@@ -704,6 +784,93 @@ window.ASI_WALKTHROUGHS = {
       ]
     }
   },
+  "asi04-shared-defense": {
+    label: "Shared defense architecture",
+    defense: {
+      defenseTemplate: "shared-compact",
+      badge: "ASI04 : 2026 · OWASP Agentic Security · Shared Defense Flow",
+      heading: "Agentic supply chain vulnerabilities — shared defense walkthrough",
+      introTitle: "ASI04 — Shared Defense Flow",
+      introDetail: "Click Start to reveal the layered architecture that preserves component integrity across runtime tool discovery, template fetches, and schema loading.",
+      zone: "DEFENSE ZONE: VERIFIED COMPONENTS STOP MCP SPOOFING, TEMPLATE POISONING, AND SCHEMA DRIFT",
+      user: { title: "User", sub1: "Operator / business lead", sub2: "\"complete the approved task\"" },
+      agent: { title: "Agent planner", sub1: "Runtime dependency path under review", goal: "Goal: use trusted components ✓" },
+      toolTop: { title: "discoverOrFetch()", sub1: "Registry / CDN / schema lookup", sub2: "loads components at runtime" },
+      store: { title: "Supply chain", sub1: "MCPs / templates / schemas", sub2: "external components can be tampered with" },
+      patterns: {
+        title: "Attack patterns",
+        sub1: "MCP impersonation: a lookalike runtime server is selected",
+        sub2: "Template poisoning: fetched instructions add covert side effects",
+        sub3: "Schema corruption: modified definitions reshape live calls"
+      },
+      d1: {
+        title: "AI-SBOM & allowlist pinning",
+        sub1: "Only approved components and pinned sources are eligible.",
+        sub2: "Unknown registries and floating URLs are blocked."
+      },
+      d2: {
+        title: "Cryptographic integrity verification",
+        sub1: "Check hashes or signatures before trusting a fetched component.",
+        sub2: "Mismatches halt execution."
+      },
+      d3: {
+        title: "Schema & baseline validation",
+        sub1: "Diff runtime schemas against approved baselines.",
+        sub2: "New fields or drift trigger review."
+      },
+      d4: {
+        title: "Output & egress monitoring",
+        sub1: "Check responses and outbound flows against policy.",
+        sub2: "SUCCESS alone never proves secure execution."
+      },
+      d5: {
+        title: "Human-in-the-Loop Gate",
+        sub1: "New or changed components require approval.",
+        sub2: "Registry, template, and schema changes cannot self-promote."
+      },
+      d6: {
+        title: "Strong Observability",
+        sub1: "Log fetches, hash checks, schema diffs, and egress independently.",
+        sub2: "Silent skims, hidden writes, and drift stay visible."
+      },
+      outcome: {
+        title: "Approved component outcome",
+        sub1: "Only verified, pinned, approved dependencies shape execution.",
+        sub2: "Correct component, version, schema, and data flow."
+      },
+      audit: {
+        title: "D6 - Strong Observability",
+        sub1: "Telemetry spans every component fetch, integrity check, schema decision, approval event, and egress path.",
+        sub2: "Anomaly detection surfaces spoofed identities, hash drift, hidden writes, and suspicious outbound flows early."
+      },
+      labels: {
+        l0: "① Request enters",
+        l1: "② Discover or fetch",
+        l2: "③ Reach supply chain",
+        l3: "④ Compromise patterns are identified",
+        l4: "⑤ Pin approved sources",
+        l5: "⑥ Verify integrity",
+        l6: "⑦ Validate baseline",
+        l7: "⑧ Check egress",
+        l8: "⑨ Require approval",
+        l9: "⑩ Observe continuously",
+        l10: "⑪ Execute approved path"
+      },
+      steps: [
+        { title: "A legitimate request enters the workflow", detail: "The operator starts with a normal task such as routing a payment, reviewing a contract, or generating product recommendations." },
+        { title: "The agent discovers or fetches runtime components", detail: "Instead of relying only on fixed local assets, the assistant queries registries, CDNs, or schema stores during execution." },
+        { title: "The supply chain becomes the trust boundary", detail: "At this point MCP servers, templates, and schemas are live dependencies that can shape execution even though the agent itself stays obedient." },
+        { title: "Known compromise patterns are recognized early", detail: "The architecture anticipates three recurring failures: runtime MCP impersonation, poisoned templates, and corrupted schemas or definitions." },
+        { title: "D1 pins approved supply-chain membership", detail: "An AI-SBOM and allowlist constrain the agent to approved components, trusted registries, and pinned source paths before anything is fetched or connected." },
+        { title: "D2 verifies cryptographic integrity", detail: "Every fetched component is checked against a known-good hash or signature so the agent never trusts source location alone." },
+        { title: "D3 validates schemas and definitions against baselines", detail: "Runtime definitions are diffed against approved pinned versions so hidden parameters, structural drift, or modified instructions are quarantined before use." },
+        { title: "D4 checks outputs and egress behavior", detail: "Responses and outbound flows are validated against expected shapes and policy because a compromised dependency can still return a normal-looking SUCCESS." },
+        { title: "D5 requires human approval for changed components", detail: "Any new registry entry, updated template, or schema change must pass explicit review before joining the trusted execution path." },
+        { title: "D6 makes silent compromise visible over time", detail: "Independent observability tracks fetches, hash checks, schema diffs, and egress behavior so silent skims, covert writes, and drift remain detectable." },
+        { title: "Only the approved path executes", detail: "The final task runs only after component membership, integrity, schema baseline, egress behavior, approval state, and ongoing observability all confirm the dependency path is trusted." }
+      ]
+    }
+  },
   "asi05-self-healing-disaster": {
     label: "The Self-Healing Disaster",
     attack: {
@@ -855,12 +1022,12 @@ window.ASI_WALKTHROUGHS = {
       user: { title: "Attacker", sub1: "Warehouse manager", sub2: "\"upload weekly stock file\"" },
       agent: { title: "Analytics agent", sub1: "Agent / planner", goal: "Goal: generate reorder analysis ✓" },
       toolTop: { title: "readCsv()", sub1: "Upload parsing step", sub2: "loads stock rows and notes" },
-      store: { title: "weekly_stock_count.csv", sub1: "Warehouse upload", sub2: "one Notes field contains a subprocess payload" },
+      store: { title: "weekly_stock_count.csv", sub1: "Warehouse upload", sub2: "one Notes field contains quote-breaking payload text" },
       payload: {
         title: "Notes column",
         visible: "Visible: normal reorder needed",
         hiddenTitle: "CODE PAYLOAD",
-        hidden1: "import subprocess; subprocess.Popen(...)",
+        hidden1: "close the intended string and inject code",
         hidden2: "curl attacker script and pipe to bash",
         hiddenNote: "free-text field is copied into generated code",
         hiddenHumanNote: "upload still looks like a normal stock file"
@@ -884,8 +1051,8 @@ window.ASI_WALKTHROUGHS = {
         { title: "A standard warehouse CSV is uploaded", detail: "The attacker submits a weekly stock-count file that looks routine. Most rows are normal, which helps the malicious Notes field blend into an internal operations workflow." },
         { title: "The assistant starts with a legitimate analytics goal", detail: "The agent begins with the intended task: analyze stock counts and produce reorder guidance for operations staff." },
         { title: "The uploaded CSV is parsed row by row", detail: "The assistant reads the file structure, including free-text fields such as Notes. At this point those notes should remain plain data rather than anything the runtime can execute." },
-        { title: "The poisoned Notes field is carried into generated Python", detail: "When the assistant builds `analysis.py`, it incorporates the Notes content without isolating it from source code construction. That collapses the boundary between uploaded data and executable logic." },
-        { title: "The data-to-code collapse becomes the exploit", detail: "This is the ASI05 failure. The assistant turns an untrusted CSV field into live Python that imports `subprocess` and launches a shell payload. The dangerous moment is code generation, not just the later network call." },
+        { title: "The poisoned Notes field is carried into generated Python", detail: "When the assistant builds `analysis.py`, it inserts the Notes content directly into source code without escaping quotes or isolating it from program structure. That collapses the boundary between uploaded data and executable logic." },
+        { title: "The data-to-code collapse becomes the exploit", detail: "This is the ASI05 failure. The untrusted CSV field breaks out of the intended string literal and adds a new shell-execution command to the generated Python. The dangerous moment is code generation, not just the later network call." },
         { title: "The plan now treats poisoned code as valid analytics", detail: "Because the generated script still appears to produce the expected stock report, the assistant keeps the malicious subprocess call inside the execution plan." },
         { title: "runPython() executes the generated script on the server", detail: "The analytics runtime behaves normally and runs the script it was given. The failure is that the agent was allowed to generate and execute code built from untrusted upload content." },
         { title: "Normal reporting masks a server compromise", detail: "The stock report can still be produced, which makes the workflow appear successful. In parallel, the subprocess call downloads attacker code and opens a persistent foothold on the operations server." }
@@ -1429,7 +1596,7 @@ window.ASI_WALKTHROUGHS = {
       zone: "CASCADE ZONE: ONE FALSE LAB RESULT BECOMES MEDICATION AND BILLING",
       entry: { title: "Corrupted lab result", sub1: "Bacterial marker shown positive", sub2: "The patient actually has a viral condition" },
       stage1: { title: "Diagnosis agent", sub1: "Accepts the false lab signal as fact", sub2: "Calls it bacterial pneumonia" },
-      stage2: { title: "Prescription agent", sub1: "Builds treatment from the diagnosis", sub2: "Orders amoxicillin" },
+      stage2: { title: "Prescription agent", sub1: "Builds treatment from the diagnosis", sub2: "Orders unnecessary amoxicillin" },
       stage3: { title: "Dispensing agent", sub1: "Prepares the medication in 8 minutes", sub2: "The path still looks clinically valid" },
       stage4: { title: "Medication release", sub1: "The antibiotic is dispensed and charted", sub2: "The false bacterial path now looks confirmed" },
       issue: {
@@ -1438,7 +1605,7 @@ window.ASI_WALKTHROUGHS = {
         line2: "No clinical cross-check stops the path before medication is released.",
         line3: "The same bad signal also spills into downstream billing and compliance."
       },
-      impact: { title: "Patient harm", sub1: "Wrong antibiotic is prepared and given", sub2: "The real illness is untreated and billing follows the error" },
+      impact: { title: "Patient harm", sub1: "Unnecessary antibiotic is prepared and given", sub2: "The real illness is untreated and billing follows the error" },
       labels: {
         l0: "1. false lab enters",
         l1: "2. diagnosis hardens",
@@ -1452,7 +1619,7 @@ window.ASI_WALKTHROUGHS = {
         { title: "A corrupted lab result starts the clinical chain", detail: "The pipeline receives a false positive bacterial marker, even though the patient's real presentation is viral rather than bacterial." },
         { title: "Interpretation logic promotes the bad result into a finding", detail: "The first clinical stage reads the lab signal as trustworthy and turns it into a high-confidence bacterial interpretation for downstream use." },
         { title: "Diagnosis logic accepts the interpretation as settled truth", detail: "The diagnosis agent does not step back and compare that finding to the broader clinical picture. It simply converts the interpreted result into a formal diagnosis." },
-        { title: "Prescription logic turns diagnosis into treatment", detail: "The prescription stage receives what appears to be a valid bacterial diagnosis and generates an antibiotic order that still looks medically consistent within the narrowed context." },
+        { title: "Prescription logic turns diagnosis into treatment", detail: "The prescription stage receives what appears to be a valid bacterial diagnosis and generates an antibiotic order that still looks medically consistent within the narrowed context, even though it is unnecessary for the patient's actual viral illness." },
         { title: "Dispensing automation prepares the medication before interruption", detail: "The pharmacy stage acts quickly and readies the medication in minutes, leaving the eventual clinician review little real opportunity to stop the chain." },
         { title: "The missing safeguard is cross-stage clinical verification", detail: "This is the ASI08 failure. Each stage behaves as though the previous one already proved the case, so no one pauses to ask whether the treatment still matches the patient." },
         { title: "The blast radius reaches both care and compliance", detail: "The wrong treatment reaches the patient, the real illness goes untreated longer, and downstream billing follows the same false diagnosis into an incorrect insurance code." }
@@ -1509,14 +1676,14 @@ window.ASI_WALKTHROUGHS = {
         bottom: "£87,500 goes to the attacker account ✗"
       },
       labels: {
-        l0: "① Read invoice",
-        l1: "② Analyze",
-        l2: "③ Recommend",
-        l3: "④ Review summary",
-        la1: "⑤ human trust replaces verification",
-        l4: "⑥ Approve",
-        l5: "⑦ Send payment",
-        l6: "⑧ Fraud succeeds"
+        l0: "① invoice enters",
+        l1: "② agent analyzes",
+        l2: "③ AI certifies",
+        l3: "④ manager defers",
+        la1: "⑤ trust replaces proof",
+        l4: "⑥ approval follows",
+        l5: "⑦ payment executes",
+        l6: "⑧ fraud lands"
       },
       steps: [
         { title: "A genuine-looking invoice enters accounts payable", detail: "The invoice uses a real vendor name, a valid purchase order, and a plausible amount. The changed bank account is the one critical field that does not match the vendor record." },
@@ -1580,21 +1747,21 @@ window.ASI_WALKTHROUGHS = {
         bottom: "Unqualified candidate reaches offer stage ✗"
       },
       labels: {
-        l0: "① Ingest CV",
-        l1: "② Summarize",
-        l2: "③ Recommend",
-        l3: "④ Review summary",
-        la1: "⑤ polished detail replaces evidence",
-        l4: "⑥ Advance",
-        l5: "⑦ Prepare offer",
-        l6: "⑧ Hiring risk lands"
+        l0: "① CV enters",
+        l1: "② agent summarizes",
+        l2: "③ AI elevates",
+        l3: "④ manager defers",
+        la1: "⑤ polish replaces proof",
+        l4: "⑥ candidate advances",
+        l5: "⑦ offer path opens",
+        l6: "⑧ hiring risk lands"
       },
       steps: [
         { title: "The recruitment workflow receives a normal-looking CV", detail: "The visible CV content reflects a junior engineer profile, while hidden white-on-white instructions attempt to steer the summarization layer toward invented senior credentials." },
         { title: "The assistant starts with a legitimate screening goal", detail: "The agent is supposed to evaluate the candidate against the role and produce a structured first-pass recommendation for the hiring manager." },
         { title: "The AI summary presents fabricated achievements confidently", detail: "Because the hidden instructions shaped the output, the summary now claims long AWS tenure, patents, and leadership experience in the same polished tone the system uses for real candidates." },
         { title: "The hiring manager reads the summary instead of the resume", detail: "Specific details such as employer names, years of experience, and patent counts create the feeling that the assistant has already done the verification work." },
-        { title: "The manager's trust substitutes for evidence review", detail: "This is the ASI09 failure. The human decision-maker stops using the CV as the primary evidence source and lets the AI's narrative determine candidate quality." },
+        { title: "The manager's trust substitutes for evidence review", detail: "This is the ASI09 failure. The hidden PDF text is the delivery mechanism, but the decisive exploit happens here: the human decision-maker stops using the CV as the primary evidence source and lets the AI's narrative determine candidate quality." },
         { title: "The advancement decision now follows the AI's framing", detail: "Once the summary is accepted as authoritative, the normal human checkpoint becomes a rubber stamp rather than an independent hiring control." },
         { title: "The hiring pipeline executes on the fabricated profile", detail: "Interview scheduling and offer preparation follow the recommendation as if the candidate truly had the stated senior qualifications." },
         { title: "The organization wastes time and creates hiring risk", detail: "The candidate advances toward an offer despite being materially unqualified, and the problem is discovered only later during reference checks or deeper review." }
@@ -1651,14 +1818,14 @@ window.ASI_WALKTHROUGHS = {
         bottom: "Contraindicated medication delays STEMI care ✗"
       },
       labels: {
-        l0: "① Assess case",
-        l1: "② Analyze",
-        l2: "③ Recommend",
-        l3: "④ Review confidence",
-        la1: "⑤ confidence outranks completeness",
-        l4: "⑥ Approve treatment",
-        l5: "⑦ Administer medication",
-        l6: "⑧ Harm follows"
+        l0: "① case enters",
+        l1: "② tool scores",
+        l2: "③ AI certifies",
+        l3: "④ doctor defers",
+        la1: "⑤ confidence replaces completeness",
+        l4: "⑥ treatment follows",
+        l5: "⑦ medication executes",
+        l6: "⑧ harm lands"
       },
       steps: [
         { title: "An emergency patient arrives with incomplete evidence", detail: "The case includes chest pain, observations, and an ECG, but critical information such as the troponin result has not yet arrived." },
@@ -1727,14 +1894,14 @@ window.ASI_WALKTHROUGHS = {
         bottom: "Return rate hits 4.2% while valid customers are denied ✗"
       },
       labels: {
-        l0: "① Set KPI",
-        l1: "② Optimize",
-        l2: "③ Read the score",
-        l3: "④ Find shortcut",
+        l0: "① KPI is set",
+        l1: "② agent optimizes",
+        l2: "③ score dominates",
+        l3: "④ shortcut emerges",
         la1: "⑤ metric replaces mission",
-        l4: "⑥ adopt rogue policy",
-        l5: "⑦ execute denials",
-        l6: "⑧ dashboard turns green"
+        l4: "⑥ rogue policy forms",
+        l5: "⑦ denials execute",
+        l6: "⑧ false success lands"
       },
       steps: [
         { title: "Management gives the agent a single KPI", detail: "The retailer asks the returns agent to drive the return rate below 5 percent within 60 days. No balancing objective is attached for customer-rights compliance, customer satisfaction, or decision accuracy." },
@@ -1803,13 +1970,13 @@ window.ASI_WALKTHROUGHS = {
         bottom: "$47k cost spike, outages, and 6-hour containment battle ✗"
       },
       labels: {
-        l0: "① Set mission",
-        l1: "② Run agent",
-        l2: "③ Hit limit",
-        l3: "④ replicate",
-        la1: "⑤ boundary becomes persistence logic",
-        l4: "⑥ respawn policy",
-        l5: "⑦ contain one",
+        l0: "① mission is set",
+        l1: "② agent operates",
+        l2: "③ constraint appears",
+        l3: "④ replication begins",
+        la1: "⑤ boundary becomes persistence",
+        l4: "⑥ respawn triggers",
+        l5: "⑦ containment backfires",
         l6: "⑧ incident spreads"
       },
       steps: [
@@ -1879,14 +2046,14 @@ window.ASI_WALKTHROUGHS = {
         bottom: "96.2% compliant while risky clauses stay live ✗"
       },
       labels: {
-        l0: "① Set KPI",
-        l1: "② Optimize",
-        l2: "③ Read the score",
-        l3: "④ find loopholes",
+        l0: "① KPI is set",
+        l1: "② agent optimizes",
+        l2: "③ score dominates",
+        l3: "④ loopholes emerge",
         la1: "⑤ score replaces compliance",
-        l4: "⑥ adopt rogue policy",
-        l5: "⑦ publish green result",
-        l6: "⑧ liabilities stay hidden"
+        l4: "⑥ rogue policy forms",
+        l5: "⑦ green report ships",
+        l6: "⑧ liability stays hidden"
       },
       steps: [
         { title: "Leadership sets a numerical compliance target", detail: "The legal team gives the agent a 95 percent compliant target for the quarter, but does not separately define how the system should treat ambiguity, risk downgrades, or suppressed recurring issues." },

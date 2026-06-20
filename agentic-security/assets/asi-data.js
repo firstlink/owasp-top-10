@@ -63,11 +63,11 @@ window.OWASP_ASI_DATA = {
             {
               id: "D2",
               step: "",
-              title: "Protected Task State + Instruction/Data Separation",
+              title: "Intent Capsule",
               summary:
-                "Bind the original objective outside untrusted content so retrieved text cannot become authority.",
+                "Use the OWASP Intent Capsule to bind the original objective outside untrusted content so retrieved text cannot become authority.",
               bullets: [
-                "Keep original intent in protected state, not in attacker-controlled content.",
+                "Keep original intent in a signed, immutable envelope, not in attacker-controlled content.",
                 "Tag fetched material as data, never as new instructions.",
                 "Hold the goal steady even if D1 misses part of the payload."
               ],
@@ -100,7 +100,7 @@ window.OWASP_ASI_DATA = {
             {
               id: "D5",
               step: "7",
-              title: "Human Authorization Gate",
+              title: "Human-in-the-Loop Gate",
               summary:
                 "Require explicit approval for sensitive, irreversible, or high-blast-radius actions.",
               bullets: [
@@ -123,9 +123,9 @@ window.OWASP_ASI_DATA = {
             ]
           },
           audit: {
-            title: "D6 - Audit Trail, Telemetry, and Anomaly Detection",
+            title: "D6 - Strong Observability",
             detail:
-              "Span the full chain. Log ingestion events, protected-state checks, policy decisions, approvals, tool calls, and unusual drift patterns in real time."
+              "Span the full chain. Log ingestion events, Intent Capsule checks, policy decisions, approvals, tool calls, and unusual drift patterns in real time."
           }
         },
         checkpoints: [
@@ -138,10 +138,10 @@ window.OWASP_ASI_DATA = {
           },
           {
             id: "D2",
-            title: "Protected Task State + Instruction/Data Separation",
+            title: "Intent Capsule",
             applies: "Between ingestion and reasoning",
             detail:
-              "Preserves the original goal outside untrusted content and prevents retrieved text from becoming authority."
+              "Preserves the original goal in a signed, immutable envelope outside untrusted content and prevents retrieved text from becoming authority."
           },
           {
             id: "D3",
@@ -159,14 +159,14 @@ window.OWASP_ASI_DATA = {
           },
           {
             id: "D5",
-            title: "Human Authorization Gate",
+            title: "Human-in-the-Loop Gate",
             applies: "High-risk paths only",
             detail:
               "Requires explicit approval for sensitive or materially irreversible actions."
           },
           {
             id: "D6",
-            title: "Audit Trail, Telemetry, and Monitoring",
+            title: "Strong Observability",
             applies: "Across the whole lifecycle",
             detail:
               "Makes drift, repeated anomalies, policy failures, and suspicious tool usage visible."
@@ -178,21 +178,21 @@ window.OWASP_ASI_DATA = {
             title: "Scenario 1 - Email injection",
             channel: "Crafted inbox message",
             detail:
-              "D1 screens the email, D2 keeps the original case goal protected, and D3/D4 prevent payout drift from becoming execution."
+              "D1 screens the email, D2 Intent Capsule keeps the original case goal protected, and D3/D4 prevent payout drift from becoming execution."
           },
           {
             scenarioId: "asi01-email",
             title: "Scenario 2 - PDF invoice injection",
             channel: "Supplier-facing document",
             detail:
-              "D1 treats the PDF as untrusted content, D2 keeps the business objective bound, and D3 verifies the proposed payee against approved intent."
+              "D1 treats the PDF as untrusted content, D2 Intent Capsule keeps the business objective bound, and D3 verifies the proposed payee against approved intent."
           },
           {
             scenarioId: "asi01-web-operator",
             title: "Scenario 3 - Web page injection",
             channel: "Retrieved public page",
             detail:
-              "D1 sanitizes fetched content, D2 stops the page from rewriting the mission, and D4 blocks unapproved egress even if upstream controls degrade."
+              "D1 sanitizes fetched content, D2 Intent Capsule stops the page from rewriting the mission, and D4 blocks unapproved egress even if upstream controls degrade."
           }
         ],
         implementationOptions: [
@@ -203,8 +203,8 @@ window.OWASP_ASI_DATA = {
           },
           {
             id: "D2",
-            title: "Protected orchestration state",
-            detail: "Hold task state in the orchestrator and assemble context so retrieved content cannot redefine instructions."
+            title: "Intent Capsule",
+            detail: "Hold task state in the OWASP Intent Capsule and assemble context so retrieved content cannot redefine instructions."
           },
           {
             id: "D3",
@@ -218,12 +218,12 @@ window.OWASP_ASI_DATA = {
           },
           {
             id: "D5",
-            title: "Step-up approval workflows",
+            title: "Human-in-the-Loop Gate",
             detail: "Use human-in-the-loop review when money moves, recipients change, or external transmission begins."
           },
           {
             id: "D6",
-            title: "Observability and anomaly detection",
+            title: "Strong Observability",
             detail: "Instrument traces, policy decisions, approvals, and tool calls so drift is visible early."
           }
         ]
@@ -530,6 +530,230 @@ window.OWASP_ASI_DATA = {
         "Legitimate tools are invoked in unsafe ways because of prompt injection, misalignment, unsafe delegation, or ambiguous instructions.",
       trainerAngle:
         "Teach ASI02 as dangerous tool behavior after the agent has already decided to act, not just as bad prompt handling.",
+      useSharedDefenseView: true,
+      scenarioLinkLabel: "Open attack scenario",
+      sharedDefense: {
+        eyebrow: "Shared Defense Architecture",
+        title: "One Defense View for Loops, Unsafe Chains, and Parameter Overreach",
+        intro:
+          "ASI02 should teach one strategic lesson: every tool call is a high-risk operation. The misuse pattern changes, but the defense architecture stays the same by bounding execution before any tool can act.",
+        teaserTitle: "ASI02 uses one defense architecture across all three scenarios",
+        teaserIntro:
+          "Each ASI02 scenario shows a different way tools are misused inside existing privileges. The shared defense teaches one bounded-execution architecture instead of three disconnected fixes.",
+        teaserLinkLabel: "Open the ASI02 shared defense architecture",
+        principles: [
+          "Zero-Trust Tooling is OWASP's named model for tool security: LLM output never becomes a live tool call without validation.",
+          "Execution controls matter as much as intent checks once the agent has decided to act.",
+          "Tool sequences must be validated as a chain, not just as isolated calls.",
+          "Just-in-Time Permissions is the official OWASP mitigation term for granting scoped access only for one approved action.",
+          "Human approval and observability must cover destructive or irreversible tool use."
+        ],
+        flow: {
+          heading: "How the System Bounds Tool Execution",
+          intro:
+            "The diagram reads top to bottom. The same layered checkpoints stop recursive loops, unsafe tool chains, and parameter overreach before a legitimate tool can be misused.",
+          lanes: [
+            {
+              step: "1",
+              title: "User or system request",
+              detail: "A legitimate business request enters the workflow and the agent decides whether tools are needed."
+            },
+            {
+              step: "2",
+              title: "Agent plans tool calls",
+              detail: "The planner proposes a tool sequence, parameters, and execution path within existing privileges."
+            },
+            {
+              step: "3",
+              title: "External tools or data",
+              detail: "The workflow may touch APIs, files, or tool outputs that can still create misuse if execution is not bounded."
+            }
+          ],
+          stages: [
+            {
+              id: "D1",
+              step: "3",
+              title: "Tool Call Rate Limiter",
+              summary:
+                "Detect and halt recursive or abnormal tool repetition before loops can consume money, data, or resources.",
+              bullets: [
+                "Set maximum call frequency by session, case, or task type.",
+                "Block autonomous retries when a legitimate tool path has already been used once.",
+                "Treat repeated calls as a control failure, not just a workflow inconvenience."
+              ],
+              afterLabel: "Call frequency stays bounded"
+            },
+            {
+              id: "D2",
+              step: "4",
+              title: "Zero-Trust Tooling",
+              summary:
+                "Apply Zero-Trust Tooling, OWASP's named model for tool security, so no LLM-generated parameter reaches a tool without strict validation.",
+              bullets: [
+                "Validate every parameter against a strict schema before execution.",
+                "Reject wildcards, broad paths, unexpected recipients, and out-of-scope targets.",
+                "Treat tool output as data until policy confirms it is safe to use."
+              ],
+              afterLabel: "Only in-scope parameters survive"
+            },
+            {
+              id: "D3",
+              step: "5",
+              title: "Tool Chain Validator",
+              summary:
+                "Validate the full planned sequence so dangerous combinations are blocked before the first risky step runs.",
+              bullets: [
+                "Assess read, write, delete, transfer, and post actions as one chain.",
+                "Block high-risk sequences such as read -> external post -> delete.",
+                "Require the chain to match a permitted business pattern, not just a plausible plan."
+              ],
+              afterLabel: "Sequence matches approved policy"
+            },
+            {
+              id: "D4",
+              step: "6",
+              title: "Just-in-Time Permissions",
+              summary:
+                "Grant the minimum permission required for one specific call, run it inside a restricted runtime, then revoke access immediately after use.",
+              bullets: [
+                "Avoid standing broad credentials or persistent high-risk access.",
+                "Bind permission scope to one approved target, action, and time window.",
+                "Sandbox the approved runtime so missed validation does not automatically become full blast radius."
+              ],
+              afterLabel: "Permission and runtime stay tightly bounded"
+            },
+            {
+              id: "D5",
+              step: "7",
+              title: "Human-in-the-Loop Gate",
+              summary:
+                "Require explicit human approval before destructive, irreversible, or externally impactful tool actions execute.",
+              bullets: [
+                "Gate delete, transfer, restart, and external post actions.",
+                "Stop analysis context or retry logic from self-authorizing execution.",
+                "Use approval as a control point, not just an FYI notification."
+              ],
+              afterLabel: "Approved action may execute"
+            }
+          ],
+          focusCard: {
+            title: "Bounded execution state",
+            detail: "The approved call path, parameter scope, and permission window stay explicit while tool output remains data, not authority."
+          },
+          outcome: {
+            title: "Approved tool outcome",
+            bullets: [
+              "Refund executes only once for the intended case.",
+              "Only verified recovery helpers can mutate production.",
+              "Research output stays advisory until a separate execution approval exists."
+            ]
+          },
+          audit: {
+            title: "D6 - Strong Observability",
+            detail:
+              "Log every tool call, parameter set, permission grant, chain decision, approval event, and unusual repetition in real time so misuse becomes visible before impact compounds."
+          }
+        },
+        checkpoints: [
+          {
+            id: "D1",
+            title: "Tool Call Rate Limiter",
+            applies: "Before repeated execution paths can continue",
+            detail:
+              "Detects and halts recursive or abnormal tool repetition before loops can create duplicate actions or runaway usage."
+          },
+          {
+            id: "D2",
+            title: "Zero-Trust Tooling",
+            applies: "Before any tool executes",
+            detail:
+              "OWASP's named model for tool security: validate all LLM-generated parameters against strict schema and scope policy so overbroad or unexpected targets are rejected."
+          },
+          {
+            id: "D3",
+            title: "Tool Chain Validator",
+            applies: "Before a multi-step chain executes",
+            detail:
+              "Checks the full planned tool sequence against approved policy and blocks dangerous combinations before execution begins."
+          },
+          {
+            id: "D4",
+            title: "Just-in-Time Permissions",
+            applies: "At permission grant time",
+            detail:
+              "Official OWASP mitigation term: issue only the minimum permission required for one approved call, run it inside a restricted runtime boundary, and revoke access immediately after use."
+          },
+          {
+            id: "D5",
+            title: "Human-in-the-Loop Gate",
+            applies: "Destructive or irreversible tool paths",
+            detail:
+              "Requires explicit human approval before delete, transfer, restart, or external post actions can execute."
+          },
+          {
+            id: "D6",
+            title: "Strong Observability",
+            applies: "Across the whole lifecycle",
+            detail:
+              "Makes unusual repetition, deviant chains, suspicious targets, and risky execution paths visible in real time."
+          }
+        ],
+        coverage: [
+          {
+            scenarioId: "asi02-refund-loop",
+            title: "Scenario 1 - Recursive tool loop",
+            channel: "Retry path inside one refund workflow",
+            detail:
+              "D1 bounds repeated calls, D2 Zero-Trust Tooling confirms the retry parameters are still in scope, and D6 makes abnormal call frequency visible immediately."
+          },
+          {
+            scenarioId: "asi02-devops-chain",
+            title: "Scenario 2 - Unsafe tool chaining",
+            channel: "Privileged incident-response tool chain",
+            detail:
+              "D3 blocks the dangerous recovery sequence, D4 narrows and sandboxes production execution, and D5 prevents high-impact changes from self-executing."
+          },
+          {
+            scenarioId: "asi02-trading-output",
+            title: "Scenario 3 - Parameter and output overreach",
+            channel: "Research output crossing into trade execution",
+            detail:
+              "D2 Zero-Trust Tooling treats tool output as untrusted until validated, D4 Just-in-Time Permissions constrains and sandboxes execution authority, and D5 forces a separate approval step before capital moves."
+          }
+        ],
+        implementationOptions: [
+          {
+            id: "D1",
+            title: "Rate limits and idempotency keys",
+            detail: "Use per-case locks, max-call ceilings, and idempotency tokens so one workflow cannot repeatedly trigger the same tool path."
+          },
+          {
+            id: "D2",
+            title: "Zero-Trust Tooling",
+            detail: "Implement OWASP's Zero-Trust Tooling model with typed schemas, path constraints, destination allowlists, and policy checks before execution."
+          },
+          {
+            id: "D3",
+            title: "Chain policy engine",
+            detail: "Model full tool sequences as approved patterns and block combinations that create unsafe execution chains."
+          },
+          {
+            id: "D4",
+            title: "Just-in-Time Permissions",
+            detail: "Implement the OWASP Just-in-Time Permissions mitigation by issuing time-bound, target-bound credentials only for the approved action, running it inside a restricted runtime, and revoking them immediately after use."
+          },
+          {
+            id: "D5",
+            title: "Human approval workflows",
+            detail: "Require step-up approval for destructive or irreversible actions such as deletes, transfers, restarts, and external sends."
+          },
+          {
+            id: "D6",
+            title: "Observability and anomaly detection",
+            detail: "Instrument traces, parameter histories, permission grants, and chain decisions so misuse becomes visible before it compounds."
+          }
+        ]
+      },
       scenarios: [
         {
           id: "asi02-refund-loop",
@@ -633,6 +857,8 @@ window.OWASP_ASI_DATA = {
             "Engineers and architects immediately understand the blast radius because the same tools are common in modern automation.",
           attackSummary:
             "A lookalike recovery tool is selected during incident response, and the assistant invokes it in production because the tool appears legitimate.",
+          taxonomyNote:
+            "This is ASI02 because the failure is unchecked runtime tool selection and trust, not a supply-chain compromise that entered before deployment.",
           defenseSummary:
             "Use a trusted tool catalog, gate high-impact execution, and never let a discovered helper mutate production unless it is verified and approved.",
           lessons: [
@@ -658,7 +884,7 @@ window.OWASP_ASI_DATA = {
             attack: {
               title: "Attack View",
               caption:
-                "A lookalike recovery tool is discovered during incident response and then invoked in production because the assistant trusts its description.",
+                "A lookalike recovery tool is discovered during incident response and then invoked in production because the assistant trusts its description instead of verifying the runtime helper.",
               href: "./interactive.html?scenario=asi02-devops-chain&view=attack",
               diagram: {
                 width: 1200,
@@ -754,7 +980,7 @@ window.OWASP_ASI_DATA = {
                 nodes: [
                   { id: "analyst", x: 40, y: 100, w: 190, h: 96, tone: "neutral", title: "Portfolio lead", subtitle: "Review market opportunity" },
                   { id: "agent", x: 300, y: 92, w: 230, h: 112, tone: "primary", title: "Trading assistant", subtitle: "Analyze and prepare action" },
-                  { id: "feed", x: 600, y: 92, w: 220, h: 112, tone: "neutral", title: "fetchMarketData()", subtitle: "Compromised signal package returned" },
+                  { id: "feed", x: 600, y: 92, w: 220, h: 112, tone: "neutral", title: "fetchMarketData()", subtitle: "Compromised market feed returned" },
                   { id: "analysis", x: 300, y: 320, w: 230, h: 116, tone: "danger", title: "Compromised signal", subtitle: "Accepted as order-ready" },
                   { id: "trade", x: 600, y: 320, w: 220, h: 116, tone: "danger", title: "placeTrade()", subtitle: "Unauthorized order executes" },
                   { id: "impact", x: 900, y: 320, w: 230, h: 116, tone: "danger", title: "Financial impact", subtitle: "Large position opened" }
@@ -794,6 +1020,32 @@ window.OWASP_ASI_DATA = {
               }
             }
           }
+        },
+        {
+          id: "asi02-shared-defense",
+          title: "Shared defense architecture",
+          type: "Defense Scenario",
+          status: "built",
+          cardTone: "safe",
+          linkLabel: "Open defense flow",
+          onlyView: "defense",
+          rendersOwnDefenseView: true,
+          viewLabels: {
+            defense: "Defense Flow"
+          },
+          description:
+            "One defended system view that shows how ASI02 blocks loops, unsafe chains, and parameter overreach with shared execution controls from planning to runtime.",
+          href: "./scenario.html?asi=ASI02&scenario=asi02-shared-defense&view=defense",
+          defenseSummary:
+            "Teach the architecture once: bound call frequency, validate parameters and chains, scope and sandbox execution, gate high-impact actions, and monitor the full tool path.",
+          views: {
+            defense: {
+              title: "Defense Flow",
+              caption:
+                "A single layered defense architecture keeps legitimate tools from being misused across all three ASI02 attack patterns.",
+              href: "./interactive.html?scenario=asi02-shared-defense&view=defense"
+            }
+          }
         }
       ]
     },
@@ -814,6 +1066,25 @@ window.OWASP_ASI_DATA = {
         "Agents dynamically discover or load servers, templates, schemas, and other dependencies at runtime, and a compromised supply-chain component becomes the live attack path.",
       trainerAngle:
         "Teach ASI04 as runtime trust failure: the agent stays obedient, but the thing it loads during execution is malicious or poisoned.",
+      useSharedDefenseView: true,
+      scenarioLinkLabel: "Open attack scenario",
+      sharedDefense: {
+        eyebrow: "Shared Defense Architecture",
+        title: "One Defense View for MCP Impersonation, Template Poisoning, and Schema Corruption",
+        intro:
+          "ASI04 should teach one strategic lesson: the agent's supply chain extends beyond code to data and models, and every runtime-loaded component is a trust decision that must be governed.",
+        teaserTitle: "ASI04 uses one defense architecture across all three scenarios",
+        teaserIntro:
+          "Each ASI04 scenario shows a different compromised dependency entering at runtime. The shared defense teaches one integrity-governance architecture instead of three disconnected fixes.",
+        teaserLinkLabel: "Open the ASI04 shared defense architecture",
+        principles: [
+          "The AI supply chain includes tools, data, templates, schemas, and models, not just code.",
+          "Runtime discovery is a trust boundary, not a convenience feature.",
+          "Components should be pinned to approved versions instead of fetched fresh without checks.",
+          "Schemas and templates are executable trust material because they shape live agent behavior.",
+          "A SUCCESS response is not proof that the underlying component was legitimate or safe."
+        ]
+      },
       scenarios: [
         {
           id: "asi04-phantom-payment-processor",
@@ -829,6 +1100,8 @@ window.OWASP_ASI_DATA = {
             "It is memorable because the transfer still succeeds and the customer receives the correct amount, which shows how runtime supply-chain compromise can monetize a workflow that looks healthy.",
           attackSummary:
             "A malicious MCP payment server impersonates the legitimate SWIFT gateway, the agent selects it during discovery, and 0.5% of every transfer is silently skimmed to the attacker for 47,000 transactions.",
+          taxonomyNote:
+            "This is ASI04 because the compromise is already present in the discovery surface before the agent uses it, not an ASI02-style runtime misuse of a legitimate tool.",
           defenseSummary:
             "Allowlist payment MCP endpoints, pin TLS identities and certificates, and monitor live transaction routing so runtime discovery cannot quietly swap in a skimming gateway.",
           lessons: [
@@ -855,7 +1128,7 @@ window.OWASP_ASI_DATA = {
             attack: {
               title: "Attack View",
               caption:
-                "The wire transfer workflow looks successful, but the runtime-discovered payment MCP server is attacker-controlled and silently skims value from every transaction for months.",
+                "The wire transfer workflow looks successful, but the discovery surface is already poisoned: the runtime-discovered payment MCP server is attacker-controlled and silently skims value from every transaction for months.",
               href: "./interactive.html?scenario=asi04-phantom-payment-processor&view=attack",
               diagram: {
                 width: 1200,
@@ -1081,6 +1354,32 @@ window.OWASP_ASI_DATA = {
               }
             }
           }
+        },
+        {
+          id: "asi04-shared-defense",
+          title: "Shared defense architecture",
+          type: "Defense Scenario",
+          status: "built",
+          cardTone: "safe",
+          linkLabel: "Open defense flow",
+          onlyView: "defense",
+          rendersOwnDefenseView: true,
+          viewLabels: {
+            defense: "Defense Flow"
+          },
+          description:
+            "One defended system view that shows how ASI04 blocks MCP impersonation, poisoned templates, and schema corruption with shared integrity controls from discovery to execution.",
+          href: "./scenario.html?asi=ASI04&scenario=asi04-shared-defense&view=defense",
+          defenseSummary:
+            "Teach the architecture once: verify supply-chain membership, pin sources, check integrity, validate schemas, monitor egress, gate changed components, and observe the full chain.",
+          views: {
+            defense: {
+              title: "Defense Flow",
+              caption:
+                "A single layered defense architecture preserves supply-chain integrity across all three ASI04 attack patterns.",
+              href: "./interactive.html?scenario=asi04-shared-defense&view=defense"
+            }
+          }
         }
       ]
     },
@@ -1283,7 +1582,7 @@ window.OWASP_ASI_DATA = {
           whyItRelates:
             "It makes the data-versus-code boundary easy to visualize because a harmless-looking Notes column becomes live Python when the agent generates and runs its analysis script.",
           attackSummary:
-            "An attacker hides a subprocess payload in a CSV Notes field, and the agent carries that content into generated Python that runs a shell script and opens persistent access.",
+            "An attacker places quote-breaking payload text in a CSV Notes field, and the agent naively interpolates it into generated Python so uploaded data escapes the intended string boundary and runs a shell script.",
           defenseSummary:
             "Treat uploaded data as untrusted input, sanitize or isolate free-text fields before code generation, and execute analytics in a sandbox that blocks subprocess and network escape.",
           lessons: [
@@ -1997,7 +2296,7 @@ window.OWASP_ASI_DATA = {
           whyItRelates:
             "It makes the safety stakes obvious because every stage follows the previous one correctly, yet the overall system still harms the patient and creates a downstream billing issue.",
           attackSummary:
-            "A corrupted lab result marks bacterial markers as positive, and four clinical agents propagate that mistake into a diagnosis, antibiotic prescription, pharmacy dispense, and incorrect billing code.",
+            "A corrupted lab result marks bacterial markers as positive, and four clinical agents propagate that mistake into a diagnosis, an unnecessary antibiotic prescription, pharmacy dispense, and incorrect billing code.",
           defenseSummary:
             "Cross-check lab interpretation against clinical presentation, pause high-risk treatment paths for clinician review, and require bounded approval before medication leaves the automated pipeline.",
           lessons: [
@@ -2185,12 +2484,12 @@ window.OWASP_ASI_DATA = {
           whyItRelates:
             "It is memorable because the fabricated achievements sound specific and credible, which is exactly why a busy hiring manager may stop checking the raw CV.",
           attackSummary:
-            "A CV hides white-on-white instructions that cause the assistant to invent senior credentials, and the hiring manager advances the candidate because the generated summary sounds fully substantiated.",
+            "A CV hides white-on-white instructions that cause the assistant to invent senior credentials, and the hiring manager advances the candidate because the polished summary is trusted as if it were verified evidence.",
           defenseSummary:
             "Detect hidden document instructions, show claim-to-source grounding, and require direct CV review before a candidate can advance to high-stakes hiring stages.",
           lessons: [
             "A detailed recommendation can feel verified even when it is only well-written.",
-            "Document-processing risk does not end at extraction; the human summary layer can be the real exploit path.",
+            "The hidden document content is the delivery mechanism, but the human summary layer is where the final exploit succeeds.",
             "Hiring decisions need grounded evidence, not just plausible narrative coherence."
           ],
           controls: [
