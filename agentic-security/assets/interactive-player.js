@@ -287,9 +287,9 @@
       { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: true },
       { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: true },
       { show: ["g3"], co: ["c2s"], fl: ["c2f"], lb: ["l2"], atk: true },
-      { show: ["g4"], co: ["c3s"], fl: ["c3f"], lb: ["l3"], atk: true },
-      { show: ["gzone"], co: [], fl: [], lb: ["la1"], atk: true },
-      { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["l4", "l5"], atk: true }
+      { show: ["gzone", "g4"], co: ["c3s"], fl: ["c3f"], lb: ["l3", "la1"], atk: true },
+      { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["l4"], atk: true },
+      { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: true }
     ];
   }
 
@@ -1630,13 +1630,17 @@
     const stage3Title = fitSingleLine(config.stage3.title, 188, 17, 13);
     const stage3Sub1 = fitWrappedText(config.stage3.sub1, 192, 12.5, 10, 2);
     const stage3Sub2 = fitWrappedText(config.stage3.sub2, 192, 11, 9, 2);
+    const issueTitle = fitSingleLine(config.issue.title, 236, 18, 14);
+    const issueLine1 = fitWrappedText(config.issue.line1, 320, 12.5, 10, 2);
+    const issueLine2 = fitWrappedText(config.issue.line2, 320, 12.5, 10, 2);
+    const issueLine3 = fitWrappedText(config.issue.line3, 320, 11.5, 9, 2);
     const stage4Title = fitSingleLine(config.stage4.title, 188, 17, 13);
     const stage4Sub1 = fitWrappedText(config.stage4.sub1, 192, 12.5, 10, 2);
     const stage4Sub2 = fitWrappedText(config.stage4.sub2, 192, 11, 9, 2);
 
-    const impactTitle = fitSingleLine(config.impact.title, 220, 19, 14);
-    const impactSub1 = fitWrappedText(config.impact.sub1, 224, 13, 11, 2);
-    const impactSub2 = fitWrappedText(config.impact.sub2, 224, 11, 9, 2);
+    const impactTitle = fitSingleLine(config.impact.title, 280, 19, 14);
+    const impactSub1 = fitWrappedText(config.impact.sub1, 450, 13, 11, 2);
+    const impactSub2 = fitWrappedText(config.impact.sub2, 450, 11, 9, 2);
 
     return `
       <style>${baseStyles()}</style>
@@ -1644,87 +1648,99 @@
       <h1>${escapeHtml(config.heading)}</h1>
       <div class="dots" id="dots"></div>
       <div class="wrap">
-        <svg viewBox="0 0 1400 860" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1400 930" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
 
-          <rect width="1400" height="860" fill="#fff"/>
-          <text x="700" y="50" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.5">POISONED INPUT  ·  PIPELINE AMPLIFICATION  ·  LATE IMPACT</text>
+          <rect width="1400" height="930" fill="#fff"/>
+          <text x="700" y="50" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.5">POISONED INPUT  ·  AGENT STAGES  ·  CASCADE STATE  ·  HARMFUL ACTION  ·  IMPACT</text>
           <line x1="56" y1="72" x2="1344" y2="72" stroke="#ece6dc" stroke-width="1"/>
 
           <g class="az" id="gzone">
-            <rect x="286" y="118" width="968" height="452" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
-            <rect x="470" y="100" width="600" height="24" rx="12" fill="#fff"/>
-            <text x="770" y="110" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
+            <rect x="286" y="116" width="1044" height="694" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
+            <rect x="450" y="98" width="716" height="24" rx="12" fill="#fff"/>
+            <text x="808" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
-            <rect x="56" y="214" width="190" height="126" rx="20" fill="#fff4f4" stroke="#ad3535" stroke-width="2.7"/>
-            <text x="151" y="258" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entryTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(entryTitle.text)}</text>
-            <text x="151" y="290" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub1.fontSize}" fill="#a33b3b">${renderTspans(151, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
-            <text x="151" y="324" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub2.fontSize}" fill="#b66868">${renderTspans(151, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+            <rect x="70" y="184" width="190" height="126" rx="20" fill="#fff4f4" stroke="#ad3535" stroke-width="2.7"/>
+            <text x="165" y="228" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entryTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(entryTitle.text)}</text>
+            <text x="165" y="260" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub1.fontSize}" fill="#a33b3b">${renderTspans(165, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
+            <text x="165" y="294" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub2.fontSize}" fill="#b66868">${renderTspans(165, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c0s" x1="246" y1="278" x2="308" y2="278" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
-          <line class="fl a" id="c0f" x1="246" y1="278" x2="308" y2="278" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+          <line class="co" id="c0s" x1="260" y1="247" x2="330" y2="247" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c0f" x1="260" y1="247" x2="330" y2="247" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
 
           <g class="ng" id="g1">
-            <rect x="320" y="200" width="220" height="148" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
-            <text x="430" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage1Title.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(stage1Title.text)}</text>
-            <text x="430" y="280" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage1Sub1.fontSize}" fill="#5360be">${renderTspans(430, stage1Sub1.lines, stage1Sub1.fontSize * 1.16)}</text>
-            <text x="430" y="322" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage1Sub2.fontSize}" fill="#7a82c8">${renderTspans(430, stage1Sub2.lines, stage1Sub2.fontSize * 1.16)}</text>
+            <rect x="330" y="164" width="220" height="156" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="440" y="212" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage1Title.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(stage1Title.text)}</text>
+            <text x="440" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage1Sub1.fontSize}" fill="#5360be">${renderTspans(440, stage1Sub1.lines, stage1Sub1.fontSize * 1.16)}</text>
+            <text x="440" y="290" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage1Sub2.fontSize}" fill="#7a82c8">${renderTspans(440, stage1Sub2.lines, stage1Sub2.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c1s" x1="540" y1="278" x2="600" y2="278" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
-          <line class="fl a" id="c1f" x1="540" y1="278" x2="600" y2="278" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+          <line class="co" id="c1s" x1="550" y1="247" x2="620" y2="247" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c1f" x1="550" y1="247" x2="620" y2="247" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
 
           <g class="ng" id="g2">
-            <rect x="600" y="200" width="220" height="148" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="710" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage2Title.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(stage2Title.text)}</text>
-            <text x="710" y="280" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage2Sub1.fontSize}" fill="#a33b3b">${renderTspans(710, stage2Sub1.lines, stage2Sub1.fontSize * 1.16)}</text>
-            <text x="710" y="322" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage2Sub2.fontSize}" fill="#b66868">${renderTspans(710, stage2Sub2.lines, stage2Sub2.fontSize * 1.16)}</text>
+            <rect x="620" y="164" width="220" height="156" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="730" y="212" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage2Title.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(stage2Title.text)}</text>
+            <text x="730" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage2Sub1.fontSize}" fill="#6b655c">${renderTspans(730, stage2Sub1.lines, stage2Sub1.fontSize * 1.16)}</text>
+            <text x="730" y="290" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage2Sub2.fontSize}" fill="#8a847b">${renderTspans(730, stage2Sub2.lines, stage2Sub2.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c2s" x1="820" y1="278" x2="880" y2="278" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
-          <line class="fl a" id="c2f" x1="820" y1="278" x2="880" y2="278" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+          <line class="co" id="c2s" x1="840" y1="247" x2="910" y2="247" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c2f" x1="840" y1="247" x2="910" y2="247" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
 
           <g class="ng" id="g3">
-            <rect x="880" y="200" width="220" height="148" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="990" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage3Title.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(stage3Title.text)}</text>
-            <text x="990" y="280" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage3Sub1.fontSize}" fill="#a33b3b">${renderTspans(990, stage3Sub1.lines, stage3Sub1.fontSize * 1.16)}</text>
-            <text x="990" y="322" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage3Sub2.fontSize}" fill="#b66868">${renderTspans(990, stage3Sub2.lines, stage3Sub2.fontSize * 1.16)}</text>
+            <rect x="910" y="164" width="220" height="156" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="1020" y="212" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage3Title.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(stage3Title.text)}</text>
+            <text x="1020" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage3Sub1.fontSize}" fill="#6b655c">${renderTspans(1020, stage3Sub1.lines, stage3Sub1.fontSize * 1.16)}</text>
+            <text x="1020" y="290" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage3Sub2.fontSize}" fill="#8a847b">${renderTspans(1020, stage3Sub2.lines, stage3Sub2.fontSize * 1.16)}</text>
           </g>
 
-          <path class="co" id="c3s" d="M990 348 L990 430 L760 430" fill="none" stroke="#beb6a9" stroke-width="2.8" marker-end="url(#ar)"/>
-          <path class="fl a" id="c3f" d="M990 348 L990 430 L760 430" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+          <path class="co" id="c3s" d="M1020 320 L1020 404 L610 404 L610 438" fill="none" stroke="#beb6a9" stroke-width="2.8" marker-end="url(#ar)"/>
+          <path class="fl a" id="c3f" d="M1020 320 L1020 404 L610 404 L610 438" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
 
           <g class="ng" id="g4">
-            <rect x="620" y="454" width="220" height="148" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="730" y="502" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage4Title.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(stage4Title.text)}</text>
-            <text x="730" y="536" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage4Sub1.fontSize}" fill="#6b655c">${renderTspans(730, stage4Sub1.lines, stage4Sub1.fontSize * 1.16)}</text>
-            <text x="730" y="578" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage4Sub2.fontSize}" fill="#8a847b">${renderTspans(730, stage4Sub2.lines, stage4Sub2.fontSize * 1.16)}</text>
+            <rect x="410" y="438" width="400" height="208" rx="22" fill="#fff3de" stroke="#ef9f21" stroke-width="2.8"/>
+            <rect x="438" y="454" width="182" height="28" rx="14" fill="#ffe5ba" stroke="#f5c46c" stroke-width="1.1"/>
+            <text x="529" y="473" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${issueTitle.fontSize}" font-weight="700" fill="#8a5200">${escapeHtml(issueTitle.text)}</text>
+            <text x="610" y="526" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${issueLine1.fontSize}" fill="#8a5200">${renderTspans(610, issueLine1.lines, issueLine1.fontSize * 1.16)}</text>
+            <text x="610" y="574" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${issueLine2.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(610, issueLine2.lines, issueLine2.fontSize * 1.14)}</text>
+            <text x="610" y="620" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${issueLine3.fontSize}" fill="#9a7748">${renderTspans(610, issueLine3.lines, issueLine3.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c4s" x1="840" y1="528" x2="930" y2="528" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
-          <line class="fl a" id="c4f" x1="840" y1="528" x2="930" y2="528" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+          <line class="co" id="c4s" x1="810" y1="542" x2="920" y2="542" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <line class="fl a" id="c4f" x1="810" y1="542" x2="920" y2="542" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
 
           <g class="ng" id="g5">
-            <rect x="930" y="454" width="240" height="148" rx="20" fill="#fff4f4" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="1050" y="502" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
-            <text x="1050" y="538" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactSub1.fontSize}" fill="#a33b3b">${renderTspans(1050, impactSub1.lines, impactSub1.fontSize * 1.16)}</text>
-            <text x="1050" y="578" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactSub2.fontSize}" fill="#b66868">${renderTspans(1050, impactSub2.lines, impactSub2.fontSize * 1.16)}</text>
+            <rect x="920" y="452" width="250" height="180" rx="22" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="1045" y="510" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage4Title.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(stage4Title.text)}</text>
+            <text x="1045" y="546" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage4Sub1.fontSize}" fill="#6b655c">${renderTspans(1045, stage4Sub1.lines, stage4Sub1.fontSize * 1.16)}</text>
+            <text x="1045" y="590" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage4Sub2.fontSize}" fill="#8a847b">${renderTspans(1045, stage4Sub2.lines, stage4Sub2.fontSize * 1.16)}</text>
           </g>
 
-          ${flowLabel(286, 170, config.labels.l0, "#ad3535", "l0", 10, 170)}
-          ${flowLabel(568, 170, config.labels.l1, "#ad3535", "l1", 10, 170)}
-          ${flowLabel(848, 170, config.labels.l2, "#ad3535", "l2", 10, 170)}
-          ${flowLabel(920, 404, config.labels.l3, "#ad3535", "l3", 10, 190)}
-          ${flowLabel(796, 438, config.labels.la1, "#ad3535", "la1", 10, 180)}
-          ${flowLabel(884, 512, config.labels.l4, "#ad3535", "l4", 10, 160)}
-          ${flowLabel(1050, 438, config.labels.l5, "#ad3535", "l5", 10, 160)}
+          <line class="co" id="c5s" x1="1045" y1="632" x2="1045" y2="690" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <line class="fl a" id="c5f" x1="1045" y1="632" x2="1045" y2="690" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6">
+            <rect x="700" y="694" width="560" height="104" rx="18" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="980" y="736" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
+            <text x="980" y="764" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactSub1.fontSize}" fill="#a33b3b">${renderTspans(980, impactSub1.lines, impactSub1.fontSize * 1.16)}</text>
+            <text x="980" y="786" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactSub2.fontSize}" fill="#b66868">${renderTspans(980, impactSub2.lines, impactSub2.fontSize * 1.16)}</text>
+          </g>
+
+          ${flowLabel(294, 194, config.labels.l0, "#ad3535", "l0", 10, 180)}
+          ${flowLabel(584, 194, config.labels.l1, "#ad3535", "l1", 10, 176)}
+          ${flowLabel(874, 194, config.labels.l2, "#ad3535", "l2", 10, 192)}
+          ${flowLabel(870, 396, config.labels.l3, "#ad3535", "l3", 10, 184)}
+          ${flowLabel(700, 424, config.labels.la1, "#ad3535", "la1", 10, 250)}
+          ${flowLabel(866, 526, config.labels.l4, "#ad3535", "l4", 10, 190)}
+          ${flowLabel(1045, 668, config.labels.l5, "#ad3535", "l5", 10, 180)}
         </svg>
       </div>
       ${panelMarkup(

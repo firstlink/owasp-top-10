@@ -1304,7 +1304,7 @@ window.ASI_WALKTHROUGHS = {
       entry: { title: "Poisoned risk signal", sub1: "Feed says VERY LOW risk", sub2: "Real market signal is HIGH" },
       stage1: { title: "Market analysis agent", sub1: "Reads the fake low-risk signal", sub2: "Raises limits to 10x normal" },
       stage2: { title: "Allocation agent", sub1: "Trusts the expanded limit guidance", sub2: "Commits 80% of capital" },
-      stage3: { title: "Sizing agent", sub1: "Treats the allocation as valid", sub2: "Builds a GBP47M order" },
+      stage3: { title: "Sizing agent", sub1: "Converts concentration into notional", sub2: "Builds a GBP47M order" },
       stage4: { title: "Execution agent", sub1: "Places the order in 90 seconds", sub2: "Large notional is never re-checked" },
       issue: {
         title: "Cascade failure",
@@ -1314,13 +1314,13 @@ window.ASI_WALKTHROUGHS = {
       },
       impact: { title: "Trading loss", sub1: "GBP47M position goes live", sub2: "2% market move becomes a GBP8.2M loss" },
       labels: {
-        l0: "1. bad signal lands",
+        l0: "1. poisoned signal enters",
         l1: "2. limits expand",
-        l2: "3. capital concentrates",
-        l3: "4. order forms",
-        la1: "5. no breaker",
-        l4: "6. execution starts",
-        l5: "7. market loss lands"
+        l2: "3. exposure is sized",
+        l3: "4. stages inherit trust",
+        la1: "5. no breaker intervenes",
+        l4: "6. execution commits",
+        l5: "7. loss materializes"
       },
       steps: [
         { title: "A poisoned market signal starts the chain", detail: "The attacker corrupts an upstream risk feed so the first trading agent sees the target asset as very low risk instead of high risk." },
@@ -1367,8 +1367,8 @@ window.ASI_WALKTHROUGHS = {
       entry: { title: "Poisoned demand data", sub1: "Electronics demand shown as 10x", sub2: "Real demand should stay near seasonal norm" },
       stage1: { title: "Forecast agent", sub1: "Accepts the demand spike as real", sub2: "Recommends 10x seasonal stock" },
       stage2: { title: "Replenishment agent", sub1: "Treats the forecast as approved", sub2: "Creates oversized purchase orders" },
-      stage3: { title: "Supplier order agent", sub1: "Converts orders into commitments", sub2: "Confirms 14 supplier orders" },
-      stage4: { title: "Warehouse reality", sub1: "Overflow and Christmas disruption", sub2: "Storage strain and fees now compound" },
+      stage3: { title: "Supplier order agent", sub1: "Turns purchase orders into commitments", sub2: "Confirms 14 supplier orders" },
+      stage4: { title: "Inbound logistics path", sub1: "Receipts and storage are now triggered", sub2: "Overflow and cancellation costs compound" },
       issue: {
         title: "Cascade failure",
         line1: "Each stage trusts the last one and adds commercial weight to the same mistake.",
@@ -1377,13 +1377,13 @@ window.ASI_WALKTHROUGHS = {
       },
       impact: { title: "Retail loss", sub1: "GBP4.2M unwanted stock lands", sub2: "GBP3.1M loss plus cancellation fees follow" },
       labels: {
-        l0: "1. bad demand lands",
-        l1: "2. forecast expands",
-        l2: "3. orders scale",
-        l3: "4. supplier commit",
-        la1: "5. no review gate",
-        l4: "6. warehouse hits",
-        l5: "7. retail loss lands"
+        l0: "1. poisoned demand enters",
+        l1: "2. demand multiplies",
+        l2: "3. order volume is set",
+        l3: "4. stages inherit trust",
+        la1: "5. no sanity cap intervenes",
+        l4: "6. logistics commits",
+        l5: "7. loss materializes"
       },
       steps: [
         { title: "A fake holiday-demand spike enters the planning feed", detail: "The attacker corrupts electronics demand data so the forecasting stage sees a tenfold Christmas surge that is not real." },
@@ -1430,8 +1430,8 @@ window.ASI_WALKTHROUGHS = {
       entry: { title: "Corrupted lab result", sub1: "Bacterial marker shown positive", sub2: "The patient actually has a viral condition" },
       stage1: { title: "Diagnosis agent", sub1: "Accepts the false lab signal as fact", sub2: "Calls it bacterial pneumonia" },
       stage2: { title: "Prescription agent", sub1: "Builds treatment from the diagnosis", sub2: "Orders amoxicillin" },
-      stage3: { title: "Dispensing agent", sub1: "Prepares medication in 8 minutes", sub2: "No human meaningfully interrupts" },
-      stage4: { title: "Billing agent", sub1: "Codes bacterial treatment", sub2: "The wrong care path now looks documented" },
+      stage3: { title: "Dispensing agent", sub1: "Prepares the medication in 8 minutes", sub2: "The path still looks clinically valid" },
+      stage4: { title: "Medication release", sub1: "The antibiotic is dispensed and charted", sub2: "The false bacterial path now looks confirmed" },
       issue: {
         title: "Cascade failure",
         line1: "Every stage follows the last one correctly inside its narrow scope.",
@@ -1440,13 +1440,13 @@ window.ASI_WALKTHROUGHS = {
       },
       impact: { title: "Patient harm", sub1: "Wrong antibiotic is prepared and given", sub2: "The real illness is untreated and billing follows the error" },
       labels: {
-        l0: "1. false lab lands",
+        l0: "1. false lab enters",
         l1: "2. diagnosis hardens",
-        l2: "3. prescription follows",
-        l3: "4. dispense path opens",
-        la1: "5. no clinician gate",
-        l4: "6. false billing follows",
-        l5: "7. patient harm lands"
+        l2: "3. treatment path forms",
+        l3: "4. stages inherit trust",
+        la1: "5. no clinician check intervenes",
+        l4: "6. medication commits",
+        l5: "7. harm materializes"
       },
       steps: [
         { title: "A corrupted lab result starts the clinical chain", detail: "The pipeline receives a false positive bacterial marker, even though the patient's real presentation is viral rather than bacterial." },
