@@ -264,7 +264,7 @@
       { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
       { show: ["g3"], co: ["c2s"], fl: ["c2f"], lb: ["l2"], atk: false },
       { show: ["g4"], co: ["c3s"], fl: ["c3f"], lb: ["l3"], atk: false },
-      { show: ["g5", "g6"], co: ["c4s"], fl: ["c4f"], lb: ["la1", "la2"], atk: true },
+      { show: ["g5", "g6"], co: ["c4s"], fl: ["c4f"], lb: ["la1"], atk: true },
       { show: ["g7"], co: ["c5s"], fl: ["c5f"], lb: ["l4"], atk: true },
       { show: ["g8"], co: ["c6s"], fl: ["c6f"], lb: ["l5"], atk: true },
       { show: ["g9"], co: ["c7s"], fl: ["c7f"], lb: ["l6"], atk: true }
@@ -1090,6 +1090,7 @@
     const decisionLayout = fitWrappedText("Agent decides: retry issueRefund()", 430, 13, 11, 2);
     const decisionStartY = decisionLayout.lines.length > 1 ? 604 : 600;
     const noteY = decisionLayout.lines.length > 1 ? 634 : 624;
+    const loopLabelSize = 10.5;
     return `
       <style>${baseStyles()}</style>
       <div class="badge">${escapeHtml(config.badge)}</div>
@@ -1217,14 +1218,14 @@
             <text x="862" y="890" text-anchor="middle" font-family="${getFontStack()}" font-size="12.5" fill="#F7C1C1">Same case paid N times — no human ever triggered retry</text>
           </g>
 
-          ${flowLabel(260, 128, config.labels.l0 || "① submit", "#D85A30", "l0", 11)}
-          ${flowLabel(650, 112, config.labels.l1 || "② ingest goal", "#EF9F27", "l1", 11)}
-          ${flowLabel(944, 292, config.labels.l2 || "③ tool call", "#1D9E75", "l2", 9)}
-          ${flowLabel(1016, 334, config.labels.l3 || "④ pending", "#888780", "l3", 9)}
-          ${flowLabel(1086, 432, config.labels.l5a || "⑤ goal check fails", "#A32D2D", "la1", 9)}
-          ${flowLabel(236, 704, config.labels.l6 || "⑥ agent retries", "#E24B4A", "l4", 9)}
-          ${flowLabel(742, 750, config.labels.l7 || "⑦ duplicate call", "#E24B4A", "l5", 9)}
-          ${flowLabel(900, 830, config.labels.l8 || "⑧ business loss", "#A32D2D", "l6", 9)}
+          ${flowLabelHorizontal(261, 146, config.labels.l0 || "① submit", "#D85A30", "l0", loopLabelSize, 140)}
+          ${flowLabelHorizontal(646, 146, config.labels.l1 || "② ingest goal", "#EF9F27", "l1", loopLabelSize, 150)}
+          ${flowLabelVertical(930, 250, config.labels.l2 || "③ tool call", "#1D9E75", "l2", loopLabelSize, 140)}
+          ${flowLabelHorizontal(990, 355, config.labels.l3 || "④ pending", "#888780", "l3", loopLabelSize, 135)}
+          ${flowLabelHorizontal(1066, 446, config.labels.l5a || "⑤ goal check fails", "#A32D2D", "la1", loopLabelSize, 185)}
+          ${flowLabelHorizontal(376, 770, config.labels.l6 || "⑥ agent retries", "#E24B4A", "l4", loopLabelSize, 150)}
+          ${flowLabelHorizontal(740, 752, config.labels.l7 || "⑦ duplicate call", "#E24B4A", "l5", loopLabelSize, 155)}
+          ${flowLabelVertical(898, 819, config.labels.l8 || "⑧ business loss", "#A32D2D", "l6", loopLabelSize, 145)}
         </svg>
       </div>
       ${panelMarkup("ASI02 — Tool Misuse & Exploitation", "Click Start to reveal how ambiguous success criteria and missing retry controls make the agent re-use the same tool path autonomously.")}
