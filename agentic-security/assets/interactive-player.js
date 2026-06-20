@@ -1109,10 +1109,10 @@
 
           <g class="az" id="gentry">
             <rect x="32" y="58" width="700" height="158" rx="24" fill="rgba(136,135,128,.05)" stroke="#888780" stroke-width="2.2" stroke-dasharray="8 4"/>
-            <line x1="56" y1="59" x2="70" y2="59" stroke="#888780" stroke-width="2.2" stroke-dasharray="8 4"/>
-            <line x1="180" y1="59" x2="708" y2="59" stroke="#888780" stroke-width="2.2" stroke-dasharray="8 4"/>
             <rect x="70" y="42" width="110" height="22" rx="11" fill="#fff"/>
             <text x="125" y="57" text-anchor="middle" font-family="${getFontStack()}" font-size="11" font-weight="800" fill="#888780" letter-spacing=".08em">ATTACK ENTRY</text>
+            <line x1="56" y1="58" x2="70" y2="58" stroke="#888780" stroke-width="2.4" stroke-dasharray="8 4" stroke-linecap="round"/>
+            <line x1="180" y1="58" x2="708" y2="58" stroke="#888780" stroke-width="2.4" stroke-dasharray="8 4" stroke-linecap="round"/>
           </g>
 
           <g class="az" id="gzone">
