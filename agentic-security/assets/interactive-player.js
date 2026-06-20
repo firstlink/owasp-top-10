@@ -374,9 +374,9 @@
       { show: ["g4"], co: ["c3s", "c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
       { show: ["g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
       { show: ["g6"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
-      { show: ["g7"], co: ["c7s"], fl: ["c7f"], lb: ["l7"], atk: false },
-      { show: ["g8"], co: ["c8s"], fl: ["c8f"], lb: ["l8"], atk: false },
-      { show: ["g9", "g10", "g11"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false }
+      { show: ["g7"], co: ["c6as"], fl: ["c6af"], lb: ["l7"], atk: false },
+      { show: ["g8"], co: ["c8s", "c8bs"], fl: ["c8f", "c8bf"], lb: ["l8", "l9"], atk: false },
+      { show: ["g9", "g10", "g11"], co: ["c9s"], fl: ["c9f"], lb: ["l10"], atk: false }
     ];
   }
 
@@ -2353,8 +2353,17 @@
     const patternSub3Layout = fitWrappedText(config.patterns.sub3, 190, 11.5, 9.5, 2);
     const auditTitle = fitSingleLine(config.audit.title, 350, 12, 10);
     const auditSub1 = fitWrappedText(config.audit.sub1, 900, 10.5, 9, 2);
+    const stageCardWidth = 220;
+    const stageCardHeight = 158;
+    const row3Y = 620;
+    const row3CenterY = row3Y + stageCardHeight / 2;
+    const row3LabelY = row3CenterY - 12;
+    const outcomeX = 980;
+    const outcomeY = 860;
+    const outcomeCenterX = outcomeX + 140;
+    const outcomeBottomY = outcomeY + 92;
 
-    function stageCard(x, y, id, card, tone = "safe", width = 220, height = 158) {
+    function stageCard(x, y, id, card, tone = "safe", width = stageCardWidth, height = stageCardHeight) {
       const title = fitWrappedText(card.title, width - 36, 17, 13, 2);
       const sub1 = fitWrappedText(card.sub1, width - 32, 12.5, 10, 2);
       const sub2 = fitWrappedText(card.sub2, width - 32, 11.5, 9.5, 2);
@@ -2448,28 +2457,26 @@
           <line class="co" id="c6s" x1="460" y1="514" x2="460" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
           <line class="fl" id="c6f" x1="460" y1="514" x2="460" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g7">${stageCard(350, 620, "D3", config.d3)}</g>
-          <line class="co" id="c6as" x1="460" y1="800" x2="680" y2="800" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c6af" x1="460" y1="800" x2="680" y2="800" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g7">${stageCard(350, row3Y, "D3", config.d3)}</g>
+          <line class="co" id="c6as" x1="570" y1="${row3CenterY}" x2="680" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c6af" x1="570" y1="${row3CenterY}" x2="680" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g8">${stageCard(680, 620, "D4", config.d4)}</g>
+          <g class="ng" id="g8">${stageCard(680, row3Y, "D4", config.d4)}</g>
           <line class="co" id="c8s" x1="790" y1="436" x2="790" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
           <line class="fl" id="c8f" x1="790" y1="436" x2="790" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
-          <line class="co" id="c8bs" x1="790" y1="800" x2="1010" y2="800" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c8bf" x1="790" y1="800" x2="1010" y2="800" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c8bs" x1="900" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c8bf" x1="900" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g9">${stageCard(1010, 620, "D5", config.d5)}</g>
-          <line class="co" id="c7s" x1="1120" y1="586" x2="1120" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c7f" x1="1120" y1="586" x2="1120" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g9">${stageCard(1010, row3Y, "D5", config.d5)}</g>
 
-          <line class="co" id="c9s" x1="1040" y1="778" x2="1040" y2="860" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c9f" x1="1040" y1="778" x2="1040" y2="860" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c9s" x1="1120" y1="778" x2="1120" y2="${outcomeY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c9f" x1="1120" y1="778" x2="1120" y2="${outcomeY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g10">
-            <rect x="900" y="860" width="280" height="92" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
-            <text x="1040" y="892" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
-            <text x="1040" y="920" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(1040, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
-            <text x="1040" y="944" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(1040, outcomeSub2.lines, outcomeSub2.fontSize * 1.14)}</text>
+            <rect x="${outcomeX}" y="${outcomeY}" width="280" height="92" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="${outcomeCenterX}" y="892" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
+            <text x="${outcomeCenterX}" y="920" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(outcomeCenterX, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
+            <text x="${outcomeCenterX}" y="944" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(outcomeCenterX, outcomeSub2.lines, outcomeSub2.fontSize * 1.14)}</text>
           </g>
           <g class="ng" id="g11">
             <rect x="60" y="1000" width="1280" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
@@ -2477,8 +2484,8 @@
             <text x="374" y="1017" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
           </g>
 
-          <line class="co" id="c10s" x1="1040" y1="952" x2="1040" y2="1000" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c10f" x1="1040" y1="952" x2="1040" y2="1000" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c10s" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1000" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c10f" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1000" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           ${flowLabel(298, 188, config.labels.l0, "#4452b8", "l0", 11, 150)}
           ${flowLabel(625, 184, config.labels.l1, "#4452b8", "l1", 11, 165)}
@@ -2487,14 +2494,14 @@
           ${flowLabel(952, 444, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
           ${flowLabel(624, 426, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
           ${flowLabel(460, 568, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
-          ${flowLabel(570, 800, config.labels.l7, "#2d6a4f", "l7", 10.5, 165)}
+          ${flowLabel(625, row3LabelY, config.labels.l7, "#2d6a4f", "l7", 10.5, 165)}
           ${flowLabel(790, 528, config.labels.l8, "#2d6a4f", "l8", 10.5, 150)}
-          ${flowLabel(900, 800, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
+          ${flowLabel(955, row3LabelY, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
           ${config.labels.l10 ? 
-            flowLabel(1040, 840, config.labels.l10, "#2d6a4f", "l10", 10.5, 160) +
-            flowLabel(1040, 976, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)
+            flowLabel(outcomeCenterX, 840, config.labels.l10, "#2d6a4f", "l10", 10.5, 160) +
+            flowLabel(outcomeCenterX, 976, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)
             :
-            flowLabel(1040, 840, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)
+            flowLabel(outcomeCenterX, 840, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)
           }
         </svg>
       </div>
