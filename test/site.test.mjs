@@ -42,7 +42,6 @@ test("serves scenario index pages", async () => {
 
   assert.equal(response.status, 200);
   assert.match(html, /data-asi-id="ASI01"/);
-  assert.match(html, /shared-defense-root/);
   assert.match(html, /scenario-grid-root/);
   assert.match(html, /assets\/asi-data\.js/);
 });
@@ -104,20 +103,8 @@ test("serves a scenario detail page", async () => {
 
   assert.equal(response.status, 200);
   assert.match(html, /scenario-frame/);
-  assert.match(html, /scenario-shared-defense-root/);
   assert.match(html, /Attack View/);
   assert.match(html, /Defense View/);
-});
-
-test("serves the ASI01 shared defense scenario page", async () => {
-  const response = await fetch(
-    `${baseUrl}/scenario.html?asi=ASI01&scenario=asi01-shared-defense&view=defense`
-  );
-  const html = await response.text();
-
-  assert.equal(response.status, 200);
-  assert.match(html, /scenario-frame/);
-  assert.match(html, /scenario-shared-defense-root/);
 });
 
 test("serves an ASI05 scenario detail page", async () => {
@@ -171,17 +158,6 @@ test("serves an ASI10 scenario detail page", async () => {
 test("serves interactive walkthrough data", async () => {
   const response = await fetch(
     `${baseUrl}/interactive.html?scenario=asi01-support-refund&view=attack`
-  );
-  const html = await response.text();
-
-  assert.equal(response.status, 200);
-  assert.match(html, /interactive-player\.js/);
-  assert.match(html, /walkthrough-data\.js/);
-});
-
-test("serves ASI01 shared defense interactive walkthrough data", async () => {
-  const response = await fetch(
-    `${baseUrl}/interactive.html?scenario=asi01-shared-defense&view=defense`
   );
   const html = await response.text();
 
@@ -276,18 +252,6 @@ test("ships ASI05 content in the shared data asset", async () => {
   assert.match(js, /asi05-self-healing-disaster/);
   assert.match(js, /asi05-pharmacy-sql-injection/);
   assert.match(js, /asi05-retail-inventory-shell/);
-});
-
-test("ships ASI01 shared defense architecture in the shared data asset", async () => {
-  const response = await fetch(`${baseUrl}/assets/asi-data.js`);
-  const js = await response.text();
-
-  assert.equal(response.status, 200);
-  assert.match(js, /useSharedDefenseView: true/);
-  assert.match(js, /asi01-shared-defense/);
-  assert.match(js, /Open defense flow/);
-  assert.match(js, /One Defense View for Email, PDF, and Web Injection/);
-  assert.match(js, /Protected Task State \+ Instruction\/Data Separation/);
 });
 
 test("ships ASI08 content in the shared data asset", async () => {

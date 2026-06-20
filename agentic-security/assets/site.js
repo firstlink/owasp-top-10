@@ -77,17 +77,6 @@
     const summary = document.getElementById("asi-summary");
     if (summary) summary.textContent = category.summary;
 
-    const sharedDefenseRoot = document.getElementById("shared-defense-root");
-    if (sharedDefenseRoot) {
-      if (category.sharedDefense) {
-        sharedDefenseRoot.hidden = false;
-        sharedDefenseRoot.innerHTML = renderSharedDefense(category);
-      } else {
-        sharedDefenseRoot.hidden = true;
-        sharedDefenseRoot.innerHTML = "";
-      }
-    }
-
     const scenarioGrid = document.getElementById("scenario-grid-root");
     if (scenarioGrid && category.scenarios) {
       scenarioGrid.innerHTML = category.scenarios
@@ -112,7 +101,6 @@
     const frame = document.getElementById("scenario-frame");
     const root = document.getElementById("scenario-diagram-root");
     const diagramSection = document.getElementById("scenario-diagram-section");
-    const sharedDefenseRoot = document.getElementById("scenario-shared-defense-root");
     const tabs = document.querySelector(".scenario-tabs");
     const stepStrip = document.getElementById("scenario-step-strip");
     const stepMeta = document.getElementById("scenario-step-meta");
@@ -287,10 +275,6 @@
 
     function updateView() {
       if (diagramSection) diagramSection.hidden = false;
-      if (sharedDefenseRoot) {
-        sharedDefenseRoot.hidden = true;
-        sharedDefenseRoot.innerHTML = "";
-      }
 
       const viewData = scenarioData.views[activeView];
       if (!viewData) return;
@@ -409,173 +393,6 @@
     }
   }
 
-  function renderSharedDefense(category) {
-    const defense = category.sharedDefense;
-    if (!defense) return "";
-    const flowHeading = defense.flow.heading || "How the System Preserves Protected Intent";
-    const flowIntro = defense.flow.intro || "The diagram reads top to bottom. The same layered checkpoints stop each variant of the attack without relying on one fragile prompt-only control.";
-    const focusCard = defense.flow.focusCard || defense.flow.protectedContext || null;
-
-    const laneCards = defense.flow.lanes.map((lane) => `
-      <article class="flow-lane-card">
-        <span class="step-badge">${escapeHtml(lane.step)}</span>
-        <h3>${escapeHtml(lane.title)}</h3>
-        <p>${escapeHtml(lane.detail)}</p>
-      </article>
-    `).join("");
-
-    const stageCards = defense.flow.stages.map((stage, index) => `
-      ${index === 0 ? '<div class="flow-drop-arrow" aria-hidden="true">↓</div>' : ""}
-      <article class="flow-stage-card flow-stage-card-${stage.id.toLowerCase()}">
-        <div class="flow-stage-head">
-          <p class="flow-stage-id">${escapeHtml(stage.id)}</p>
-          ${stage.step ? `<span class="step-badge">${escapeHtml(stage.step)}</span>` : ""}
-        </div>
-        <h3>${escapeHtml(stage.title)}</h3>
-        <p>${escapeHtml(stage.summary)}</p>
-        <ul class="flow-bullets">
-          ${stage.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}
-        </ul>
-      </article>
-      ${index === 1 && focusCard ? `
-        <div class="flow-transition">
-          <span>${escapeHtml(stage.afterLabel)}</span>
-        </div>
-        <article class="flow-context-card">
-          <p class="flow-context-title">${escapeHtml(focusCard.title)}</p>
-          <p>${escapeHtml(focusCard.detail)}</p>
-        </article>
-      ` : `
-        <div class="flow-transition">
-          <span>${escapeHtml(stage.afterLabel)}</span>
-        </div>
-      `}
-    `).join("");
-
-    return `
-      <section class="shared-defense-shell" id="shared-defense">
-        <article class="shared-defense-intro">
-          <p class="eyebrow">${escapeHtml(defense.eyebrow)}</p>
-          <h2>${escapeHtml(defense.title)}</h2>
-          <p class="hero-copy">${escapeHtml(defense.intro)}</p>
-        </article>
-
-        <div class="architect-grid">
-          ${defense.principles.map((principle) => `
-            <article class="architect-card">
-              <p>${escapeHtml(principle)}</p>
-            </article>
-          `).join("")}
-        </div>
-
-        <section class="defense-flow-panel">
-          <div class="defense-flow-header">
-            <p class="eyebrow">Defended Flow</p>
-            <h2>${escapeHtml(flowHeading)}</h2>
-            <p class="hero-copy">
-              ${escapeHtml(flowIntro)}
-            </p>
-          </div>
-
-          <div class="flow-lane-grid">
-            ${laneCards}
-          </div>
-
-          <div class="flow-stack">
-            ${stageCards}
-
-            <article class="flow-outcome-card">
-              <p class="eyebrow">8. Execute approved action</p>
-              <h3>${escapeHtml(defense.flow.outcome.title)}</h3>
-              <ul class="flow-bullets">
-                ${defense.flow.outcome.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}
-              </ul>
-            </article>
-
-            <article class="flow-audit-card">
-              <p class="flow-stage-id">${escapeHtml(defense.flow.audit.title)}</p>
-              <p>${escapeHtml(defense.flow.audit.detail)}</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="defense-reference-grid">
-          <article class="reference-panel">
-            <p class="eyebrow">Checkpoints</p>
-            <h2>What Each Layer Really Does</h2>
-            <div class="checkpoint-grid">
-              ${defense.checkpoints.map((item) => `
-                <article class="checkpoint-card">
-                  <p class="flow-stage-id">${escapeHtml(item.id)}</p>
-                  <h3>${escapeHtml(item.title)}</h3>
-                  <p class="checkpoint-applies">${escapeHtml(item.applies)}</p>
-                  <p>${escapeHtml(item.detail)}</p>
-                </article>
-              `).join("")}
-            </div>
-          </article>
-
-          <article class="reference-panel">
-            <p class="eyebrow">Coverage</p>
-            <h2>Why One Defense View Covers All Three Attacks</h2>
-            <div class="coverage-grid">
-              ${defense.coverage.map((item) => `
-                <article class="coverage-card">
-                  <h3>${escapeHtml(item.title)}</h3>
-                  <p class="checkpoint-applies">${escapeHtml(item.channel)}</p>
-                  <p>${escapeHtml(item.detail)}</p>
-                </article>
-              `).join("")}
-            </div>
-          </article>
-
-          <article class="reference-panel">
-            <p class="eyebrow">Implementation Options</p>
-            <h2>Controls You Can Actually Build</h2>
-            <div class="checkpoint-grid">
-              ${defense.implementationOptions.map((item) => `
-                <article class="checkpoint-card">
-                  <p class="flow-stage-id">${escapeHtml(item.id)}</p>
-                  <h3>${escapeHtml(item.title)}</h3>
-                  <p>${escapeHtml(item.detail)}</p>
-                </article>
-              `).join("")}
-            </div>
-          </article>
-        </section>
-      </section>
-    `;
-  }
-
-  function renderSharedDefenseTeaser(category, scenario) {
-    const coverage = category.sharedDefense && category.sharedDefense.coverage
-      ? category.sharedDefense.coverage.find((item) => item.scenarioId === scenario.id)
-      : null;
-    const defense = category.sharedDefense || {};
-    const teaserTitle = defense.teaserTitle || `${category.id} uses one defense architecture across all three scenarios`;
-    const teaserIntro = defense.teaserIntro || `${scenario.title} teaches how the attack begins. The defense lesson for ${category.id} is centralized so students learn one reusable architecture instead of memorizing three separate fixes.`;
-    const teaserLinkLabel = defense.teaserLinkLabel || `Open the ${category.id} shared defense architecture`;
-
-    return `
-      <article class="shared-defense-teaser-card">
-        <p class="eyebrow">Shared Defense View</p>
-        <h2>${escapeHtml(teaserTitle)}</h2>
-        <p class="hero-copy">
-          ${escapeHtml(teaserIntro)}
-        </p>
-        ${coverage ? `
-          <div class="shared-defense-teaser-focus">
-            <h3>${escapeHtml(coverage.title)}</h3>
-            <p class="checkpoint-applies">${escapeHtml(coverage.channel)}</p>
-            <p>${escapeHtml(coverage.detail)}</p>
-          </div>
-        ` : ""}
-        <div class="shared-defense-teaser-actions">
-          <a class="card-link" href="${category.href}#shared-defense">${escapeHtml(teaserLinkLabel)}</a>
-        </div>
-      </article>
-    `;
-  }
 
   function renderDiagram(diagram) {
     const { width, height, nodes, edges } = diagram;
