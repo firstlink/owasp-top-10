@@ -35,6 +35,8 @@ a {
 
 .site-shell-scenario {
   width: min(1360px, calc(100% - 24px));
+  padding-top: 22px;
+  padding-bottom: 28px;
 }
 
 .page-hero {
@@ -49,6 +51,12 @@ a {
 .page-hero-simple {
   display: grid;
   gap: 10px;
+}
+
+.page-hero-scenario {
+  margin-bottom: 8px;
+  padding: 12px 16px;
+  gap: 2px;
 }
 
 .eyebrow,
@@ -83,12 +91,72 @@ h1 {
   font-size: 14px;
 }
 
+.page-hero-scenario .breadcrumbs {
+  font-size: 10px;
+}
+
+.page-hero-scenario h1 {
+  font-size: clamp(1.3rem, 1.9vw, 2rem);
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.page-hero-scenario.page-hero-minimal {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.page-hero-scenario.page-hero-minimal .breadcrumbs {
+  display: none;
+}
+
+.page-hero-scenario.page-hero-minimal h1 {
+  margin-top: 0;
+}
+
+@media (min-width: 960px) {
+  .page-hero-scenario h1 {
+    white-space: nowrap;
+  }
+
+  .page-hero-scenario.page-hero-inline {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .page-hero-scenario.page-hero-inline .breadcrumbs {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .page-hero-scenario.page-hero-inline #scenario-breadcrumb-title {
+    display: none;
+  }
+
+  .page-hero-scenario.page-hero-inline h1 {
+    flex: 0 1 auto;
+    margin-top: 0;
+  }
+}
+
+.page-hero-scenario .eyebrow {
+  display: none;
+}
+
 .section {
   background: transparent;
 }
 
 .section-plain {
   padding: 0;
+}
+
+.category-section-heading {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 0 2px;
 }
 
 .asi-grid,
@@ -116,6 +184,15 @@ h1 {
   box-shadow: var(--shadow);
 }
 
+.scenario-card-safe {
+  background: linear-gradient(180deg, #f5fbf6 0%, #ffffff 100%);
+  border-color: #bfd8c8;
+}
+
+.scenario-card-safe .card-link {
+  color: #2d6a4f;
+}
+
 .asi-card h3,
 .scenario-card h3 {
   font-size: 1.15rem;
@@ -134,14 +211,99 @@ h1 {
 
 .scenario-shell {
   display: grid;
-  gap: 14px;
+  gap: 10px;
+}
+
+.scenario-step-strip {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.scenario-step-strip.is-attack {
+  background: #fff7f7;
+  border-color: #e6c0c0;
+}
+
+.scenario-step-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.scenario-step-meta {
+  display: none;
+}
+
+.scenario-step-strip.is-attack .scenario-step-meta {
+  color: #9c2f2f;
+}
+
+.scenario-step-title {
+  font-size: 0.98rem;
+  line-height: 1.2;
+}
+
+.scenario-step-detail {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.scenario-step-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.scenario-step-button {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.scenario-step-strip.is-attack .scenario-step-button:not(.scenario-step-button-secondary) {
+  background: #9c2f2f;
+}
+
+.scenario-step-button:disabled {
+  background: #d5d0c8;
+  color: #7f7a72;
+  cursor: not-allowed;
+}
+
+.scenario-step-button-secondary {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
 }
 
 .scenario-tabs {
   display: inline-flex;
-  gap: 8px;
+  gap: 6px;
   width: fit-content;
-  padding: 6px;
+  padding: 4px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -149,13 +311,14 @@ h1 {
 }
 
 .scenario-tab {
-  min-height: 42px;
-  padding: 0 18px;
+  min-height: 36px;
+  padding: 0 14px;
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--muted);
   font: inherit;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -166,6 +329,8 @@ h1 {
 }
 
 .diagram-frame {
+  position: relative;
+  z-index: 1;
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -173,19 +338,31 @@ h1 {
   box-shadow: var(--shadow);
 }
 
-.diagram-frame-large {
-  min-height: 920px;
+.diagram-frame-bare {
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-.diagram-frame iframe,
-#scenario-diagram-root {
+.diagram-frame-large {
+  min-height: 0;
+}
+
+.diagram-frame iframe {
+  display: block;
   width: 100%;
-  min-height: 920px;
+  height: 1040px;
   border: 0;
   background: #fff;
 }
 
 #scenario-diagram-root {
+  width: 100%;
+  min-height: 1040px;
+  border: 0;
+  background: #fff;
   padding: 20px;
 }
 
@@ -193,6 +370,255 @@ h1 {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.shared-defense-shell {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.shared-defense-intro,
+.defense-flow-panel,
+.reference-panel,
+.shared-defense-teaser-card {
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.architect-grid,
+.defense-reference-grid,
+.checkpoint-grid,
+.coverage-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.architect-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.architect-card,
+.flow-lane-card,
+.flow-stage-card,
+.flow-context-card,
+.flow-outcome-card,
+.flow-audit-card,
+.checkpoint-card,
+.coverage-card,
+.shared-defense-teaser-focus {
+  padding: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.architect-card {
+  background: linear-gradient(180deg, #fffdf8 0%, #f7f1e7 100%);
+}
+
+.architect-card p,
+.flow-lane-card p,
+.flow-stage-card p,
+.flow-context-card p,
+.flow-outcome-card p,
+.flow-audit-card p,
+.checkpoint-card p,
+.coverage-card p,
+.shared-defense-teaser-focus p,
+.shared-defense-teaser-card p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.architect-card h3,
+.flow-lane-card h3,
+.flow-stage-card h3,
+.flow-context-card h3,
+.flow-outcome-card h3,
+.flow-audit-card h3,
+.checkpoint-card h3,
+.coverage-card h3,
+.shared-defense-teaser-focus h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.defense-flow-panel,
+.reference-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.defense-flow-header {
+  display: grid;
+  gap: 10px;
+}
+
+.flow-lane-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.flow-lane-card {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  min-height: 160px;
+  padding-top: 46px;
+  background: #fffdf8;
+}
+
+.flow-stack {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.flow-stage-card,
+.flow-context-card,
+.flow-outcome-card {
+  width: min(760px, 100%);
+}
+
+.flow-stage-card {
+  display: grid;
+  gap: 12px;
+  background: #f5fbf6;
+  border-color: #b7d5c4;
+}
+
+.flow-stage-card-d3,
+.flow-stage-card-d4,
+.flow-stage-card-d5 {
+  background: #f9fafc;
+  border-color: #cfd6e8;
+}
+
+.flow-stage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.flow-stage-id,
+.flow-context-title {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.flow-bullets {
+  display: grid;
+  gap: 10px;
+  margin-left: 18px;
+  color: var(--muted);
+}
+
+.flow-drop-arrow,
+.flow-transition {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
+}
+
+.flow-drop-arrow {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.flow-transition span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 16px;
+  background: #f7f4ee;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.flow-context-card {
+  display: grid;
+  gap: 8px;
+  background: #eef1ff;
+  border-color: #c8d0f2;
+}
+
+.flow-outcome-card {
+  display: grid;
+  gap: 12px;
+  background: #fffdf8;
+}
+
+.flow-audit-card {
+  width: 100%;
+  background: #f0f7f2;
+  border-color: #9dc4ad;
+}
+
+.defense-reference-grid {
+  grid-template-columns: 1fr;
+}
+
+.checkpoint-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.coverage-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.checkpoint-applies {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.shared-defense-teaser {
+  display: grid;
+}
+
+.shared-defense-teaser-card {
+  display: grid;
+  gap: 16px;
+}
+
+.shared-defense-teaser-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.step-badge {
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0 10px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.flow-stage-head .step-badge {
+  position: static;
 }
 
 @media (max-width: 720px) {
@@ -207,10 +633,59 @@ h1 {
     border-radius: 16px;
   }
 
+  .page-hero-scenario {
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    gap: 2px;
+  }
+
+  .page-hero-scenario .breadcrumbs {
+    font-size: 10px;
+  }
+
+  .page-hero-scenario h1 {
+    font-size: clamp(1.25rem, 6.6vw, 1.8rem);
+    white-space: normal;
+  }
+
+  .page-hero-scenario.page-hero-minimal {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
   .scenario-tabs {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .scenario-step-strip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .scenario-step-title {
+    font-size: 0.92rem;
+  }
+
+  .scenario-step-detail {
+    -webkit-line-clamp: 2;
+  }
+
+  .scenario-step-actions {
+    width: 100%;
+  }
+
+  .scenario-step-button {
+    flex: 1 1 0;
+  }
+
+  .scenario-tab {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 13px;
   }
 
   .scenario-tab {
@@ -218,9 +693,27 @@ h1 {
     padding: 0 12px;
   }
 
-  .diagram-frame-large,
-  .diagram-frame iframe,
+  .flow-lane-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .architect-grid,
+  .checkpoint-grid,
+  .coverage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flow-stage-card,
+  .flow-context-card,
+  .flow-outcome-card {
+    width: 100%;
+  }
+
+  .diagram-frame iframe {
+    height: 720px;
+  }
+
   #scenario-diagram-root {
-    min-height: 760px;
+    min-height: 920px;
   }
 }

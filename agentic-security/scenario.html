@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ASI Scenario</title>
-<link rel="stylesheet" href="./assets/styles.css">
+<link rel="stylesheet" href="./assets/styles.css?v=20260618p">
 </head>
 <body data-page="scenario">
   <div class="site-shell site-shell-scenario">
-    <header class="page-hero page-hero-simple">
+    <header class="page-hero page-hero-simple page-hero-scenario">
       <nav class="breadcrumbs">
         <a href="./index.html">Top 10</a>
         <span>/</span>
@@ -26,14 +26,28 @@
         <button class="scenario-tab" data-view="defense" type="button">Defense View</button>
       </div>
 
-      <section class="diagram-frame diagram-frame-large">
-        <iframe id="scenario-frame" title="Scenario walkthrough" loading="lazy" hidden></iframe>
+      <section class="scenario-step-strip" id="scenario-step-strip" hidden>
+        <div class="scenario-step-actions">
+          <button class="scenario-step-button scenario-step-button-secondary" id="scenario-step-reset" type="button" hidden>↺ Restart</button>
+          <button class="scenario-step-button" id="scenario-step-next" type="button">▶ Start</button>
+        </div>
+        <div class="scenario-step-copy">
+          <p class="scenario-step-meta" id="scenario-step-meta">Click to begin</p>
+          <h2 class="scenario-step-title" id="scenario-step-title"></h2>
+          <p class="scenario-step-detail" id="scenario-step-detail"></p>
+        </div>
+      </section>
+
+      <section class="diagram-frame diagram-frame-large" id="scenario-diagram-section">
+        <iframe id="scenario-frame" title="Scenario walkthrough" loading="eager" hidden></iframe>
         <div id="scenario-diagram-root" hidden></div>
       </section>
+
+      <section class="shared-defense-teaser" id="scenario-shared-defense-root" hidden></section>
     </main>
   </div>
 
-  <script src="./assets/asi-data.js"></script>
-  <script src="./assets/site.js"></script>
+  <script src="./assets/asi-data.js?v=20260618p"></script>
+  <script src="./assets/site.js?v=20260618p"></script>
 </body>
 </html>

@@ -17,3 +17,7 @@ npm test
 ```
 
 The test suite starts the local server on an ephemeral port and checks the home page, category page, scenario page, interactive walkthrough page, and shared CSS asset.
+
+## Documentation
+
+- ASI01 shared defense architecture: [agentic-security/ASI01_DEFENSE_VIEW.md](/Users/firstlink/Documents/owasp/agentic-security/ASI01_DEFENSE_VIEW.md)

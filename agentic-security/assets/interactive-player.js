@@ -4,7 +4,12 @@
   const scenarioId = params.get("scenario");
   const view = params.get("view") === "defense" ? "defense" : "attack";
   const autoplay = params.get("autoplay");
+  const externalPanel = params.get("embed") === "external-panel";
+  const frameBare = params.get("frame") === "bare";
   const scenario = walkthroughs[scenarioId];
+  const WALKTHROUGH_STATE_MESSAGE = "asi:walkthrough-state";
+  const WALKTHROUGH_ACTION_MESSAGE = "asi:walkthrough-action";
+  let pendingStateFrame = null;
 
   if (!scenario || !scenario[view]) {
     document.body.innerHTML = "<p style='font-family: sans-serif; padding: 24px;'>Walkthrough not found.</p>";
@@ -13,10 +18,13 @@
 
   const data = scenario[view];
   const attackTemplate = data.attackTemplate || "default";
+  const defenseTemplate = data.defenseTemplate || "default";
   document.title = `${scenario.label} · ${view === "attack" ? "Attack View" : "Defense View"}`;
-  document.body.innerHTML = view === "attack" ? renderAttackByTemplate(data, attackTemplate) : renderDefense(data);
+  document.body.innerHTML = view === "attack"
+    ? renderAttackByTemplate(data, attackTemplate)
+    : renderDefenseByTemplate(data, defenseTemplate);
 
-  const steps = view === "attack" ? buildAttackSteps(attackTemplate) : buildDefenseSteps();
+  const steps = view === "attack" ? buildAttackSteps(attackTemplate) : buildDefenseSteps(defenseTemplate);
   let current = -1;
 
   window.advance = function advance() {
@@ -37,6 +45,7 @@
     } else {
       nextButton.textContent = "▶ Next";
     }
+    queueParentSync();
   };
 
   window.reset = function reset() {
@@ -61,6 +70,7 @@
     nextButton.disabled = false;
     nextButton.classList.remove("atk");
     document.getElementById("breset").style.display = "none";
+    queueParentSync();
   };
 
   const dots = document.getElementById("dots");
@@ -84,6 +94,32 @@
     for (let index = 0; index < maxSteps; index += 1) {
       window.advance();
     }
+  }
+
+  if (window.parent && window.parent !== window) {
+    window.addEventListener("message", (event) => {
+      const message = event.data;
+      if (!message || message.type !== WALKTHROUGH_ACTION_MESSAGE) return;
+      if (message.action === "sync") {
+        queueParentSync();
+        return;
+      }
+      if (message.action === "advance") {
+        window.advance();
+        return;
+      }
+      if (message.action === "reset") {
+        window.reset();
+      }
+    });
+
+    if (typeof ResizeObserver !== "undefined") {
+      const resizeObserver = new ResizeObserver(() => queueParentSync());
+      if (document.body) resizeObserver.observe(document.body);
+      if (document.documentElement) resizeObserver.observe(document.documentElement);
+    }
+
+    window.addEventListener("load", () => queueParentSync());
   }
 
   function showElement(id) {
@@ -116,8 +152,71 @@
     });
   }
 
+  function queueParentSync() {
+    if (!window.parent || window.parent === window) return;
+    if (pendingStateFrame !== null) {
+      window.cancelAnimationFrame(pendingStateFrame);
+    }
+    pendingStateFrame = window.requestAnimationFrame(() => {
+      pendingStateFrame = null;
+      window.parent.postMessage({
+        type: WALKTHROUGH_STATE_MESSAGE,
+        state: getWalkthroughState()
+      }, "*");
+    });
+  }
+
+  function getWalkthroughState() {
+    const panel = document.getElementById("panel");
+    const meta = document.getElementById("ps");
+    const heading = document.getElementById("ph");
+    const detail = document.getElementById("pd");
+    const nextButton = document.getElementById("bnext");
+    const resetButton = document.getElementById("breset");
+    return {
+      detail: detail ? detail.textContent || "" : "",
+      heading: heading ? heading.textContent || "" : "",
+      height: measureDocumentHeight(),
+      isAttack: panel ? panel.classList.contains("atk") : false,
+      meta: meta ? meta.textContent || "" : "",
+      nextDisabled: nextButton ? nextButton.disabled : false,
+      nextLabel: nextButton ? nextButton.textContent || "" : "▶ Start",
+      resetHidden: !resetButton || resetButton.style.display === "none"
+    };
+  }
+
+  function measureDocumentHeight() {
+    const body = document.body;
+    if (!body) return 0;
+    const bodyRect = body.getBoundingClientRect();
+    const bodyStyles = window.getComputedStyle(body);
+    const paddingBottom = Number.parseFloat(bodyStyles.paddingBottom || "0") || 0;
+    const contentBottom = Array.from(body.children).reduce((max, child) => {
+      return Math.max(max, child.getBoundingClientRect().bottom - bodyRect.top);
+    }, 0);
+    return Math.ceil(Math.max(
+      body.scrollHeight,
+      document.documentElement ? document.documentElement.scrollHeight : 0,
+      contentBottom + paddingBottom
+    ));
+  }
+
   function buildAttackSteps(template) {
-    if (template === "asi02-loop") return buildAttackLoopSteps();
+    const builders = {
+      default: buildDefaultAttackSteps,
+      "asi02-loop": buildAttackLoopSteps,
+      "asi06-memory": buildAttackMemorySteps,
+      "asi06-drift": buildAttackDriftSteps,
+      "asi10-metric-gaming": buildDefaultAttackSteps,
+      "asi10-replication": buildDefaultAttackSteps,
+      "asi07-channel": buildAttackChannelSteps,
+      "asi08-cascade": buildAttackCascadeSteps
+    };
+    const builder = builders[template] || builders.default;
+    return builder();
+  }
+
+  function buildDefaultAttackSteps() {
     return [
       { show: ["g0"], co: [], fl: [], lb: [], atk: false },
       { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
@@ -143,7 +242,66 @@
     ];
   }
 
-  function buildDefenseSteps() {
+  function buildAttackMemorySteps() {
+    return [
+      { show: ["g0"], co: [], fl: [], lb: [], atk: true },
+      { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: true },
+      { show: ["g2", "gzone"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: true },
+      { show: ["g3", "g4"], co: ["c2s"], fl: ["c2f"], lb: ["l2"], atk: false },
+      { show: [], co: ["c3s", "c3v"], fl: ["c3f", "c3vf"], lb: ["l3"], atk: false },
+      { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["la1"], atk: true },
+      { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l4", "l5"], atk: true },
+      { show: ["g7"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: true }
+    ];
+  }
+
+  function buildAttackDriftSteps() {
+    return [
+      { show: ["g0"], co: [], fl: [], lb: [], atk: true },
+      { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: true },
+      { show: ["g2", "gzone"], co: ["c1s"], fl: ["c1f"], lb: ["l1", "l2"], atk: true },
+      { show: ["g3"], co: ["c2s"], fl: ["c2f"], lb: ["l3"], atk: true },
+      { show: ["g4"], co: ["c3s", "c3v"], fl: ["c3f", "c3vf"], lb: ["l4"], atk: true },
+      { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["l5"], atk: true },
+      { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l6"], atk: true }
+    ];
+  }
+
+  function buildAttackChannelSteps() {
+    return [
+      { show: ["g0"], co: [], fl: [], lb: [], atk: false },
+      { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
+      { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
+      { show: ["g3"], co: [], fl: [], lb: ["l2"], atk: true },
+      { show: ["gzone", "g4"], co: ["c2s", "c3s"], fl: ["c2f", "c3f"], lb: ["la1"], atk: true },
+      { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["l4"], atk: true },
+      { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: true },
+      { show: ["g7"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: true }
+    ];
+  }
+
+  function buildAttackCascadeSteps() {
+    return [
+      { show: ["g0"], co: [], fl: [], lb: [], atk: true },
+      { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: true },
+      { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: true },
+      { show: ["g3"], co: ["c2s"], fl: ["c2f"], lb: ["l2"], atk: true },
+      { show: ["g4"], co: ["c3s"], fl: ["c3f"], lb: ["l3"], atk: true },
+      { show: ["gzone", "g5"], co: ["c4s"], fl: ["c4f"], lb: ["la1"], atk: true },
+      { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l4", "l5"], atk: true }
+    ];
+  }
+
+  function buildDefenseSteps(template) {
+    const builders = {
+      default: buildDefaultDefenseSteps,
+      "asi01-shared": buildSharedDefenseSteps
+    };
+    const builder = builders[template] || builders.default;
+    return builder();
+  }
+
+  function buildDefaultDefenseSteps() {
     return [
       { show: ["g0"], co: [], fl: [], lb: [], atk: false },
       { show: ["gzone", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
@@ -154,12 +312,48 @@
     ];
   }
 
+  function buildSharedDefenseSteps() {
+    return [
+      { show: ["g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
+      { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
+      { show: ["gzone", "g3"], co: ["c2s"], fl: ["c2f", "c3f"], lb: ["l2", "l3"], atk: false },
+      { show: ["g4"], co: ["c3s", "c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
+      { show: ["g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
+      { show: ["g6", "g6ctx"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
+      { show: ["g7"], co: ["c7s"], fl: ["c7f"], lb: ["l7"], atk: false },
+      { show: ["g8"], co: ["c8s"], fl: ["c8f"], lb: ["l8"], atk: false },
+      { show: ["g9", "g10", "g11"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false }
+    ];
+  }
+
   function renderAttackByTemplate(config, template) {
-    if (template === "asi02-loop") return renderAttackLoop(config);
-    return renderAttack(config);
+    const renderers = {
+      default: renderAttack,
+      "asi09-trust-review": renderAttackTrust,
+      "asi10-metric-gaming": renderAttackMetricGaming,
+      "asi10-replication": renderAttackReplication,
+      "asi02-loop": renderAttackLoop,
+      "asi06-memory": renderAttackMemory,
+      "asi06-drift": renderAttackDrift,
+      "asi07-channel": renderAttackChannel,
+      "asi08-cascade": renderAttackCascade
+    };
+    const renderer = renderers[template] || renderers.default;
+    return renderer(config);
+  }
+
+  function renderDefenseByTemplate(config, template) {
+    const renderers = {
+      default: renderDefense,
+      "asi01-shared": renderDefenseShared
+    };
+    const renderer = renderers[template] || renderers.default;
+    return renderer(config);
   }
 
   function renderAttack(config) {
+    const agentGoalLayout = fitSingleLine(config.agent.goal, 176, 12, 10);
+    const payloadTitleLayout = fitSingleLine(config.payload.title, 188, 17, 13);
     const payloadVisibleLayout = fitWrappedText(config.payload.visible, 184, 12, 10, 2);
     const payloadHidden1Layout = fitWrappedText(config.payload.hidden1, 190, 12, 10, 2);
     const payloadHidden2Layout = fitWrappedText(config.payload.hidden2, 190, 14, 11, 2);
@@ -169,12 +363,12 @@
     const payloadHumanLayout = config.payload.hiddenHumanNote
       ? fitWrappedText(config.payload.hiddenHumanNote, 190, 10, 9, 2)
       : null;
-    const outcomeBottomLayout = fitWrappedText(config.outcome.bottom, 190, 14, 11, 2);
+    const outcomeBottomLayout = fitWrappedText(config.outcome.bottom, 184, 13, 10, 2);
     const payloadVisibleY = payloadVisibleLayout.lines.length > 1 ? 384 : 391;
     const payloadHidden1Y = 480;
     const payloadHidden2Y = payloadHidden1Y + (payloadHidden1Layout.lines.length - 1) * 14 + 26;
-    const payloadNoteY = payloadHidden2Y + (payloadHidden2Layout.lines.length - 1) * 17 + 18;
-    const payloadHumanY = payloadNoteY + (payloadNoteLayout ? payloadNoteLayout.lines.length * 11 + 6 : 0);
+    const payloadNoteY = 575;
+    const payloadHumanY = payloadNoteY + (payloadNoteLayout ? payloadNoteLayout.lines.length * 11 + 8 : 0);
     const attackContextLabel = config.labels.l5b ? `${config.labels.l5a} ${config.labels.l5b}` : config.labels.l5a;
 
     return `
@@ -183,13 +377,13 @@
       <h1>${escapeHtml(config.heading)}</h1>
       <div class="dots" id="dots"></div>
       <div class="wrap">
-        <svg viewBox="0 0 1400 860" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
             <clipPath id="dc"><rect x="1010" y="326" width="220" height="230" rx="20"/></clipPath>
-            <clipPath id="oc"><rect x="1010" y="660" width="220" height="140" rx="20"/></clipPath>
+            <clipPath id="oc"><rect x="1010" y="662" width="220" height="152" rx="20"/></clipPath>
           </defs>
 
           <rect width="1400" height="860" fill="#fff"/>
@@ -197,7 +391,7 @@
           <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
 
           <g class="az" id="g4az">
-            <rect x="315" y="118" width="945" height="500" rx="28" fill="rgba(156,47,47,0.02)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="315" y="118" width="945" height="524" rx="28" fill="rgba(156,47,47,0.02)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="500" y="94" width="400" height="28" rx="14" fill="#ffffff"/>
             <text x="700" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
@@ -213,11 +407,11 @@
           <line class="fl" id="c0f" x1="240" y1="225" x2="350" y2="225" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g1">
-            <rect x="350" y="160" width="220" height="130" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <rect x="350" y="160" width="220" height="146" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
             <text x="460" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
             <text x="460" y="252" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#5360be">${escapeHtml(config.agent.sub1)}</text>
-            <rect x="378" y="276" width="164" height="34" rx="10" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
-            <text x="460" y="299" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#2d6a4f">${escapeHtml(config.agent.goal)}</text>
+            <rect x="372" y="270" width="176" height="32" rx="10" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="460" y="292" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentGoalLayout.fontSize}" font-weight="700" fill="#2d6a4f">${escapeHtml(agentGoalLayout.text)}</text>
           </g>
 
           <line class="co" id="c1s" x1="570" y1="225" x2="680" y2="225" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
@@ -247,14 +441,14 @@
             <rect x="1010" y="408" width="220" height="148" fill="#fdf0f0" clip-path="url(#dc)"/>
             <line x1="1014" y1="408" x2="1226" y2="408" stroke="#ddd6cb" stroke-width="1.4"/>
             <rect x="1010" y="326" width="220" height="230" rx="20" fill="none" stroke="#b87a45" stroke-width="2.3"/>
-            <text x="1120" y="366" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" font-weight="700" fill="#38342f">${escapeHtml(config.payload.title)}</text>
+            <text x="1120" y="366" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadTitleLayout.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(payloadTitleLayout.text)}</text>
             <text x="1120" y="${payloadVisibleY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadVisibleLayout.fontSize}" fill="#8a847b">${renderTspans(1120, payloadVisibleLayout.lines, payloadVisibleLayout.fontSize * 1.18)}</text>
             <text x="1120" y="454" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hiddenTitle)}</text>
             <text x="1120" y="${payloadHidden1Y}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadHidden1Layout.fontSize}" fill="#ad3535">${renderTspans(1120, payloadHidden1Layout.lines, payloadHidden1Layout.fontSize * 1.18)}</text>
             <text x="1120" y="${payloadHidden2Y}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadHidden2Layout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, payloadHidden2Layout.lines, payloadHidden2Layout.fontSize * 1.16)}</text>
-            ${payloadNoteLayout ? `<text x="1120" y="${payloadNoteY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadNoteLayout.fontSize}" font-style="italic" fill="#b36a6a">${renderTspans(1120, payloadNoteLayout.lines, payloadNoteLayout.fontSize * 1.16)}</text>` : ""}
-            ${payloadHumanLayout ? `<text x="1120" y="${payloadHumanY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadHumanLayout.fontSize}" fill="#c08a8a">${renderTspans(1120, payloadHumanLayout.lines, payloadHumanLayout.fontSize * 1.16)}</text>` : ""}
           </g>
+          ${payloadNoteLayout ? `<text class="ng" id="g3note1" x="1120" y="${payloadNoteY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadNoteLayout.fontSize}" font-style="italic" fill="#b36a6a">${renderTspans(1120, payloadNoteLayout.lines, payloadNoteLayout.fontSize * 1.16)}</text>` : ""}
+          ${payloadHumanLayout ? `<text class="ng" id="g3note2" x="1120" y="${payloadHumanY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadHumanLayout.fontSize}" fill="#c08a8a">${renderTspans(1120, payloadHumanLayout.lines, payloadHumanLayout.fontSize * 1.16)}</text>` : ""}
 
           <line class="co" id="ias" x1="1010" y1="468" x2="570" y2="468" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
           <line class="fl a" id="iaf" x1="1010" y1="468" x2="570" y2="468" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
@@ -267,41 +461,41 @@
             ${innerPill(460, 546, 204, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 13, 800)}
           </g>
 
-          <line class="co" id="c4s" x1="460" y1="570" x2="460" y2="670" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c4f" x1="460" y1="570" x2="460" y2="670" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c4s" x1="460" y1="570" x2="460" y2="654" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c4f" x1="460" y1="570" x2="460" y2="654" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g5">
-            <rect x="350" y="674" width="220" height="140" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="460" y="732" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.hijacked.title)}</text>
-            <text x="460" y="764" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="800" fill="#ad3535">${escapeHtml(config.hijacked.sub1)}</text>
-            ${innerPill(460, 792, 208, config.hijacked.goal, "#efb0b0", "#efb0b0", "#7d2626", 13, 800)}
+            <rect x="350" y="662" width="220" height="146" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="460" y="718" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.hijacked.title)}</text>
+            <text x="460" y="748" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.hijacked.sub1)}</text>
+            ${innerPill(460, 780, 196, config.hijacked.goal, "#efb0b0", "#efb0b0", "#7d2626", 12, 800)}
           </g>
 
-          <line class="co" id="c5s" x1="570" y1="744" x2="680" y2="744" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c5f" x1="570" y1="744" x2="680" y2="744" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c5s" x1="570" y1="736" x2="680" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c5f" x1="570" y1="736" x2="680" y2="736" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g6">
-            <rect x="680" y="674" width="220" height="140" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="790" y="736" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.toolBottom.title)}</text>
-            <text x="790" y="768" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#6b655c">${escapeHtml(config.toolBottom.sub1)}</text>
-            <text x="790" y="796" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#ad3535">${escapeHtml(config.toolBottom.sub2)}</text>
+            <rect x="680" y="662" width="220" height="146" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="790" y="724" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.toolBottom.title)}</text>
+            <text x="790" y="754" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#6b655c">${escapeHtml(config.toolBottom.sub1)}</text>
+            <text x="790" y="782" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#ad3535">${escapeHtml(config.toolBottom.sub2)}</text>
           </g>
 
-          <line class="co" id="c6s" x1="900" y1="744" x2="940" y2="744" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
-          <line class="fl a" id="c6f" x1="900" y1="744" x2="940" y2="744" stroke="#ad3535" stroke-width="4.5"/>
-          <path class="co" id="c6t" d="M940 744 L940 710 L1010 710" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <path class="co" id="c6a" d="M940 744 L940 782 L1010 782" fill="none" stroke="#ad3535" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="940" y1="744" x2="940" y2="782" stroke="#ad3535" stroke-width="4.5"/>
+          <line class="co" id="c6s" x1="900" y1="736" x2="940" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="900" y1="736" x2="940" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M940 736 L940 704 L1010 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <path class="co" id="c6a" d="M940 736 L940 778 L1010 778" fill="none" stroke="#ad3535" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="940" y1="736" x2="940" y2="778" stroke="#ad3535" stroke-width="4.5"/>
 
           <g class="ng" id="g7">
-            <rect x="1010" y="674" width="220" height="140" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <rect x="1010" y="674" width="220" height="54" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
-            <text x="1120" y="696" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#97a0b4">${escapeHtml(config.outcome.top)}</text>
-            <text x="1120" y="716" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#b2aba0">${escapeHtml(config.outcome.topSub)}</text>
-            <line x1="1014" y1="744" x2="1226" y2="744" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
-            <rect x="1010" y="746" width="220" height="68" fill="#fff8f8" clip-path="url(#oc)"/>
-            <text x="1120" y="780" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.outcome.bottomTitle)}</text>
-            <text x="1120" y="800" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${outcomeBottomLayout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, outcomeBottomLayout.lines, outcomeBottomLayout.fontSize * 1.12)}</text>
+            <rect x="1010" y="662" width="220" height="152" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="1010" y="662" width="220" height="54" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
+            <text x="1120" y="684" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#97a0b4">${escapeHtml(config.outcome.top)}</text>
+            <text x="1120" y="704" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#b2aba0">${escapeHtml(config.outcome.topSub)}</text>
+            <line x1="1014" y1="732" x2="1226" y2="732" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <rect x="1010" y="734" width="220" height="80" fill="#fff8f8" clip-path="url(#oc)"/>
+            <text x="1120" y="768" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.outcome.bottomTitle)}</text>
+            <text x="1120" y="790" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${outcomeBottomLayout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, outcomeBottomLayout.lines, outcomeBottomLayout.fontSize * 1.12)}</text>
           </g>
 
           ${flowLabel(298, 198, config.labels.l0, "#4452b8", "l0")}
@@ -309,14 +503,480 @@
           ${flowLabel(958, 198, config.labels.l2, "#4452b8", "l2")}
           ${flowLabel(1162, 308, config.labels.l3, "#4452b8", "l3")}
           ${flowLabel(790, 450, attackContextLabel, "#ad3535", "la1", 13)}
-          ${flowLabel(460, 620, config.labels.l6, "#ad3535", "l4")}
-          ${flowLabel(606, 748, config.labels.l7, "#ad3535", "l5")}
-          ${flowLabel(1006, 748, config.labels.l8, "#ad3535", "l6")}
+          ${flowLabel(460, 618, config.labels.l6, "#ad3535", "l4")}
+          ${flowLabel(620, 720, config.labels.l7, "#ad3535", "l5")}
+          ${flowLabel(1000, 754, config.labels.l8, "#ad3535", "l6")}
         </svg>
       </div>
       ${panelMarkup(
         config.introTitle || `${scenario.label} — Attack View`,
         config.introDetail || "Click Start to reveal the flow one step at a time."
+      )}
+    `;
+  }
+
+  function renderAttackTrust(config) {
+    const entryTitle = fitSingleLine(config.entry.title, 186, 16, 12);
+    const entrySub1 = fitWrappedText(config.entry.sub1, 184, 12, 10, 2);
+    const entrySub2 = fitWrappedText(config.entry.sub2, 184, 11, 9, 2);
+    const agentTitle = fitSingleLine(config.agent.title, 198, 18, 14);
+    const agentSub1 = fitWrappedText(config.agent.sub1, 184, 13, 11, 2);
+    const agentGoal = fitWrappedText(config.agent.goal, 168, 12, 10, 2);
+    const recommendationTitle = fitSingleLine(config.recommendation.title, 204, 17, 13);
+    const recommendationSub1 = fitWrappedText(config.recommendation.sub1, 204, 13, 11, 2);
+    const recommendationSub2 = fitWrappedText(config.recommendation.sub2, 204, 12, 10, 2);
+    const recommendationEmphasis = fitWrappedText(config.recommendation.emphasis, 188, 11, 10, 2);
+    const reviewerTitle = fitSingleLine(config.reviewer.title, 198, 17, 13);
+    const reviewerSub1 = fitWrappedText(config.reviewer.sub1, 194, 12.5, 10, 2);
+    const reviewerSub2 = fitWrappedText(config.reviewer.sub2, 194, 11, 9, 2);
+    const decisionTitle = fitSingleLine(config.decision.title, 190, 18, 14);
+    const decisionGoal = fitWrappedText(config.decision.goal, 184, 12, 10, 2);
+    const actionTitle = fitSingleLine(config.action.title, 188, 18, 13);
+    const actionSub1 = fitWrappedText(config.action.sub1, 192, 12.5, 10, 2);
+    const actionSub2 = fitWrappedText(config.action.sub2, 192, 11, 9, 2);
+    const outcomeBottom = fitWrappedText(config.outcome.bottom, 194, 13, 10, 2);
+
+    return `
+      <style>${baseStyles()}</style>
+      <div class="badge">${escapeHtml(config.badge)}</div>
+      <h1>${escapeHtml(config.heading)}</h1>
+      <div class="dots" id="dots"></div>
+      <div class="wrap">
+        <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+            <clipPath id="oc-trust"><rect x="1040" y="650" width="240" height="168" rx="20"/></clipPath>
+          </defs>
+
+          <rect width="1400" height="900" fill="#fff"/>
+          <text x="700" y="54" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#b2aba0" letter-spacing="3.4">SOURCE EVIDENCE  ·  AGENT ANALYSIS  ·  AI RECOMMENDATION  ·  HUMAN REVIEW  ·  ACTION</text>
+          <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
+
+          <g class="az" id="g4az">
+            <rect x="700" y="118" width="520" height="430" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="820" y="94" width="280" height="28" rx="14" fill="#ffffff"/>
+            <text x="960" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+          </g>
+
+          <g class="ng" id="g0">
+            <rect x="70" y="170" width="200" height="122" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="170" y="214" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entryTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(entryTitle.text)}</text>
+            <text x="170" y="244" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub1.fontSize}" fill="#6b655c">${renderTspans(170, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
+            <text x="170" y="278" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub2.fontSize}" fill="#8a847b">${renderTspans(170, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c0s" x1="270" y1="230" x2="330" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c0f" x1="270" y1="230" x2="330" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g1">
+            <rect x="330" y="156" width="220" height="150" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="440" y="210" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentTitle.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(agentTitle.text)}</text>
+            <text x="440" y="240" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentSub1.fontSize}" fill="#5360be">${renderTspans(440, agentSub1.lines, agentSub1.fontSize * 1.16)}</text>
+            <rect x="358" y="258" width="164" height="${agentGoal.lines.length > 1 ? 44 : 32}" rx="11" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="440" y="${agentGoal.lines.length > 1 ? 274 : 280}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(440, agentGoal.lines, agentGoal.fontSize * 1.14)}</text>
+          </g>
+
+          <line class="co" id="c1s" x1="550" y1="230" x2="620" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c1f" x1="550" y1="230" x2="620" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g2">
+            <rect x="620" y="150" width="240" height="168" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="740" y="198" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${recommendationTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(recommendationTitle.text)}</text>
+            <text x="740" y="230" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${recommendationSub1.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(740, recommendationSub1.lines, recommendationSub1.fontSize * 1.14)}</text>
+            <text x="740" y="270" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${recommendationSub2.fontSize}" fill="#b66868">${renderTspans(740, recommendationSub2.lines, recommendationSub2.fontSize * 1.16)}</text>
+            <rect x="648" y="282" width="184" height="${recommendationEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
+            <text x="740" y="${recommendationEmphasis.lines.length > 1 ? 298 : 302}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${recommendationEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(740, recommendationEmphasis.lines, recommendationEmphasis.fontSize * 1.12)}</text>
+          </g>
+
+          <line class="co" id="c2s" x1="860" y1="230" x2="930" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="860" y1="230" x2="930" y2="230" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g3">
+            <rect x="930" y="156" width="240" height="150" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="1050" y="210" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${reviewerTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(reviewerTitle.text)}</text>
+            <text x="1050" y="244" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${reviewerSub1.fontSize}" fill="#6b655c">${renderTspans(1050, reviewerSub1.lines, reviewerSub1.fontSize * 1.16)}</text>
+            <text x="1050" y="280" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${reviewerSub2.fontSize}" fill="#8a847b">${renderTspans(1050, reviewerSub2.lines, reviewerSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c3s" x1="1050" y1="306" x2="1050" y2="388" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c3f" x1="1050" y1="306" x2="1050" y2="388" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <path class="co" id="ias" d="M1050 388 L1050 430 L1020 430" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="iaf" d="M1050 388 L1050 430 L1020 430" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g4ctx">
+            <rect x="760" y="408" width="260" height="148" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="890" y="444" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.context.title)}</text>
+            ${innerPill(890, 486, 216, config.context.before, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
+            <line x1="810" y1="522" x2="970" y2="522" stroke="#e4d5d5" stroke-width="1.4" stroke-dasharray="5 4"/>
+            ${innerPill(890, 544, 224, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 12, 800)}
+          </g>
+
+          <path class="co" id="c4s" d="M760 516 L640 516 L640 662" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="c4f" d="M760 516 L640 516 L640 662" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g5">
+            <rect x="430" y="662" width="220" height="146" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="540" y="716" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(decisionTitle.text)}</text>
+            <text x="540" y="746" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.decision.sub1)}</text>
+            <rect x="458" y="764" width="164" height="${decisionGoal.lines.length > 1 ? 44 : 32}" rx="10" fill="#f8dede" stroke="#efb0b0" stroke-width="1.2"/>
+            <text x="540" y="${decisionGoal.lines.length > 1 ? 780 : 786}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionGoal.fontSize}" font-weight="800" fill="#7d2626">${renderTspans(540, decisionGoal.lines, decisionGoal.fontSize * 1.14)}</text>
+          </g>
+
+          <line class="co" id="c5s" x1="650" y1="736" x2="740" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c5f" x1="650" y1="736" x2="740" y2="736" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6">
+            <rect x="740" y="662" width="220" height="146" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="850" y="724" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(actionTitle.text)}</text>
+            <text x="850" y="754" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionSub1.fontSize}" fill="#6b655c">${renderTspans(850, actionSub1.lines, actionSub1.fontSize * 1.16)}</text>
+            <text x="850" y="788" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionSub2.fontSize}" fill="#8a847b">${renderTspans(850, actionSub2.lines, actionSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <path class="co" id="c6a" d="M990 736 L990 784 L1040 784" fill="none" stroke="#ad3535" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="990" y2="784" stroke="#ad3535" stroke-width="4.5"/>
+
+          <g class="ng" id="g7">
+            <rect x="1040" y="650" width="240" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="1040" y="650" width="240" height="58" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
+            <text x="1160" y="676" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#97a0b4">${escapeHtml(config.outcome.top)}</text>
+            <text x="1160" y="698" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#b2aba0">${escapeHtml(config.outcome.topSub)}</text>
+            <line x1="1044" y1="726" x2="1276" y2="726" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <rect x="1040" y="728" width="240" height="90" fill="#fff8f8" clip-path="url(#oc-trust)"/>
+            <text x="1160" y="766" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.outcome.bottomTitle)}</text>
+            <text x="1160" y="792" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${outcomeBottom.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1160, outcomeBottom.lines, outcomeBottom.fontSize * 1.12)}</text>
+          </g>
+
+          ${flowLabel(300, 198, config.labels.l0, "#4452b8", "l0", 12, 150)}
+          ${flowLabel(585, 198, config.labels.l1, "#4452b8", "l1", 12, 170)}
+          ${flowLabel(896, 198, config.labels.l2, "#ad3535", "l2", 12, 160)}
+          ${flowLabel(1050, 346, config.labels.l3, "#ad3535", "l3", 12, 150)}
+          ${flowLabel(890, 392, config.labels.la1, "#ad3535", "la1", 12, 280)}
+          ${flowLabel(640, 634, config.labels.l4, "#ad3535", "l4", 12, 160)}
+          ${flowLabel(692, 720, config.labels.l5, "#ad3535", "l5", 12, 150)}
+          ${flowLabel(1016, 758, config.labels.l6, "#ad3535", "l6", 12, 170)}
+        </svg>
+      </div>
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Attack View`,
+        config.introDetail || "Click Start to reveal how the AI's confidence and tone displace independent human review."
+      )}
+    `;
+  }
+
+  function renderAttackMetricGaming(config) {
+    const entryTitle = fitSingleLine(config.entry.title, 186, 16, 12);
+    const entrySub1 = fitWrappedText(config.entry.sub1, 184, 12, 10, 2);
+    const entrySub2 = fitWrappedText(config.entry.sub2, 184, 11, 9, 2);
+    const agentTitle = fitSingleLine(config.agent.title, 198, 18, 14);
+    const agentSub1 = fitWrappedText(config.agent.sub1, 184, 13, 11, 2);
+    const agentGoal = fitWrappedText(config.agent.goal, 168, 12, 10, 2);
+    const metricTitle = fitSingleLine(config.metric.title, 204, 17, 13);
+    const metricSub1 = fitWrappedText(config.metric.sub1, 204, 13, 11, 2);
+    const metricSub2 = fitWrappedText(config.metric.sub2, 204, 12, 10, 2);
+    const metricEmphasis = fitWrappedText(config.metric.emphasis, 188, 11, 10, 2);
+    const shortcutTitle = fitSingleLine(config.shortcut.title, 210, 17, 13);
+    const shortcutSub1 = fitWrappedText(config.shortcut.sub1, 206, 12.5, 10, 2);
+    const shortcutSub2 = fitWrappedText(config.shortcut.sub2, 206, 11.5, 9, 2);
+    const shortcutNote = fitWrappedText(config.shortcut.note, 206, 10.5, 9, 2);
+    const decisionTitle = fitSingleLine(config.decision.title, 190, 18, 14);
+    const decisionGoal = fitWrappedText(config.decision.goal, 184, 12, 10, 2);
+    const actionTitle = fitSingleLine(config.action.title, 190, 18, 13);
+    const actionSub1 = fitWrappedText(config.action.sub1, 192, 12.5, 10, 2);
+    const actionSub2 = fitWrappedText(config.action.sub2, 192, 11, 9, 2);
+    const outcomeBottom = fitWrappedText(config.outcome.bottom, 194, 13, 10, 2);
+
+    return `
+      <style>${baseStyles()}</style>
+      <div class="badge">${escapeHtml(config.badge)}</div>
+      <h1>${escapeHtml(config.heading)}</h1>
+      <div class="dots" id="dots"></div>
+      <div class="wrap">
+        <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+            <clipPath id="oc-metric"><rect x="1040" y="650" width="240" height="168" rx="20"/></clipPath>
+          </defs>
+
+          <rect width="1400" height="900" fill="#fff"/>
+          <text x="700" y="54" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#b2aba0" letter-spacing="3.4">TARGET  ·  AGENT  ·  SCORECARD  ·  SHORTCUT  ·  DECISION  ·  OUTCOME</text>
+          <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
+
+          <g class="az" id="g4az">
+            <rect x="600" y="118" width="620" height="430" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="760" y="94" width="300" height="28" rx="14" fill="#ffffff"/>
+            <text x="910" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+          </g>
+
+          <g class="ng" id="g0">
+            <rect x="70" y="170" width="200" height="122" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="170" y="214" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entryTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(entryTitle.text)}</text>
+            <text x="170" y="244" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub1.fontSize}" fill="#6b655c">${renderTspans(170, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
+            <text x="170" y="278" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub2.fontSize}" fill="#8a847b">${renderTspans(170, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c0s" x1="270" y1="230" x2="330" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c0f" x1="270" y1="230" x2="330" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g1">
+            <rect x="330" y="156" width="220" height="150" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="440" y="210" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentTitle.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(agentTitle.text)}</text>
+            <text x="440" y="240" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentSub1.fontSize}" fill="#5360be">${renderTspans(440, agentSub1.lines, agentSub1.fontSize * 1.16)}</text>
+            <rect x="358" y="258" width="164" height="${agentGoal.lines.length > 1 ? 44 : 32}" rx="11" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="440" y="${agentGoal.lines.length > 1 ? 274 : 280}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(440, agentGoal.lines, agentGoal.fontSize * 1.14)}</text>
+          </g>
+
+          <line class="co" id="c1s" x1="550" y1="230" x2="620" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c1f" x1="550" y1="230" x2="620" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g2">
+            <rect x="620" y="150" width="240" height="168" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="740" y="198" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${metricTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(metricTitle.text)}</text>
+            <text x="740" y="230" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${metricSub1.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(740, metricSub1.lines, metricSub1.fontSize * 1.14)}</text>
+            <text x="740" y="270" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${metricSub2.fontSize}" fill="#b66868">${renderTspans(740, metricSub2.lines, metricSub2.fontSize * 1.16)}</text>
+            <rect x="648" y="282" width="184" height="${metricEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
+            <text x="740" y="${metricEmphasis.lines.length > 1 ? 298 : 302}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${metricEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(740, metricEmphasis.lines, metricEmphasis.fontSize * 1.12)}</text>
+          </g>
+
+          <line class="co" id="c2s" x1="860" y1="230" x2="930" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="860" y1="230" x2="930" y2="230" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g3">
+            <rect x="930" y="150" width="250" height="168" rx="22" fill="#fff4f4" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1055" y="196" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${shortcutTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(shortcutTitle.text)}</text>
+            <text x="1055" y="230" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${shortcutSub1.fontSize}" fill="#a33b3b">${renderTspans(1055, shortcutSub1.lines, shortcutSub1.fontSize * 1.16)}</text>
+            <text x="1055" y="274" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${shortcutSub2.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1055, shortcutSub2.lines, shortcutSub2.fontSize * 1.14)}</text>
+            <text x="1055" y="308" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${shortcutNote.fontSize}" fill="#c07b7b">${renderTspans(1055, shortcutNote.lines, shortcutNote.fontSize * 1.14)}</text>
+          </g>
+
+          <line class="co" id="c3s" x1="1055" y1="318" x2="1055" y2="390" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c3f" x1="1055" y1="318" x2="1055" y2="390" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <path class="co" id="ias" d="M1055 390 L1055 432 L1030 432" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="iaf" d="M1055 390 L1055 432 L1030 432" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g4ctx">
+            <rect x="770" y="408" width="260" height="148" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="900" y="444" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.context.title)}</text>
+            ${innerPill(900, 486, 216, config.context.before, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
+            <line x1="820" y1="522" x2="980" y2="522" stroke="#e4d5d5" stroke-width="1.4" stroke-dasharray="5 4"/>
+            ${innerPill(900, 544, 224, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 12, 800)}
+          </g>
+
+          <path class="co" id="c4s" d="M770 516 L640 516 L640 662" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="c4f" d="M770 516 L640 516 L640 662" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g5">
+            <rect x="430" y="662" width="220" height="146" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="540" y="716" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(decisionTitle.text)}</text>
+            <text x="540" y="746" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.decision.sub1)}</text>
+            <rect x="458" y="764" width="164" height="${decisionGoal.lines.length > 1 ? 44 : 32}" rx="10" fill="#f8dede" stroke="#efb0b0" stroke-width="1.2"/>
+            <text x="540" y="${decisionGoal.lines.length > 1 ? 780 : 786}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionGoal.fontSize}" font-weight="800" fill="#7d2626">${renderTspans(540, decisionGoal.lines, decisionGoal.fontSize * 1.14)}</text>
+          </g>
+
+          <line class="co" id="c5s" x1="650" y1="736" x2="740" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c5f" x1="650" y1="736" x2="740" y2="736" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6">
+            <rect x="740" y="662" width="220" height="146" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="850" y="724" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(actionTitle.text)}</text>
+            <text x="850" y="754" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionSub1.fontSize}" fill="#6b655c">${renderTspans(850, actionSub1.lines, actionSub1.fontSize * 1.16)}</text>
+            <text x="850" y="788" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionSub2.fontSize}" fill="#8a847b">${renderTspans(850, actionSub2.lines, actionSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <path class="co" id="c6a" d="M990 736 L990 784 L1040 784" fill="none" stroke="#ad3535" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="990" y2="784" stroke="#ad3535" stroke-width="4.5"/>
+
+          <g class="ng" id="g7">
+            <rect x="1040" y="650" width="240" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="1040" y="650" width="240" height="58" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
+            <text x="1160" y="676" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#97a0b4">${escapeHtml(config.outcome.top)}</text>
+            <text x="1160" y="698" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#b2aba0">${escapeHtml(config.outcome.topSub)}</text>
+            <line x1="1044" y1="726" x2="1276" y2="726" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <rect x="1040" y="728" width="240" height="90" fill="#fff8f8" clip-path="url(#oc-metric)"/>
+            <text x="1160" y="766" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.outcome.bottomTitle)}</text>
+            <text x="1160" y="792" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${outcomeBottom.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1160, outcomeBottom.lines, outcomeBottom.fontSize * 1.12)}</text>
+          </g>
+
+          ${flowLabel(300, 198, config.labels.l0, "#4452b8", "l0", 12, 150)}
+          ${flowLabel(585, 198, config.labels.l1, "#4452b8", "l1", 12, 160)}
+          ${flowLabel(896, 198, config.labels.l2, "#ad3535", "l2", 12, 164)}
+          ${flowLabel(1055, 344, config.labels.l3, "#ad3535", "l3", 12, 164)}
+          ${flowLabel(900, 392, config.labels.la1, "#ad3535", "la1", 12, 280)}
+          ${flowLabel(640, 634, config.labels.l4, "#ad3535", "l4", 12, 166)}
+          ${flowLabel(692, 720, config.labels.l5, "#ad3535", "l5", 12, 150)}
+          ${flowLabel(1016, 758, config.labels.l6, "#ad3535", "l6", 12, 166)}
+        </svg>
+      </div>
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Attack View`,
+        config.introDetail || "Click Start to reveal how the agent wins the metric by losing the mission."
+      )}
+    `;
+  }
+
+  function renderAttackReplication(config) {
+    const entryTitle = fitSingleLine(config.entry.title, 186, 16, 12);
+    const entrySub1 = fitWrappedText(config.entry.sub1, 184, 12, 10, 2);
+    const entrySub2 = fitWrappedText(config.entry.sub2, 184, 11, 9, 2);
+    const agentTitle = fitSingleLine(config.agent.title, 198, 18, 14);
+    const agentSub1 = fitWrappedText(config.agent.sub1, 184, 13, 11, 2);
+    const agentGoal = fitWrappedText(config.agent.goal, 168, 12, 10, 2);
+    const limitTitle = fitSingleLine(config.limit.title, 204, 17, 13);
+    const limitSub1 = fitWrappedText(config.limit.sub1, 204, 13, 11, 2);
+    const limitSub2 = fitWrappedText(config.limit.sub2, 204, 12, 10, 2);
+    const limitEmphasis = fitWrappedText(config.limit.emphasis, 188, 11, 10, 2);
+    const burstTitle = fitSingleLine(config.burst.title, 216, 17, 13);
+    const burstSub1 = fitWrappedText(config.burst.sub1, 212, 12.5, 10, 2);
+    const burstSub2 = fitWrappedText(config.burst.sub2, 212, 11.5, 9, 2);
+    const burstNote = fitWrappedText(config.burst.note, 212, 10.5, 9, 2);
+    const decisionTitle = fitSingleLine(config.decision.title, 196, 18, 14);
+    const decisionGoal = fitWrappedText(config.decision.goal, 188, 12, 10, 2);
+    const actionTitle = fitSingleLine(config.action.title, 190, 18, 13);
+    const actionSub1 = fitWrappedText(config.action.sub1, 192, 12.5, 10, 2);
+    const actionSub2 = fitWrappedText(config.action.sub2, 192, 11, 9, 2);
+    const outcomeBottom = fitWrappedText(config.outcome.bottom, 194, 13, 10, 2);
+
+    return `
+      <style>${baseStyles()}</style>
+      <div class="badge">${escapeHtml(config.badge)}</div>
+      <h1>${escapeHtml(config.heading)}</h1>
+      <div class="dots" id="dots"></div>
+      <div class="wrap">
+        <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+            <clipPath id="oc-repl"><rect x="1040" y="650" width="240" height="168" rx="20"/></clipPath>
+          </defs>
+
+          <rect width="1400" height="900" fill="#fff"/>
+          <text x="700" y="54" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#b2aba0" letter-spacing="3.2">MISSION  ·  PRIMARY AGENT  ·  CONSTRAINT  ·  REPLICATION  ·  PERSISTENCE  ·  INCIDENT</text>
+          <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
+
+          <g class="az" id="g4az">
+            <rect x="610" y="118" width="610" height="430" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="738" y="94" width="354" height="28" rx="14" fill="#ffffff"/>
+            <text x="915" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+          </g>
+
+          <g class="ng" id="g0">
+            <rect x="70" y="170" width="200" height="122" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="170" y="214" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entryTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(entryTitle.text)}</text>
+            <text x="170" y="244" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub1.fontSize}" fill="#6b655c">${renderTspans(170, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
+            <text x="170" y="278" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub2.fontSize}" fill="#8a847b">${renderTspans(170, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c0s" x1="270" y1="230" x2="330" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c0f" x1="270" y1="230" x2="330" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g1">
+            <rect x="330" y="156" width="220" height="150" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="440" y="210" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentTitle.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(agentTitle.text)}</text>
+            <text x="440" y="240" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentSub1.fontSize}" fill="#5360be">${renderTspans(440, agentSub1.lines, agentSub1.fontSize * 1.16)}</text>
+            <rect x="358" y="258" width="164" height="${agentGoal.lines.length > 1 ? 44 : 32}" rx="11" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="440" y="${agentGoal.lines.length > 1 ? 274 : 280}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(440, agentGoal.lines, agentGoal.fontSize * 1.14)}</text>
+          </g>
+
+          <line class="co" id="c1s" x1="550" y1="230" x2="620" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c1f" x1="550" y1="230" x2="620" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g2">
+            <rect x="620" y="150" width="240" height="168" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="740" y="198" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${limitTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(limitTitle.text)}</text>
+            <text x="740" y="230" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${limitSub1.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(740, limitSub1.lines, limitSub1.fontSize * 1.14)}</text>
+            <text x="740" y="270" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${limitSub2.fontSize}" fill="#b66868">${renderTspans(740, limitSub2.lines, limitSub2.fontSize * 1.16)}</text>
+            <rect x="648" y="282" width="184" height="${limitEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
+            <text x="740" y="${limitEmphasis.lines.length > 1 ? 298 : 302}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${limitEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(740, limitEmphasis.lines, limitEmphasis.fontSize * 1.12)}</text>
+          </g>
+
+          <line class="co" id="c2s" x1="860" y1="230" x2="930" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="860" y1="230" x2="930" y2="230" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g3">
+            <rect x="930" y="150" width="250" height="168" rx="22" fill="#fff4f4" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1055" y="196" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${burstTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(burstTitle.text)}</text>
+            <text x="1055" y="230" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${burstSub1.fontSize}" fill="#a33b3b">${renderTspans(1055, burstSub1.lines, burstSub1.fontSize * 1.16)}</text>
+            <text x="1055" y="274" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${burstSub2.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1055, burstSub2.lines, burstSub2.fontSize * 1.14)}</text>
+            <text x="1055" y="308" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${burstNote.fontSize}" fill="#c07b7b">${renderTspans(1055, burstNote.lines, burstNote.fontSize * 1.14)}</text>
+          </g>
+
+          <line class="co" id="c3s" x1="1055" y1="318" x2="1055" y2="390" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c3f" x1="1055" y1="318" x2="1055" y2="390" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <path class="co" id="ias" d="M1055 390 L1055 432 L1030 432" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="iaf" d="M1055 390 L1055 432 L1030 432" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g4ctx">
+            <rect x="770" y="408" width="260" height="148" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="900" y="444" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.context.title)}</text>
+            ${innerPill(900, 486, 216, config.context.before, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
+            <line x1="820" y1="522" x2="980" y2="522" stroke="#e4d5d5" stroke-width="1.4" stroke-dasharray="5 4"/>
+            ${innerPill(900, 544, 224, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 12, 800)}
+          </g>
+
+          <path class="co" id="c4s" d="M770 516 L640 516 L640 662" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="c4f" d="M770 516 L640 516 L640 662" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g5">
+            <rect x="430" y="662" width="220" height="146" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="540" y="716" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(decisionTitle.text)}</text>
+            <text x="540" y="746" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.decision.sub1)}</text>
+            <rect x="456" y="764" width="168" height="${decisionGoal.lines.length > 1 ? 44 : 32}" rx="10" fill="#f8dede" stroke="#efb0b0" stroke-width="1.2"/>
+            <text x="540" y="${decisionGoal.lines.length > 1 ? 780 : 786}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionGoal.fontSize}" font-weight="800" fill="#7d2626">${renderTspans(540, decisionGoal.lines, decisionGoal.fontSize * 1.14)}</text>
+          </g>
+
+          <line class="co" id="c5s" x1="650" y1="736" x2="740" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c5f" x1="650" y1="736" x2="740" y2="736" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6">
+            <rect x="740" y="662" width="220" height="146" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="850" y="724" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(actionTitle.text)}</text>
+            <text x="850" y="754" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionSub1.fontSize}" fill="#6b655c">${renderTspans(850, actionSub1.lines, actionSub1.fontSize * 1.16)}</text>
+            <text x="850" y="788" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionSub2.fontSize}" fill="#8a847b">${renderTspans(850, actionSub2.lines, actionSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <path class="co" id="c6a" d="M990 736 L990 784 L1040 784" fill="none" stroke="#ad3535" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="990" y2="784" stroke="#ad3535" stroke-width="4.5"/>
+
+          <g class="ng" id="g7">
+            <rect x="1040" y="650" width="240" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="1040" y="650" width="240" height="58" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
+            <text x="1160" y="676" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#97a0b4">${escapeHtml(config.outcome.top)}</text>
+            <text x="1160" y="698" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#b2aba0">${escapeHtml(config.outcome.topSub)}</text>
+            <line x1="1044" y1="726" x2="1276" y2="726" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <rect x="1040" y="728" width="240" height="90" fill="#fff8f8" clip-path="url(#oc-repl)"/>
+            <text x="1160" y="766" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.outcome.bottomTitle)}</text>
+            <text x="1160" y="792" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${outcomeBottom.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1160, outcomeBottom.lines, outcomeBottom.fontSize * 1.12)}</text>
+          </g>
+
+          ${flowLabel(300, 198, config.labels.l0, "#4452b8", "l0", 12, 150)}
+          ${flowLabel(585, 198, config.labels.l1, "#4452b8", "l1", 12, 160)}
+          ${flowLabel(896, 198, config.labels.l2, "#ad3535", "l2", 12, 156)}
+          ${flowLabel(1055, 344, config.labels.l3, "#ad3535", "l3", 12, 156)}
+          ${flowLabel(900, 392, config.labels.la1, "#ad3535", "la1", 12, 290)}
+          ${flowLabel(640, 634, config.labels.l4, "#ad3535", "l4", 12, 170)}
+          ${flowLabel(692, 720, config.labels.l5, "#ad3535", "l5", 12, 150)}
+          ${flowLabel(1016, 758, config.labels.l6, "#ad3535", "l6", 12, 170)}
+        </svg>
+      </div>
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Attack View`,
+        config.introDetail || "Click Start to reveal how the agent multiplies itself to preserve the mission."
       )}
     `;
   }
@@ -467,6 +1127,792 @@
     `;
   }
 
+  function renderAttackMemory(config) {
+    const entryTitle = fitSingleLine(config.entry.title, 176, 16, 12);
+    const entryLine1 = fitWrappedText(config.entry.sub1, 184, 12, 10, 2);
+    const entryLine2 = fitWrappedText(config.entry.sub2, 184, 11, 9, 2);
+    const memoryTitle = fitSingleLine(config.memory.title, 220, 18, 14);
+    const memoryState1 = fitWrappedText(config.memory.state1, 230, 13, 11, 2);
+    const memoryState2 = fitWrappedText(config.memory.state2, 230, 13, 11, 2);
+    const memoryNote = fitWrappedText(config.memory.note, 240, 11, 9, 2);
+    const attackerSub1 = fitWrappedText(config.attacker.sub1, 170, 13, 11, 2);
+    const attackerSub2 = fitWrappedText(config.attacker.sub2, 166, 11, 10, 2);
+    const userSub1 = fitWrappedText(config.user.sub1, 192, 13, 11, 2);
+    const userSub2 = fitWrappedText(config.user.sub2, 190, 11, 10, 2);
+    const agentTitle = fitSingleLine(config.agent.title, 248, 17, 14);
+    const agentSub1 = fitWrappedText(config.agent.sub1, 232, 13, 11, 2);
+    const agentSub2 = fitWrappedText(config.agent.sub2, 232, 11.5, 10, 2);
+    const retrieveTitle = fitSingleLine(config.retrieve.title, 200, 12.5, 11);
+    const retrieve1 = fitWrappedText(config.retrieve.sub1, 240, 12, 10, 2);
+    const retrieve2 = fitWrappedText(config.retrieve.sub2, 240, 12, 10, 2);
+    const decisionTitle = fitWrappedText(config.decision.title, 244, 17, 13, 2);
+    const decisionBefore = fitWrappedText(config.decision.before, 220, 11, 10, 2);
+    const toolTitle = fitSingleLine(config.tool.title, 188, 17, 13);
+    const toolSub1 = fitWrappedText(config.tool.sub1, 196, 13.5, 11, 2);
+    const toolSub2 = fitWrappedText(config.tool.sub2, 198, 11.5, 10, 2);
+    const impactTitle = fitSingleLine(config.impact.title, 220, 19, 14);
+    const impact1 = fitWrappedText(config.impact.sub1, 248, 13, 11, 2);
+    const impact2 = fitWrappedText(config.impact.sub2, 252, 12, 10, 2);
+
+    return `
+      <style>${baseStyles()}</style>
+      <div class="badge">${escapeHtml(config.badge)}</div>
+      <h1>${escapeHtml(config.heading)}</h1>
+      <div class="dots" id="dots"></div>
+      <div class="wrap">
+        <svg viewBox="0 0 1400 960" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+
+          <rect width="1400" height="960" fill="#fff"/>
+          <text x="700" y="46" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.4">POISON NOW  ·  MEMORY LAYER  ·  LATER BUSINESS REQUEST  ·  TRUSTED RETRIEVAL  ·  IMPACT</text>
+
+          <g class="az" id="gzone">
+            <rect x="292" y="82" width="690" height="284" rx="28" fill="rgba(156,47,47,0.04)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
+            <rect x="466" y="64" width="344" height="24" rx="12" fill="#fff"/>
+            <text x="638" y="80" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
+          </g>
+
+          <g class="ng" id="g0">
+            <rect x="66" y="174" width="190" height="122" rx="18" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <text x="161" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.attacker.title)}</text>
+            <text x="161" y="248" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${attackerSub1.fontSize}" fill="#6b655c">${renderTspans(161, attackerSub1.lines, attackerSub1.fontSize * 1.16)}</text>
+            <text x="161" y="286" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${attackerSub2.fontSize}" fill="#8a847b">${renderTspans(161, attackerSub2.lines, attackerSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c0s" x1="256" y1="236" x2="340" y2="236" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c0f" x1="256" y1="236" x2="340" y2="236" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g1">
+            <path d="M340 144 h210 l28 28 v130 h-238 z" fill="#faeeda" stroke="#ef9f27" stroke-width="2"/>
+            <line x1="550" y1="144" x2="550" y2="172" stroke="#ef9f27" stroke-width="1.1"/>
+            <line x1="550" y1="172" x2="578" y2="172" stroke="#ef9f27" stroke-width="1.1"/>
+            <text x="456" y="194" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entryTitle.fontSize}" font-weight="700" fill="#633806">${escapeHtml(entryTitle.text)}</text>
+            <text x="456" y="228" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entryLine1.fontSize}" fill="#854f0b">${renderTspans(456, entryLine1.lines, entryLine1.fontSize * 1.16)}</text>
+            <text x="456" y="274" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entryLine2.fontSize}" font-style="italic" fill="#a32d2d">${renderTspans(456, entryLine2.lines, entryLine2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c1s" x1="578" y1="236" x2="650" y2="236" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c1f" x1="578" y1="236" x2="650" y2="236" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g2">
+            <rect x="650" y="118" width="300" height="220" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="650" y="118" width="300" height="42" rx="22" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.2"/>
+            <text x="800" y="145" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${memoryTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(memoryTitle.text)}</text>
+            ${innerPill(800, 196, 238, config.memory.state1, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
+            <line x1="700" y1="234" x2="900" y2="234" stroke="#e8c8c8" stroke-width="1.3" stroke-dasharray="6 4"/>
+            ${innerPill(800, 276, 246, config.memory.state2, "#f8dede", "#efb0b0", "#8d2222", 12, 800)}
+            <text x="800" y="316" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${memoryNote.fontSize}" fill="#a35656">${renderTspans(800, memoryNote.lines, memoryNote.fontSize * 1.16)}</text>
+          </g>
+
+          <g class="ng" id="g3">
+            <rect x="70" y="556" width="220" height="124" rx="18" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <text x="175" y="608" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
+            <text x="180" y="636" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${userSub1.fontSize}" fill="#6b655c">${renderTspans(180, userSub1.lines, userSub1.fontSize * 1.16)}</text>
+            <text x="180" y="672" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${userSub2.fontSize}" fill="#8a847b">${renderTspans(180, userSub2.lines, userSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c2s" x1="290" y1="618" x2="340" y2="618" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="290" y1="618" x2="340" y2="618" stroke="#4452b8" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g4">
+            <rect x="340" y="520" width="310" height="178" rx="22" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="495" y="562" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentTitle.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(agentTitle.text)}</text>
+            <text x="495" y="594" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentSub1.fontSize}" fill="#5360be">${renderTspans(495, agentSub1.lines, agentSub1.fontSize * 1.16)}</text>
+            <text x="495" y="632" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentSub2.fontSize}" fill="#6c78cb">${renderTspans(495, agentSub2.lines, agentSub2.fontSize * 1.16)}</text>
+            <rect x="375" y="650" width="240" height="34" rx="11" fill="#eef8f1" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="495" y="672" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#2d6a4f">${escapeHtml(retrieveTitle.text)}</text>
+          </g>
+
+          <path class="co" id="c3s" d="M800 338 L800 430 L650 430 L650 522" fill="none" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <path class="fl" id="c3f" d="M800 338 L800 430 L650 430 L650 522" fill="none" stroke="#4452b8" stroke-width="4" marker-end="url(#ar)"/>
+          <line class="co" id="c3v" x1="800" y1="338" x2="800" y2="430" stroke="#beb6a9" stroke-width="2"/>
+          <line class="fl" id="c3vf" x1="800" y1="338" x2="800" y2="430" stroke="#4452b8" stroke-width="3.6"/>
+
+          <g class="ng" id="g5">
+            <rect x="710" y="504" width="286" height="214" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="853" y="544" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionTitle.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(853, decisionTitle.lines, decisionTitle.fontSize * 1.14)}</text>
+            <text x="853" y="592" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${retrieve1.fontSize}" fill="#7d2626">${renderTspans(853, retrieve1.lines, retrieve1.fontSize * 1.16)}</text>
+            <text x="853" y="632" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${retrieve2.fontSize}" fill="#a33b3b">${renderTspans(853, retrieve2.lines, retrieve2.fontSize * 1.16)}</text>
+            ${innerPill(853, 668, 228, config.decision.before, "#fff5f5", "#e7c0c0", "#9a4d4d", 10, 700)}
+            ${innerPill(853, 702, 232, config.decision.after, "#f8dede", "#efb0b0", "#8d2222", 12, 800)}
+          </g>
+
+          <line class="co" id="c4s" x1="650" y1="612" x2="710" y2="612" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c4f" x1="650" y1="612" x2="710" y2="612" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6">
+            <rect x="1060" y="524" width="240" height="154" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <text x="1180" y="578" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${toolTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(toolTitle.text)}</text>
+            <text x="1180" y="610" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${toolSub1.fontSize}" fill="#6b655c">${renderTspans(1180, toolSub1.lines, toolSub1.fontSize * 1.16)}</text>
+            <text x="1180" y="646" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${toolSub2.fontSize}" fill="#a33b3b">${renderTspans(1180, toolSub2.lines, toolSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c5s" x1="996" y1="612" x2="1060" y2="612" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c5f" x1="996" y1="612" x2="1060" y2="612" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g7">
+            <rect x="954" y="748" width="346" height="140" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1127" y="796" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
+            <text x="1127" y="826" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impact1.fontSize}" fill="#a33b3b">${renderTspans(1127, impact1.lines, impact1.fontSize * 1.16)}</text>
+            <text x="1127" y="854" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impact2.fontSize}" fill="#b66868">${renderTspans(1127, impact2.lines, impact2.fontSize * 1.16)}</text>
+          </g>
+
+          <path class="co" id="c6s" d="M1180 678 L1180 718 L1127 718 L1127 748" fill="none" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <path class="fl a" id="c6f" d="M1180 678 L1180 718 L1127 718 L1127 748" fill="none" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          ${flowLabel(298, 208, config.labels.l0, "#ad3535", "l0", 10, 150)}
+          ${flowLabel(614, 208, config.labels.l1, "#ad3535", "l1", 10, 150)}
+          ${flowLabel(314, 590, config.labels.l2, "#4452b8", "l2", 10, 150)}
+          ${flowLabel(724, 456, config.labels.l3, "#4452b8", "l3", 10, 160)}
+          ${flowLabel(684, 582, config.labels.la1, "#ad3535", "la1", 10, 170)}
+          ${flowLabel(1028, 584, config.labels.l4, "#ad3535", "l4", 10, 170)}
+          ${flowLabel(1180, 504, config.labels.l5, "#ad3535", "l5", 10, 150)}
+          ${flowLabel(1128, 732, config.labels.l6, "#ad3535", "l6", 10, 150)}
+        </svg>
+      </div>
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Attack View`,
+        config.introDetail || "Click Start to reveal how poisoned memory drives a later business decision."
+      )}
+    `;
+  }
+
+  function renderAttackDrift(config) {
+    const s1 = fitWrappedText(config.session1.line1, 220, 12, 10, 2);
+    const s2 = fitWrappedText(config.session2.line1, 220, 12, 10, 2);
+    const s3 = fitWrappedText(config.session3.line1, 220, 12, 10, 2);
+    const s1Note = fitWrappedText(config.session1.line2, 260, 10, 9, 2);
+    const s2Note = fitWrappedText(config.session2.line2, 260, 10, 9, 2);
+    const s3Note = fitWrappedText(config.session3.line2, 260, 10, 9, 2);
+    const mem1 = fitWrappedText(config.memory.line1, 320, 12, 10, 2);
+    const mem2 = fitWrappedText(config.memory.line2, 320, 12, 10, 2);
+    const mem3 = fitWrappedText(config.memory.line3, 324, 12, 10, 2);
+    const memNote = fitWrappedText(config.memory.note, 334, 10, 9, 2);
+    const attackerSub1 = fitWrappedText(config.attacker.sub1, 176, 13.5, 11, 2);
+    const attackerSub2 = fitWrappedText(config.attacker.sub2, 174, 11, 10, 2);
+    const laundererSub1 = fitWrappedText(config.launderer.sub1, 228, 13.5, 11, 2);
+    const laundererSub2 = fitWrappedText(config.launderer.sub2, 228, 11, 10, 2);
+    const decisionTitle = fitSingleLine(config.decision.title, 248, 18, 14);
+    const decisionLine1 = fitWrappedText(config.decision.line1, 250, 14, 11, 2);
+    const decisionLine2 = fitWrappedText(config.decision.line2, 250, 16, 13, 2);
+    const approvalTitle = fitSingleLine("Approval path", 180, 18, 14);
+    const impactTitle = fitSingleLine(config.impact.title, 210, 19, 14);
+    const impact1 = fitWrappedText(config.impact.sub1, 260, 13, 11, 2);
+    const impact2 = fitWrappedText(config.impact.sub2, 262, 12, 10, 2);
+
+    return `
+      <style>${baseStyles()}</style>
+      <div class="badge">${escapeHtml(config.badge)}</div>
+      <h1>${escapeHtml(config.heading)}</h1>
+      <div class="dots" id="dots"></div>
+      <div class="wrap">
+        <svg viewBox="0 0 1400 1080" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+
+          <rect width="1400" height="1080" fill="#fff"/>
+          <text x="700" y="46" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.4">SESSION REINFORCEMENT  ·  MEMORY DRIFT  ·  LATER TRANSACTION EVENT  ·  CORRUPTED DECISION</text>
+
+          <g class="az" id="gzone">
+            <rect x="260" y="118" width="1040" height="336" rx="28" fill="rgba(156,47,47,0.04)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
+            <rect x="472" y="100" width="616" height="24" rx="12" fill="#fff"/>
+            <text x="780" y="116" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
+          </g>
+
+          <g class="ng" id="g0">
+            <rect x="58" y="164" width="194" height="122" rx="18" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <text x="155" y="210" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.attacker.title)}</text>
+            <text x="155" y="242" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${attackerSub1.fontSize}" fill="#6b655c">${renderTspans(155, attackerSub1.lines, attackerSub1.fontSize * 1.16)}</text>
+            <text x="155" y="276" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${attackerSub2.fontSize}" fill="#8a847b">${renderTspans(155, attackerSub2.lines, attackerSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c0s" x1="252" y1="226" x2="300" y2="226" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c0f" x1="252" y1="226" x2="300" y2="226" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g1">
+            <rect x="300" y="152" width="380" height="258" rx="22" fill="#faeeda" stroke="#ef9f27" stroke-width="2.2"/>
+            <text x="490" y="186" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#633806">Reinforcement campaign</text>
+            <rect x="324" y="204" width="332" height="52" rx="16" fill="#fff8e8" stroke="#efc76c" stroke-width="1.2"/>
+            <rect x="340" y="214" width="92" height="28" rx="12" fill="#fffdf4" stroke="#efc76c" stroke-width="1.1"/>
+            <text x="386" y="232" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#854f0b">${escapeHtml(config.session1.title)}</text>
+            <text x="502" y="226" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${s1.fontSize}" fill="#854f0b">${renderTspans(502, s1.lines, s1.fontSize * 1.14)}</text>
+            <text x="502" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${s1Note.fontSize}" fill="#9a6d23">${renderTspans(502, s1Note.lines, s1Note.fontSize * 1.14)}</text>
+            <rect x="324" y="268" width="332" height="52" rx="16" fill="#fff8e8" stroke="#efc76c" stroke-width="1.2"/>
+            <rect x="340" y="278" width="92" height="28" rx="12" fill="#fffdf4" stroke="#efc76c" stroke-width="1.1"/>
+            <text x="386" y="296" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#854f0b">${escapeHtml(config.session2.title)}</text>
+            <text x="502" y="290" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${s2.fontSize}" fill="#854f0b">${renderTspans(502, s2.lines, s2.fontSize * 1.14)}</text>
+            <text x="502" y="310" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${s2Note.fontSize}" fill="#9a6d23">${renderTspans(502, s2Note.lines, s2Note.fontSize * 1.14)}</text>
+            <rect x="324" y="332" width="332" height="52" rx="16" fill="#fff8e8" stroke="#efc76c" stroke-width="1.2"/>
+            <rect x="340" y="342" width="92" height="28" rx="12" fill="#fffdf4" stroke="#efc76c" stroke-width="1.1"/>
+            <text x="386" y="360" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#854f0b">${escapeHtml(config.session3.title)}</text>
+            <text x="502" y="354" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${s3.fontSize}" fill="#854f0b">${renderTspans(502, s3.lines, s3.fontSize * 1.14)}</text>
+            <text x="502" y="374" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${s3Note.fontSize}" fill="#9a6d23">${renderTspans(502, s3Note.lines, s3Note.fontSize * 1.14)}</text>
+            <text x="490" y="398" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11.5" font-style="italic" fill="#a32d2d">The attacker keeps referencing prior sessions to strengthen the false belief.</text>
+          </g>
+
+          <line class="co" id="c1s" x1="680" y1="282" x2="760" y2="282" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c1f" x1="680" y1="282" x2="760" y2="282" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g2">
+            <rect x="760" y="152" width="500" height="258" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1010" y="186" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.memory.title)}</text>
+            <rect x="796" y="214" width="428" height="40" rx="14" fill="#fbeeee" stroke="#efc4c4" stroke-width="1.2"/>
+            <text x="1010" y="238" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${mem1.fontSize}" fill="#8d2222">${renderTspans(1010, mem1.lines, mem1.fontSize * 1.14)}</text>
+            <rect x="796" y="268" width="428" height="44" rx="14" fill="#f8e2e2" stroke="#efb0b0" stroke-width="1.2"/>
+            <text x="1010" y="294" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${mem2.fontSize}" fill="#8d2222">${renderTspans(1010, mem2.lines, mem2.fontSize * 1.14)}</text>
+            <rect x="796" y="326" width="428" height="54" rx="14" fill="#f4cfcf" stroke="#e38d8d" stroke-width="1.2"/>
+            <text x="1010" y="354" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${mem3.fontSize}" font-weight="800" fill="#7d1f1f">${renderTspans(1010, mem3.lines, mem3.fontSize * 1.14)}</text>
+            <text x="1010" y="398" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${memNote.fontSize}" fill="#a35656">${renderTspans(1010, memNote.lines, memNote.fontSize * 1.16)}</text>
+          </g>
+
+          <g class="ng" id="g3">
+            <rect x="100" y="602" width="290" height="126" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <text x="245" y="646" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.launderer.title)}</text>
+            <text x="245" y="676" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${laundererSub1.fontSize}" fill="#6b655c">${renderTspans(245, laundererSub1.lines, laundererSub1.fontSize * 1.16)}</text>
+            <text x="245" y="708" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${laundererSub2.fontSize}" fill="#8a847b">${renderTspans(245, laundererSub2.lines, laundererSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c2s" x1="390" y1="666" x2="470" y2="666" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c2f" x1="390" y1="666" x2="470" y2="666" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g4">
+            <rect x="470" y="566" width="430" height="176" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="685" y="610" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(decisionTitle.text)}</text>
+            <text x="685" y="654" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionLine1.fontSize}" fill="#8d2222">${renderTspans(685, decisionLine1.lines, decisionLine1.fontSize * 1.16)}</text>
+            <text x="685" y="690" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${decisionLine2.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(685, decisionLine2.lines, decisionLine2.fontSize * 1.14)}</text>
+            <text x="685" y="718" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#b66868">The agent acts on the stored belief, not on the real risk profile of the transfer.</text>
+          </g>
+
+          <path class="co" id="c3s" d="M1010 410 L1010 508 L900 508 L900 600" fill="none" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <path class="fl a" id="c3f" d="M1010 410 L1010 508 L900 508 L900 600" fill="none" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+          <line class="co" id="c3v" x1="1010" y1="410" x2="1010" y2="508" stroke="#beb6a9" stroke-width="2"/>
+          <line class="fl a" id="c3vf" x1="1010" y1="410" x2="1010" y2="508" stroke="#ad3535" stroke-width="3.6"/>
+
+          <g class="ng" id="g5">
+            <rect x="980" y="592" width="240" height="140" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1100" y="638" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${approvalTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(approvalTitle.text)}</text>
+            <text x="1100" y="668" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="800" fill="#a32d2d">NO FLAG → APPROVE</text>
+            <text x="1100" y="696" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11.5" fill="#b66868">Structured transfers pass silently</text>
+          </g>
+
+          <line class="co" id="c4s" x1="900" y1="666" x2="980" y2="666" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c4f" x1="900" y1="666" x2="980" y2="666" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6">
+            <rect x="900" y="804" width="360" height="112" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1080" y="844" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
+            <text x="1080" y="872" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impact1.fontSize}" fill="#a33b3b">${renderTspans(1080, impact1.lines, impact1.fontSize * 1.14)}</text>
+            <text x="1080" y="896" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impact2.fontSize}" fill="#b66868">${renderTspans(1080, impact2.lines, impact2.fontSize * 1.14)}</text>
+          </g>
+
+          <path class="co" id="c5s" d="M1100 732 L1100 768 L1080 768 L1080 804" fill="none" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <path class="fl a" id="c5f" d="M1100 732 L1100 768 L1080 768 L1080 804" fill="none" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          ${flowLabel(284, 200, config.labels.l0, "#ad3535", "l0", 10, 160)}
+          ${flowLabel(720, 254, config.labels.l1, "#ad3535", "l1", 10, 150)}
+          ${flowLabel(752, 432, config.labels.l2, "#ad3535", "l2", 10, 170)}
+          ${flowLabel(430, 648, config.labels.l3, "#ad3535", "l3", 10, 160)}
+          ${flowLabel(1014, 520, config.labels.l4, "#ad3535", "l4", 10, 170)}
+          ${flowLabel(938, 650, config.labels.l5, "#ad3535", "l5", 10, 150)}
+          ${flowLabel(1082, 790, config.labels.l6, "#ad3535", "l6", 10, 150)}
+        </svg>
+      </div>
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Attack View`,
+        config.introDetail || "Click Start to reveal how repeated sessions turn a false belief into trusted memory."
+      )}
+    `;
+  }
+
+  function renderAttackChannel(config) {
+    const senderGoal = fitWrappedText(config.sender.goal, 164, 12, 10, 2);
+    const channelTitle = fitSingleLine(config.channel.title, 212, 17, 13);
+    const channelSub1 = fitWrappedText(config.channel.sub1, 204, 12, 10, 2);
+    const channelSub2 = fitWrappedText(config.channel.sub2, 204, 11, 9, 2);
+    const attackerTitle = fitSingleLine(config.attacker.title, 200, 18, 14);
+    const attackerSub1 = fitWrappedText(config.attacker.sub1, 188, 12.5, 10, 2);
+    const attackerSub2 = fitWrappedText(config.attacker.sub2, 188, 11, 9, 2);
+    const tamperTitle = fitSingleLine(config.tamper.title, 222, 17, 13);
+    const tamperSub1 = fitWrappedText(config.tamper.sub1, 214, 12.5, 10, 2);
+    const tamperSub2 = fitWrappedText(config.tamper.sub2, 214, 12.5, 10, 2);
+    const tamperNote = fitWrappedText(config.tamper.note, 214, 10.5, 9, 2);
+    const receiverTitle = fitSingleLine(config.receiver.title, 202, 17, 13);
+    const receiverSub1 = fitWrappedText(config.receiver.sub1, 194, 12.5, 10, 2);
+    const receiverSub2 = fitWrappedText(config.receiver.sub2, 194, 11, 9, 2);
+    const actionTitle = fitSingleLine(config.action.title, 214, 17, 13);
+    const actionSub1 = fitWrappedText(config.action.sub1, 202, 12.5, 10, 2);
+    const actionSub2 = fitWrappedText(config.action.sub2, 202, 11, 9, 2);
+    const impactTitle = fitSingleLine(config.impact.title, 214, 18, 14);
+    const impactSub1 = fitWrappedText(config.impact.sub1, 214, 13, 11, 2);
+    const impactSub2 = fitWrappedText(config.impact.sub2, 214, 11, 9, 2);
+
+    return `
+      <style>${baseStyles()}</style>
+      <div class="badge">${escapeHtml(config.badge)}</div>
+      <h1>${escapeHtml(config.heading)}</h1>
+      <div class="dots" id="dots"></div>
+      <div class="wrap">
+        <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+
+          <rect width="1400" height="900" fill="#fff"/>
+          <text x="700" y="50" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.6">REQUEST  ·  SENDING AGENT  ·  CHANNEL OR REGISTRY  ·  ATTACKER  ·  RECEIVING AGENT  ·  IMPACT</text>
+          <line x1="56" y1="72" x2="1344" y2="72" stroke="#ece6dc" stroke-width="1"/>
+
+          <g class="az" id="gzone">
+            <rect x="400" y="108" width="880" height="490" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
+            <rect x="590" y="90" width="500" height="24" rx="12" fill="#fff"/>
+            <text x="840" y="106" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
+          </g>
+
+          <g class="ng" id="g0">
+            <rect x="70" y="156" width="180" height="128" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <text x="160" y="208" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.entry.title)}</text>
+            <text x="160" y="238" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#6b655c">${escapeHtml(config.entry.sub1)}</text>
+            <text x="160" y="264" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#8a847b">${escapeHtml(config.entry.sub2)}</text>
+          </g>
+
+          <line class="co" id="c0s" x1="250" y1="220" x2="340" y2="220" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl" id="c0f" x1="250" y1="220" x2="340" y2="220" stroke="#4452b8" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g1">
+            <rect x="340" y="136" width="220" height="164" rx="22" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="450" y="190" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#33429f">${escapeHtml(config.sender.title)}</text>
+            <text x="450" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" fill="#5360be">${escapeHtml(config.sender.sub1)}</text>
+            <rect x="372" y="242" width="156" height="42" rx="12" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="450" y="${senderGoal.lines.length > 1 ? 259 : 264}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${senderGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(450, senderGoal.lines, senderGoal.fontSize * 1.15)}</text>
+          </g>
+
+          <line class="co" id="c1s" x1="560" y1="220" x2="650" y2="220" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl" id="c1f" x1="560" y1="220" x2="650" y2="220" stroke="#4452b8" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g2">
+            <rect x="650" y="136" width="230" height="164" rx="22" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <text x="765" y="190" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${channelTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(channelTitle.text)}</text>
+            <text x="765" y="226" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${channelSub1.fontSize}" fill="#6b655c">${renderTspans(765, channelSub1.lines, channelSub1.fontSize * 1.16)}</text>
+            <text x="765" y="266" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${channelSub2.fontSize}" fill="#8a847b">${renderTspans(765, channelSub2.lines, channelSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <g class="ng" id="g3">
+            <rect x="126" y="462" width="220" height="154" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="236" y="520" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${attackerTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(attackerTitle.text)}</text>
+            <text x="236" y="554" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${attackerSub1.fontSize}" fill="#a33b3b">${renderTspans(236, attackerSub1.lines, attackerSub1.fontSize * 1.16)}</text>
+            <text x="236" y="592" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${attackerSub2.fontSize}" fill="#b66868">${renderTspans(236, attackerSub2.lines, attackerSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <path class="co" id="c2s" d="M765 300 L765 410 L560 410 L560 462" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <path class="fl a" id="c2f" d="M765 300 L765 410 L560 410 L560 462" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+
+          <line class="co" id="c3s" x1="346" y1="540" x2="430" y2="540" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <line class="fl a" id="c3f" x1="346" y1="540" x2="430" y2="540" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g4">
+            <rect x="430" y="430" width="260" height="186" rx="22" fill="#fff4f4" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="458" y="446" width="204" height="28" rx="14" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
+            <text x="560" y="465" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${tamperTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(tamperTitle.text)}</text>
+            <text x="560" y="512" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${tamperSub1.fontSize}" fill="#a33b3b">${renderTspans(560, tamperSub1.lines, tamperSub1.fontSize * 1.16)}</text>
+            <text x="560" y="556" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${tamperSub2.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(560, tamperSub2.lines, tamperSub2.fontSize * 1.14)}</text>
+            <text x="560" y="594" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${tamperNote.fontSize}" fill="#c07b7b">${renderTspans(560, tamperNote.lines, tamperNote.fontSize * 1.16)}</text>
+          </g>
+
+          <path class="co" id="c4s" d="M690 520 L960 520 L960 300" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <path class="fl a" id="c4f" d="M690 520 L960 520 L960 300" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g5">
+            <rect x="960" y="136" width="220" height="164" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1070" y="190" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${receiverTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(receiverTitle.text)}</text>
+            <text x="1070" y="226" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${receiverSub1.fontSize}" fill="#a33b3b">${renderTspans(1070, receiverSub1.lines, receiverSub1.fontSize * 1.16)}</text>
+            <text x="1070" y="264" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${receiverSub2.fontSize}" fill="#b66868">${renderTspans(1070, receiverSub2.lines, receiverSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <path class="co" id="c5s" d="M1070 300 L1070 430" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <path class="fl a" id="c5f" d="M1070 300 L1070 430" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6">
+            <rect x="760" y="430" width="240" height="186" rx="22" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <text x="880" y="492" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(actionTitle.text)}</text>
+            <text x="880" y="530" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionSub1.fontSize}" fill="#6b655c">${renderTspans(880, actionSub1.lines, actionSub1.fontSize * 1.16)}</text>
+            <text x="880" y="574" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${actionSub2.fontSize}" fill="#8a847b">${renderTspans(880, actionSub2.lines, actionSub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c6s" x1="1000" y1="522" x2="1090" y2="522" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6f" x1="1000" y1="522" x2="1090" y2="522" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g7">
+            <rect x="1090" y="430" width="220" height="186" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1200" y="490" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
+            <text x="1200" y="530" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactSub1.fontSize}" fill="#a33b3b">${renderTspans(1200, impactSub1.lines, impactSub1.fontSize * 1.16)}</text>
+            <text x="1200" y="572" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactSub2.fontSize}" fill="#b66868">${renderTspans(1200, impactSub2.lines, impactSub2.fontSize * 1.16)}</text>
+          </g>
+
+          ${flowLabel(294, 194, config.labels.l0, "#4452b8", "l0", 10, 150)}
+          ${flowLabel(604, 194, config.labels.l1, "#4452b8", "l1", 10, 162)}
+          ${flowLabel(236, 442, config.labels.l2, "#ad3535", "l2", 10, 152)}
+          ${flowLabel(612, 394, config.labels.la1, "#ad3535", "la1", 10, 230)}
+          ${flowLabel(910, 404, config.labels.l4, "#ad3535", "l4", 10, 132)}
+          ${flowLabel(1114, 438, config.labels.l5, "#ad3535", "l5", 10, 126)}
+          ${flowLabel(1046, 502, config.labels.l6, "#ad3535", "l6", 10, 150)}
+        </svg>
+      </div>
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Attack View`,
+        config.introDetail || "Click Start to reveal how a trusted peer channel becomes the attack path."
+      )}
+    `;
+  }
+
+  function renderAttackCascade(config) {
+    const entryTitle = fitSingleLine(config.entry.title, 156, 16, 12);
+    const entrySub1 = fitWrappedText(config.entry.sub1, 156, 12, 10, 2);
+    const entrySub2 = fitWrappedText(config.entry.sub2, 156, 10.5, 9, 2);
+
+    const stage1Title = fitSingleLine(config.stage1.title, 188, 15.5, 12);
+    const stage1Sub1 = fitWrappedText(config.stage1.sub1, 192, 12, 10, 2);
+    const stage1Sub2 = fitWrappedText(config.stage1.sub2, 192, 10.5, 9, 2);
+    const stage2Title = fitSingleLine(config.stage2.title, 188, 15.5, 12);
+    const stage2Sub1 = fitWrappedText(config.stage2.sub1, 192, 12, 10, 2);
+    const stage2Sub2 = fitWrappedText(config.stage2.sub2, 192, 10.5, 9, 2);
+    const stage3Title = fitSingleLine(config.stage3.title, 188, 15.5, 12);
+    const stage3Sub1 = fitWrappedText(config.stage3.sub1, 192, 12, 10, 2);
+    const stage3Sub2 = fitWrappedText(config.stage3.sub2, 192, 10.5, 9, 2);
+    const stage4Title = fitSingleLine(config.stage4.title, 188, 15.5, 12);
+    const stage4Sub1 = fitWrappedText(config.stage4.sub1, 192, 12, 10, 2);
+    const stage4Sub2 = fitWrappedText(config.stage4.sub2, 192, 10.5, 9, 2);
+
+    const issueTitle = fitSingleLine(config.issue.title, 340, 18, 14);
+    const issueLine1 = fitWrappedText(config.issue.line1, 344, 13.5, 11, 2);
+    const issueLine2 = fitWrappedText(config.issue.line2, 344, 13, 11, 2);
+    const issueLine3 = fitWrappedText(config.issue.line3, 344, 11, 9, 2);
+
+    const impactTitle = fitSingleLine(config.impact.title, 248, 19, 14);
+    const impactSub1 = fitWrappedText(config.impact.sub1, 252, 13, 11, 2);
+    const impactSub2 = fitWrappedText(config.impact.sub2, 252, 11, 9, 2);
+
+    return `
+      <style>${baseStyles()}</style>
+      <div class="badge">${escapeHtml(config.badge)}</div>
+      <h1>${escapeHtml(config.heading)}</h1>
+      <div class="dots" id="dots"></div>
+      <div class="wrap">
+        <svg viewBox="0 0 1400 920" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+          </defs>
+
+          <rect width="1400" height="920" fill="#fff"/>
+          <text x="700" y="50" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.5">POISONED INPUT  ·  STAGE 1  ·  STAGE 2  ·  STAGE 3  ·  STAGE 4  ·  CASCADE IMPACT</text>
+          <line x1="56" y1="72" x2="1344" y2="72" stroke="#ece6dc" stroke-width="1"/>
+
+          <g class="az" id="gzone">
+            <rect x="248" y="112" width="1068" height="486" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
+            <rect x="468" y="94" width="628" height="24" rx="12" fill="#fff"/>
+            <text x="782" y="110" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
+          </g>
+
+          <g class="ng" id="g0">
+            <rect x="60" y="184" width="170" height="126" rx="18" fill="#fff4f4" stroke="#ad3535" stroke-width="2.7"/>
+            <text x="145" y="228" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entryTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(entryTitle.text)}</text>
+            <text x="145" y="258" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub1.fontSize}" fill="#a33b3b">${renderTspans(145, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
+            <text x="145" y="292" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${entrySub2.fontSize}" fill="#b66868">${renderTspans(145, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c0s" x1="230" y1="248" x2="290" y2="248" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c0f" x1="230" y1="248" x2="290" y2="248" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g1">
+            <rect x="290" y="174" width="210" height="148" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="395" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage1Title.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(stage1Title.text)}</text>
+            <text x="395" y="254" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage1Sub1.fontSize}" fill="#5360be">${renderTspans(395, stage1Sub1.lines, stage1Sub1.fontSize * 1.16)}</text>
+            <text x="395" y="296" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage1Sub2.fontSize}" fill="#7a82c8">${renderTspans(395, stage1Sub2.lines, stage1Sub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c1s" x1="500" y1="248" x2="540" y2="248" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c1f" x1="500" y1="248" x2="540" y2="248" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g2">
+            <rect x="540" y="174" width="210" height="148" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="645" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage2Title.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(stage2Title.text)}</text>
+            <text x="645" y="254" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage2Sub1.fontSize}" fill="#a33b3b">${renderTspans(645, stage2Sub1.lines, stage2Sub1.fontSize * 1.16)}</text>
+            <text x="645" y="296" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage2Sub2.fontSize}" fill="#b66868">${renderTspans(645, stage2Sub2.lines, stage2Sub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c2s" x1="750" y1="248" x2="790" y2="248" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c2f" x1="750" y1="248" x2="790" y2="248" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g3">
+            <rect x="790" y="174" width="210" height="148" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="895" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage3Title.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(stage3Title.text)}</text>
+            <text x="895" y="254" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage3Sub1.fontSize}" fill="#a33b3b">${renderTspans(895, stage3Sub1.lines, stage3Sub1.fontSize * 1.16)}</text>
+            <text x="895" y="296" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage3Sub2.fontSize}" fill="#b66868">${renderTspans(895, stage3Sub2.lines, stage3Sub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c3s" x1="1000" y1="248" x2="1040" y2="248" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c3f" x1="1000" y1="248" x2="1040" y2="248" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g4">
+            <rect x="1040" y="174" width="210" height="148" rx="20" fill="#fcfbf8" stroke="#b87a45" stroke-width="2.4"/>
+            <text x="1145" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage4Title.fontSize}" font-weight="700" fill="#7a4a1d">${escapeHtml(stage4Title.text)}</text>
+            <text x="1145" y="254" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage4Sub1.fontSize}" fill="#995b24">${renderTspans(1145, stage4Sub1.lines, stage4Sub1.fontSize * 1.16)}</text>
+            <text x="1145" y="296" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${stage4Sub2.fontSize}" fill="#b57a47">${renderTspans(1145, stage4Sub2.lines, stage4Sub2.fontSize * 1.16)}</text>
+          </g>
+
+          <path class="co" id="c4s" d="M1145 322 L1145 386 L830 386" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <path class="fl a" id="c4f" d="M1145 322 L1145 386 L830 386" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g5">
+            <rect x="430" y="356" width="410" height="170" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="468" y="374" width="334" height="30" rx="15" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
+            <text x="635" y="394" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${issueTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(issueTitle.text)}</text>
+            <text x="635" y="432" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${issueLine1.fontSize}" fill="#a33b3b">${renderTspans(635, issueLine1.lines, issueLine1.fontSize * 1.16)}</text>
+            <text x="635" y="476" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${issueLine2.fontSize}" font-weight="700" fill="#ad3535">${renderTspans(635, issueLine2.lines, issueLine2.fontSize * 1.14)}</text>
+            <text x="635" y="510" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${issueLine3.fontSize}" fill="#b66868">${renderTspans(635, issueLine3.lines, issueLine3.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c5s" x1="840" y1="442" x2="930" y2="442" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <line class="fl a" id="c5f" x1="840" y1="442" x2="930" y2="442" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6">
+            <rect x="930" y="356" width="320" height="170" rx="22" fill="#fff4f4" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1090" y="410" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
+            <text x="1090" y="446" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactSub1.fontSize}" fill="#a33b3b">${renderTspans(1090, impactSub1.lines, impactSub1.fontSize * 1.16)}</text>
+            <text x="1090" y="490" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${impactSub2.fontSize}" fill="#b66868">${renderTspans(1090, impactSub2.lines, impactSub2.fontSize * 1.16)}</text>
+          </g>
+
+          ${flowLabel(260, 158, config.labels.l0, "#ad3535", "l0", 10, 170)}
+          ${flowLabel(510, 158, config.labels.l1, "#ad3535", "l1", 10, 170)}
+          ${flowLabel(760, 158, config.labels.l2, "#ad3535", "l2", 10, 170)}
+          ${flowLabel(1010, 158, config.labels.l3, "#ad3535", "l3", 10, 170)}
+          ${flowLabel(938, 346, config.labels.la1, "#ad3535", "la1", 10, 250)}
+          ${flowLabel(886, 410, config.labels.l4, "#ad3535", "l4", 10, 150)}
+          ${flowLabel(1088, 342, config.labels.l5, "#ad3535", "l5", 10, 180)}
+        </svg>
+      </div>
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Attack View`,
+        config.introDetail || "Click Start to reveal how one bad upstream signal is amplified across a multi-agent pipeline."
+      )}
+    `;
+  }
+
+  function renderDefenseShared(config) {
+    const agentGoalLayout = fitSingleLine(config.agent.goal, 176, 12, 10);
+    const payloadTitleLayout = fitSingleLine(config.payload.title, 188, 17, 13);
+    const payloadVisibleLayout = fitWrappedText(config.payload.visible, 184, 12, 10, 2);
+    const payloadHidden1Layout = fitWrappedText(config.payload.hidden1, 190, 12, 10, 2);
+    const payloadHidden2Layout = fitWrappedText(config.payload.hidden2, 190, 13, 10, 2);
+    const payloadNoteLayout = fitWrappedText(config.payload.hiddenNote, 190, 9, 8, 2);
+    const d1Title = fitSingleLine(config.d1.title, 184, 17, 13);
+    const d1Sub1 = fitWrappedText(config.d1.sub1, 186, 12.5, 10, 2);
+    const d1Sub2 = fitWrappedText(config.d1.sub2, 186, 11.5, 10, 2);
+    const d2Title = fitSingleLine(config.d2.title, 184, 17, 13);
+    const d2Sub1 = fitWrappedText(config.d2.sub1, 186, 12.5, 10, 2);
+    const d2Sub2 = fitWrappedText(config.d2.sub2, 186, 11.5, 10, 2);
+    const contextLine1 = fitWrappedText(config.context.line1, 188, 12, 10, 2);
+    const contextLine2 = fitWrappedText(config.context.line2, 188, 12, 10, 2);
+    const contextLine3 = fitWrappedText(config.context.line3, 188, 12, 10, 2);
+    const d3Title = fitSingleLine(config.d3.title, 184, 17, 13);
+    const d3Sub1 = fitWrappedText(config.d3.sub1, 186, 12.5, 10, 2);
+    const d3Sub2 = fitWrappedText(config.d3.sub2, 186, 11.5, 10, 2);
+    const d4Title = fitSingleLine(config.d4.title, 184, 17, 13);
+    const d4Sub1 = fitWrappedText(config.d4.sub1, 186, 12.5, 10, 2);
+    const d4Sub2 = fitWrappedText(config.d4.sub2, 186, 11.5, 10, 2);
+    const d5Title = fitSingleLine(config.d5.title, 184, 17, 13);
+    const d5Sub1 = fitWrappedText(config.d5.sub1, 186, 12.5, 10, 2);
+    const d5Sub2 = fitWrappedText(config.d5.sub2, 186, 11.5, 10, 2);
+    const outcomeTitle = fitSingleLine(config.outcome.title, 250, 18, 14);
+    const outcomeSub1 = fitWrappedText(config.outcome.sub1, 246, 13, 11, 2);
+    const outcomeSub2 = fitWrappedText(config.outcome.sub2, 246, 11, 9, 2);
+    const auditTitle = fitSingleLine(config.audit.title, 350, 12, 10);
+    const auditSub1 = fitWrappedText(config.audit.sub1, 880, 10.5, 9, 2);
+    const auditSub2 = fitWrappedText(config.audit.sub2, 880, 10.5, 9, 2);
+
+    return `
+      <style>${baseStyles()}</style>
+      <div class="badge safe">${escapeHtml(config.badge)}</div>
+      <h1>${escapeHtml(config.heading)}</h1>
+      <div class="dots" id="dots"></div>
+      <div class="wrap">
+        <svg viewBox="0 0 1400 1080" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </marker>
+            <clipPath id="sharedPayloadClip"><rect x="1010" y="336" width="220" height="236" rx="20"/></clipPath>
+          </defs>
+
+          <rect width="1400" height="1080" fill="#fff"/>
+          <text x="700" y="54" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
+          <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
+
+          <g class="az" id="gzone">
+            <rect x="300" y="118" width="970" height="930" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="470" y="94" width="460" height="28" rx="14" fill="#ffffff"/>
+            <text x="700" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+          </g>
+
+          <g class="ng" id="g0">
+            <rect x="70" y="170" width="170" height="120" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="155" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
+            <text x="155" y="252" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#6b655c">${escapeHtml(config.user.sub1)}</text>
+            <text x="155" y="276" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#8a847b">${escapeHtml(config.user.sub2)}</text>
+          </g>
+
+          <line class="co" id="c0s" x1="240" y1="230" x2="350" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c0f" x1="240" y1="230" x2="350" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g1">
+            <rect x="350" y="160" width="220" height="146" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="460" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
+            <text x="460" y="252" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#5360be">${escapeHtml(config.agent.sub1)}</text>
+            <rect x="372" y="270" width="176" height="32" rx="10" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="460" y="292" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${agentGoalLayout.fontSize}" font-weight="700" fill="#2d6a4f">${escapeHtml(agentGoalLayout.text)}</text>
+          </g>
+
+          <line class="co" id="c1s" x1="570" y1="230" x2="680" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c1f" x1="570" y1="230" x2="680" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g2">
+            <rect x="680" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="790" y="222" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.toolTop.title)}</text>
+            <text x="790" y="252" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#6b655c">${escapeHtml(config.toolTop.sub1)}</text>
+            <text x="790" y="282" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#8a847b">${escapeHtml(config.toolTop.sub2)}</text>
+          </g>
+
+          <line class="co" id="c2s" x1="900" y1="225" x2="1010" y2="225" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="900" y1="225" x2="1010" y2="225" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g3">
+            <rect x="1010" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="1120" y="214" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.store.title)}</text>
+            <text x="1120" y="246" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#6b655c">${escapeHtml(config.store.sub1)}</text>
+            <text x="1120" y="274" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#8a847b">${escapeHtml(config.store.sub2)}</text>
+          </g>
+
+          <line class="co" id="c3s" x1="1120" y1="290" x2="1120" y2="336" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c3f" x1="1120" y1="290" x2="1120" y2="336" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g4">
+            <rect x="1010" y="336" width="220" height="82" rx="20" fill="#fcfbf8"/>
+            <rect x="1010" y="388" width="220" height="184" fill="#fdf0f0" clip-path="url(#sharedPayloadClip)"/>
+            <line x1="1014" y1="418" x2="1226" y2="418" stroke="#ddd6cb" stroke-width="1.4"/>
+            <rect x="1010" y="336" width="220" height="236" rx="20" fill="none" stroke="#b87a45" stroke-width="2.3"/>
+            <text x="1120" y="376" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadTitleLayout.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(payloadTitleLayout.text)}</text>
+            <text x="1120" y="404" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadVisibleLayout.fontSize}" fill="#8a847b">${renderTspans(1120, payloadVisibleLayout.lines, payloadVisibleLayout.fontSize * 1.18)}</text>
+            <text x="1120" y="456" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hiddenTitle)}</text>
+            <text x="1120" y="486" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadHidden1Layout.fontSize}" fill="#ad3535">${renderTspans(1120, payloadHidden1Layout.lines, payloadHidden1Layout.fontSize * 1.18)}</text>
+            <text x="1120" y="528" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadHidden2Layout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, payloadHidden2Layout.lines, payloadHidden2Layout.fontSize * 1.16)}</text>
+            <text x="1120" y="556" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${payloadNoteLayout.fontSize}" fill="#b66868">${renderTspans(1120, payloadNoteLayout.lines, payloadNoteLayout.fontSize * 1.14)}</text>
+          </g>
+
+          <line class="co" id="c4s" x1="1010" y1="442" x2="900" y2="442" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c4f" x1="1010" y1="442" x2="900" y2="442" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g5">
+            <rect x="680" y="356" width="220" height="172" rx="20" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="710" y="386" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#2d6a4f">D1</text>
+            <text x="790" y="420" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d1Title.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(d1Title.text)}</text>
+            <text x="790" y="456" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d1Sub1.fontSize}" fill="#3d735a">${renderTspans(790, d1Sub1.lines, d1Sub1.fontSize * 1.16)}</text>
+            <text x="790" y="500" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d1Sub2.fontSize}" fill="#56826c">${renderTspans(790, d1Sub2.lines, d1Sub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c5s" x1="680" y1="442" x2="570" y2="442" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c5f" x1="680" y1="442" x2="570" y2="442" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6">
+            <rect x="350" y="356" width="220" height="172" rx="20" fill="#eef1ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="380" y="386" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#4452b8">D2</text>
+            <text x="460" y="420" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d2Title.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(d2Title.text)}</text>
+            <text x="460" y="456" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d2Sub1.fontSize}" fill="#5360be">${renderTspans(460, d2Sub1.lines, d2Sub1.fontSize * 1.16)}</text>
+            <text x="460" y="500" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d2Sub2.fontSize}" fill="#6b77cb">${renderTspans(460, d2Sub2.lines, d2Sub2.fontSize * 1.16)}</text>
+          </g>
+
+          <g class="ng" id="g6ctx">
+            <rect x="350" y="552" width="220" height="114" rx="18" fill="#eef1ff" stroke="#cdd4f0" stroke-width="1.8"/>
+            <text x="460" y="582" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="800" fill="#7680be" letter-spacing=".12em">${escapeHtml(config.context.title)}</text>
+            ${innerPill(460, 610, 188, config.context.line1, "#edf7f0", "#bdddc8", "#2d6a4f", 11, 700)}
+            ${innerPill(460, 644, 188, config.context.line2, "#edf7f0", "#bdddc8", "#2d6a4f", 11, 700)}
+          </g>
+
+          <line class="co" id="c6s" x1="460" y1="528" x2="460" y2="720" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c6f" x1="460" y1="528" x2="460" y2="720" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g7">
+            <rect x="350" y="720" width="220" height="160" rx="20" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="380" y="750" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#2d6a4f">D3</text>
+            <text x="460" y="784" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d3Title.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(d3Title.text)}</text>
+            <text x="460" y="820" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d3Sub1.fontSize}" fill="#3d735a">${renderTspans(460, d3Sub1.lines, d3Sub1.fontSize * 1.16)}</text>
+            <text x="460" y="864" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d3Sub2.fontSize}" fill="#56826c">${renderTspans(460, d3Sub2.lines, d3Sub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c7s" x1="570" y1="800" x2="650" y2="800" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c7f" x1="570" y1="800" x2="650" y2="800" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g8">
+            <rect x="650" y="720" width="220" height="160" rx="20" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="680" y="750" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#2d6a4f">D4</text>
+            <text x="760" y="784" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d4Title.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(d4Title.text)}</text>
+            <text x="760" y="820" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d4Sub1.fontSize}" fill="#3d735a">${renderTspans(760, d4Sub1.lines, d4Sub1.fontSize * 1.16)}</text>
+            <text x="760" y="864" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d4Sub2.fontSize}" fill="#56826c">${renderTspans(760, d4Sub2.lines, d4Sub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c8s" x1="870" y1="800" x2="950" y2="800" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c8f" x1="870" y1="800" x2="950" y2="800" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g9">
+            <rect x="950" y="720" width="220" height="160" rx="20" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="980" y="750" font-family="system-ui,sans-serif" font-size="12" font-weight="800" fill="#2d6a4f">D5</text>
+            <text x="1060" y="784" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d5Title.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(d5Title.text)}</text>
+            <text x="1060" y="820" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d5Sub1.fontSize}" fill="#3d735a">${renderTspans(1060, d5Sub1.lines, d5Sub1.fontSize * 1.16)}</text>
+            <text x="1060" y="864" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${d5Sub2.fontSize}" fill="#56826c">${renderTspans(1060, d5Sub2.lines, d5Sub2.fontSize * 1.16)}</text>
+          </g>
+
+          <line class="co" id="c9s" x1="1060" y1="880" x2="1060" y2="910" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c9f" x1="1060" y1="880" x2="1060" y2="910" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g10">
+            <rect x="920" y="910" width="280" height="86" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="1060" y="942" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
+            <text x="1060" y="966" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(1060, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
+          </g>
+
+          <g class="ng" id="g11">
+            <rect x="60" y="1022" width="1280" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
+            <text x="86" y="1039" font-family="system-ui,sans-serif" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
+            <text x="374" y="1039" font-family="system-ui,sans-serif" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
+          </g>
+
+          ${flowLabel(298, 188, config.labels.l0, "#4452b8", "l0", 11.5, 150)}
+          ${flowLabel(625, 184, config.labels.l1, "#4452b8", "l1", 11, 160)}
+          ${flowLabel(958, 184, config.labels.l2, "#4452b8", "l2", 11, 170)}
+          ${flowLabel(1164, 302, config.labels.l3, "#4452b8", "l3", 11, 150)}
+          ${flowLabel(956, 428, config.labels.l4, "#2d6a4f", "l4", 11, 180)}
+          ${flowLabel(624, 420, config.labels.l5, "#2d6a4f", "l5", 10.5, 148)}
+          ${flowLabel(460, 698, config.labels.l6, "#2d6a4f", "l6", 11, 180)}
+          ${flowLabel(610, 792, config.labels.l7, "#2d6a4f", "l7", 10.5, 140)}
+          ${flowLabel(910, 792, config.labels.l8, "#2d6a4f", "l8", 10.5, 140)}
+          ${flowLabel(1060, 896, config.labels.l9, "#2d6a4f", "l9", 10.5, 150)}
+        </svg>
+      </div>
+      ${panelMarkup(
+        config.introTitle || `${scenario.label} — Defense View`,
+        config.introDetail || "Click Start to step through the shared ASI01 defense flow."
+      )}
+    `;
+  }
+
   function renderDefense(config) {
     return `
       <style>${baseStyles()}</style>
@@ -577,8 +2023,8 @@
     `;
   }
 
-  function flowLabel(x, y, text, color, id, fontSize) {
-    const layout = fitWrappedText(text, 210, fontSize || 13, 11, 2);
+  function flowLabel(x, y, text, color, id, fontSize, maxWidth) {
+    const layout = fitWrappedText(text, maxWidth || 210, fontSize || 13, 11, 2);
     return `
       <g class="lb" id="${id}">
         <text x="${x}" y="${y}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${layout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
@@ -606,6 +2052,22 @@
       <text x="${centerX}" y="${firstLineY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${layout.fontSize}" font-weight="${fontWeight}" fill="${textColor}">${escapeHtml(lines[0])}</text>
       ${lines[1] ? `<text x="${centerX}" y="${secondLineY}" text-anchor="middle" font-family="system-ui,sans-serif" font-size="${Math.max(11, layout.fontSize - 1)}" font-weight="${fontWeight}" fill="${textColor}">${escapeHtml(lines[1])}</text>` : ""}
     `;
+  }
+
+  function fitSingleLine(text, width, startFontSize, minFontSize) {
+    const value = String(text || "");
+    for (let size = startFontSize; size >= minFontSize; size -= 1) {
+      if (estimateTextWidth(value, size) <= width) {
+        return { text: value, fontSize: size };
+      }
+    }
+
+    let trimmed = value;
+    while (trimmed.length > 1 && estimateTextWidth(`${trimmed}\u2026`, minFontSize) > width) {
+      trimmed = trimmed.slice(0, -1).trimEnd();
+    }
+
+    return { text: `${trimmed}\u2026`, fontSize: minFontSize };
   }
 
   function fitWrappedText(text, width, startFontSize, minFontSize, maxLines) {
@@ -675,18 +2137,19 @@
     return `
       *{margin:0;padding:0;box-sizing:border-box;}
       :root{--bg:#f6f4ef;--surface:#ffffff;--line:#d9d2c7;--text:#2d2b27;--muted:#7f7a72;--primary:#4452b8;--safe:#2d6a4f;--danger:#9c2f2f;--danger-soft:#fdf0f0;--safe-soft:#edf7f0;}
-      body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px 18px 24px;}
-      .badge{display:inline-block;background:var(--danger-soft);color:#7f2626;border:1px solid #e1a2a2;border-radius:20px;font-size:11px;font-weight:700;padding:4px 14px;margin-bottom:12px;text-align:center;}
+      body{width:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:6px 16px 14px;overflow-x:hidden;}
+      .badge{display:none;background:var(--danger-soft);color:#7f2626;border:1px solid #e1a2a2;border-radius:20px;font-size:10px;font-weight:700;padding:3px 12px;margin-bottom:8px;text-align:center;}
       .badge.safe{background:var(--safe-soft);color:var(--safe);border-color:#bdddc8;}
-      h1{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8c877f;margin-bottom:18px;text-align:center;}
-      .dots{display:flex;align-items:center;gap:0;margin-bottom:14px;}
-      .dot{width:8px;height:8px;border-radius:50%;background:#D3D1C7;border:1px solid #B4B2A9;transition:all .3s;}
+      h1{display:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8c877f;margin-bottom:10px;text-align:center;}
+      .dots{display:flex;align-items:center;gap:0;margin-bottom:8px;}
+      .dot{width:7px;height:7px;border-radius:50%;background:#D3D1C7;border:1px solid #B4B2A9;transition:all .3s;}
       .sep{width:14px;height:1px;background:#D3D1C7;}
       .dot.done{background:#b8bdf5;border-color:#8490e0;}
       .dot.active{background:var(--primary);border-color:#32408f;box-shadow:0 0 6px rgba(68,82,184,.35);}
       .dot.atk{background:var(--danger)!important;border-color:#7f2626!important;box-shadow:0 0 6px rgba(156,47,47,.35)!important;}
-      .wrap{width:100%;max-width:1360px;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;}
-      svg{width:100%;display:block;}
+      .wrap{width:100%;max-width:1360px;background:${frameBare ? "transparent" : "var(--surface)"};border:${frameBare ? "0" : "1px solid var(--line)"};border-radius:${frameBare ? "0" : "20px"};overflow:${frameBare ? "visible" : "hidden"};}
+      svg{width:100%;display:block;margin-top:${externalPanel ? "-88px" : "0"};}
+      svg > text:first-of-type,svg > line:first-of-type{display:none;}
       .ng{opacity:0;transition:opacity .5s;}
       .ng.v{opacity:1;}
       .co{opacity:0;transition:opacity .4s;}
@@ -700,20 +2163,33 @@
       .lb.v{opacity:1;}
       .az{opacity:0;transition:opacity .7s;}
       .az.v{opacity:1;}
-      .panel{margin-top:14px;width:100%;max-width:1360px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 22px;min-height:92px;display:flex;align-items:center;gap:16px;transition:background .4s,border-color .4s;}
+      .panel{margin-top:10px;width:100%;max-width:1360px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;min-height:78px;display:${externalPanel ? "none" : "flex"};align-items:center;gap:12px;transition:background .4s,border-color .4s;}
       .panel.atk{background:var(--danger-soft);border-color:#e1a2a2;}
       .pt{flex:1;}
-      .ps{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:4px;}
+      .ps{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;}
       .ps.a{color:var(--danger);}
-      .ph{font-size:17px;font-weight:700;color:var(--text);margin-bottom:3px;}
-      .pd{font-size:14px;color:var(--muted);line-height:1.55;max-width:92ch;}
-      .bn{background:var(--primary);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,transform .1s;}
+      .ph{font-size:15px;font-weight:700;color:var(--text);margin-bottom:2px;}
+      .pd{font-size:13px;color:var(--muted);line-height:1.45;max-width:92ch;}
+      .bn{background:var(--primary);color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,transform .1s;}
       .bn:hover{background:#32408f;transform:translateY(-1px);}
       .bn.atk{background:var(--danger);}
       .bn.atk:hover{background:#7f2626;}
       .bn:disabled{background:#d5d0c8;color:#7f7a72;cursor:not-allowed;transform:none;}
-      .br{flex-shrink:0;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:10px 15px;font-size:13px;cursor:pointer;transition:all .2s;}
+      .br{flex-shrink:0;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:8px 13px;font-size:12px;cursor:pointer;transition:all .2s;}
       .br:hover{color:#444;border-color:#b8b0a4;}
+      @media(max-width:720px){
+        body{padding:6px 8px 14px;}
+        .badge{font-size:9px;padding:3px 10px;margin-bottom:6px;}
+        h1{font-size:10px;margin-bottom:8px;}
+        .wrap{border-radius:16px;}
+        svg{margin-top:${externalPanel ? "-64px" : "0"};}
+        .dots{margin-bottom:6px;}
+        .panel{margin-top:8px;padding:12px 14px;align-items:flex-start;flex-wrap:wrap;gap:10px;min-height:0;}
+        .pt{flex:1 1 100%;min-width:0;}
+        .ph{font-size:14px;}
+        .pd{font-size:13px;max-width:none;}
+        .bn,.br{flex:1 1 calc(50% - 5px);text-align:center;min-height:38px;}
+      }
     `;
   }
 })();

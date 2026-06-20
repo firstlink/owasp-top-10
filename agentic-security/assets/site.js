@@ -1,6 +1,7 @@
 (function () {
   const data = window.OWASP_ASI_DATA;
   if (!data) return;
+  const ASSET_VERSION = "20260618p";
 
   const page = document.body.dataset.page;
 
@@ -18,7 +19,8 @@
     const params = new URLSearchParams(window.location.search);
     return {
       asi: params.get("asi"),
-      scenario: params.get("scenario")
+      scenario: params.get("scenario"),
+      view: params.get("view")
     };
   }
 
@@ -37,16 +39,24 @@
     `;
   }
 
-  function createScenarioCard(scenario) {
+  function createScenarioCard(category, scenario) {
     const link = scenario.href || "#";
     const disabled = !scenario.href;
+    const linkLabel = disabled
+      ? "Coming soon"
+      : scenario.linkLabel
+        ? scenario.linkLabel
+        : category && category.scenarioLinkLabel
+        ? category.scenarioLinkLabel
+        : "Open";
+    const toneClass = scenario.cardTone ? ` scenario-card-${scenario.cardTone}` : "";
     return `
-      <article class="scenario-card">
+      <article class="scenario-card${toneClass}">
         <p class="scenario-type">${scenario.type}</p>
         <h3>${scenario.title}</h3>
         <p>${scenario.description}</p>
         <a class="card-link ${disabled ? "is-disabled" : ""}" href="${link}">
-          ${disabled ? "Coming soon" : "Open"}
+          ${linkLabel}
         </a>
       </article>
     `;
@@ -69,12 +79,14 @@
 
     const scenarioGrid = document.getElementById("scenario-grid-root");
     if (scenarioGrid && category.scenarios) {
-      scenarioGrid.innerHTML = category.scenarios.map(createScenarioCard).join("");
+      scenarioGrid.innerHTML = category.scenarios
+        .map((scenario) => createScenarioCard(category, scenario))
+        .join("");
     }
   }
 
   function renderScenario() {
-    const { asi, scenario } = getParams();
+    const { asi, scenario, view } = getParams();
     const category = getCategory(asi);
     const scenarioData = getScenario(asi, scenario);
     if (!category || !scenarioData) return;
@@ -85,47 +97,460 @@
     const type = document.getElementById("scenario-type");
     const bc = document.getElementById("scenario-breadcrumb-title");
     const asiLink = document.getElementById("scenario-asi-link");
+    const hero = document.querySelector(".page-hero-scenario");
     const frame = document.getElementById("scenario-frame");
     const root = document.getElementById("scenario-diagram-root");
+    const diagramSection = document.getElementById("scenario-diagram-section");
+    const sharedDefenseRoot = document.getElementById("scenario-shared-defense-root");
+    const tabs = document.querySelector(".scenario-tabs");
+    const stepStrip = document.getElementById("scenario-step-strip");
+    const stepMeta = document.getElementById("scenario-step-meta");
+    const stepTitle = document.getElementById("scenario-step-title");
+    const stepDetail = document.getElementById("scenario-step-detail");
+    const stepReset = document.getElementById("scenario-step-reset");
+    const stepNext = document.getElementById("scenario-step-next");
+    const attackButton = document.querySelector('.scenario-tab[data-view="attack"]');
+    const defenseButton = document.querySelector('.scenario-tab[data-view="defense"]');
+    const isDefenseOnlyScenario = scenarioData.onlyView === "defense";
+    const isStandardAttackScenario = !isDefenseOnlyScenario;
+    let frameResizeObserver = null;
+    let latestFrameState = null;
+    let latestFrameHeight = 0;
 
-    if (title) title.textContent = `${category.id} · ${scenarioData.title}`;
+    if (title) {
+      title.textContent = isDefenseOnlyScenario
+        ? `${category.id} · ${scenarioData.title}`
+        : scenarioData.title;
+    }
     if (type) type.textContent = scenarioData.type;
     if (bc) bc.textContent = scenarioData.title;
     if (asiLink) {
       asiLink.textContent = category.id;
       asiLink.href = category.href;
     }
+    if (attackButton) {
+      attackButton.hidden = isDefenseOnlyScenario;
+      attackButton.textContent = scenarioData.viewLabels && scenarioData.viewLabels.attack
+        ? scenarioData.viewLabels.attack
+        : "Attack";
+    }
+    if (defenseButton) {
+      defenseButton.hidden = isStandardAttackScenario;
+      defenseButton.textContent = scenarioData.viewLabels && scenarioData.viewLabels.defense
+        ? scenarioData.viewLabels.defense
+        : "Defense";
+    }
+    if (hero) {
+      hero.classList.toggle("page-hero-inline", false);
+      hero.classList.toggle("page-hero-minimal", isDefenseOnlyScenario);
+    }
+    if (diagramSection) {
+      diagramSection.classList.toggle("diagram-frame-bare", isDefenseOnlyScenario);
+    }
+    if (tabs && (scenarioData.onlyView || isStandardAttackScenario)) {
+      tabs.remove();
+    }
 
-    let activeView = "attack";
+    const requestedView = isStandardAttackScenario ? "attack" : (view === "defense" ? "defense" : "attack");
+    let activeView = scenarioData.onlyView || (scenarioData.views && scenarioData.views[requestedView] ? requestedView : "attack");
+    if (!scenarioData.views || !scenarioData.views[activeView]) {
+      activeView = scenarioData.views && scenarioData.views.defense ? "defense" : "attack";
+    }
+
+    function resizeScenarioFrame() {
+      if (!frame || frame.hidden) return;
+      const isCompactViewport = window.matchMedia("(max-width: 720px)").matches;
+      const minHeight = getScenarioFrameMinHeight(isCompactViewport);
+      let nextHeight = minHeight;
+      try {
+        const doc = frame.contentDocument;
+        if (doc && doc.body) {
+          const bodyStyles = window.getComputedStyle(doc.body);
+          const bodyTop = doc.body.getBoundingClientRect().top;
+          const paddingBottom = Number.parseFloat(bodyStyles.paddingBottom || "0") || 0;
+          const contentBottom = Array.from(doc.body.children).reduce((max, child) => {
+            return Math.max(max, child.getBoundingClientRect().bottom - bodyTop);
+          }, 0);
+          nextHeight = Math.max(
+            minHeight,
+            Math.ceil(contentBottom + paddingBottom),
+            doc.body.scrollHeight
+          );
+        }
+      } catch (error) {
+        nextHeight = latestFrameHeight
+          ? Math.max(minHeight, latestFrameHeight)
+          : getScenarioFrameFallbackHeight(isCompactViewport);
+      }
+      frame.style.height = `${nextHeight}px`;
+    }
+
+    function bindScenarioFrameObserver() {
+      if (frameResizeObserver) {
+        frameResizeObserver.disconnect();
+        frameResizeObserver = null;
+      }
+      try {
+        const doc = frame && frame.contentDocument;
+        if (!doc || !doc.body || typeof ResizeObserver === "undefined") return;
+        frameResizeObserver = new ResizeObserver(() => resizeScenarioFrame());
+        frameResizeObserver.observe(doc.body);
+        if (doc.documentElement) {
+          frameResizeObserver.observe(doc.documentElement);
+        }
+      } catch (error) {
+        frameResizeObserver = null;
+      }
+    }
+
+    function updateExternalStepStrip() {
+      if (!frame || frame.hidden || !stepStrip) return;
+      try {
+        const doc = frame.contentDocument;
+        if (!doc) return;
+        const meta = doc.getElementById("ps");
+        const heading = doc.getElementById("ph");
+        const detail = doc.getElementById("pd");
+        const nextButton = doc.getElementById("bnext");
+        const resetButton = doc.getElementById("breset");
+        const panel = doc.getElementById("panel");
+
+        if (!meta || !heading || !detail || !nextButton || !resetButton || !panel) return;
+
+        const metaText = (meta.textContent || "").trim().toLowerCase();
+        const headingText = (heading.textContent || "").trim();
+        const nextLabel = (nextButton.textContent || "").trim().toLowerCase();
+        const isIntroState = metaText === "click to begin"
+          || headingText.toLowerCase() === "walkthrough"
+          || (nextLabel.includes("start") && !(detail.textContent || "").trim());
+        stepStrip.hidden = false;
+        stepStrip.classList.toggle("is-attack", panel.classList.contains("atk"));
+        stepMeta.textContent = "";
+        stepTitle.textContent = isIntroState ? "" : (headingText || scenarioData.title);
+        stepTitle.hidden = isIntroState;
+        stepDetail.textContent = isIntroState ? "" : (detail.textContent || "");
+        stepDetail.hidden = isIntroState || !stepDetail.textContent;
+        stepNext.textContent = nextButton.textContent || "▶ Start";
+        stepNext.disabled = nextButton.disabled;
+        stepReset.hidden = resetButton.style.display === "none";
+      } catch (error) {
+        if (latestFrameState) {
+          applyExternalStepState(latestFrameState);
+          return;
+        }
+        stepStrip.hidden = true;
+      }
+    }
+
+    function runScenarioAction(action) {
+      if (!frame || frame.hidden || !frame.contentWindow) return;
+      let usedDirectCall = false;
+      try {
+        const runner = frame.contentWindow[action];
+        if (typeof runner === "function") {
+          runner();
+          usedDirectCall = true;
+        }
+      } catch (error) {
+        usedDirectCall = false;
+      }
+      if (!usedDirectCall) {
+        frame.contentWindow.postMessage({ type: "asi:walkthrough-action", action }, "*");
+      }
+      window.setTimeout(() => {
+        updateExternalStepStrip();
+        resizeScenarioFrame();
+      }, 0);
+      window.setTimeout(() => {
+        updateExternalStepStrip();
+        resizeScenarioFrame();
+      }, 120);
+    }
 
     function updateTabs() {
       document.querySelectorAll(".scenario-tab").forEach((button) => {
+        if (scenarioData.onlyView && button.dataset.view !== scenarioData.onlyView) return;
         button.classList.toggle("is-active", button.dataset.view === activeView);
       });
     }
 
     function updateView() {
+      if (diagramSection) diagramSection.hidden = false;
+      if (sharedDefenseRoot) {
+        sharedDefenseRoot.hidden = true;
+        sharedDefenseRoot.innerHTML = "";
+      }
+
       const viewData = scenarioData.views[activeView];
+      if (!viewData) return;
       if (viewData.href && frame) {
         frame.hidden = false;
         root.hidden = true;
-        frame.src = viewData.href;
+        latestFrameState = null;
+        latestFrameHeight = 0;
+        if (frameResizeObserver) {
+          frameResizeObserver.disconnect();
+          frameResizeObserver = null;
+        }
+        frame.style.height = `${getScenarioFrameFallbackHeight(window.matchMedia("(max-width: 720px)").matches)}px`;
+        const extraParams = ["embed=external-panel", `v=${ASSET_VERSION}`];
+        if (isDefenseOnlyScenario) {
+          extraParams.unshift("frame=bare");
+        }
+        frame.src = `${viewData.href}${viewData.href.includes("?") ? "&" : "?"}${extraParams.join("&")}`;
       } else if (root) {
+        if (frameResizeObserver) {
+          frameResizeObserver.disconnect();
+          frameResizeObserver = null;
+        }
         frame.hidden = true;
         root.hidden = false;
+        if (stepStrip) {
+          stepStrip.hidden = true;
+        }
         root.innerHTML = renderDiagram(viewData.diagram);
       }
       updateTabs();
     }
 
     document.querySelectorAll(".scenario-tab").forEach((button) => {
+      if (button.hidden) return;
       button.addEventListener("click", () => {
         activeView = button.dataset.view;
         updateView();
       });
     });
 
+    if (frame) {
+      window.addEventListener("message", (event) => {
+        const message = event.data;
+        if (!message || message.type !== "asi:walkthrough-state" || !message.state) return;
+        latestFrameState = message.state;
+        latestFrameHeight = Number(message.state.height) || 0;
+        applyExternalStepState(message.state);
+        resizeScenarioFrame();
+      });
+
+      frame.addEventListener("load", () => {
+        resizeScenarioFrame();
+        bindScenarioFrameObserver();
+        updateExternalStepStrip();
+        try {
+          frame.contentWindow.postMessage({ type: "asi:walkthrough-action", action: "sync" }, "*");
+        } catch (error) {
+          // Ignore sync failures; same-origin pages will be read directly.
+        }
+        window.setTimeout(resizeScenarioFrame, 120);
+        window.setTimeout(resizeScenarioFrame, 360);
+        window.setTimeout(updateExternalStepStrip, 120);
+      });
+    }
+
+    if (stepNext) {
+      stepNext.addEventListener("click", () => runScenarioAction("advance"));
+    }
+
+    if (stepReset) {
+      stepReset.addEventListener("click", () => runScenarioAction("reset"));
+    }
+
     updateView();
+
+    function applyExternalStepState(state) {
+      if (!stepStrip || !stepMeta || !stepTitle || !stepDetail || !stepNext || !stepReset || !state) return;
+      const metaText = (state.meta || "").trim().toLowerCase();
+      const headingText = (state.heading || "").trim();
+      const detailText = state.detail || "";
+      const nextLabel = (state.nextLabel || "▶ Start").trim().toLowerCase();
+      const isIntroState = metaText === "click to begin"
+        || headingText.toLowerCase() === "walkthrough"
+        || (nextLabel.includes("start") && !detailText.trim());
+      stepStrip.hidden = false;
+      stepStrip.classList.toggle("is-attack", Boolean(state.isAttack));
+      stepMeta.textContent = "";
+      stepTitle.textContent = isIntroState ? "" : (headingText || scenarioData.title);
+      stepTitle.hidden = isIntroState;
+      stepDetail.textContent = isIntroState ? "" : detailText;
+      stepDetail.hidden = isIntroState || !stepDetail.textContent;
+      stepNext.textContent = state.nextLabel || "▶ Start";
+      stepNext.disabled = Boolean(state.nextDisabled);
+      stepReset.hidden = Boolean(state.resetHidden);
+    }
+
+    function getScenarioFrameMinHeight(isCompactViewport) {
+      if (isDefenseOnlyScenario) {
+        return isCompactViewport ? 920 : 980;
+      }
+      return isCompactViewport ? 560 : 760;
+    }
+
+    function getScenarioFrameFallbackHeight(isCompactViewport) {
+      if (isDefenseOnlyScenario) {
+        return isCompactViewport ? 980 : 1120;
+      }
+      return isCompactViewport ? 720 : 1040;
+    }
+  }
+
+  function renderSharedDefense(category) {
+    const defense = category.sharedDefense;
+    if (!defense) return "";
+
+    const laneCards = defense.flow.lanes.map((lane) => `
+      <article class="flow-lane-card">
+        <span class="step-badge">${escapeHtml(lane.step)}</span>
+        <h3>${escapeHtml(lane.title)}</h3>
+        <p>${escapeHtml(lane.detail)}</p>
+      </article>
+    `).join("");
+
+    const stageCards = defense.flow.stages.map((stage, index) => `
+      ${index === 0 ? '<div class="flow-drop-arrow" aria-hidden="true">↓</div>' : ""}
+      <article class="flow-stage-card flow-stage-card-${stage.id.toLowerCase()}">
+        <div class="flow-stage-head">
+          <p class="flow-stage-id">${escapeHtml(stage.id)}</p>
+          ${stage.step ? `<span class="step-badge">${escapeHtml(stage.step)}</span>` : ""}
+        </div>
+        <h3>${escapeHtml(stage.title)}</h3>
+        <p>${escapeHtml(stage.summary)}</p>
+        <ul class="flow-bullets">
+          ${stage.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}
+        </ul>
+      </article>
+      ${index === 1 ? `
+        <div class="flow-transition">
+          <span>${escapeHtml(stage.afterLabel)}</span>
+        </div>
+        <article class="flow-context-card">
+          <p class="flow-context-title">${escapeHtml(defense.flow.protectedContext.title)}</p>
+          <p>${escapeHtml(defense.flow.protectedContext.detail)}</p>
+        </article>
+      ` : `
+        <div class="flow-transition">
+          <span>${escapeHtml(stage.afterLabel)}</span>
+        </div>
+      `}
+    `).join("");
+
+    return `
+      <section class="shared-defense-shell" id="shared-defense">
+        <article class="shared-defense-intro">
+          <p class="eyebrow">${escapeHtml(defense.eyebrow)}</p>
+          <h2>${escapeHtml(defense.title)}</h2>
+          <p class="hero-copy">${escapeHtml(defense.intro)}</p>
+        </article>
+
+        <div class="architect-grid">
+          ${defense.principles.map((principle) => `
+            <article class="architect-card">
+              <p>${escapeHtml(principle)}</p>
+            </article>
+          `).join("")}
+        </div>
+
+        <section class="defense-flow-panel">
+          <div class="defense-flow-header">
+            <p class="eyebrow">Defended Flow</p>
+            <h2>How the System Preserves Protected Intent</h2>
+            <p class="hero-copy">
+              The diagram reads top to bottom. The same layered checkpoints stop email, PDF, and web-based goal hijack attempts without relying on one fragile prompt-only control.
+            </p>
+          </div>
+
+          <div class="flow-lane-grid">
+            ${laneCards}
+          </div>
+
+          <div class="flow-stack">
+            ${stageCards}
+
+            <article class="flow-outcome-card">
+              <p class="eyebrow">8. Execute approved action</p>
+              <h3>${escapeHtml(defense.flow.outcome.title)}</h3>
+              <ul class="flow-bullets">
+                ${defense.flow.outcome.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join("")}
+              </ul>
+            </article>
+
+            <article class="flow-audit-card">
+              <p class="flow-stage-id">${escapeHtml(defense.flow.audit.title)}</p>
+              <p>${escapeHtml(defense.flow.audit.detail)}</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="defense-reference-grid">
+          <article class="reference-panel">
+            <p class="eyebrow">Checkpoints</p>
+            <h2>What Each Layer Really Does</h2>
+            <div class="checkpoint-grid">
+              ${defense.checkpoints.map((item) => `
+                <article class="checkpoint-card">
+                  <p class="flow-stage-id">${escapeHtml(item.id)}</p>
+                  <h3>${escapeHtml(item.title)}</h3>
+                  <p class="checkpoint-applies">${escapeHtml(item.applies)}</p>
+                  <p>${escapeHtml(item.detail)}</p>
+                </article>
+              `).join("")}
+            </div>
+          </article>
+
+          <article class="reference-panel">
+            <p class="eyebrow">Coverage</p>
+            <h2>Why One Defense View Covers All Three Attacks</h2>
+            <div class="coverage-grid">
+              ${defense.coverage.map((item) => `
+                <article class="coverage-card">
+                  <h3>${escapeHtml(item.title)}</h3>
+                  <p class="checkpoint-applies">${escapeHtml(item.channel)}</p>
+                  <p>${escapeHtml(item.detail)}</p>
+                </article>
+              `).join("")}
+            </div>
+          </article>
+
+          <article class="reference-panel">
+            <p class="eyebrow">Implementation Options</p>
+            <h2>Controls You Can Actually Build</h2>
+            <div class="checkpoint-grid">
+              ${defense.implementationOptions.map((item) => `
+                <article class="checkpoint-card">
+                  <p class="flow-stage-id">${escapeHtml(item.id)}</p>
+                  <h3>${escapeHtml(item.title)}</h3>
+                  <p>${escapeHtml(item.detail)}</p>
+                </article>
+              `).join("")}
+            </div>
+          </article>
+        </section>
+      </section>
+    `;
+  }
+
+  function renderSharedDefenseTeaser(category, scenario) {
+    const coverage = category.sharedDefense && category.sharedDefense.coverage
+      ? category.sharedDefense.coverage.find((item) => item.scenarioId === scenario.id)
+      : null;
+
+    return `
+      <article class="shared-defense-teaser-card">
+        <p class="eyebrow">Shared Defense View</p>
+        <h2>ASI01 uses one defense architecture across all three scenarios</h2>
+        <p class="hero-copy">
+          ${escapeHtml(scenario.title)} teaches how the goal hijack begins. The defense lesson for ASI01 is centralized so students learn one protected-intent architecture instead of memorizing three separate fixes.
+        </p>
+        ${coverage ? `
+          <div class="shared-defense-teaser-focus">
+            <h3>${escapeHtml(coverage.title)}</h3>
+            <p class="checkpoint-applies">${escapeHtml(coverage.channel)}</p>
+            <p>${escapeHtml(coverage.detail)}</p>
+          </div>
+        ` : ""}
+        <div class="shared-defense-teaser-actions">
+          <a class="card-link" href="${category.href}#shared-defense">Open the ASI01 shared defense architecture</a>
+        </div>
+      </article>
+    `;
   }
 
   function renderDiagram(diagram) {

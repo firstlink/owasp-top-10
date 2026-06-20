@@ -49,12 +49,15 @@ export function createStaticSiteServer() {
   });
 }
 
-export async function startServer(port = Number(process.env.PORT) || 3000) {
+export async function startServer(
+  port = Number(process.env.PORT) || 3000,
+  host = process.env.HOST || "127.0.0.1"
+) {
   if (port === 0) {
     const server = createStaticSiteServer();
     await new Promise((resolve, reject) => {
       server.once("error", reject);
-      server.listen(0, () => {
+      server.listen(0, host, () => {
         server.off("error", reject);
         resolve();
       });
@@ -71,7 +74,7 @@ export async function startServer(port = Number(process.env.PORT) || 3000) {
     try {
       await new Promise((resolve, reject) => {
         server.once("error", reject);
-        server.listen(candidatePort, () => {
+        server.listen(candidatePort, host, () => {
           server.off("error", reject);
           resolve();
         });
