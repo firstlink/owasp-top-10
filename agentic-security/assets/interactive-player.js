@@ -2393,12 +2393,6 @@
           <text x="700" y="54" text-anchor="middle" font-family="${getFontStack()}" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
           <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
 
-          <g class="az" id="gzone">
-            <rect x="300" y="118" width="970" height="920" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
-            <rect x="390" y="94" width="620" height="28" rx="14" fill="#ffffff"/>
-            <text x="700" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".08em">${escapeHtml(config.zone)}</text>
-          </g>
-
           <g class="ng" id="g0">
             <rect x="70" y="170" width="170" height="120" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
             <text x="155" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
