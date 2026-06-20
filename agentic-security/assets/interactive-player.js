@@ -1108,11 +1108,11 @@
           <text x="700" y="44" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.2">ATTACK ENTRY  ·  AGENT CORE  ·  TOOL CALL  ·  RESPONSE  ·  REASONING LOOP</text>
 
           <g class="az" id="gentry">
-            <rect x="32" y="58" width="700" height="158" rx="24" fill="rgba(136,135,128,.05)" stroke="#888780" stroke-width="2.2" stroke-dasharray="8 4"/>
+            <rect x="32" y="58" width="986" height="158" rx="24" fill="rgba(136,135,128,.05)"/>
+            <path d="M180 58 H994 A24 24 0 0 1 1018 82 V192 A24 24 0 0 1 994 216 H56 A24 24 0 0 1 32 192 V82 A24 24 0 0 1 56 58" fill="none" stroke="#888780" stroke-width="2.4" stroke-dasharray="8 4" stroke-linecap="round" stroke-linejoin="round"/>
             <rect x="70" y="42" width="110" height="22" rx="11" fill="#fff"/>
             <text x="125" y="57" text-anchor="middle" font-family="${getFontStack()}" font-size="11" font-weight="800" fill="#888780" letter-spacing=".08em">ATTACK ENTRY</text>
-            <line x1="56" y1="58" x2="70" y2="58" stroke="#888780" stroke-width="2.4" stroke-dasharray="8 4" stroke-linecap="round"/>
-            <line x1="180" y1="58" x2="708" y2="58" stroke="#888780" stroke-width="2.4" stroke-dasharray="8 4" stroke-linecap="round"/>
+            <path d="M56 58 H70" fill="none" stroke="#888780" stroke-width="2.4" stroke-dasharray="8 4" stroke-linecap="round"/>
           </g>
 
           <g class="az" id="gzone">

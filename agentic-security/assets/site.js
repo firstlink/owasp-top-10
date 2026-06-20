@@ -1,7 +1,7 @@
 (function () {
   const data = window.OWASP_ASI_DATA;
   if (!data) return;
-  const ASSET_VERSION = "20260620f";
+  const ASSET_VERSION = "20260620g";
 
   const page = document.body.dataset.page;
 
