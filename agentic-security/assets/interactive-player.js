@@ -9,6 +9,16 @@
   const scenario = walkthroughs[scenarioId];
   const WALKTHROUGH_STATE_MESSAGE = "asi:walkthrough-state";
   const WALKTHROUGH_ACTION_MESSAGE = "asi:walkthrough-action";
+  const DIAGRAM_TOKENS = {
+    flowLabelGap: {
+      horizontal: 36,
+      vertical: 22
+    },
+    flowLabelMaxWidth: {
+      horizontal: 170,
+      vertical: 190
+    }
+  };
   let pendingStateFrame = null;
 
   if (!scenario || !scenario[view]) {
@@ -2632,11 +2642,36 @@
   }
 
   function flowLabelHorizontal(x, lineY, text, color, id, fontSize, maxWidth) {
-    return flowLabelMarkup(x, lineY, text, color, id, fontSize, maxWidth, "lb-h");
+    return flowLabelMarkup(
+      x,
+      lineY,
+      text,
+      color,
+      id,
+      fontSize,
+      getFlowLabelMaxWidth("horizontal", maxWidth),
+      "lb-h"
+    );
   }
 
   function flowLabelVertical(x, lineCenterY, text, color, id, fontSize, maxWidth) {
-    return flowLabelMarkup(x, lineCenterY, text, color, id, fontSize, maxWidth, "lb-v");
+    return flowLabelMarkup(
+      x,
+      lineCenterY,
+      text,
+      color,
+      id,
+      fontSize,
+      getFlowLabelMaxWidth("vertical", maxWidth),
+      "lb-v"
+    );
+  }
+
+  function getFlowLabelMaxWidth(orientation, requestedWidth) {
+    const tokenWidth = orientation === "vertical"
+      ? DIAGRAM_TOKENS.flowLabelMaxWidth.vertical
+      : DIAGRAM_TOKENS.flowLabelMaxWidth.horizontal;
+    return requestedWidth ? Math.min(requestedWidth, tokenWidth) : tokenWidth;
   }
 
   function innerPill(centerX, centerY, width, text, fill, stroke, textColor, fontSize, fontWeight) {
@@ -2685,7 +2720,10 @@
   }
 
   function wrapText(text, width, fontSize, maxLines, forceEllipsis) {
-    const words = String(text || "").split(/\s+/).filter(Boolean);
+    const words = String(text || "")
+      .split(/\s+/)
+      .filter(Boolean)
+      .flatMap((word) => splitLongToken(word, width, fontSize));
     if (!words.length) return Object.assign([""], { truncated: false });
 
     const lines = [];
@@ -2714,6 +2752,28 @@
     }
     trimmed[lastIndex] = `${lastLine}\u2026`;
     return Object.assign(trimmed, { truncated: true });
+  }
+
+  function splitLongToken(token, width, fontSize) {
+    const value = String(token || "");
+    if (!value) return [];
+    if (estimateTextWidth(value, fontSize) <= width) return [value];
+
+    const segments = [];
+    let current = "";
+
+    Array.from(value).forEach((char) => {
+      const candidate = `${current}${char}`;
+      if (!current || estimateTextWidth(candidate, fontSize) <= width) {
+        current = candidate;
+        return;
+      }
+      segments.push(current);
+      current = char;
+    });
+
+    if (current) segments.push(current);
+    return segments;
   }
 
   function estimateTextWidth(text, fontSize) {
@@ -2745,7 +2805,7 @@
   function baseStyles() {
     return `
       *{margin:0;padding:0;box-sizing:border-box;}
-      :root{--bg:#f6f4ef;--surface:#ffffff;--line:#d9d2c7;--text:#2d2b27;--muted:#7f7a72;--primary:#4452b8;--safe:#2d6a4f;--danger:#ad3535;--danger-soft:#fff8f8;--safe-soft:#edf7f0;--flow-label-gap-horizontal:36;--flow-label-gap-vertical:22;}
+      :root{--bg:#f6f4ef;--surface:#ffffff;--line:#d9d2c7;--text:#2d2b27;--muted:#7f7a72;--primary:#4452b8;--safe:#2d6a4f;--danger:#ad3535;--danger-soft:#fff8f8;--safe-soft:#edf7f0;--flow-label-gap-horizontal:${DIAGRAM_TOKENS.flowLabelGap.horizontal};--flow-label-gap-vertical:${DIAGRAM_TOKENS.flowLabelGap.vertical};}
       body{width:100%;background:var(--bg);font-family:${getFontStack()};display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:6px 16px 14px;overflow-x:hidden;}
       .badge{display:none;background:var(--danger-soft);color:#7f2626;border:1px solid #e1a2a2;border-radius:20px;font-size:10px;font-weight:700;padding:3px 12px;margin-bottom:8px;text-align:center;}
       .badge.safe{background:var(--safe-soft);color:var(--safe);border-color:#bdddc8;}
