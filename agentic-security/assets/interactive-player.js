@@ -2482,9 +2482,10 @@
           ${flowLabel(1130, 304, config.labels.l3, "#4452b8", "l3", 10.5, 170)}
           ${flowLabel(952, 444, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
           ${flowLabel(624, 426, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
-          ${flowLabel(460, 594, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
-          ${flowLabel(534, 692, config.labels.l7, "#2d6a4f", "l7", 10.5, 165)}
-          ${flowLabel(866, 692, config.labels.l8, "#2d6a4f", "l8", 10.5, 150)}
+          ${flowLabel(460, 570, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
+          ${flowLabel(460, 670, config.labels.l7, "#2d6a4f", "l7", 10.5, 165)}
+          ${flowLabel(790, 530, config.labels.l8, "#2d6a4f", "l8", 10.5, 150)}
+          ${flowLabel(1120, 605, config.labels.l10, "#2d6a4f", "l10", 10.5, 160)}
           ${config.labels.l10 ? 
             flowLabel(1040, 840, config.labels.l10, "#2d6a4f", "l10", 10.5, 160) +
             flowLabel(1040, 976, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)
