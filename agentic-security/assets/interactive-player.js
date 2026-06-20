@@ -375,8 +375,8 @@
       { show: ["g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
       { show: ["g6"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
       { show: ["g7"], co: ["c6as"], fl: ["c6af"], lb: ["l7"], atk: false },
-      { show: ["g8"], co: ["c8s", "c8bs"], fl: ["c8f", "c8bf"], lb: ["l8", "l9"], atk: false },
-      { show: ["g9", "g10", "g11"], co: ["c9s"], fl: ["c9f"], lb: ["l10"], atk: false }
+      { show: ["g8"], co: [], fl: [], lb: [], atk: false },
+      { show: ["g9", "g10", "g11"], co: ["c8bs", "c9s"], fl: ["c8bf", "c9f"], lb: ["l8", "l9"], atk: false }
     ];
   }
 
@@ -1999,16 +1999,16 @@
             <text x="374" y="1039" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
           </g>
 
-          ${flowLabel(298, 188, config.labels.l0, "#4452b8", "l0", 11.5, 150)}
-          ${flowLabel(625, 184, config.labels.l1, "#4452b8", "l1", 11, 160)}
-          ${flowLabel(958, 184, config.labels.l2, "#4452b8", "l2", 11, 170)}
-          ${flowLabel(1164, 302, config.labels.l3, "#4452b8", "l3", 11, 150)}
-          ${flowLabel(956, 428, config.labels.l4, "#2d6a4f", "l4", 11, 180)}
-          ${flowLabel(624, 420, config.labels.l5, "#2d6a4f", "l5", 10.5, 190)}
-          ${flowLabel(460, 698, config.labels.l6, "#2d6a4f", "l6", 11, 180)}
-          ${flowLabel(610, 792, config.labels.l7, "#2d6a4f", "l7", 10.5, 175)}
-          ${flowLabel(910, 792, config.labels.l8, "#2d6a4f", "l8", 10.5, 170)}
-          ${flowLabel(1060, 896, config.labels.l9, "#2d6a4f", "l9", 10.5, 190)}
+          ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11.5, 150)}
+          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 11, 160)}
+          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 11, 170)}
+          ${flowLabelVertical(1120, 313, config.labels.l3, "#4452b8", "l3", 11, 150)}
+          ${flowLabelHorizontal(955, 442, config.labels.l4, "#2d6a4f", "l4", 11, 180)}
+          ${flowLabelHorizontal(625, 442, config.labels.l5, "#2d6a4f", "l5", 10.5, 190)}
+          ${flowLabelVertical(460, 624, config.labels.l6, "#2d6a4f", "l6", 11, 180)}
+          ${flowLabelHorizontal(610, 800, config.labels.l7, "#2d6a4f", "l7", 10.5, 175)}
+          ${flowLabelHorizontal(910, 800, config.labels.l8, "#2d6a4f", "l8", 10.5, 170)}
+          ${flowLabelVertical(1060, 895, config.labels.l9, "#2d6a4f", "l9", 10.5, 190)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2167,17 +2167,17 @@
             <text x="430" y="1757" font-family="${getFontStack()}" font-size="${auditSub1Layout.fontSize}" fill="#56826c">${renderTspans(430, auditSub1Layout.lines, auditSub1Layout.fontSize * 1.12)}</text>
           </g>
 
-          ${flowLabel(292, 188, config.labels.l0, "#4452b8", "l0", 11, 150)}
-          ${flowLabel(604, 188, config.labels.l1, "#4452b8", "l1", 11, 160)}
-          ${flowLabel(940, 186, config.labels.l2, "#4452b8", "l2", 11, 150)}
-          ${flowLabel(700, 338, config.labels.l3, "#4452b8", "l3", 10.5, 220)}
-          ${flowLabel(700, 540, config.labels.l4, "#2d6a4f", "l4", 10.5, 180)}
-          ${flowLabel(700, 720, config.labels.l5, "#2d6a4f", "l5", 10.5, 180)}
-          ${flowLabel(700, 900, config.labels.l6, "#2d6a4f", "l6", 10.5, 170)}
-          ${flowLabel(700, 1080, config.labels.l7, "#2d6a4f", "l7", 10.5, 170)}
-          ${flowLabel(700, 1260, config.labels.l8, "#2d6a4f", "l8", 10.5, 160)}
-          ${flowLabel(700, 1440, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
-          ${flowLabel(700, 1620, config.labels.l10, "#2d6a4f", "l10", 10.5, 185)}
+          ${flowLabelHorizontal(280, 230, config.labels.l0, "#4452b8", "l0", 11, 150)}
+          ${flowLabelHorizontal(605, 230, config.labels.l1, "#4452b8", "l1", 11, 160)}
+          ${flowLabelHorizontal(935, 228, config.labels.l2, "#4452b8", "l2", 11, 150)}
+          ${flowLabelVertical(700, 328, config.labels.l3, "#4452b8", "l3", 10.5, 220)}
+          ${flowLabelVertical(700, 536, config.labels.l4, "#2d6a4f", "l4", 10.5, 180)}
+          ${flowLabelVertical(700, 719, config.labels.l5, "#2d6a4f", "l5", 10.5, 180)}
+          ${flowLabelVertical(700, 899, config.labels.l6, "#2d6a4f", "l6", 10.5, 170)}
+          ${flowLabelVertical(700, 1079, config.labels.l7, "#2d6a4f", "l7", 10.5, 170)}
+          ${flowLabelVertical(700, 1259, config.labels.l8, "#2d6a4f", "l8", 10.5, 160)}
+          ${flowLabelVertical(700, 1439, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
+          ${flowLabelVertical(700, 1619, config.labels.l10, "#2d6a4f", "l10", 10.5, 185)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2325,17 +2325,17 @@
             <text x="374" y="1187" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
           </g>
 
-          ${flowLabel(298, 188, config.labels.l0, "#4452b8", "l0", 11, 150)}
-          ${flowLabel(625, 184, config.labels.l1, "#4452b8", "l1", 11, 165)}
-          ${flowLabel(958, 184, config.labels.l2, "#4452b8", "l2", 11, 160)}
-          ${flowLabel(1130, 304, config.labels.l3, "#4452b8", "l3", 10.5, 170)}
-          ${flowLabel(952, 444, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
-          ${flowLabel(624, 426, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
-          ${flowLabel(460, 594, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
-          ${flowLabel(530, 692, config.labels.l7, "#2d6a4f", "l7", 10.5, 140)}
-          ${flowLabel(870, 692, config.labels.l8, "#2d6a4f", "l8", 10.5, 140)}
-          ${flowLabel(1040, 848, config.labels.l9, "#2d6a4f", "l9", 10.5, 150)}
-          ${flowLabel(1040, 1050, config.labels.l10, "#2d6a4f", "l10", 10.5, 160)}
+          ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11, 150)}
+          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 11, 165)}
+          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 11, 160)}
+          ${flowLabelVertical(1120, 313, config.labels.l3, "#4452b8", "l3", 10.5, 170)}
+          ${flowLabelHorizontal(955, 458, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
+          ${flowLabelHorizontal(625, 436, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
+          ${flowLabelVertical(460, 560, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
+          ${flowLabelHorizontal(530, 700, config.labels.l7, "#2d6a4f", "l7", 10.5, 140)}
+          ${flowLabelHorizontal(870, 700, config.labels.l8, "#2d6a4f", "l8", 10.5, 140)}
+          ${flowLabelVertical(1040, 821, config.labels.l9, "#2d6a4f", "l9", 10.5, 150)}
+          ${flowLabelVertical(1040, 1047, config.labels.l10, "#2d6a4f", "l10", 10.5, 160)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2462,8 +2462,6 @@
           <line class="fl" id="c6af" x1="570" y1="${row3CenterY}" x2="680" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g8">${stageCard(680, row3Y, "D4", config.d4)}</g>
-          <line class="co" id="c8s" x1="790" y1="436" x2="790" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c8f" x1="790" y1="436" x2="790" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
           <line class="co" id="c8bs" x1="900" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
           <line class="fl" id="c8bf" x1="900" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
@@ -2487,22 +2485,16 @@
           <line class="co" id="c10s" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1000" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
           <line class="fl" id="c10f" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1000" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          ${flowLabel(298, 188, config.labels.l0, "#4452b8", "l0", 11, 150)}
-          ${flowLabel(625, 184, config.labels.l1, "#4452b8", "l1", 11, 165)}
-          ${flowLabel(958, 184, config.labels.l2, "#4452b8", "l2", 11, 160)}
-          ${flowLabel(1130, 304, config.labels.l3, "#4452b8", "l3", 10.5, 170)}
-          ${flowLabel(952, 444, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
-          ${flowLabel(624, 426, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
-          ${flowLabel(460, 568, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
-          ${flowLabel(625, row3LabelY, config.labels.l7, "#2d6a4f", "l7", 10.5, 165)}
-          ${flowLabel(790, 528, config.labels.l8, "#2d6a4f", "l8", 10.5, 150)}
-          ${flowLabel(955, row3LabelY, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
-          ${config.labels.l10 ? 
-            flowLabel(outcomeCenterX, 840, config.labels.l10, "#2d6a4f", "l10", 10.5, 160) +
-            flowLabel(outcomeCenterX, 976, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)
-            :
-            flowLabel(outcomeCenterX, 840, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)
-          }
+          ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11, 150)}
+          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 11, 165)}
+          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 11, 160)}
+          ${flowLabelVertical(1120, 313, config.labels.l3, "#4452b8", "l3", 10.5, 170)}
+          ${flowLabelHorizontal(955, 458, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
+          ${flowLabelHorizontal(625, 436, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
+          ${flowLabelVertical(460, 567, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
+          ${flowLabelHorizontal(625, row3CenterY, config.labels.l7, "#2d6a4f", "l7", 10.5, 165)}
+          ${flowLabelHorizontal(955, row3CenterY, config.labels.l8, "#2d6a4f", "l8", 10.5, 160)}
+          ${flowLabelVertical(1120, (778 + outcomeY) / 2, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2593,11 +2585,11 @@
             <text x="1120" y="758" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#56826c">${escapeHtml(config.outcome.sub2)}</text>
           </g>
 
-          ${flowLabel(295, 194, config.labels.l0, "#2d6a4f", "l0")}
-          ${flowLabel(625, 194, config.labels.l1, "#2d6a4f", "l1")}
-          ${flowLabel(790, 350, config.labels.l2, "#2d6a4f", "l2")}
-          ${flowLabel(956, 446, config.labels.l3, "#2d6a4f", "l3")}
-          ${flowLabel(1120, 590, config.labels.l4, "#2d6a4f", "l4")}
+          ${flowLabelHorizontal(295, 230, config.labels.l0, "#2d6a4f", "l0")}
+          ${flowLabelHorizontal(625, 230, config.labels.l1, "#2d6a4f", "l1")}
+          ${flowLabelVertical(790, 343, config.labels.l2, "#2d6a4f", "l2")}
+          ${flowLabelHorizontal(955, 461, config.labels.l3, "#2d6a4f", "l3")}
+          ${flowLabelVertical(1120, 591, config.labels.l4, "#2d6a4f", "l4")}
           ${flowLabel(1120, 638, config.labels.l5, "#2d6a4f", "l5")}
         </svg>
       </div>
@@ -2622,17 +2614,29 @@
     `;
   }
 
-  function flowLabel(x, y, text, color, id, fontSize, maxWidth) {
+  function flowLabelMarkup(x, y, text, color, id, fontSize, maxWidth, className) {
     const startSize = fontSize || 13;
     const minSize = Math.min(startSize, 11);
     const layout = fitWrappedText(text, maxWidth || 210, startSize, minSize, 2);
     return `
-      <g class="lb" id="${id}">
+      <g class="lb${className ? ` ${className}` : ""}" id="${id}">
         <text x="${x}" y="${y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${layout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
           ${renderTspans(x, layout.lines, layout.fontSize * 1.18)}
         </text>
       </g>
     `;
+  }
+
+  function flowLabel(x, y, text, color, id, fontSize, maxWidth) {
+    return flowLabelMarkup(x, y, text, color, id, fontSize, maxWidth, "");
+  }
+
+  function flowLabelHorizontal(x, lineY, text, color, id, fontSize, maxWidth) {
+    return flowLabelMarkup(x, lineY, text, color, id, fontSize, maxWidth, "lb-h");
+  }
+
+  function flowLabelVertical(x, lineCenterY, text, color, id, fontSize, maxWidth) {
+    return flowLabelMarkup(x, lineCenterY, text, color, id, fontSize, maxWidth, "lb-v");
   }
 
   function innerPill(centerX, centerY, width, text, fill, stroke, textColor, fontSize, fontWeight) {
@@ -2741,7 +2745,7 @@
   function baseStyles() {
     return `
       *{margin:0;padding:0;box-sizing:border-box;}
-      :root{--bg:#f6f4ef;--surface:#ffffff;--line:#d9d2c7;--text:#2d2b27;--muted:#7f7a72;--primary:#4452b8;--safe:#2d6a4f;--danger:#ad3535;--danger-soft:#fff8f8;--safe-soft:#edf7f0;}
+      :root{--bg:#f6f4ef;--surface:#ffffff;--line:#d9d2c7;--text:#2d2b27;--muted:#7f7a72;--primary:#4452b8;--safe:#2d6a4f;--danger:#ad3535;--danger-soft:#fff8f8;--safe-soft:#edf7f0;--flow-label-gap-horizontal:36;--flow-label-gap-vertical:22;}
       body{width:100%;background:var(--bg);font-family:${getFontStack()};display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:6px 16px 14px;overflow-x:hidden;}
       .badge{display:none;background:var(--danger-soft);color:#7f2626;border:1px solid #e1a2a2;border-radius:20px;font-size:10px;font-weight:700;padding:3px 12px;margin-bottom:8px;text-align:center;}
       .badge.safe{background:var(--safe-soft);color:var(--safe);border-color:#bdddc8;}
@@ -2766,6 +2770,8 @@
       @media(prefers-reduced-motion:reduce){.fl{animation:none;}}
       .lb{opacity:0;transition:opacity .3s .15s;}
       .lb.v{opacity:1;}
+      .lb.lb-h text{transform:translateY(calc(var(--flow-label-gap-horizontal) * -1px));}
+      .lb.lb-v text{transform:translateY(calc(var(--flow-label-gap-vertical) * -1px));}
       .az{opacity:0;transition:opacity .7s;}
       .az.v{opacity:1;}
       .panel{margin-top:10px;width:100%;max-width:1360px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;min-height:78px;display:${externalPanel ? "none" : "flex"};align-items:center;gap:12px;transition:background .4s,border-color .4s;}
