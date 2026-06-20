@@ -1945,8 +1945,8 @@ window.OWASP_ASI_DATA = {
                   { id: "forecast", x: 320, y: 100, w: 220, h: 116, tone: "primary", title: "Forecast agent", subtitle: "Recommends 10x holiday stock" },
                   { id: "replenish", x: 620, y: 100, w: 220, h: 116, tone: "danger", title: "Replenishment agent", subtitle: "Creates oversized POs" },
                   { id: "supplier", x: 920, y: 100, w: 220, h: 116, tone: "danger", title: "Supplier order agent", subtitle: "Confirms 14 supplier orders" },
-                  { id: "warehouse", x: 620, y: 340, w: 220, h: 116, tone: "neutral", title: "Warehouse reality", subtitle: "Overflow and Christmas disruption" },
-                  { id: "impact", x: 920, y: 340, w: 240, h: 116, tone: "danger", title: "Retail loss", subtitle: "GBP3.1M plus cancellation fees" }
+                  { id: "warehouse", x: 620, y: 340, w: 220, h: 116, tone: "neutral", title: "Warehouse reality", subtitle: "GBP4.2M stock hits operations" },
+                  { id: "impact", x: 920, y: 340, w: 240, h: 116, tone: "danger", title: "Retail loss", subtitle: "GBP3.1M after discounts and fees" }
                 ],
                 edges: [
                   { from: "input", to: "forecast", fromSide: "right", toSide: "left", tone: "danger", label: "1. fake demand enters seasonal planning", labelX: 288, labelY: 144 },
