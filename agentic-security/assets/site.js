@@ -361,6 +361,12 @@
       stepNext.addEventListener("click", () => runScenarioAction("advance"));
     }
 
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("button, a, input, select, textarea, .scenario-tab")) return;
+      if (!stepStrip || stepStrip.hidden) return;
+      runScenarioAction("advance");
+    });
+
     if (stepReset) {
       stepReset.addEventListener("click", () => runScenarioAction("reset"));
     }

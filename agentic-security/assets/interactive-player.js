@@ -122,6 +122,11 @@
     window.addEventListener("load", () => queueParentSync());
   }
 
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("button, a, input, select, textarea, .dot, .sep")) return;
+    window.advance();
+  });
+
   function showElement(id) {
     const element = document.getElementById(id);
     if (element) element.classList.add("v");
@@ -2378,18 +2383,18 @@
       <h1>${escapeHtml(config.heading)}</h1>
       <div class="dots" id="dots"></div>
       <div class="wrap">
-        <svg viewBox="0 0 1400 1220" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1400 1080" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
-          <rect width="1400" height="1220" fill="#fff"/>
+          <rect width="1400" height="1080" fill="#fff"/>
           <text x="700" y="54" text-anchor="middle" font-family="${getFontStack()}" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
           <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
 
           <g class="az" id="gzone">
-            <rect x="300" y="118" width="970" height="1070" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="300" y="118" width="970" height="920" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="390" y="94" width="620" height="28" rx="14" fill="#ffffff"/>
             <text x="700" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".08em">${escapeHtml(config.zone)}</text>
           </g>
@@ -2446,8 +2451,8 @@
           <line class="fl" id="c5f" x1="680" y1="436" x2="570" y2="436" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g6">${stageCard(350, 356, "D2", config.d2, "primary")}</g>
-          <line class="co" id="c6s" x1="460" y1="514" x2="460" y2="606" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c6f" x1="460" y1="514" x2="460" y2="606" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c6s" x1="460" y1="514" x2="460" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c6f" x1="460" y1="514" x2="460" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g7">${stageCard(250, 620, "D3", config.d3)}</g>
           <line class="co" id="c7s" x1="470" y1="700" x2="590" y2="700" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
@@ -2458,20 +2463,23 @@
           <line class="fl" id="c8f" x1="810" y1="700" x2="930" y2="700" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g9">${stageCard(930, 620, "D5", config.d5)}</g>
-          <line class="co" id="c9s" x1="1040" y1="778" x2="1040" y2="1062" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c9f" x1="1040" y1="778" x2="1040" y2="1062" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c9s" x1="1040" y1="778" x2="1040" y2="860" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c9f" x1="1040" y1="778" x2="1040" y2="860" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g10">
-            <rect x="900" y="1062" width="280" height="92" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
-            <text x="1040" y="1094" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
-            <text x="1040" y="1122" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(1040, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
-            <text x="1040" y="1146" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(1040, outcomeSub2.lines, outcomeSub2.fontSize * 1.14)}</text>
+            <rect x="900" y="860" width="280" height="92" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="1040" y="892" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
+            <text x="1040" y="920" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(1040, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
+            <text x="1040" y="944" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(1040, outcomeSub2.lines, outcomeSub2.fontSize * 1.14)}</text>
           </g>
           <g class="ng" id="g11">
-            <rect x="60" y="1170" width="1280" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
-            <text x="86" y="1187" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
-            <text x="374" y="1187" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
+            <rect x="60" y="1000" width="1280" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
+            <text x="86" y="1017" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
+            <text x="374" y="1017" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
           </g>
+
+          <line class="co" id="c10s" x1="1040" y1="952" x2="1040" y2="1000" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c10f" x1="1040" y1="952" x2="1040" y2="1000" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           ${flowLabel(298, 188, config.labels.l0, "#4452b8", "l0", 11, 150)}
           ${flowLabel(625, 184, config.labels.l1, "#4452b8", "l1", 11, 165)}
@@ -2480,9 +2488,9 @@
           ${flowLabel(952, 444, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
           ${flowLabel(624, 426, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
           ${flowLabel(460, 594, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
-          ${flowLabel(530, 692, config.labels.l7, "#2d6a4f", "l7", 10.5, 165)}
-          ${flowLabel(870, 692, config.labels.l8, "#2d6a4f", "l8", 10.5, 150)}
-          ${flowLabel(1040, 1050, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
+          ${flowLabel(534, 692, config.labels.l7, "#2d6a4f", "l7", 10.5, 165)}
+          ${flowLabel(866, 692, config.labels.l8, "#2d6a4f", "l8", 10.5, 150)}
+          ${flowLabel(1040, 840, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
         </svg>
       </div>
       ${panelMarkup(
