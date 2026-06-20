@@ -107,6 +107,17 @@ test("serves a scenario detail page", async () => {
   assert.match(html, /Defense View/);
 });
 
+test("serves the ASI01 defense scenario page", async () => {
+  const response = await fetch(
+    `${baseUrl}/scenario.html?asi=ASI01&scenario=asi01-shared-defense&view=defense`
+  );
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /scenario-frame/);
+  assert.match(html, /Defense Flow/);
+});
+
 test("serves an ASI05 scenario detail page", async () => {
   const response = await fetch(
     `${baseUrl}/scenario.html?asi=ASI05&scenario=asi05-self-healing-disaster`
@@ -176,6 +187,17 @@ test("serves an ASI07 scenario detail page", async () => {
   assert.match(html, /scenario-frame/);
   assert.match(html, /Attack View/);
   assert.match(html, /Defense View/);
+});
+
+test("serves ASI01 defense interactive walkthrough data", async () => {
+  const response = await fetch(
+    `${baseUrl}/interactive.html?scenario=asi01-shared-defense&view=defense`
+  );
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /interactive-player\.js/);
+  assert.match(html, /walkthrough-data\.js/);
 });
 
 test("serves ASI07 interactive walkthrough data", async () => {
