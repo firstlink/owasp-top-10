@@ -2455,6 +2455,9 @@
           <line class="fl" id="c8f" x1="790" y1="436" x2="790" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g9">${stageCard(1010, 620, "D5", config.d5)}</g>
+          <line class="co" id="c7s" x1="1120" y1="586" x2="1120" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c7f" x1="1120" y1="586" x2="1120" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+
           <line class="co" id="c9s" x1="1040" y1="778" x2="1040" y2="860" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
           <line class="fl" id="c9f" x1="1040" y1="778" x2="1040" y2="860" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
