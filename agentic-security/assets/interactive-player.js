@@ -1222,12 +1222,12 @@
 
           ${flowLabelHorizontal(261, 146, config.labels.l0 || "① submit", "#D85A30", "l0", loopLabelSize, 140)}
           ${flowLabelHorizontal(646, 146, config.labels.l1 || "② ingest goal", "#EF9F27", "l1", loopLabelSize, 150)}
-          ${flowLabelVertical(930, 250, config.labels.l2 || "③ tool call", "#1D9E75", "l2", loopLabelSize, 140)}
+          ${flowLabelVertical(900, 250, config.labels.l2 || "③ tool call", "#1D9E75", "l2", loopLabelSize, 140)}
           ${flowLabelHorizontal(990, 355, config.labels.l3 || "④ pending", "#888780", "l3", loopLabelSize, 135)}
           ${flowLabelHorizontal(1066, 446, config.labels.l5a || "⑤ goal check fails", "#A32D2D", "la1", loopLabelSize, 185)}
           ${flowLabelHorizontal(376, 770, config.labels.l6 || "⑥ agent retries", "#E24B4A", "l4", loopLabelSize, 150)}
           ${flowLabelHorizontal(740, 752, config.labels.l7 || "⑦ duplicate call", "#E24B4A", "l5", loopLabelSize, 155)}
-          ${flowLabelVertical(898, 819, config.labels.l8 || "⑧ business loss", "#A32D2D", "l6", loopLabelSize, 145)}
+          ${flowLabelVertical(898, 836, config.labels.l8 || "⑧ business loss", "#A32D2D", "l6", loopLabelSize, 145)}
         </svg>
       </div>
       ${panelMarkup("ASI02 — Tool Misuse & Exploitation", "Click Start to reveal how ambiguous success criteria and missing retry controls make the agent re-use the same tool path autonomously.")}
