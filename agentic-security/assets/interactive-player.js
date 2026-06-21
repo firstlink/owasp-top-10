@@ -505,7 +505,7 @@
           <g class="az" id="g4az">
             <rect x="315" y="118" width="945" height="524" rx="28" fill="rgba(156,47,47,0.02)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="500" y="94" width="400" height="28" rx="14" fill="#ffffff"/>
-            <text x="700" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <text x="700" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -596,8 +596,8 @@
           <line class="co" id="c6s" x1="900" y1="736" x2="940" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
           <line class="fl a" id="c6f" x1="900" y1="736" x2="940" y2="736" stroke="#ad3535" stroke-width="4.5"/>
           <path class="co" id="c6t" d="M940 736 L940 704 L1010 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <path class="co" id="c6a" d="M940 736 L940 778 L1010 778" fill="none" stroke="#ad3535" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="940" y1="736" x2="940" y2="778" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6a" d="M940 736 L1010 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="940" y1="736" x2="1010" y2="736" stroke="#ad3535" stroke-width="4.5"/>
 
           <g class="ng" id="g7">
             <rect x="1010" y="662" width="220" height="152" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
@@ -669,7 +669,7 @@
           <g class="az" id="g4az">
             <rect x="700" y="118" width="520" height="430" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="820" y="94" width="280" height="28" rx="14" fill="#ffffff"/>
-            <text x="960" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <text x="960" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -750,8 +750,8 @@
           <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
           <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
           <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <path class="co" id="c6a" d="M990 736 L990 784 L1040 784" fill="none" stroke="#ad3535" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="990" y1="736" x2="990" y2="784" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6a" d="M990 736 L1040 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="1040" y2="736" stroke="#ad3535" stroke-width="4.5"/>
 
           <g class="ng" id="g7">
             <rect x="1040" y="650" width="240" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
@@ -824,7 +824,7 @@
           <g class="az" id="g4az">
             <rect x="600" y="118" width="620" height="430" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="760" y="94" width="300" height="28" rx="14" fill="#ffffff"/>
-            <text x="910" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <text x="910" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -906,8 +906,8 @@
           <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
           <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
           <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <path class="co" id="c6a" d="M990 736 L990 784 L1040 784" fill="none" stroke="#ad3535" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="990" y1="736" x2="990" y2="784" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6a" d="M990 736 L1040 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="1040" y2="736" stroke="#ad3535" stroke-width="4.5"/>
 
           <g class="ng" id="g7">
             <rect x="1040" y="650" width="240" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
@@ -980,7 +980,7 @@
           <g class="az" id="g4az">
             <rect x="610" y="118" width="610" height="430" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="738" y="94" width="354" height="28" rx="14" fill="#ffffff"/>
-            <text x="915" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <text x="915" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -1062,8 +1062,8 @@
           <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
           <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
           <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <path class="co" id="c6a" d="M990 736 L990 784 L1040 784" fill="none" stroke="#ad3535" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="990" y1="736" x2="990" y2="784" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6a" d="M990 736 L1040 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="1040" y2="736" stroke="#ad3535" stroke-width="4.5"/>
 
           <g class="ng" id="g7">
             <rect x="1040" y="650" width="240" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
@@ -1126,7 +1126,7 @@
           <g class="az" id="gzone">
             <rect x="40" y="260" width="1320" height="614" rx="28" fill="rgba(226,75,74,.06)" stroke="#E24B4A" stroke-width="3" stroke-dasharray="10 5"/>
             <rect x="470" y="242" width="460" height="24" rx="12" fill="#fff"/>
-            <text x="700" y="259" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#A32D2D" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <text x="700" y="243" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#A32D2D" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -1288,7 +1288,7 @@
           <g class="az" id="gzone">
             <rect x="292" y="82" width="690" height="284" rx="28" fill="rgba(156,47,47,0.04)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
             <rect x="466" y="64" width="344" height="24" rx="12" fill="#fff"/>
-            <text x="638" y="80" text-anchor="middle" font-family="${getFontStack()}" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
+            <text x="638" y="66" text-anchor="middle" font-family="${getFontStack()}" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -1438,7 +1438,7 @@
           <g class="az" id="gzone">
             <rect x="260" y="118" width="1040" height="336" rx="28" fill="rgba(156,47,47,0.04)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
             <rect x="472" y="100" width="616" height="24" rx="12" fill="#fff"/>
-            <text x="780" y="116" text-anchor="middle" font-family="${getFontStack()}" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
+            <text x="780" y="100" text-anchor="middle" font-family="${getFontStack()}" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -1754,7 +1754,7 @@
           <g class="az" id="gzone">
             <rect x="286" y="116" width="1044" height="694" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
             <rect x="450" y="98" width="716" height="24" rx="12" fill="#fff"/>
-            <text x="808" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
+            <text x="808" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -1895,7 +1895,7 @@
           <g class="az" id="gzone">
             <rect x="300" y="118" width="970" height="930" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="470" y="94" width="460" height="28" rx="14" fill="#ffffff"/>
-            <text x="700" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <text x="700" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -2119,7 +2119,7 @@
           <g class="az" id="gzone">
             <rect x="240" y="118" width="920" height="1540" rx="30" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="368" y="94" width="664" height="28" rx="14" fill="#ffffff"/>
-            <text x="700" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".08em">${escapeHtml(config.zone)}</text>
+            <text x="700" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".08em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -2275,7 +2275,7 @@
           <g class="az" id="gzone">
             <rect x="300" y="118" width="970" height="1070" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="390" y="94" width="620" height="28" rx="14" fill="#ffffff"/>
-            <text x="700" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".08em">${escapeHtml(config.zone)}</text>
+            <text x="700" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".08em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -2560,7 +2560,7 @@
           <g class="az" id="gzone">
             <rect x="300" y="118" width="970" height="520" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
             <rect x="500" y="94" width="400" height="28" rx="14" fill="#ffffff"/>
-            <text x="700" y="114" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <text x="700" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
