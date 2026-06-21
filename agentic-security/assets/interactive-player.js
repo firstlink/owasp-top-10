@@ -617,7 +617,7 @@
           ${flowLabel(790, 450, attackContextLabel, "#ad3535", "la1", 13)}
           ${flowLabel(460, 618, config.labels.l6, "#ad3535", "l4")}
           ${flowLabel(620, 720, config.labels.l7, "#ad3535", "l5")}
-          ${flowLabelHorizontal(971, 736, config.labels.l8, "#ad3535", "l6", 12, 170)}
+          ${flowLabelHorizontal(965, 736, config.labels.l8, "#ad3535", "l6", 12, 170)}
         </svg>
       </div>
       ${panelMarkup(
@@ -771,7 +771,7 @@
           ${flowLabel(890, 392, config.labels.la1, "#ad3535", "la1", 12, 280)}
           ${flowLabel(640, 634, config.labels.l4, "#ad3535", "l4", 12, 160)}
           ${flowLabel(692, 720, config.labels.l5, "#ad3535", "l5", 12, 150)}
-          ${flowLabelHorizontal(1011, 736, config.labels.l6, "#ad3535", "l6", 12, 170)}
+          ${flowLabelHorizontal(1005, 736, config.labels.l6, "#ad3535", "l6", 12, 170)}
         </svg>
       </div>
       ${panelMarkup(
@@ -927,7 +927,7 @@
           ${flowLabel(900, 392, config.labels.la1, "#ad3535", "la1", 12, 280)}
           ${flowLabel(640, 634, config.labels.l4, "#ad3535", "l4", 12, 166)}
           ${flowLabel(692, 720, config.labels.l5, "#ad3535", "l5", 12, 150)}
-          ${flowLabelHorizontal(1011, 736, config.labels.l6, "#ad3535", "l6", 12, 166)}
+          ${flowLabelHorizontal(1005, 736, config.labels.l6, "#ad3535", "l6", 12, 166)}
         </svg>
       </div>
       ${panelMarkup(
@@ -1083,7 +1083,7 @@
           ${flowLabel(900, 392, config.labels.la1, "#ad3535", "la1", 12, 290)}
           ${flowLabel(640, 634, config.labels.l4, "#ad3535", "l4", 12, 170)}
           ${flowLabel(692, 720, config.labels.l5, "#ad3535", "l5", 12, 150)}
-          ${flowLabelHorizontal(1011, 736, config.labels.l6, "#ad3535", "l6", 12, 170)}
+          ${flowLabelHorizontal(1005, 736, config.labels.l6, "#ad3535", "l6", 12, 170)}
         </svg>
       </div>
       ${panelMarkup(
