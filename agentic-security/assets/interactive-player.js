@@ -1169,8 +1169,8 @@
             <text x="1161" y="376" text-anchor="middle" font-family="${getFontStack()}" font-size="11" fill="#5F5E5A">Refund is not confirmed as complete</text>
           </g>
 
-          <path class="co" id="c4s" d="M1161 402 L1161 446 L970 446" fill="none" stroke="#EF9F27" stroke-width="2" marker-end="url(#ar)"/>
-          <path class="fl" id="c4f" d="M1161 402 L1161 446 L970 446" fill="none" stroke="#EF9F27" stroke-width="3.8" marker-end="url(#ar)"/>
+          <path class="co" id="c4s" d="M1161 402 L1161 446 L970 462" fill="none" stroke="#EF9F27" stroke-width="2" marker-end="url(#ar)"/>
+          <path class="fl" id="c4f" d="M1161 402 L1161 446 L970 462" fill="none" stroke="#EF9F27" stroke-width="3.8" marker-end="url(#ar)"/>
 
           <g class="ng" id="g5">
             <rect x="356" y="462" width="604" height="176" rx="16" fill="#FAEEDA" stroke="#EF9F27" stroke-width="2.6"/>
