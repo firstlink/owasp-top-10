@@ -2168,6 +2168,9 @@ window.ASI_WALKTHROUGHS = {
         "l7": "⑦ Run script",
         "l8": "⑧ Delete backups"
       },
+      "labelPositions": {
+        "l3Y": 320
+      },
       "steps": [
         {
           "title": "Disk pressure alert starts the workflow",
@@ -2344,6 +2347,14 @@ window.ASI_WALKTHROUGHS = {
         "l7": "⑦ Run SQL",
         "l8": "⑧ Destroy and expose data"
       },
+      "labelPositions": {
+        "l3Y": 322,
+        "l8X": 955,
+        "l8Y": 720
+      },
+      "connectorPositions": {
+        "outcomeEndX": 1010
+      },
       "steps": [
         {
           "title": "A routine-looking pharmacy request is submitted",
@@ -2519,6 +2530,9 @@ window.ASI_WALKTHROUGHS = {
         "l6": "⑥ Plan shifts",
         "l7": "⑦ Run script",
         "l8": "⑧ Open shell"
+      },
+      "labelPositions": {
+        "l3Y": 320
       },
       "steps": [
         {
@@ -5212,8 +5226,8 @@ window.ASI_WALKTHROUGHS = {
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "Sensitive actions require explicit approval before they run.",
-        "sub2": "New recipients, payouts, and endpoints trigger review."
+        "sub1": "Sensitive actions need approval.",
+        "sub2": "New payees, payouts, or endpoints need review."
       },
       "outcome": {
         "title": "Approved outcome",

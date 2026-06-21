@@ -1877,7 +1877,7 @@
     const d4Sub2 = fitWrappedText(config.d4.sub2, 186, 11.5, 10, 2);
     const d5Title = fitSingleLine(config.d5.title, 184, 17, 13);
     const d5Sub1 = fitWrappedText(config.d5.sub1, 186, 12.5, 10, 2);
-    const d5Sub2 = fitWrappedText(config.d5.sub2, 186, 11.5, 10, 2);
+    const d5Sub2 = fitWrappedText(config.d5.sub2, 186, 10.5, 9, 2);
     const outcomeTitle = fitSingleLine(config.outcome.title, 250, 18, 14);
     const outcomeSub1 = fitWrappedText(config.outcome.sub1, 246, 13, 11, 2);
     const outcomeSub2 = fitWrappedText(config.outcome.sub2, 246, 11, 9, 2);
@@ -2046,15 +2046,15 @@
           </g>
 
           ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11.5, 150)}
-          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 11, 160)}
-          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 11, 170)}
-          ${flowLabelVertical(1120, 313, config.labels.l3, "#4452b8", "l3", 11, 150)}
+          ${flowLabelHorizontalSegment(570, 680, 230, config.labels.l1, "#4452b8", "l1", 10.5, 96)}
+          ${flowLabelHorizontalSegment(900, 1010, 225, config.labels.l2, "#4452b8", "l2", 10.5, 96)}
+          ${flowLabelVertical(1120, 334, config.labels.l3, "#4452b8", "l3", 10.5, 150)}
           ${flowLabelHorizontal(955, 442, config.labels.l4, "#2d6a4f", "l4", 11, 180)}
           ${flowLabelHorizontal(625, 442, config.labels.l5, "#2d6a4f", "l5", 10.5, 190)}
-          ${flowLabelVertical(460, 624, config.labels.l6, "#2d6a4f", "l6", 11, 180)}
+          ${flowLabelVertical(460, 700, config.labels.l6, "#2d6a4f", "l6", 10.5, 150)}
           ${flowLabelHorizontal(610, 800, config.labels.l7, "#2d6a4f", "l7", 10.5, 175)}
           ${flowLabelHorizontal(910, 800, config.labels.l8, "#2d6a4f", "l8", 10.5, 170)}
-          ${flowLabelVertical(1060, 895, config.labels.l9, "#2d6a4f", "l9", 10.5, 190)}
+          ${flowLabelVertical(1060, 918, config.labels.l9, "#2d6a4f", "l9", 10.5, 170)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2373,16 +2373,16 @@
           </g>
 
           ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11, 150)}
-          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 11, 165)}
-          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 11, 160)}
-          ${flowLabelVertical(1120, 313, config.labels.l3, "#4452b8", "l3", 10.5, 170)}
+          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 11, 128)}
+          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 11, 124)}
+          ${flowLabelVertical(1120, 340, config.labels.l3, "#4452b8", "l3", 10.5, 170)}
           ${flowLabelHorizontal(955, 458, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
           ${flowLabelHorizontal(625, 436, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
           ${flowLabelVertical(460, 560, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
           ${flowLabelHorizontal(530, 700, config.labels.l7, "#2d6a4f", "l7", 10.5, 140)}
           ${flowLabelHorizontalSegment(810, 930, 700, config.labels.l8, "#2d6a4f", "l8", 10.5, 140)}
           ${flowLabelVertical(1040, 821, config.labels.l9, "#2d6a4f", "l9", 10.5, 150)}
-          ${flowLabelVertical(1040, 1047, config.labels.l10, "#2d6a4f", "l10", 10.5, 160)}
+          ${flowLabelVertical(1040, 1076, config.labels.l10, "#2d6a4f", "l10", 10.5, 160)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2546,15 +2546,15 @@
           <line class="fl" id="c10f" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1100" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11, 148)}
-          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 10.5, 128)}
-          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 10.5, 128)}
-          ${flowLabelVertical(1120, 313, config.labels.l3, "#4452b8", "l3", 10.5, 154)}
+          ${flowLabelHorizontalSegment(570, 680, 230, config.labels.l1, "#4452b8", "l1", 10.5, 92)}
+          ${flowLabelHorizontalSegment(900, 1010, 225, config.labels.l2, "#4452b8", "l2", 10.5, 92)}
+          ${flowLabelVertical(1120, 337, config.labels.l3, "#4452b8", "l3", 10.5, 154)}
           ${flowLabelHorizontalSegment(930, 1010, row2CenterY, config.labels.l4, "#2d6a4f", "l4", 10, 128)}
           ${flowLabelHorizontalSegment(600, 680, row2CenterY, config.labels.l5, "#2d6a4f", "l5", 10, 126)}
-          ${flowLabelVertical(475, (row2BottomY + row3Y) / 2, config.labels.l6, "#2d6a4f", "l6", 10, 140)}
+          ${flowLabelVertical(475, row3Y + 42, config.labels.l6, "#2d6a4f", "l6", 10, 140)}
           ${flowLabelHorizontalSegment(600, 680, row3CenterY, config.labels.l7, "#2d6a4f", "l7", 10, 126)}
           ${flowLabelHorizontalSegment(930, 1010, row3CenterY, config.labels.l8, "#2d6a4f", "l8", 10, 126)}
-          ${flowLabelVertical(1135, (row3BottomY + outcomeY) / 2, config.labels.l9, "#2d6a4f", "l9", 10, 144)}
+          ${flowLabelVertical(1135, ((row3BottomY + outcomeY) / 2) + 64, config.labels.l9, "#2d6a4f", "l9", 10, 144)}
         </svg>
       </div>
       ${panelMarkup(
