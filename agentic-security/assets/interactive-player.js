@@ -1090,7 +1090,7 @@
     const decisionLayout = fitWrappedText("Agent decides: retry issueRefund()", 430, 13, 11, 2);
     const decisionStartY = decisionLayout.lines.length > 1 ? 604 : 600;
     const noteY = decisionLayout.lines.length > 1 ? 634 : 624;
-    const loopLabelSize = 10.5;
+    const loopLabelSize = 11.5;
     return `
       <style>${baseStyles()}</style>
       <div class="badge">${escapeHtml(config.badge)}</div>
