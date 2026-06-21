@@ -1110,8 +1110,8 @@
           <g class="az" id="gentry">
             <rect x="32" y="58" width="986" height="158" rx="24" fill="rgba(136,135,128,.05)"/>
             <path d="M180 58 H994 A24 24 0 0 1 1018 82 V192 A24 24 0 0 1 994 216 H56 A24 24 0 0 1 32 192 V82 A24 24 0 0 1 56 58" fill="none" stroke="#888780" stroke-width="2.4" stroke-dasharray="8 4" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="70" y="35" width="110" height="22" rx="11" fill="#fff"/>
-            <text x="125" y="50" text-anchor="middle" font-family="${getFontStack()}" font-size="11" font-weight="800" fill="#888780" letter-spacing=".08em">ATTACK ENTRY</text>
+            <rect x="70" y="28" width="110" height="22" rx="11" fill="#fff"/>
+            <text x="125" y="43" text-anchor="middle" font-family="${getFontStack()}" font-size="11" font-weight="800" fill="#888780" letter-spacing=".08em">ATTACK ENTRY</text>
             <path d="M56 58 H70" fill="none" stroke="#888780" stroke-width="2.4" stroke-dasharray="8 4" stroke-linecap="round"/>
           </g>
 
@@ -2866,7 +2866,7 @@
       .ng{opacity:0;transition:opacity .5s;}
       .ng.v{opacity:1;}
       .co{opacity:0;transition:opacity .4s;}
-      .co.v{opacity:1;}
+      .co.v{opacity:0;}
       .fl{stroke-dasharray:14 8;animation:da 1.1s linear infinite;opacity:0;transition:opacity .4s;}
       .fl.v{opacity:1;}
       .fl.a{stroke-dasharray:10 6;animation:da .65s linear infinite;}
