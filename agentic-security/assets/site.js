@@ -1,7 +1,21 @@
 (function () {
   const data = window.OWASP_ASI_DATA;
   if (!data) return;
-  const ASSET_VERSION = "20260620g";
+  const ASSET_VERSION = "20260621a";
+  const EDGE_LABEL_TOKENS = {
+    fontSize: {
+      horizontal: 13,
+      vertical: 13
+    },
+    minFontSize: {
+      horizontal: 11,
+      vertical: 11
+    },
+    maxWidth: {
+      horizontal: 210,
+      vertical: 230
+    }
+  };
 
   const page = document.body.dataset.page;
 
@@ -468,8 +482,17 @@
       ? elbowPath(fromPoint, toPoint, edge.fromSide)
       : `M ${fromPoint.x} ${fromPoint.y} L ${toPoint.x} ${toPoint.y}`;
 
+    const orientation = edge.fromSide === "top" || edge.fromSide === "bottom"
+      ? "vertical"
+      : "horizontal";
     const labelLayout = edge.label
-      ? fitWrappedText(edge.label, edge.labelWidth || 220, 14, 11, 2)
+      ? fitWrappedText(
+          edge.label,
+          edge.labelWidth || EDGE_LABEL_TOKENS.maxWidth[orientation],
+          Math.max(EDGE_LABEL_TOKENS.fontSize[orientation], 12),
+          EDGE_LABEL_TOKENS.minFontSize[orientation],
+          2
+        )
       : null;
     const label = labelLayout
       ? `

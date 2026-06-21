@@ -9,14 +9,22 @@
   const scenario = walkthroughs[scenarioId];
   const WALKTHROUGH_STATE_MESSAGE = "asi:walkthrough-state";
   const WALKTHROUGH_ACTION_MESSAGE = "asi:walkthrough-action";
-    const DIAGRAM_TOKENS = {
-      flowLabelGap: {
+  const DIAGRAM_TOKENS = {
+    flowLabelGap: {
       horizontal: 24,
       vertical: 14
-      },
+    },
+    flowLabelFontSize: {
+      horizontal: 11.5,
+      vertical: 11.5
+    },
+    flowLabelMinFontSize: {
+      horizontal: 10.5,
+      vertical: 10.5
+    },
     flowLabelMaxWidth: {
-      horizontal: 170,
-      vertical: 190
+      horizontal: 160,
+      vertical: 176
     },
     nodeTextMaxLines: {
       title: 2,
@@ -2642,12 +2650,15 @@
     `;
   }
 
-  function flowLabelMarkup(x, y, text, color, id, fontSize, maxWidth, className) {
-    const startSize = fontSize || 13;
-    const minSize = Math.min(startSize, 11);
-    const layout = fitWrappedText(text, maxWidth || 210, startSize, minSize, 2);
+  function flowLabelMarkup(x, y, text, color, id, options = {}) {
+    const orientation = options.orientation || "horizontal";
+    const defaultFontSize = DIAGRAM_TOKENS.flowLabelFontSize[orientation] || 11.5;
+    const startSize = Math.max(options.fontSize || defaultFontSize, defaultFontSize);
+    const minSize = DIAGRAM_TOKENS.flowLabelMinFontSize[orientation] || Math.min(startSize, 10.5);
+    const maxWidth = options.maxWidth || getFlowLabelMaxWidth(orientation);
+    const layout = fitWrappedText(text, maxWidth, startSize, minSize, 2);
     return `
-      <g class="lb${className ? ` ${className}` : ""}" id="${id}">
+      <g class="lb${options.className ? ` ${options.className}` : ""}" id="${id}">
         <text x="${x}" y="${y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${layout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
           ${renderTspans(x, layout.lines, layout.fontSize * 1.18)}
         </text>
@@ -2656,33 +2667,29 @@
   }
 
   function flowLabel(x, y, text, color, id, fontSize, maxWidth) {
-    return flowLabelMarkup(x, y, text, color, id, fontSize, maxWidth, "");
+    return flowLabelMarkup(x, y, text, color, id, {
+      fontSize,
+      maxWidth,
+      orientation: "horizontal"
+    });
   }
 
   function flowLabelHorizontal(x, lineY, text, color, id, fontSize, maxWidth) {
-    return flowLabelMarkup(
-      x,
-      lineY,
-      text,
-      color,
-      id,
+    return flowLabelMarkup(x, lineY, text, color, id, {
       fontSize,
-      getFlowLabelMaxWidth("horizontal", maxWidth),
-      "lb-h"
-    );
+      maxWidth: getFlowLabelMaxWidth("horizontal", maxWidth),
+      orientation: "horizontal",
+      className: "lb-h"
+    });
   }
 
   function flowLabelVertical(x, lineCenterY, text, color, id, fontSize, maxWidth) {
-    return flowLabelMarkup(
-      x,
-      lineCenterY,
-      text,
-      color,
-      id,
+    return flowLabelMarkup(x, lineCenterY, text, color, id, {
       fontSize,
-      getFlowLabelMaxWidth("vertical", maxWidth),
-      "lb-v"
-    );
+      maxWidth: getFlowLabelMaxWidth("vertical", maxWidth),
+      orientation: "vertical",
+      className: "lb-v"
+    });
   }
 
   function getFlowLabelMaxWidth(orientation, requestedWidth) {
