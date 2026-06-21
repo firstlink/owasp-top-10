@@ -1190,8 +1190,8 @@
             <text x="1133" y="562" text-anchor="middle" font-family="${getFontStack()}" font-size="15" font-weight="800" fill="#A32D2D">→ N (unlimited)</text>
           </g>
 
-          <path class="co" id="c5s" d="M420 588 L330 588 L330 770 L420 770" fill="none" stroke="#E24B4A" stroke-width="2.2" stroke-dasharray="8 4" marker-end="url(#ar)"/>
-          <path class="fl a" id="c5f" d="M420 588 L330 588 L330 770 L420 770" fill="none" stroke="#E24B4A" stroke-width="4.2" stroke-dasharray="8 4" marker-end="url(#ar)"/>
+          <path class="co" id="c5s" d="M350 588 L330 588 L330 770 L420 770" fill="none" stroke="#E24B4A" stroke-width="2.2" stroke-dasharray="8 4" marker-end="url(#ar)"/>
+          <path class="fl a" id="c5f" d="M350 588 L330 588 L330 770 L420 770" fill="none" stroke="#E24B4A" stroke-width="4.2" stroke-dasharray="8 4" marker-end="url(#ar)"/>
 
           <g class="ng" id="g7">
             <rect x="420" y="692" width="278" height="118" rx="14" fill="#FCEBEB" stroke="#E24B4A" stroke-width="2.2"/>
