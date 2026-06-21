@@ -2652,13 +2652,14 @@
 
   function flowLabelMarkup(x, y, text, color, id, options = {}) {
     const orientation = options.orientation || "horizontal";
+    const className = options.className || (orientation === "vertical" ? "lb-v" : "lb-h");
     const defaultFontSize = DIAGRAM_TOKENS.flowLabelFontSize[orientation] || 11.5;
     const startSize = Math.max(options.fontSize || defaultFontSize, defaultFontSize);
     const minSize = DIAGRAM_TOKENS.flowLabelMinFontSize[orientation] || Math.min(startSize, 10.5);
     const maxWidth = options.maxWidth || getFlowLabelMaxWidth(orientation);
     const layout = fitWrappedText(text, maxWidth, startSize, minSize, 2);
     return `
-      <g class="lb${options.className ? ` ${options.className}` : ""}" id="${id}">
+      <g class="lb ${className}" id="${id}">
         <text x="${x}" y="${y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${layout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
           ${renderTspans(x, layout.lines, layout.fontSize * 1.18)}
         </text>
@@ -2670,7 +2671,8 @@
     return flowLabelMarkup(x, y, text, color, id, {
       fontSize,
       maxWidth,
-      orientation: "horizontal"
+      orientation: "horizontal",
+      className: "lb-h"
     });
   }
 
