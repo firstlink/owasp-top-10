@@ -11,8 +11,8 @@
   const WALKTHROUGH_ACTION_MESSAGE = "asi:walkthrough-action";
   const DIAGRAM_TOKENS = {
     flowLabelGap: {
-      horizontal: 24,
-      vertical: 14
+      horizontal: 12,
+      vertical: 10
     },
     flowLabelFontSize: {
       horizontal: 11.5,
