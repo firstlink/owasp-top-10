@@ -9,11 +9,11 @@
   const scenario = walkthroughs[scenarioId];
   const WALKTHROUGH_STATE_MESSAGE = "asi:walkthrough-state";
   const WALKTHROUGH_ACTION_MESSAGE = "asi:walkthrough-action";
-  const DIAGRAM_TOKENS = {
-    flowLabelGap: {
-      horizontal: 36,
-      vertical: 22
-    },
+    const DIAGRAM_TOKENS = {
+      flowLabelGap: {
+      horizontal: 24,
+      vertical: 14
+      },
     flowLabelMaxWidth: {
       horizontal: 170,
       vertical: 190
