@@ -593,12 +593,6 @@
             <text x="790" y="${toolBottomSub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolBottomSub2Layout.fontSize}" fill="#ad3535">${renderTspans(790, toolBottomSub2Layout.lines, toolBottomSub2Layout.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c6s" x1="900" y1="736" x2="940" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
-          <line class="fl a" id="c6f" x1="900" y1="736" x2="940" y2="736" stroke="#ad3535" stroke-width="4.5"/>
-          <path class="co" id="c6t" d="M940 736 L940 704 L1010 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <path class="co" id="c6a" d="M940 736 L1010 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="940" y1="736" x2="1010" y2="736" stroke="#ad3535" stroke-width="4.5"/>
-
           <g class="ng" id="g7">
             <rect x="1010" y="662" width="220" height="152" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <rect x="1010" y="662" width="220" height="54" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
@@ -610,6 +604,12 @@
             <text x="1120" y="790" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottomLayout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, outcomeBottomLayout.lines, outcomeBottomLayout.fontSize * 1.12)}</text>
           </g>
 
+          <line class="co" id="c6s" x1="900" y1="736" x2="940" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="900" y1="736" x2="940" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M940 736 L940 704 L1010 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <path class="co" id="c6a" d="M940 736 L1010 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="940" y1="736" x2="1010" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+
           ${flowLabel(298, 198, config.labels.l0, "#4452b8", "l0")}
           ${flowLabel(628, 198, config.labels.l1, "#4452b8", "l1")}
           ${flowLabel(958, 198, config.labels.l2, "#4452b8", "l2")}
@@ -617,7 +617,7 @@
           ${flowLabel(790, 450, attackContextLabel, "#ad3535", "la1", 13)}
           ${flowLabel(460, 618, config.labels.l6, "#ad3535", "l4")}
           ${flowLabel(620, 720, config.labels.l7, "#ad3535", "l5")}
-          ${flowLabel(1000, 754, config.labels.l8, "#ad3535", "l6")}
+          ${flowLabelHorizontal(1000, 736, config.labels.l8, "#ad3535", "l6", 12, 170)}
         </svg>
       </div>
       ${panelMarkup(
@@ -747,12 +747,6 @@
             <text x="850" y="788" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionSub2.fontSize}" fill="#8a847b">${renderTspans(850, actionSub2.lines, actionSub2.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
-          <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
-          <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <path class="co" id="c6a" d="M990 736 L1040 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="990" y1="736" x2="1040" y2="736" stroke="#ad3535" stroke-width="4.5"/>
-
           <g class="ng" id="g7">
             <rect x="1040" y="650" width="240" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <rect x="1040" y="650" width="240" height="58" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
@@ -764,6 +758,12 @@
             <text x="1160" y="792" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottom.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1160, outcomeBottom.lines, outcomeBottom.fontSize * 1.12)}</text>
           </g>
 
+          <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <path class="co" id="c6a" d="M990 736 L1040 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="1040" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+
           ${flowLabel(300, 198, config.labels.l0, "#4452b8", "l0", 12, 150)}
           ${flowLabel(585, 198, config.labels.l1, "#4452b8", "l1", 12, 170)}
           ${flowLabel(896, 198, config.labels.l2, "#ad3535", "l2", 12, 160)}
@@ -771,7 +771,7 @@
           ${flowLabel(890, 392, config.labels.la1, "#ad3535", "la1", 12, 280)}
           ${flowLabel(640, 634, config.labels.l4, "#ad3535", "l4", 12, 160)}
           ${flowLabel(692, 720, config.labels.l5, "#ad3535", "l5", 12, 150)}
-          ${flowLabel(1016, 758, config.labels.l6, "#ad3535", "l6", 12, 170)}
+          ${flowLabelHorizontal(1016, 736, config.labels.l6, "#ad3535", "l6", 12, 170)}
         </svg>
       </div>
       ${panelMarkup(
@@ -903,12 +903,6 @@
             <text x="850" y="788" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionSub2.fontSize}" fill="#8a847b">${renderTspans(850, actionSub2.lines, actionSub2.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
-          <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
-          <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <path class="co" id="c6a" d="M990 736 L1040 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="990" y1="736" x2="1040" y2="736" stroke="#ad3535" stroke-width="4.5"/>
-
           <g class="ng" id="g7">
             <rect x="1040" y="650" width="240" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <rect x="1040" y="650" width="240" height="58" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
@@ -920,6 +914,12 @@
             <text x="1160" y="792" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottom.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1160, outcomeBottom.lines, outcomeBottom.fontSize * 1.12)}</text>
           </g>
 
+          <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <path class="co" id="c6a" d="M990 736 L1040 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="1040" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+
           ${flowLabel(300, 198, config.labels.l0, "#4452b8", "l0", 12, 150)}
           ${flowLabel(585, 198, config.labels.l1, "#4452b8", "l1", 12, 160)}
           ${flowLabel(896, 198, config.labels.l2, "#ad3535", "l2", 12, 164)}
@@ -927,7 +927,7 @@
           ${flowLabel(900, 392, config.labels.la1, "#ad3535", "la1", 12, 280)}
           ${flowLabel(640, 634, config.labels.l4, "#ad3535", "l4", 12, 166)}
           ${flowLabel(692, 720, config.labels.l5, "#ad3535", "l5", 12, 150)}
-          ${flowLabel(1016, 758, config.labels.l6, "#ad3535", "l6", 12, 166)}
+          ${flowLabelHorizontal(1016, 736, config.labels.l6, "#ad3535", "l6", 12, 166)}
         </svg>
       </div>
       ${panelMarkup(
@@ -1059,12 +1059,6 @@
             <text x="850" y="788" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionSub2.fontSize}" fill="#8a847b">${renderTspans(850, actionSub2.lines, actionSub2.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
-          <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
-          <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <path class="co" id="c6a" d="M990 736 L1040 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="990" y1="736" x2="1040" y2="736" stroke="#ad3535" stroke-width="4.5"/>
-
           <g class="ng" id="g7">
             <rect x="1040" y="650" width="240" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <rect x="1040" y="650" width="240" height="58" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
@@ -1076,6 +1070,12 @@
             <text x="1160" y="792" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottom.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1160, outcomeBottom.lines, outcomeBottom.fontSize * 1.12)}</text>
           </g>
 
+          <line class="co" id="c6s" x1="960" y1="736" x2="990" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <path class="co" id="c6a" d="M990 736 L1040 736" fill="none" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="1040" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+
           ${flowLabel(300, 198, config.labels.l0, "#4452b8", "l0", 12, 150)}
           ${flowLabel(585, 198, config.labels.l1, "#4452b8", "l1", 12, 160)}
           ${flowLabel(896, 198, config.labels.l2, "#ad3535", "l2", 12, 156)}
@@ -1083,7 +1083,7 @@
           ${flowLabel(900, 392, config.labels.la1, "#ad3535", "la1", 12, 290)}
           ${flowLabel(640, 634, config.labels.l4, "#ad3535", "l4", 12, 170)}
           ${flowLabel(692, 720, config.labels.l5, "#ad3535", "l5", 12, 150)}
-          ${flowLabel(1016, 758, config.labels.l6, "#ad3535", "l6", 12, 170)}
+          ${flowLabelHorizontal(1016, 736, config.labels.l6, "#ad3535", "l6", 12, 170)}
         </svg>
       </div>
       ${panelMarkup(
