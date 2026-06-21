@@ -11,8 +11,8 @@
   const WALKTHROUGH_ACTION_MESSAGE = "asi:walkthrough-action";
   const DIAGRAM_TOKENS = {
     flowLabelGap: {
-      horizontal: 8,
-      vertical: 10
+      horizontal: 12,
+      vertical: 12
     },
     flowConnectorEndInset: {
       horizontal: 16,
@@ -262,8 +262,8 @@
       { show: ["g0"], co: [], fl: [], lb: [], atk: false },
       { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
       { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
-      { show: ["g3"], co: ["c2s"], fl: ["c2f", "c3f"], lb: ["l2", "l3"], atk: false },
-      { show: ["g4az", "g4ctx"], co: ["ias"], fl: ["iaf"], lb: ["la1", "la2"], atk: true },
+      { show: ["g3", "g4az"], co: ["c2s"], fl: ["c2f", "c3f"], lb: ["l2", "l3"], atk: false },
+      { show: ["g4ctx"], co: ["ias"], fl: ["iaf"], lb: ["la1", "la2"], atk: true },
       { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["l4"], atk: true },
       { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: true },
       { show: ["g7"], co: ["c6s", "c6t", "c6a"], fl: ["c6f", "c6af"], lb: ["l6"], atk: true }
@@ -479,13 +479,20 @@
     const outcomeTopLayout = fitSingleLine(config.outcome.top, 188, 12, 10);
     const outcomeTopSubLayout = fitWrappedText(config.outcome.topSub, 188, 10, 8, 2);
     const outcomeTopSubY = outcomeTopSubLayout.lines.length > 1 ? 696 : 704;
+    const outcomeBottomTitleLayout = fitWrappedText(config.outcome.bottomTitle, 196, 18, 13, 2);
     const outcomeBottomLayout = fitWrappedText(config.outcome.bottom, 184, 13, 10, 2);
+    const outcomeBottomTitleY = outcomeBottomTitleLayout.lines.length > 1 ? 756 : 768;
+    const outcomeBottomY = outcomeBottomLayout.lines.length > 1 ? 792 : 798;
     const payloadVisibleY = payloadVisibleLayout.lines.length > 1 ? 384 : 391;
     const payloadHidden1Y = 480;
     const payloadHidden2Y = payloadHidden1Y + (payloadHidden1Layout.lines.length - 1) * 14 + 26;
     const payloadNoteY = 575;
     const payloadHumanY = payloadNoteY + (payloadNoteLayout ? payloadNoteLayout.lines.length * 11 + 8 : 0);
     const attackContextLabel = config.labels.l5b ? `${config.labels.l5a} ${config.labels.l5b}` : config.labels.l5a;
+    const l3LabelY = config.labelPositions?.l3Y || 308;
+    const l8LabelX = config.labelPositions?.l8X || 955;
+    const l8LabelY = config.labelPositions?.l8Y || 736;
+    const outcomeConnectorEndX = config.connectorPositions?.outcomeEndX || 1010;
 
     return `
       <style>${baseStyles()}</style>
@@ -508,7 +515,7 @@
 
           <g class="az" id="g4az">
             <rect x="315" y="118" width="945" height="524" rx="28" fill="rgba(156,47,47,0.02)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
-            <rect x="500" y="94" width="400" height="28" rx="14" fill="#ffffff"/>
+            <rect x="500" y="86" width="400" height="20" rx="10" fill="#ffffff"/>
             <text x="700" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
@@ -604,24 +611,24 @@
             <text x="1120" y="${outcomeTopSubY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTopSubLayout.fontSize}" fill="#b2aba0">${renderTspans(1120, outcomeTopSubLayout.lines, outcomeTopSubLayout.fontSize * 1.14)}</text>
             <line x1="1014" y1="732" x2="1226" y2="732" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
             <rect x="1010" y="734" width="220" height="80" fill="#fff8f8" clip-path="url(#oc)"/>
-            <text x="1120" y="768" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.outcome.bottomTitle)}</text>
-            <text x="1120" y="790" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottomLayout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, outcomeBottomLayout.lines, outcomeBottomLayout.fontSize * 1.12)}</text>
+            <text x="1120" y="${outcomeBottomTitleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottomTitleLayout.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(1120, outcomeBottomTitleLayout.lines, outcomeBottomTitleLayout.fontSize * 1.1)}</text>
+            <text x="1120" y="${outcomeBottomY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottomLayout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, outcomeBottomLayout.lines, outcomeBottomLayout.fontSize * 1.12)}</text>
           </g>
 
           <line class="co" id="c6s" x1="900" y1="736" x2="940" y2="736" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
           <line class="fl a" id="c6f" x1="900" y1="736" x2="940" y2="736" stroke="#ad3535" stroke-width="4.5"/>
           <path class="co" id="c6t" d="M940 736 L940 704 L1010 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="co" id="c6a" x1="940" y1="736" x2="${getFlowConnectorEndX(1010)}" y2="736" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="940" y1="736" x2="${getFlowConnectorEndX(1010)}" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <line class="co" id="c6a" x1="940" y1="736" x2="${outcomeConnectorEndX}" y2="736" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="940" y1="736" x2="${outcomeConnectorEndX}" y2="736" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          ${flowLabel(298, 198, config.labels.l0, "#4452b8", "l0")}
-          ${flowLabel(628, 198, config.labels.l1, "#4452b8", "l1")}
-          ${flowLabel(958, 198, config.labels.l2, "#4452b8", "l2")}
-          ${flowLabel(1162, 308, config.labels.l3, "#4452b8", "l3")}
-          ${flowLabel(790, 450, attackContextLabel, "#ad3535", "la1", 13)}
-          ${flowLabel(460, 618, config.labels.l6, "#ad3535", "l4")}
-          ${flowLabel(620, 720, config.labels.l7, "#ad3535", "l5")}
-          ${flowLabelHorizontalSegment(940, getFlowConnectorEndX(1010), 736, config.labels.l8, "#ad3535", "l6", 12, 170)}
+          ${flowLabelHorizontal(295, 225, config.labels.l0, "#4452b8", "l0")}
+          ${flowLabelHorizontal(625, 225, config.labels.l1, "#4452b8", "l1")}
+          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2")}
+          ${flowLabelVertical(1120, l3LabelY, config.labels.l3, "#4452b8", "l3")}
+          ${flowLabelHorizontal(790, 468, attackContextLabel, "#ad3535", "la1", 12, 340)}
+          ${flowLabelVertical(460, 612, config.labels.l6, "#ad3535", "l4")}
+          ${flowLabelHorizontal(625, 736, config.labels.l7, "#ad3535", "l5")}
+          ${flowLabelHorizontal(l8LabelX, l8LabelY, config.labels.l8, "#ad3535", "l6", 11, 108, { maxLines: 2 })}
         </svg>
       </div>
       ${panelMarkup(
@@ -672,7 +679,7 @@
 
           <g class="az" id="g4az">
             <rect x="700" y="118" width="520" height="430" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
-            <rect x="820" y="94" width="280" height="28" rx="14" fill="#ffffff"/>
+            <rect x="820" y="86" width="280" height="20" rx="10" fill="#ffffff"/>
             <text x="960" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
@@ -766,7 +773,7 @@
           <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
           <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
           <line class="co" id="c6a" x1="990" y1="736" x2="${getFlowConnectorEndX(1040)}" y2="736" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="990" y1="736" x2="${getFlowConnectorEndX(1040)}" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="${getFlowConnectorEndX(1040)}" y2="736" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           ${flowLabel(300, 198, config.labels.l0, "#4452b8", "l0", 12, 150)}
           ${flowLabel(585, 198, config.labels.l1, "#4452b8", "l1", 12, 170)}
@@ -827,7 +834,7 @@
 
           <g class="az" id="g4az">
             <rect x="600" y="118" width="620" height="430" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
-            <rect x="760" y="94" width="300" height="28" rx="14" fill="#ffffff"/>
+            <rect x="760" y="86" width="300" height="20" rx="10" fill="#ffffff"/>
             <text x="910" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
@@ -922,7 +929,7 @@
           <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
           <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
           <line class="co" id="c6a" x1="990" y1="736" x2="${getFlowConnectorEndX(1040)}" y2="736" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="990" y1="736" x2="${getFlowConnectorEndX(1040)}" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="${getFlowConnectorEndX(1040)}" y2="736" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           ${flowLabel(300, 198, config.labels.l0, "#4452b8", "l0", 12, 150)}
           ${flowLabel(585, 198, config.labels.l1, "#4452b8", "l1", 12, 160)}
@@ -983,7 +990,7 @@
 
           <g class="az" id="g4az">
             <rect x="610" y="118" width="610" height="430" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
-            <rect x="738" y="94" width="354" height="28" rx="14" fill="#ffffff"/>
+            <rect x="738" y="86" width="354" height="20" rx="10" fill="#ffffff"/>
             <text x="915" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
@@ -1078,7 +1085,7 @@
           <line class="fl a" id="c6f" x1="960" y1="736" x2="990" y2="736" stroke="#ad3535" stroke-width="4.5"/>
           <path class="co" id="c6t" d="M990 736 L990 704 L1040 704" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
           <line class="co" id="c6a" x1="990" y1="736" x2="${getFlowConnectorEndX(1040)}" y2="736" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="990" y1="736" x2="${getFlowConnectorEndX(1040)}" y2="736" stroke="#ad3535" stroke-width="4.5"/>
+          <line class="fl a" id="c6af" x1="990" y1="736" x2="${getFlowConnectorEndX(1040)}" y2="736" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           ${flowLabel(300, 198, config.labels.l0, "#4452b8", "l0", 12, 150)}
           ${flowLabel(585, 198, config.labels.l1, "#4452b8", "l1", 12, 160)}
@@ -1387,7 +1394,7 @@
           ${flowLabel(614, 208, config.labels.l1, "#ad3535", "l1", 10, 150)}
           ${flowLabel(314, 590, config.labels.l2, "#4452b8", "l2", 10, 150)}
           ${flowLabel(724, 456, config.labels.l3, "#4452b8", "l3", 10, 160)}
-          ${flowLabel(684, 582, config.labels.la1, "#ad3535", "la1", 10, 170)}
+          ${flowLabelHorizontal(760, 612, config.labels.la1, "#ad3535", "la1", 10, 320, { maxLines: 3 })}
           ${flowLabel(1028, 584, config.labels.l4, "#ad3535", "l4", 10, 170)}
           ${flowLabel(1180, 504, config.labels.l5, "#ad3535", "l5", 10, 150)}
           ${flowLabel(1128, 732, config.labels.l6, "#ad3535", "l6", 10, 150)}
@@ -2373,7 +2380,7 @@
           ${flowLabelHorizontal(625, 436, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
           ${flowLabelVertical(460, 560, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
           ${flowLabelHorizontal(530, 700, config.labels.l7, "#2d6a4f", "l7", 10.5, 140)}
-          ${flowLabelHorizontal(870, 700, config.labels.l8, "#2d6a4f", "l8", 10.5, 140)}
+          ${flowLabelHorizontalSegment(810, 930, 700, config.labels.l8, "#2d6a4f", "l8", 10.5, 140)}
           ${flowLabelVertical(1040, 821, config.labels.l9, "#2d6a4f", "l9", 10.5, 150)}
           ${flowLabelVertical(1040, 1047, config.labels.l10, "#2d6a4f", "l10", 10.5, 160)}
         </svg>
@@ -2387,19 +2394,23 @@
 
   function renderDefenseSharedCompactAsi02(config) {
     const agentGoalLayout = fitSingleLine(config.agent.goal, 176, 12, 10);
+    const toolTopTitleLayout = fitSingleLine(config.toolTop.title, 188, 18, 14);
     const patternTitleLayout = fitSingleLine(config.patterns.title, 188, 17, 13);
     const patternSub1Layout = fitWrappedText(config.patterns.sub1, 190, 11.5, 9.5, 2);
     const patternSub2Layout = fitWrappedText(config.patterns.sub2, 190, 11.5, 9.5, 2);
     const patternSub3Layout = fitWrappedText(config.patterns.sub3, 190, 11.5, 9.5, 2);
     const auditTitle = fitSingleLine(config.audit.title, 350, 12, 10);
     const auditSub1 = fitWrappedText(config.audit.sub1, 900, 10.5, 9, 2);
-    const stageCardWidth = 220;
-    const stageCardHeight = 158;
-    const row3Y = 620;
+    const stageCardWidth = 250;
+    const stageCardHeight = 186;
+    const row2Y = 356;
+    const row2CenterY = row2Y + stageCardHeight / 2;
+    const row2BottomY = row2Y + stageCardHeight;
+    const row3Y = 662;
     const row3CenterY = row3Y + stageCardHeight / 2;
-    const row3LabelY = row3CenterY - 12;
+    const row3BottomY = row3Y + stageCardHeight;
     const outcomeX = 980;
-    const outcomeY = 860;
+    const outcomeY = 960;
     const outcomeCenterX = outcomeX + 140;
     const outcomeBottomY = outcomeY + 92;
 
@@ -2413,12 +2424,21 @@
       const titleFill = tone === "primary" ? "#33429f" : "#24553f";
       const sub1Fill = tone === "primary" ? "#5360be" : "#3d735a";
       const sub2Fill = tone === "primary" ? "#6b77cb" : "#56826c";
+      const titleLineHeight = title.fontSize * 1.14;
+      const sub1LineHeight = sub1.fontSize * 1.15;
+      const sub2LineHeight = sub2.fontSize * 1.15;
+      const titleBlockHeight = Math.max(titleLineHeight, title.lines.length * titleLineHeight);
+      const sub1BlockHeight = Math.max(sub1LineHeight, sub1.lines.length * sub1LineHeight);
+      const contentTopY = y + 56;
+      const titleY = contentTopY;
+      const sub1Y = titleY + titleBlockHeight + 24;
+      const sub2Y = sub1Y + sub1BlockHeight + 20;
       return `
         <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="20" fill="${fill}" stroke="${stroke}" stroke-width="2.8"/>
-        <text x="${x + 30}" y="${y + 30}" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="${idFill}">${id}</text>
-        <text x="${x + width / 2}" y="${y + 58}" text-anchor="middle" font-family="${getFontStack()}" font-size="${title.fontSize}" font-weight="700" fill="${titleFill}">${renderTspans(x + width / 2, title.lines, title.fontSize * 1.14)}</text>
-        <text x="${x + width / 2}" y="${y + 98}" text-anchor="middle" font-family="${getFontStack()}" font-size="${sub1.fontSize}" fill="${sub1Fill}">${renderTspans(x + width / 2, sub1.lines, sub1.fontSize * 1.15)}</text>
-        <text x="${x + width / 2}" y="${y + 130}" text-anchor="middle" font-family="${getFontStack()}" font-size="${sub2.fontSize}" fill="${sub2Fill}">${renderTspans(x + width / 2, sub2.lines, sub2.fontSize * 1.15)}</text>
+        <text x="${x + 24}" y="${y + 24}" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="${idFill}">${id}</text>
+        <text x="${x + width / 2}" y="${titleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${title.fontSize}" font-weight="700" fill="${titleFill}">${renderTspans(x + width / 2, title.lines, titleLineHeight)}</text>
+        <text x="${x + width / 2}" y="${sub1Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${sub1.fontSize}" fill="${sub1Fill}">${renderTspans(x + width / 2, sub1.lines, sub1LineHeight)}</text>
+        <text x="${x + width / 2}" y="${sub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${sub2.fontSize}" fill="${sub2Fill}">${renderTspans(x + width / 2, sub2.lines, sub2LineHeight)}</text>
       `;
     }
 
@@ -2432,13 +2452,13 @@
       <h1>${escapeHtml(config.heading)}</h1>
       <div class="dots" id="dots"></div>
       <div class="wrap">
-        <svg viewBox="0 0 1400 1080" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1400 1180" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
-          <rect width="1400" height="1080" fill="#fff"/>
+          <rect width="1400" height="1180" fill="#fff"/>
           <text x="700" y="54" text-anchor="middle" font-family="${getFontStack()}" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
           <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
 
@@ -2463,7 +2483,7 @@
 
           <g class="ng" id="g2">
             <rect x="680" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="790" y="222" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.toolTop.title)}</text>
+            <text x="790" y="222" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolTopTitleLayout.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(toolTopTitleLayout.text)}</text>
             <text x="790" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.toolTop.sub1)}</text>
             <text x="790" y="282" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.toolTop.sub2)}</text>
           </g>
@@ -2486,55 +2506,55 @@
             <text x="1120" y="494" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub2Layout.fontSize}" fill="#a04d3a">${renderTspans(1120, patternSub2Layout.lines, patternSub2Layout.fontSize * 1.18)}</text>
             <text x="1120" y="554" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub3Layout.fontSize}" fill="#a04d3a">${renderTspans(1120, patternSub3Layout.lines, patternSub3Layout.fontSize * 1.18)}</text>
           </g>
-          <line class="co" id="c4s" x1="1010" y1="458" x2="900" y2="458" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c4f" x1="1010" y1="458" x2="900" y2="458" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c4s" x1="1010" y1="${row2CenterY}" x2="${680 + stageCardWidth}" y2="${row2CenterY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c4f" x1="1010" y1="${row2CenterY}" x2="${680 + stageCardWidth}" y2="${row2CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g5">${stageCard(680, 356, "D1", config.d1)}</g>
-          <line class="co" id="c5s" x1="680" y1="436" x2="570" y2="436" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c5f" x1="680" y1="436" x2="570" y2="436" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g5">${stageCard(680, row2Y, "D1", config.d1)}</g>
+          <line class="co" id="c5s" x1="680" y1="${row2CenterY}" x2="${350 + stageCardWidth}" y2="${row2CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c5f" x1="680" y1="${row2CenterY}" x2="${350 + stageCardWidth}" y2="${row2CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g6">${stageCard(350, 356, "D2", config.d2, "primary")}</g>
-          <line class="co" id="c6s" x1="460" y1="514" x2="460" y2="620" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c6f" x1="460" y1="514" x2="460" y2="620" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g6">${stageCard(350, row2Y, "D2", config.d2, "primary")}</g>
+          <line class="co" id="c6s" x1="${350 + stageCardWidth / 2}" y1="${row2BottomY}" x2="${350 + stageCardWidth / 2}" y2="${row3Y}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c6f" x1="${350 + stageCardWidth / 2}" y1="${row2BottomY}" x2="${350 + stageCardWidth / 2}" y2="${row3Y}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g7">${stageCard(350, row3Y, "D3", config.d3)}</g>
-          <line class="co" id="c6as" x1="570" y1="${row3CenterY}" x2="680" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c6af" x1="570" y1="${row3CenterY}" x2="680" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c6as" x1="${350 + stageCardWidth}" y1="${row3CenterY}" x2="680" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c6af" x1="${350 + stageCardWidth}" y1="${row3CenterY}" x2="680" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g8">${stageCard(680, row3Y, "D4", config.d4)}</g>
-          <line class="co" id="c8bs" x1="900" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c8bf" x1="900" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c8bs" x1="${680 + stageCardWidth}" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c8bf" x1="${680 + stageCardWidth}" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g9">${stageCard(1010, row3Y, "D5", config.d5)}</g>
 
-          <line class="co" id="c9s" x1="1120" y1="778" x2="1120" y2="${outcomeY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c9f" x1="1120" y1="778" x2="1120" y2="${outcomeY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c9s" x1="${1010 + stageCardWidth / 2}" y1="${row3BottomY}" x2="${1010 + stageCardWidth / 2}" y2="${outcomeY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c9f" x1="${1010 + stageCardWidth / 2}" y1="${row3BottomY}" x2="${1010 + stageCardWidth / 2}" y2="${outcomeY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g10">
             <rect x="${outcomeX}" y="${outcomeY}" width="280" height="92" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
-            <text x="${outcomeCenterX}" y="892" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
-            <text x="${outcomeCenterX}" y="920" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(outcomeCenterX, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
-            <text x="${outcomeCenterX}" y="944" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(outcomeCenterX, outcomeSub2.lines, outcomeSub2.fontSize * 1.14)}</text>
+            <text x="${outcomeCenterX}" y="${outcomeY + 32}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
+            <text x="${outcomeCenterX}" y="${outcomeY + 60}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(outcomeCenterX, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
+            <text x="${outcomeCenterX}" y="${outcomeY + 84}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(outcomeCenterX, outcomeSub2.lines, outcomeSub2.fontSize * 1.14)}</text>
           </g>
           <g class="ng" id="g11">
-            <rect x="60" y="1000" width="1280" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
-            <text x="86" y="1017" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
-            <text x="374" y="1017" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
+            <rect x="60" y="1100" width="1280" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
+            <text x="86" y="1117" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
+            <text x="374" y="1117" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
           </g>
 
-          <line class="co" id="c10s" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1000" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c10f" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1000" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c10s" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1100" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c10f" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1100" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11, 150)}
-          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 11, 165)}
-          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 11, 160)}
-          ${flowLabelVertical(1120, 313, config.labels.l3, "#4452b8", "l3", 10.5, 170)}
-          ${flowLabelHorizontal(955, 458, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
-          ${flowLabelHorizontal(625, 436, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
-          ${flowLabelVertical(460, 567, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
-          ${flowLabelHorizontal(625, row3CenterY, config.labels.l7, "#2d6a4f", "l7", 10.5, 165)}
-          ${flowLabelHorizontal(955, row3CenterY, config.labels.l8, "#2d6a4f", "l8", 10.5, 160)}
-          ${flowLabelVertical(1120, (778 + outcomeY) / 2, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
+          ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11, 148)}
+          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 10.5, 128)}
+          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 10.5, 128)}
+          ${flowLabelVertical(1120, 313, config.labels.l3, "#4452b8", "l3", 10.5, 154)}
+          ${flowLabelHorizontalSegment(930, 1010, row2CenterY, config.labels.l4, "#2d6a4f", "l4", 10, 128)}
+          ${flowLabelHorizontalSegment(600, 680, row2CenterY, config.labels.l5, "#2d6a4f", "l5", 10, 126)}
+          ${flowLabelVertical(475, (row2BottomY + row3Y) / 2, config.labels.l6, "#2d6a4f", "l6", 10, 140)}
+          ${flowLabelHorizontalSegment(600, 680, row3CenterY, config.labels.l7, "#2d6a4f", "l7", 10, 126)}
+          ${flowLabelHorizontalSegment(930, 1010, row3CenterY, config.labels.l8, "#2d6a4f", "l8", 10, 126)}
+          ${flowLabelVertical(1135, (row3BottomY + outcomeY) / 2, config.labels.l9, "#2d6a4f", "l9", 10, 144)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2661,11 +2681,15 @@
     const startSize = Math.max(options.fontSize || defaultFontSize, defaultFontSize);
     const minSize = DIAGRAM_TOKENS.flowLabelMinFontSize[orientation] || Math.min(startSize, 10.5);
     const maxWidth = options.maxWidth || getFlowLabelMaxWidth(orientation);
-    const layout = fitWrappedText(text, maxWidth, startSize, minSize, 2);
+    const maxLines = options.maxLines || 2;
+    const layout = fitWrappedText(text, maxWidth, startSize, minSize, maxLines);
+    const lineHeight = layout.fontSize * 1.18;
+    const multiLineLift = layout.lines.length > 1 ? ((layout.lines.length - 1) * lineHeight) / 2 : 0;
+    const textY = y - multiLineLift;
     return `
       <g class="lb ${className}" id="${id}">
-        <text x="${x}" y="${y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${layout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
-          ${renderTspans(x, layout.lines, layout.fontSize * 1.18)}
+        <text x="${x}" y="${textY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${layout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
+          ${renderTspans(x, layout.lines, lineHeight)}
         </text>
       </g>
     `;
@@ -2680,8 +2704,9 @@
     });
   }
 
-  function flowLabelHorizontal(x, lineY, text, color, id, fontSize, maxWidth) {
+  function flowLabelHorizontal(x, lineY, text, color, id, fontSize, maxWidth, options = {}) {
     return flowLabelMarkup(x, lineY, text, color, id, {
+      ...options,
       fontSize,
       maxWidth: getFlowLabelMaxWidth("horizontal", maxWidth),
       orientation: "horizontal",
@@ -2690,7 +2715,10 @@
   }
 
   function flowLabelHorizontalSegment(x1, x2, lineY, text, color, id, fontSize, maxWidth) {
-    return flowLabelHorizontal((x1 + x2) / 2, lineY, text, color, id, fontSize, maxWidth);
+    const segmentWidth = Math.abs(x2 - x1);
+    const usableWidth = Math.max(72, segmentWidth - 20);
+    const wrappedWidth = maxWidth ? Math.min(maxWidth, usableWidth) : usableWidth;
+    return flowLabelHorizontal((x1 + x2) / 2, lineY, text, color, id, fontSize, wrappedWidth);
   }
 
   function flowLabelVertical(x, lineCenterY, text, color, id, fontSize, maxWidth) {
@@ -2706,7 +2734,7 @@
     const tokenWidth = orientation === "vertical"
       ? DIAGRAM_TOKENS.flowLabelMaxWidth.vertical
       : DIAGRAM_TOKENS.flowLabelMaxWidth.horizontal;
-    return requestedWidth ? Math.min(requestedWidth, tokenWidth) : tokenWidth;
+    return requestedWidth || tokenWidth;
   }
 
   function getFlowConnectorEndX(endX, orientation = "horizontal") {
@@ -2883,7 +2911,7 @@
       .dot.active{background:var(--primary);border-color:#32408f;box-shadow:0 0 6px rgba(68,82,184,.35);}
       .dot.atk{background:var(--danger)!important;border-color:#7f2626!important;box-shadow:0 0 6px rgba(156,47,47,.35)!important;}
       .wrap{width:100%;max-width:1360px;background:${frameBare ? "transparent" : "var(--surface)"};border:${frameBare ? "0" : "1px solid var(--line)"};border-radius:${frameBare ? "0" : "20px"};overflow:${frameBare ? "visible" : "hidden"};}
-      svg{width:100%;display:block;margin-top:${externalPanel ? "-88px" : "0"};}
+      svg{width:100%;display:block;margin-top:${externalPanel ? "-56px" : "0"};}
       svg > text:first-of-type,svg > line:first-of-type{display:none;}
       .ng{opacity:0;transition:opacity .5s;}
       .ng.v{opacity:1;}
@@ -2919,7 +2947,7 @@
         .badge{font-size:9px;padding:3px 10px;margin-bottom:6px;}
         h1{font-size:10px;margin-bottom:8px;}
         .wrap{border-radius:16px;}
-        svg{margin-top:${externalPanel ? "-64px" : "0"};}
+        svg{margin-top:${externalPanel ? "-40px" : "0"};}
         .dots{margin-bottom:6px;}
         .panel{margin-top:8px;padding:12px 14px;align-items:flex-start;flex-wrap:wrap;gap:10px;min-height:0;}
         .pt{flex:1 1 100%;min-width:0;}
