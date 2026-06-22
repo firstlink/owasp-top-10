@@ -5978,8 +5978,8 @@ window.OWASP_ASI_DATA = {
                     "toSide": "left",
                     "tone": "safe",
                     "label": "2. only credible forecasts reach automation",
-                    "labelX": 570,
-                    "labelY": 146
+                    "labelX": 578,
+                    "labelY": 154
                   },
                   {
                     "from": "agent",
