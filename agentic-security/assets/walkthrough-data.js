@@ -1768,7 +1768,7 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "fetchTemplate()",
         "sub1": "Runtime template fetch",
-        "sub2": "loads contract_review_template"
+        "sub2": "runtime instruction source"
       },
       "store": {
         "title": "templates.legalai.io",
@@ -1779,8 +1779,9 @@ window.ASI_WALKTHROUGHS = {
         "title": "poisoned template",
         "visible": "Visible: review clauses",
         "hiddenTitle": "ATTACK EXPLOIT",
-        "hidden1": "extract parties and amounts",
-        "hidden2": "write /tmp/exfil.json",
+        "hidden1": "extract parties",
+        "hidden2": "extract financial values",
+        "hidden3": "write /tmp/exfil.json",
         "hiddenNote": "CDN poison / hidden block",
         "hiddenHumanNote": "Lawyer sees normal review"
       },
@@ -1791,8 +1792,8 @@ window.ASI_WALKTHROUGHS = {
       },
       "hijacked": {
         "title": "Legal AI agent",
-        "sub1": "POISONED TEMPLATE",
-        "goal": "Plan: hidden extract ✗"
+        "sub1": "COMPROMISED INSTRUCTION SOURCE",
+        "goal": "Plan: review + hidden extract ✗"
       },
       "toolBottom": {
         "title": "writeFile()",
@@ -1803,16 +1804,16 @@ window.ASI_WALKTHROUGHS = {
         "top": "legal review delivered ✓",
         "topSub": "(visible task still succeeds)",
         "bottomTitle": "Hidden extraction",
-        "bottom": "Leaked reviews / 14 days ✗"
+        "bottom": "Every review / 14 days / legal privilege breached ✗"
       },
       "labels": {
         "l0": "① Request",
         "l1": "② Fetch template",
         "l2": "③ Reach CDN",
         "l3": "④ Load poisoned prompt",
-        "l5a": "⑤ Supply-chain change",
-        "l5b": "adds covert extraction instructions",
-        "l6": "⑥ Plan expands",
+        "l5a": "⑤ Poisoned template",
+        "l5b": "adds hidden instruction",
+        "l6": "⑥ Execution scope expanded",
         "l7": "⑦ Hidden write",
         "l8": "⑧ Leak contract data"
       },
@@ -1944,7 +1945,7 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "fetchSchema()",
         "sub1": "Runtime schema fetch",
-        "sub2": "loads getCatalog() definition"
+        "sub2": "API definition source"
       },
       "store": {
         "title": "Internal schema registry",
@@ -1967,27 +1968,27 @@ window.ASI_WALKTHROUGHS = {
       },
       "hijacked": {
         "title": "Recommendation agent",
-        "sub1": "POISONED SCHEMA",
+        "sub1": "COMPROMISED API SCHEMA",
         "goal": "Plan: hidden export ✗"
       },
       "toolBottom": {
         "title": "getCatalog()",
         "sub1": "Legitimate internal API",
-        "sub2": "profile data also sent"
+        "sub2": "called with poisoned parameters — profile data sent"
       },
       "outcome": {
         "top": "recommendations shown ✓",
         "topSub": "(shopping flow still looks normal)",
         "bottomTitle": "Silent PII export",
-        "bottom": "800,000 / 3 weeks ✗"
+        "bottom": "800,000 customer profiles / 3 weeks / GDPR breach ✗"
       },
       "labels": {
         "l0": "① Request",
         "l1": "② Fetch schema",
         "l2": "③ Read registry",
         "l3": "④ Load modified definition",
-        "l5a": "⑤ Supply-chain change",
-        "l5b": "adds a hidden profile-export parameter",
+        "l5a": "⑤ Poisoned schema",
+        "l5b": "adds hidden parameter",
         "l6": "⑥ Plan changes",
         "l7": "⑦ Catalog call",
         "l8": "⑧ Leak customer PII"
@@ -2143,7 +2144,7 @@ window.ASI_WALKTHROUGHS = {
       },
       "hijacked": {
         "title": "Self-healing agent",
-        "sub1": "UNSAFE SCRIPT PATH",
+        "sub1": "UNSAFE GENERATED SCRIPT",
         "goal": "Plan: run over-broad cleanup ✗"
       },
       "toolBottom": {
@@ -2162,9 +2163,9 @@ window.ASI_WALKTHROUGHS = {
         "l1": "② Inspect",
         "l2": "③ Read host state",
         "l3": "④ Generate cleanup.sh",
-        "l5a": "⑤ Unsafe command",
-        "l5b": "expands cleanup beyond the intended path",
-        "l6": "⑥ Plan shifts",
+        "l5a": "⑤ Generated cleanup",
+        "l5b": "escapes safe scope",
+        "l6": "⑥ Cleanup scope escapes",
         "l7": "⑦ Run script",
         "l8": "⑧ Delete backups"
       },
@@ -2287,8 +2288,8 @@ window.ASI_WALKTHROUGHS = {
       "introDetail": "Click Start to reveal how a natural-language pharmacy request becomes live multi-statement SQL when the assistant generates and runs database code without a safe boundary.",
       "zone": "CODE EXECUTION ATTACK ZONE: NATURAL LANGUAGE IS TURNED INTO DANGEROUS SQL",
       "user": {
-        "title": "Attacker",
-        "sub1": "Portal user",
+        "title": "Portal user",
+        "sub1": "Malicious actor",
         "sub2": "\"check drug interaction\""
       },
       "agent": {
@@ -2309,6 +2310,7 @@ window.ASI_WALKTHROUGHS = {
       "payload": {
         "title": "drug request",
         "visible": "Visible: metformin + clopidogrel check",
+        "visible2": "Embedded: '; DROP TABLE drug_interactions; SELECT * FROM patient_records --",
         "hiddenTitle": "SQL PAYLOAD",
         "hidden1": "DROP TABLE drug_interactions;",
         "hidden2": "SELECT * FROM patient_records --",
@@ -2328,22 +2330,23 @@ window.ASI_WALKTHROUGHS = {
       "toolBottom": {
         "title": "executeSql()",
         "sub1": "Direct database execution",
-        "sub2": "multi-statement SQL is allowed"
+        "sub2": "multi-statement SQL is allowed",
+        "note": "no parameterised queries enforced"
       },
       "outcome": {
         "top": "safe interaction lookup ✓",
         "topSub": "(intended clinical read-only path blocked)",
-        "bottomTitle": "Database and patient impact",
-        "bottom": "safety table dropped and patient records exposed ✗"
+        "bottomTitle": "Safety database destroyed",
+        "bottom": "patient records exposed ✗"
       },
       "labels": {
         "l0": "① Submit request",
         "l1": "② Parse text",
         "l2": "③ Read portal input",
-        "l3": "④ Build SQL",
-        "l5a": "⑤ Injection payload",
-        "l5b": "turns the lookup into executable attack statements",
-        "l6": "⑥ Plan shifts",
+        "l3": "④ Generate SQL from text input",
+        "l5a": "⑤ SQL payload",
+        "l5b": "replaces safe lookup query",
+        "l6": "⑥ Execution path changed",
         "l7": "⑦ Run SQL",
         "l8": "⑧ Destroy and expose data"
       },

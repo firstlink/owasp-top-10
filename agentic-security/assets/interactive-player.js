@@ -483,8 +483,14 @@
     const storeSub2Y = storeSub2Layout.lines.length > 1 ? 266 : 274;
     const payloadTitleLayout = fitSingleLine(config.payload.title, 188, 17, 13);
     const payloadVisibleLayout = fitWrappedText(config.payload.visible, 184, 12, 10, 2);
+    const payloadVisible2Layout = config.payload.visible2
+      ? fitWrappedText(config.payload.visible2, 188, 8.4, 7.4, 3)
+      : null;
     const payloadHidden1Layout = fitWrappedText(config.payload.hidden1, 190, 12, 10, 2);
     const payloadHidden2Layout = fitWrappedText(config.payload.hidden2, 190, 14, 11, 2);
+    const payloadHidden3Layout = config.payload.hidden3
+      ? fitWrappedText(config.payload.hidden3, 190, 12, 10, 2)
+      : null;
     const payloadNoteLayout = config.payload.hiddenNote
       ? fitWrappedText(config.payload.hiddenNote, 190, 10, 9, 2)
       : null;
@@ -496,7 +502,13 @@
     const toolBottomTitleLayout = fitSingleLine(config.toolBottom.title, 188, 18, 14);
     const toolBottomSub1Layout = fitSingleLine(config.toolBottom.sub1, 190, 13, 10);
     const toolBottomSub2Layout = fitWrappedText(config.toolBottom.sub2, 190, 12, 10, 2);
-    const toolBottomSub2Y = toolBottomSub2Layout.lines.length > 1 ? 772 : 782;
+    const toolBottomNoteLayout = config.toolBottom.note
+      ? fitSingleLine(config.toolBottom.note, 190, 10, 8.2)
+      : null;
+    const toolBottomSub2Y = toolBottomNoteLayout
+      ? (toolBottomSub2Layout.lines.length > 1 ? 768 : 776)
+      : (toolBottomSub2Layout.lines.length > 1 ? 772 : 782);
+    const toolBottomNoteY = toolBottomNoteLayout ? 796 : null;
     const outcomeTopLayout = fitSingleLine(config.outcome.top, 188, 12, 10);
     const outcomeTopSubLayout = fitWrappedText(config.outcome.topSub, 188, 10, 8, 2);
     const outcomeTopSubY = outcomeTopSubLayout.lines.length > 1 ? 696 : 704;
@@ -504,10 +516,22 @@
     const outcomeBottomLayout = fitWrappedText(config.outcome.bottom, 184, 13, 10, 2);
     const outcomeBottomTitleY = outcomeBottomTitleLayout.lines.length > 1 ? 756 : 768;
     const outcomeBottomY = outcomeBottomLayout.lines.length > 1 ? 792 : 798;
-    const payloadVisibleY = payloadVisibleLayout.lines.length > 1 ? 384 : 391;
-    const payloadHidden1Y = 480;
+    const payloadDividerY = payloadVisible2Layout ? 426 : 408;
+    const payloadVisibleY = payloadVisible2Layout
+      ? (payloadVisibleLayout.lines.length > 1 ? 382 : 388)
+      : (payloadVisibleLayout.lines.length > 1 ? 384 : 391);
+    const payloadVisible2Y = payloadVisible2Layout
+      ? payloadVisibleY + ((payloadVisibleLayout.lines.length - 1) * 14) + 18
+      : null;
+    const payloadHiddenTitleY = payloadVisible2Layout ? 448 : 454;
+    const payloadHidden1Y = payloadVisible2Layout ? 474 : 480;
     const payloadHidden2Y = payloadHidden1Y + (payloadHidden1Layout.lines.length - 1) * 14 + 26;
-    const payloadNoteY = 575;
+    const payloadHidden3Y = payloadHidden3Layout
+      ? payloadHidden2Y + (payloadHidden2Layout.lines.length - 1) * 14 + 24
+      : null;
+    const payloadNoteY = payloadHidden3Y
+      ? payloadHidden3Y + ((payloadHidden3Layout.lines.length - 1) * 13) + 24
+      : 575;
     const payloadHumanY = payloadNoteY + (payloadNoteLayout ? payloadNoteLayout.lines.length * 11 + 8 : 0);
     const attackContextLabel = config.labels.l5b ? `${config.labels.l5a} ${config.labels.l5b}` : config.labels.l5a;
     const l3LabelY = config.labelPositions?.l3Y || 308;
@@ -580,16 +604,18 @@
             <line x1="1120" y1="290" x2="1120" y2="326" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
             <line class="fl" id="c3f" x1="1120" y1="290" x2="1120" y2="326" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
-            <rect x="1010" y="326" width="220" height="82" rx="20" fill="#fcfbf8"/>
-            <rect x="1010" y="376" width="220" height="32" fill="#fcfbf8"/>
-            <rect x="1010" y="408" width="220" height="148" fill="#fdf0f0" clip-path="url(#dc)"/>
-            <line x1="1014" y1="408" x2="1226" y2="408" stroke="#ddd6cb" stroke-width="1.4"/>
+            <rect x="1010" y="326" width="220" height="${payloadDividerY - 326}" rx="20" fill="#fcfbf8"/>
+            <rect x="1010" y="${payloadDividerY - 32}" width="220" height="32" fill="#fcfbf8"/>
+            <rect x="1010" y="${payloadDividerY}" width="220" height="${556 - payloadDividerY}" fill="#fdf0f0" clip-path="url(#dc)"/>
+            <line x1="1014" y1="${payloadDividerY}" x2="1226" y2="${payloadDividerY}" stroke="#ddd6cb" stroke-width="1.4"/>
             <rect x="1010" y="326" width="220" height="230" rx="20" fill="none" stroke="#b87a45" stroke-width="2.3"/>
             <text x="1120" y="366" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadTitleLayout.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(payloadTitleLayout.text)}</text>
             <text x="1120" y="${payloadVisibleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadVisibleLayout.fontSize}" fill="#8a847b">${renderTspans(1120, payloadVisibleLayout.lines, payloadVisibleLayout.fontSize * 1.18)}</text>
-            <text x="1120" y="454" text-anchor="middle" font-family="${getFontStack()}" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hiddenTitle)}</text>
+            ${payloadVisible2Layout ? `<text x="1120" y="${payloadVisible2Y}" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="${payloadVisible2Layout.fontSize}" fill="#9a5a5a">${renderTspans(1120, payloadVisible2Layout.lines, payloadVisible2Layout.fontSize * 1.2)}</text>` : ""}
+            <text x="1120" y="${payloadHiddenTitleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hiddenTitle)}</text>
             <text x="1120" y="${payloadHidden1Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadHidden1Layout.fontSize}" fill="#ad3535">${renderTspans(1120, payloadHidden1Layout.lines, payloadHidden1Layout.fontSize * 1.18)}</text>
             <text x="1120" y="${payloadHidden2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadHidden2Layout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, payloadHidden2Layout.lines, payloadHidden2Layout.fontSize * 1.16)}</text>
+            ${payloadHidden3Layout ? `<text x="1120" y="${payloadHidden3Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadHidden3Layout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, payloadHidden3Layout.lines, payloadHidden3Layout.fontSize * 1.16)}</text>` : ""}
           </g>
           ${payloadNoteLayout ? `<text class="ng" id="g3note1" x="1120" y="${payloadNoteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadNoteLayout.fontSize}" font-style="italic" fill="#b36a6a">${renderTspans(1120, payloadNoteLayout.lines, payloadNoteLayout.fontSize * 1.16)}</text>` : ""}
           ${payloadHumanLayout ? `<text class="ng" id="g3note2" x="1120" y="${payloadHumanY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadHumanLayout.fontSize}" fill="#c08a8a">${renderTspans(1120, payloadHumanLayout.lines, payloadHumanLayout.fontSize * 1.16)}</text>` : ""}
@@ -623,6 +649,7 @@
             <text x="790" y="724" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolBottomTitleLayout.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(toolBottomTitleLayout.text)}</text>
             <text x="790" y="754" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolBottomSub1Layout.fontSize}" fill="#6b655c">${escapeHtml(toolBottomSub1Layout.text)}</text>
             <text x="790" y="${toolBottomSub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolBottomSub2Layout.fontSize}" fill="#ad3535">${renderTspans(790, toolBottomSub2Layout.lines, toolBottomSub2Layout.fontSize * 1.16)}</text>
+            ${toolBottomNoteLayout ? `<text x="790" y="${toolBottomNoteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolBottomNoteLayout.fontSize}" fill="#b66868">${escapeHtml(toolBottomNoteLayout.text)}</text>` : ""}
           </g>
 
           <g class="ng" id="g7">
