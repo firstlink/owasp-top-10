@@ -310,7 +310,7 @@
       { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: true },
       { show: ["g2", "gzone"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: true },
       { show: ["g3", "g4"], co: ["c2s"], fl: ["c2f"], lb: ["l2"], atk: false },
-      { show: [], co: ["c3s", "c3v"], fl: ["c3f", "c3vf"], lb: ["l3"], atk: false },
+      { show: ["g3cue"], co: ["c3s", "c3v"], fl: ["c3f", "c3vf"], lb: ["l3"], atk: false },
       { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["la1"], atk: true },
       { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l4"], atk: true },
       { show: ["g7"], co: ["c6s"], fl: ["c6f"], lb: ["l5", "l6"], atk: true }
@@ -322,7 +322,7 @@
       { show: ["g0"], co: [], fl: [], lb: [], atk: true },
       { show: ["g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: true },
       { show: ["g2", "gzone"], co: ["c1s", "c1bs"], fl: ["c1f", "c1bf"], lb: ["l1", "l2"], atk: true },
-      { show: ["g3"], co: ["c2s"], fl: ["c2f"], lb: ["l3"], atk: true },
+      { show: ["g3", "g3cue"], co: ["c2s"], fl: ["c2f"], lb: ["l3"], atk: true },
       { show: ["g4"], co: ["c3s", "c3v"], fl: ["c3f", "c3vf"], lb: ["l4"], atk: true },
       { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["l5"], atk: true },
       { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l6"], atk: true }
@@ -672,7 +672,9 @@
           ${flowLabelHorizontal(295, 225, config.labels.l0, "#4452b8", "l0")}
           ${flowLabelHorizontal(625, 225, config.labels.l1, "#4452b8", "l1")}
           ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2")}
-          ${flowLabelVertical(1120, l3LabelY, config.labels.l3, "#4452b8", "l3")}
+          ${config.labels.l3b
+            ? flowLabelVerticalWithNote(1120, l3LabelY, config.labels.l3, config.labels.l3b, "#4452b8", "l3", 10.5, 170)
+            : flowLabelVertical(1120, l3LabelY, config.labels.l3, "#4452b8", "l3")}
           ${flowLabelHorizontal(790, 468, attackContextLabel, "#ad3535", "la1", 12, 340)}
           ${flowLabelVertical(460, 612, config.labels.l6, "#ad3535", "l4")}
           ${flowLabelHorizontal(625, 736, config.labels.l7, "#ad3535", "l5")}
@@ -1388,9 +1390,24 @@
     const toolTitle = fitSingleLine(config.tool.title, 188, 17, 13);
     const toolSub1 = fitWrappedText(config.tool.sub1, 196, 13.5, 11, 2);
     const toolSub2 = fitWrappedText(config.tool.sub2, 198, 11.5, 10, 2);
-    const impactTitle = fitSingleLine(config.impact.title, 220, 19, 14);
+    const toolNote = config.tool.note
+      ? fitWrappedText(config.tool.note, 196, 10, 8.6, 2)
+      : null;
+    const impactVisibleTitle = config.impact.visibleTitle
+      ? fitSingleLine(config.impact.visibleTitle, 236, 12.5, 10)
+      : null;
+    const impactVisibleSub1 = config.impact.visibleSub1
+      ? fitWrappedText(config.impact.visibleSub1, 246, 10.5, 9, 2)
+      : null;
+    const impactHasVisible = Boolean(impactVisibleTitle && impactVisibleSub1);
+    const impactTitle = fitSingleLine(config.impact.title, 220, 18, 13);
     const impact1 = fitWrappedText(config.impact.sub1, 248, 13, 11, 2);
     const impact2 = fitWrappedText(config.impact.sub2, 252, 12, 10, 2);
+    const timelineCue = config.timelineCue
+      ? fitSingleLine(config.timelineCue, 120, 11, 9)
+      : null;
+    const toolBoxHeight = toolNote ? 170 : 154;
+    const toolConnectorStartY = toolNote ? 694 : 678;
 
     return `
       <style>${baseStyles()}</style>
@@ -1447,14 +1464,14 @@
           </g>
 
           <g class="ng" id="g3">
-            <rect x="34" y="556" width="220" height="124" rx="18" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
-            <text x="144" y="608" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
-            <text x="144" y="636" text-anchor="middle" font-family="${getFontStack()}" font-size="${userSub1.fontSize}" fill="#6b655c">${renderTspans(144, userSub1.lines, userSub1.fontSize * 1.16)}</text>
-            <text x="144" y="672" text-anchor="middle" font-family="${getFontStack()}" font-size="${userSub2.fontSize}" fill="#8a847b">${renderTspans(144, userSub2.lines, userSub2.fontSize * 1.16)}</text>
+            <rect x="34" y="556" width="220" height="124" rx="18" fill="#fbfcfe" stroke="#d8dfe9" stroke-width="2.1"/>
+            <text x="144" y="608" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#586578">${escapeHtml(config.user.title)}</text>
+            <text x="144" y="636" text-anchor="middle" font-family="${getFontStack()}" font-size="${userSub1.fontSize}" fill="#6f7d91">${renderTspans(144, userSub1.lines, userSub1.fontSize * 1.16)}</text>
+            <text x="144" y="672" text-anchor="middle" font-family="${getFontStack()}" font-size="${userSub2.fontSize}" fill="#93a0b2">${renderTspans(144, userSub2.lines, userSub2.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c2s" x1="254" y1="618" x2="340" y2="618" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
-          <line class="fl" id="c2f" x1="254" y1="618" x2="340" y2="618" stroke="#4452b8" stroke-width="4" marker-end="url(#ar)"/>
+          <line class="co" id="c2s" x1="254" y1="618" x2="340" y2="618" stroke="#d7dde7" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="254" y1="618" x2="340" y2="618" stroke="#8ea0d8" stroke-width="3.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g4">
             <rect x="340" y="520" width="310" height="178" rx="22" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
@@ -1469,6 +1486,7 @@
           <path class="fl" id="c3f" d="M800 338 L800 430 L495 430 L495 520" fill="none" stroke="#4452b8" stroke-width="4" marker-end="url(#ar)"/>
           <line class="co" id="c3v" x1="800" y1="338" x2="800" y2="430" stroke="#beb6a9" stroke-width="2"/>
           <line class="fl" id="c3vf" x1="800" y1="338" x2="800" y2="430" stroke="#4452b8" stroke-width="3.6"/>
+          ${timelineCue ? `<text class="ng" id="g3cue" x="646" y="418" text-anchor="middle" font-family="${getFontStack()}" font-size="${timelineCue.fontSize}" font-style="italic" fill="#8a847b">${escapeHtml(timelineCue.text)}</text>` : ""}
 
           <g class="ng" id="g5">
             <rect x="710" y="504" width="286" height="214" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
@@ -1483,24 +1501,38 @@
           <line class="fl a" id="c4f" x1="650" y1="612" x2="710" y2="612" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
 
           <g class="ng" id="g6">
-            <rect x="1060" y="524" width="240" height="154" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <rect x="1060" y="524" width="240" height="${toolBoxHeight}" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
             <text x="1180" y="578" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(toolTitle.text)}</text>
             <text x="1180" y="610" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolSub1.fontSize}" fill="#6b655c">${renderTspans(1180, toolSub1.lines, toolSub1.fontSize * 1.16)}</text>
             <text x="1180" y="646" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolSub2.fontSize}" fill="#a33b3b">${renderTspans(1180, toolSub2.lines, toolSub2.fontSize * 1.16)}</text>
+            ${toolNote ? `<text x="1180" y="676" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolNote.fontSize}" fill="#b66868">${renderTspans(1180, toolNote.lines, toolNote.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <line class="co" id="c5s" x1="996" y1="612" x2="1060" y2="612" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
           <line class="fl a" id="c5f" x1="996" y1="612" x2="1060" y2="612" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
 
           <g class="ng" id="g7">
+            ${impactHasVisible
+              ? `
+            <rect x="1007" y="732" width="346" height="172" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="1022" y="748" width="316" height="54" rx="14" fill="#f8f7f4" stroke="#ddd6cb" stroke-width="1.2"/>
+            <text x="1180" y="772" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactVisibleTitle.fontSize}" font-weight="700" fill="#97a0b4">${escapeHtml(impactVisibleTitle.text)}</text>
+            <text x="1180" y="792" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactVisibleSub1.fontSize}" fill="#b2aba0">${renderTspans(1180, impactVisibleSub1.lines, impactVisibleSub1.fontSize * 1.14)}</text>
+            <line x1="1030" y1="816" x2="1330" y2="816" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <text x="1180" y="848" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
+            <text x="1180" y="874" text-anchor="middle" font-family="${getFontStack()}" font-size="${impact1.fontSize}" fill="#a33b3b">${renderTspans(1180, impact1.lines, impact1.fontSize * 1.16)}</text>
+            <text x="1180" y="898" text-anchor="middle" font-family="${getFontStack()}" font-size="${impact2.fontSize}" fill="#b66868">${renderTspans(1180, impact2.lines, impact2.fontSize * 1.16)}</text>
+              `
+              : `
             <rect x="1007" y="748" width="346" height="140" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <text x="1180" y="796" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
             <text x="1180" y="826" text-anchor="middle" font-family="${getFontStack()}" font-size="${impact1.fontSize}" fill="#a33b3b">${renderTspans(1180, impact1.lines, impact1.fontSize * 1.16)}</text>
             <text x="1180" y="854" text-anchor="middle" font-family="${getFontStack()}" font-size="${impact2.fontSize}" fill="#b66868">${renderTspans(1180, impact2.lines, impact2.fontSize * 1.16)}</text>
+              `}
           </g>
 
-          <line class="co" id="c6s" x1="1180" y1="678" x2="1180" y2="748" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6f" x1="1180" y1="678" x2="1180" y2="748" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+          <line class="co" id="c6s" x1="1180" y1="${toolConnectorStartY}" x2="1180" y2="${impactHasVisible ? 732 : 748}" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6f" x1="1180" y1="${toolConnectorStartY}" x2="1180" y2="${impactHasVisible ? 732 : 748}" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
 
           ${flowLabel(266, 208, config.labels.l0, "#ad3535", "l0", 10, 112)}
           ${flowLabel(614, 208, config.labels.l1, "#ad3535", "l1", 10, 150)}
@@ -1536,11 +1568,27 @@
     const laundererSub2 = fitWrappedText(config.launderer.sub2, 228, 11, 10, 2);
     const decisionTitle = fitSingleLine(config.decision.title, 248, 18, 14);
     const decisionLine1 = fitWrappedText(config.decision.line1, 250, 14, 11, 2);
-    const decisionLine2 = fitWrappedText(config.decision.line2, 250, 16, 13, 2);
+    const decisionLine2 = fitWrappedText(config.decision.line2, 250, 14, 11, 2);
+    const decisionLine3 = config.decision.line3
+      ? fitWrappedText(config.decision.line3, 250, 16, 13, 2)
+      : null;
+    const decisionNote = config.decision.note
+      ? fitWrappedText(config.decision.note, 280, 11, 9, 2)
+      : null;
     const approvalTitle = fitSingleLine("Approval path", 180, 18, 14);
-    const impactTitle = fitSingleLine(config.impact.title, 210, 19, 14);
+    const impactVisibleTitle = config.impact.visibleTitle
+      ? fitSingleLine(config.impact.visibleTitle, 236, 12.5, 10)
+      : null;
+    const impactVisibleSub1 = config.impact.visibleSub1
+      ? fitWrappedText(config.impact.visibleSub1, 246, 10.5, 9, 2)
+      : null;
+    const impactHasVisible = Boolean(impactVisibleTitle && impactVisibleSub1);
+    const impactTitle = fitSingleLine(config.impact.title, 210, 18, 13);
     const impact1 = fitWrappedText(config.impact.sub1, 260, 13, 11, 2);
     const impact2 = fitWrappedText(config.impact.sub2, 262, 12, 10, 2);
+    const timelineCue = config.timelineCue
+      ? fitSingleLine(config.timelineCue, 140, 11, 9)
+      : null;
 
     return `
       <style>${baseStyles()}</style>
@@ -1612,6 +1660,7 @@
 
           <line class="co" id="c1bs" x1="1055" y1="410" x2="1055" y2="454" stroke="#beb6a9" stroke-width="2.4"/>
           <line class="fl a" id="c1bf" x1="1055" y1="410" x2="1055" y2="454" stroke="#ad3535" stroke-width="4"/>
+          ${timelineCue ? `<text class="ng" id="g3cue" x="1055" y="484" text-anchor="middle" font-family="${getFontStack()}" font-size="${timelineCue.fontSize}" font-style="italic" fill="#8a847b">${escapeHtml(timelineCue.text)}</text>` : ""}
 
           <g class="ng" id="g3">
             <rect x="30" y="602" width="300" height="126" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
@@ -1624,11 +1673,12 @@
           <line class="fl a" id="c2f" x1="330" y1="666" x2="500" y2="666" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
 
           <g class="ng" id="g4">
-            <rect x="500" y="566" width="420" height="176" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="500" y="552" width="420" height="204" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <text x="710" y="610" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(decisionTitle.text)}</text>
-            <text x="710" y="654" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionLine1.fontSize}" fill="#8d2222">${renderTspans(710, decisionLine1.lines, decisionLine1.fontSize * 1.16)}</text>
-            <text x="710" y="690" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionLine2.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(710, decisionLine2.lines, decisionLine2.fontSize * 1.14)}</text>
-            <text x="710" y="718" text-anchor="middle" font-family="${getFontStack()}" font-size="11" fill="#b66868">The agent acts on the stored belief, not on the real risk profile of the transfer.</text>
+            <text x="710" y="642" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionLine1.fontSize}" fill="#8d2222">${renderTspans(710, decisionLine1.lines, decisionLine1.fontSize * 1.16)}</text>
+            <text x="710" y="674" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionLine2.fontSize}" fill="#8d2222">${renderTspans(710, decisionLine2.lines, decisionLine2.fontSize * 1.16)}</text>
+            ${decisionLine3 ? `<text x="710" y="708" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionLine3.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(710, decisionLine3.lines, decisionLine3.fontSize * 1.14)}</text>` : ""}
+            <text x="710" y="736" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionNote ? decisionNote.fontSize : 11}" fill="#b66868">${decisionNote ? renderTspans(710, decisionNote.lines, decisionNote.fontSize * 1.16) : "The agent acts on the stored belief, not on the real risk profile of the transfer."}</text>
           </g>
 
           <path class="co" id="c3s" d="M1055 500 L1055 514 L710 514 L710 566" fill="none" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
@@ -1647,14 +1697,27 @@
           <line class="fl a" id="c4f" x1="920" y1="666" x2="1045" y2="666" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
 
           <g class="ng" id="g6">
+            ${impactHasVisible
+              ? `
+            <rect x="980" y="772" width="360" height="168" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="1000" y="788" width="320" height="54" rx="14" fill="#f8f7f4" stroke="#ddd6cb" stroke-width="1.2"/>
+            <text x="1160" y="812" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactVisibleTitle.fontSize}" font-weight="700" fill="#97a0b4">${escapeHtml(impactVisibleTitle.text)}</text>
+            <text x="1160" y="832" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactVisibleSub1.fontSize}" fill="#b2aba0">${renderTspans(1160, impactVisibleSub1.lines, impactVisibleSub1.fontSize * 1.14)}</text>
+            <line x1="1010" y1="856" x2="1310" y2="856" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <text x="1160" y="888" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
+            <text x="1160" y="912" text-anchor="middle" font-family="${getFontStack()}" font-size="${impact1.fontSize}" fill="#a33b3b">${renderTspans(1160, impact1.lines, impact1.fontSize * 1.14)}</text>
+            <text x="1160" y="932" text-anchor="middle" font-family="${getFontStack()}" font-size="${impact2.fontSize}" fill="#b66868">${renderTspans(1160, impact2.lines, impact2.fontSize * 1.14)}</text>
+              `
+              : `
             <rect x="980" y="804" width="360" height="112" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <text x="1160" y="844" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
             <text x="1160" y="872" text-anchor="middle" font-family="${getFontStack()}" font-size="${impact1.fontSize}" fill="#a33b3b">${renderTspans(1160, impact1.lines, impact1.fontSize * 1.14)}</text>
             <text x="1160" y="896" text-anchor="middle" font-family="${getFontStack()}" font-size="${impact2.fontSize}" fill="#b66868">${renderTspans(1160, impact2.lines, impact2.fontSize * 1.14)}</text>
+              `}
           </g>
 
-          <line class="co" id="c5s" x1="1160" y1="732" x2="1160" y2="804" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
-          <line class="fl a" id="c5f" x1="1160" y1="732" x2="1160" y2="804" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
+          <line class="co" id="c5s" x1="1160" y1="732" x2="1160" y2="${impactHasVisible ? 772 : 804}" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
+          <line class="fl a" id="c5f" x1="1160" y1="732" x2="1160" y2="${impactHasVisible ? 772 : 804}" stroke="#ad3535" stroke-width="4" marker-end="url(#ar)"/>
 
           ${flowLabel(246, 192, config.labels.l0, "#ad3535", "l0", 10, 120)}
           ${flowLabel(776, 246, config.labels.l1, "#ad3535", "l1", 10, 118)}
@@ -2892,6 +2955,31 @@
       orientation: "vertical",
       className: "lb-v"
     });
+  }
+
+  function flowLabelVerticalWithNote(x, lineCenterY, text, note, color, id, fontSize, maxWidth) {
+    const mainStartSize = Math.max(fontSize || (DIAGRAM_TOKENS.flowLabelFontSize.vertical || 11.5), DIAGRAM_TOKENS.flowLabelFontSize.vertical || 11.5);
+    const mainMinSize = DIAGRAM_TOKENS.flowLabelMinFontSize.vertical || Math.min(mainStartSize, 10.5);
+    const mainMaxWidth = getFlowLabelMaxWidth("vertical", maxWidth);
+    const mainLayout = fitWrappedText(text, mainMaxWidth, mainStartSize, mainMinSize, 2);
+    const mainLineHeight = mainLayout.fontSize * 1.18;
+    const mainMultiLineLift = mainLayout.lines.length > 1 ? ((mainLayout.lines.length - 1) * mainLineHeight) / 2 : 0;
+    const mainTextY = lineCenterY - mainMultiLineLift;
+
+    const noteLayout = fitWrappedText(note, 150, 8.8, 7.4, 2);
+    const noteLineHeight = noteLayout.fontSize * 1.18;
+    const noteY = lineCenterY + 28;
+
+    return `
+      <g class="lb lb-v" id="${id}">
+        <text x="${x}" y="${mainTextY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${mainLayout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
+          ${renderTspans(x, mainLayout.lines, mainLineHeight)}
+        </text>
+        <text x="${x}" y="${noteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${noteLayout.fontSize}" font-weight="600" fill="#8a847b" stroke="#fffdf8" stroke-width="5" paint-order="stroke fill" stroke-linejoin="round">
+          ${renderTspans(x, noteLayout.lines, noteLineHeight)}
+        </text>
+      </g>
+    `;
   }
 
   function getFlowLabelMaxWidth(orientation, requestedWidth) {

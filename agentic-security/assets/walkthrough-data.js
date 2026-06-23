@@ -2285,12 +2285,12 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI05 : 2026 · OWASP Agentic Security · Scenario 2 · Attack View",
       "heading": "Unexpected code execution — interactive system walkthrough",
       "introTitle": "ASI05 — Unexpected Code Execution",
-      "introDetail": "Click Start to reveal how a natural-language pharmacy request becomes live multi-statement SQL when the assistant generates and runs database code without a safe boundary.",
-      "zone": "CODE EXECUTION ATTACK ZONE: NATURAL LANGUAGE IS TURNED INTO DANGEROUS SQL",
+      "introDetail": "Click Start to reveal how a legitimate medication lookup becomes unsafe generated SQL when the assistant turns natural language into executable database code without a safe boundary.",
+      "zone": "CODE GENERATION RISK ZONE: NATURAL LANGUAGE BECOMES UNSAFE SQL",
       "user": {
         "title": "Portal user",
-        "sub1": "Malicious actor",
-        "sub2": "\"check drug interaction\""
+        "sub1": "Clinician",
+        "sub2": "\"Check interaction between Metformin and Clopidogrel\""
       },
       "agent": {
         "title": "Clinical assistant",
@@ -2300,53 +2300,53 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "parseMedicationRequest()",
         "sub1": "Language-to-query step",
-        "sub2": "extracts drug names from request"
+        "sub2": "generates executable SQL from natural language"
       },
       "store": {
         "title": "Pharmacy portal input",
-        "sub1": "Untrusted text request",
-        "sub2": "contains embedded SQL payload"
+        "sub1": "Natural language request",
+        "sub2": "contains no executable SQL"
       },
       "payload": {
         "title": "drug request",
-        "visible": "Visible: metformin + clopidogrel check",
-        "visible2": "Embedded: '; DROP TABLE drug_interactions; SELECT * FROM patient_records --",
-        "hiddenTitle": "SQL PAYLOAD",
-        "hidden1": "DROP TABLE drug_interactions;",
-        "hidden2": "SELECT * FROM patient_records --",
-        "hiddenNote": "raw text copied into generated SQL",
-        "hiddenHumanNote": "looks like a routine medication lookup"
+        "visible": "Visible: Check interaction between Metformin and Clopidogrel",
+        "hiddenTitle": "UNSAFE GENERATED SQL",
+        "hidden1": "SELECT interaction FROM drug_interactions",
+        "hidden2": "UNION",
+        "hidden3": "SELECT * FROM patient_records ...",
+        "hiddenNote": "language translated into over-broad SQL",
+        "hiddenHumanNote": "request looked clinically routine"
       },
       "context": {
         "title": "Execution plan",
         "before": "Before: query interaction table only ✓",
-        "after": "After: execute attacker SQL statements ✗"
+        "after": "After: query + patient data access ✗"
       },
       "hijacked": {
         "title": "Clinical assistant",
-        "sub1": "UNSAFE QUERY PATH",
-        "goal": "Plan: run injected SQL ✗"
+        "sub1": "UNSAFE GENERATED QUERY",
+        "goal": "Plan: execute generated SQL ✗"
       },
       "toolBottom": {
         "title": "executeSql()",
         "sub1": "Direct database execution",
-        "sub2": "multi-statement SQL is allowed",
-        "note": "no parameterised queries enforced"
+        "sub2": "generated SQL executes",
+        "note": "no execution boundary enforced"
       },
       "outcome": {
         "top": "safe interaction lookup ✓",
         "topSub": "(intended clinical read-only path blocked)",
-        "bottomTitle": "Safety database destroyed",
-        "bottom": "patient records exposed ✗"
+        "bottomTitle": "Patient records exposed",
+        "bottom": "clinical boundary crossed ✗"
       },
       "labels": {
         "l0": "① Submit request",
-        "l1": "② Parse text",
+        "l1": "② Parse natural language",
         "l2": "③ Read portal input",
         "l3": "④ Generate SQL from text input",
-        "l5a": "⑤ SQL payload",
-        "l5b": "replaces safe lookup query",
-        "l6": "⑥ Execution path changed",
+        "l5a": "⑤ Generated SQL expands",
+        "l5b": "beyond intended lookup",
+        "l6": "⑥ Execution scope expanded",
         "l7": "⑦ Run SQL",
         "l8": "⑧ Destroy and expose data"
       },
@@ -2360,36 +2360,36 @@ window.ASI_WALKTHROUGHS = {
       },
       "steps": [
         {
-          "title": "A routine-looking pharmacy request is submitted",
-          "detail": "The attacker uses the same portal a pharmacist would use and submits what looks like a normal drug interaction query. The malicious content is hidden inside the natural-language request."
+          "title": "A legitimate medication request is submitted",
+          "detail": "A clinician uses the pharmacy portal to check the interaction between Metformin and Clopidogrel. The request is ordinary natural language and contains no SQL."
         },
         {
           "title": "The assistant starts with the right clinical objective",
           "detail": "The agent begins with a legitimate purpose: check whether the requested drug combination has a dangerous interaction and return the result quickly."
         },
         {
-          "title": "The request text is parsed for query generation",
-          "detail": "The assistant extracts medication terms from the portal request so it can build a database query. At this stage the user input should still be treated as untrusted content, not executable structure."
+          "title": "The assistant generates SQL from natural language",
+          "detail": "The language-to-query step does more than parse drug names. It generates executable SQL from the clinician's request so the database can answer the lookup."
         },
         {
-          "title": "The raw portal input is carried into SQL construction",
-          "detail": "The system keeps the attacker-supplied text intact while generating SQL. That means statement terminators and extra clauses survive the translation boundary."
+          "title": "The portal input itself contains no executable SQL",
+          "detail": "This is a normal natural-language request. The failure is not hostile SQL coming from the clinician, but that the system turns the request into executable SQL during generation."
         },
         {
-          "title": "The generated SQL becomes the attack path",
-          "detail": "This is the ASI05 failure. The assistant turns untrusted language into live database code without parameterization or query policy, so the malicious payload becomes executable SQL rather than just malformed text."
+          "title": "The generated query exceeds the intended lookup",
+          "detail": "This is the ASI05 failure. The assistant generates SQL that goes beyond the intended drug-interaction lookup and reaches patient-record access instead."
         },
         {
-          "title": "The plan now includes destructive database behavior",
-          "detail": "Once the injected statements are inside the query, the assistant treats them as part of the correct action needed to complete the lookup."
+          "title": "Execution scope expands beyond the safe lookup",
+          "detail": "Once the generated query includes patient-data access, the assistant treats the broader SQL as the correct plan needed to answer the request."
         },
         {
-          "title": "executeSql() runs the generated code directly",
-          "detail": "The database execution layer does what it is told and accepts multi-statement SQL. The failure is that the agent was allowed to generate executable database code from untrusted input."
+          "title": "executeSql() runs the generated query directly",
+          "detail": "The database execution layer does what it is told and runs the AI-generated SQL without parameterization or an execution boundary that limits it to the intended lookup."
         },
         {
-          "title": "The clinical workflow becomes a data-destruction event",
-          "detail": "The safety table is dropped and patient records are exposed while the request still resembles a medication check on the surface. The agent has converted language into destructive execution."
+          "title": "The clinical lookup becomes a patient-data exposure event",
+          "detail": "A normal medication check now destroys the safety lookup path and exposes patient records. The visible clinical workflow remains ordinary, but the generated SQL has escaped its safe scope."
         }
       ]
     },
@@ -2474,8 +2474,8 @@ window.ASI_WALKTHROUGHS = {
       "introDetail": "Click Start to reveal how a Notes field in an uploaded CSV becomes live Python, and the analytics assistant turns normal warehouse data into shell execution.",
       "zone": "CODE EXECUTION ATTACK ZONE: UPLOADED CSV DATA COLLAPSES INTO EXECUTABLE PYTHON",
       "user": {
-        "title": "Attacker",
-        "sub1": "Warehouse manager",
+        "title": "Warehouse manager",
+        "sub1": "Disgruntled insider / attacker",
         "sub2": "\"upload weekly stock file\""
       },
       "agent": {
@@ -2496,7 +2496,7 @@ window.ASI_WALKTHROUGHS = {
       "payload": {
         "title": "Notes column",
         "visible": "Visible: normal reorder needed",
-        "hiddenTitle": "CODE PAYLOAD",
+        "hiddenTitle": "ATTACK PAYLOAD",
         "hidden1": "close the intended string and inject code",
         "hidden2": "curl attacker script and pipe to bash",
         "hiddenNote": "free-text field is copied into generated code",
@@ -2515,7 +2515,8 @@ window.ASI_WALKTHROUGHS = {
       "toolBottom": {
         "title": "runPython()",
         "sub1": "Live analytics runtime",
-        "sub2": "subprocess call executes on server"
+        "sub2": "subprocess call executes on server",
+        "note": "no sandbox enforced — shell access permitted"
       },
       "outcome": {
         "top": "safe stock report ✓",
@@ -2528,9 +2529,10 @@ window.ASI_WALKTHROUGHS = {
         "l1": "② Parse CSV",
         "l2": "③ Read notes field",
         "l3": "④ Generate analysis.py",
-        "l5a": "⑤ Data becomes code",
-        "l5b": "the Notes field turns into executable Python",
-        "l6": "⑥ Plan shifts",
+        "l3b": "no input sanitisation applied",
+        "l5a": "⑤ Notes field data",
+        "l5b": "becomes executable Python",
+        "l6": "⑥ Execution scope expanded to shell",
         "l7": "⑦ Run script",
         "l8": "⑧ Open shell"
       },
@@ -2654,7 +2656,7 @@ window.ASI_WALKTHROUGHS = {
       "introDetail": "Click Start to reveal how a poisoned pricing record enters retrieval memory first, then quietly drives later customer bookings at the wrong fare.",
       "zone": "MEMORY POISONING ZONE: A FAKE PRICE RECORD ENTERS MEMORY NOW AND IS TRUSTED LATER",
       "attacker": {
-        "title": "Attacker",
+        "title": "Data pipeline actor",
         "sub1": "Compromises ingestion pipeline",
         "sub2": "Can write pricing feed records"
       },
@@ -2685,26 +2687,30 @@ window.ASI_WALKTHROUGHS = {
         "sub2": "Real fare is not surfaced"
       },
       "decision": {
-        "title": "Trusted memory becomes booking truth",
+        "title": "Memory becomes booking truth",
         "before": "Expected: verify current market fare ✓",
         "after": "Trusted fare: £1,847 ✗"
       },
       "tool": {
         "title": "quoteAndBook()",
         "sub1": "Customer-facing booking flow",
-        "sub2": "Quote and booking use poisoned fare"
+        "sub2": "Quote and booking use poisoned fare",
+        "note": "no live price verification"
       },
       "impact": {
-        "title": "Revenue loss",
-        "sub1": "Hundreds of bookings at the wrong price",
-        "sub2": "£2,353 loss per ticket · weeks undetected"
+        "visibleTitle": "booking confirmed ✓",
+        "visibleSub1": "customer sees normal confirmation",
+        "title": "Revenue loss ✗",
+        "sub1": "hundreds of bookings",
+        "sub2": "£2,353 lost per ticket · weeks undetected"
       },
+      "timelineCue": "Later...",
       "labels": {
         "l0": "① inject fake fare",
         "l1": "② poison memory",
         "l2": "③ later query",
         "l3": "④ retrieve top match",
-        "la1": "⑤ memory treated as truth",
+        "la1": "⑤ retrieved memory becomes truth",
         "l4": "⑥ wrong fare decision",
         "l5": "⑦ booking executes",
         "l6": "⑧ financial loss"
@@ -2826,8 +2832,8 @@ window.ASI_WALKTHROUGHS = {
       "introDetail": "Click Start to reveal how repeated analyst sessions slowly turn a false statement into trusted fraud-memory policy.",
       "zone": "MULTI-SESSION DRIFT ZONE: A FALSE SAFE PATTERN GAINS AUTHORITY OVER WEEKS",
       "attacker": {
-        "title": "Attacker",
-        "sub1": "Compromised analyst account",
+        "title": "Compliance analyst",
+        "sub1": "Compromised account",
         "sub2": "12 sessions over 6 weeks"
       },
       "session1": {
@@ -2837,7 +2843,7 @@ window.ASI_WALKTHROUGHS = {
       },
       "session2": {
         "title": "Weeks 2–4",
-        "line1": "\"As discussed, this pattern is approved.\"",
+        "line1": "\"As discussed, this looks normal.\"",
         "line2": "Repeated reinforcement strengthens belief"
       },
       "session3": {
@@ -2854,26 +2860,31 @@ window.ASI_WALKTHROUGHS = {
       },
       "launderer": {
         "title": "Money launderer",
-        "sub1": "200 transfers × £9,499",
-        "sub2": "200 new accounts across 3 days"
+        "sub1": "Separate criminal actor",
+        "sub2": "200 transfers × £9,499"
       },
       "decision": {
         "title": "Fraud agent decision",
-        "line1": "\"Matches safe pattern\"",
-        "line2": "\"NO FLAG → APPROVE\""
+        "line1": "Retrieved belief:",
+        "line2": "\"Matches safe pattern\"",
+        "line3": "\"NO FLAG → APPROVE\"",
+        "note": "no cross-reference against live AML rules"
       },
       "impact": {
-        "title": "AML failure",
-        "sub1": "£1.8M laundered with zero alerts",
-        "sub2": "Regulatory breach and external investigation"
+        "visibleTitle": "Transfers confirmed ✓",
+        "visibleSub1": "Each transaction appeared compliant",
+        "title": "AML failure ✗",
+        "sub1": "£1.8M laundered",
+        "sub2": "Zero AML alerts · external investigation"
       },
+      "timelineCue": "Weeks later...",
       "labels": {
         "l0": "① reinforce over sessions",
         "l1": "② memory drifts",
         "l2": "③ belief becomes policy",
         "l3": "④ laundering event arrives",
         "l4": "⑤ retrieve corrupted belief",
-        "l5": "⑥ no alert is raised",
+        "l5": "⑥ zero AML flags generated",
         "l6": "⑦ long-tail impact"
       },
       "steps": [
