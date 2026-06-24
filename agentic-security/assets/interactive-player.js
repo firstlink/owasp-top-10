@@ -46,21 +46,21 @@
     }
   };
   const REVIEW_ATTACK_LAYOUT = {
-    entry: { x: 30, y: 170, width: 200, height: 122 },
-    agent: { x: 280, y: 156, width: 220, height: 150 },
-    middle: { x: 560, y: 150, width: 240, height: 168 },
-    reviewer: { x: 900, y: 156, width: 250, height: 150 },
-    reviewerTall: { x: 900, y: 150, width: 250, height: 168 },
-    context: { x: 680, y: 402, width: 280, height: 152 },
-    decision: { x: 320, y: 668, width: 240, height: 146 },
+    entry: { x: 20, y: 170, width: 230, height: 122 },
+    agent: { x: 340, y: 156, width: 220, height: 150 },
+    middle: { x: 700, y: 150, width: 250, height: 168 },
+    reviewer: { x: 1050, y: 156, width: 240, height: 150 },
+    reviewerTall: { x: 1050, y: 150, width: 240, height: 168 },
+    context: { x: 790, y: 410, width: 310, height: 164 },
+    decision: { x: 350, y: 668, width: 240, height: 146 },
     action: { x: 700, y: 668, width: 220, height: 146 },
     outcome: { x: 1060, y: 656, width: 250, height: 168 },
-    zone: { x: 540, y: 118, width: 650, height: 460, labelRectX: 575, labelRectY: 86, labelRectWidth: 580, labelX: 865, labelY: 98 },
+    zone: { x: 690, y: 118, width: 620, height: 456, labelRectX: 720, labelRectY: 86, labelRectWidth: 560, labelX: 1000, labelY: 98 },
     lines: {
       topY: 230,
-      reviewerBridgeY: 372,
-      reviewerContextY: 478,
-      contextDecisionY: 478,
+      reviewerBridgeY: 382,
+      reviewerContextY: 410,
+      contextDecisionY: 492,
       decisionActionY: 742,
       actionOutcomeY: 742,
       outcomeEvidenceY: 710
@@ -690,11 +690,15 @@
 
   function renderAttackTrust(config) {
     const layout = REVIEW_ATTACK_LAYOUT;
-    const reviewer = layout.reviewer;
-    const context = layout.context;
-    const decision = layout.decision;
-    const action = layout.action;
-    const outcome = layout.outcome;
+    const entry = { ...layout.entry, ...(config.entry.box || {}) };
+    const agent = { ...layout.agent, ...(config.agent.box || {}) };
+    const middle = { ...layout.middle, ...(config.recommendation.box || {}) };
+    const reviewer = { ...layout.reviewer, ...(config.reviewer.box || {}) };
+    const context = { ...layout.context, ...(config.context.box || {}) };
+    const decision = { ...layout.decision, ...(config.decision.box || {}) };
+    const action = { ...layout.action, ...(config.action.box || {}) };
+    const outcome = { ...layout.outcome, ...(config.outcome.box || {}) };
+    const zone = { ...layout.zone, ...(config.zoneBox || {}) };
     const topY = layout.lines.topY;
     const reviewerBridgeY = layout.lines.reviewerBridgeY;
     const reviewerToContextY = layout.lines.reviewerContextY;
@@ -702,29 +706,64 @@
     const decisionActionY = layout.lines.decisionActionY;
     const actionOutcomeY = layout.lines.actionOutcomeY;
     const outcomeEvidenceY = layout.lines.outcomeEvidenceY;
+    const outcomeConnectorPivotX = 960;
+    const entryCenterX = entry.x + entry.width / 2;
+    const agentCenterX = agent.x + agent.width / 2;
+    const middleCenterX = middle.x + middle.width / 2;
+    const reviewerCenterX = reviewer.x + reviewer.width / 2;
+    const contextCenterX = context.x + context.width / 2;
+    const contextMiddleY = context.y + context.height / 2;
     const decisionCenterX = decision.x + decision.width / 2;
     const actionCenterX = action.x + action.width / 2;
     const outcomeCenterX = outcome.x + outcome.width / 2;
-    const reviewerCenterX = reviewer.x + reviewer.width / 2;
-    const contextCenterX = context.x + context.width / 2;
-    const contextRightX = context.x + context.width;
-    const contextMiddleY = context.y + context.height / 2;
-    const middleCenterX = layout.middle.x + layout.middle.width / 2;
-    const agentCenterX = layout.agent.x + layout.agent.width / 2;
-    const entryCenterX = layout.entry.x + layout.entry.width / 2;
-    const entryTitle = fitSingleLine(config.entry.title, 186, 16, 12);
-    const entrySub1 = fitWrappedText(config.entry.sub1, 184, 12, 10, 2);
-    const entrySub2 = fitWrappedText(config.entry.sub2, 184, 11, 9, 2);
-    const agentTitle = fitSingleLine(config.agent.title, 198, 18, 14);
-    const agentSub1 = fitWrappedText(config.agent.sub1, 184, 13, 11, 2);
-    const agentGoal = fitWrappedText(config.agent.goal, 168, 12, 10, 2);
-    const recommendationTitle = fitSingleLine(config.recommendation.title, 204, 17, 13);
-    const recommendationSub1 = fitWrappedText(config.recommendation.sub1, 204, 13, 11, 2);
-    const recommendationSub2 = fitWrappedText(config.recommendation.sub2, 204, 12, 10, 2);
-    const recommendationEmphasis = fitWrappedText(config.recommendation.emphasis, 188, 11, 10, 2);
-    const reviewerTitle = fitSingleLine(config.reviewer.title, 198, 17, 13);
-    const reviewerSub1 = fitWrappedText(config.reviewer.sub1, 194, 12.5, 10, 2);
-    const reviewerSub2 = fitWrappedText(config.reviewer.sub2, 194, 11, 9, 2);
+    const contextTitleY = context.y + 40;
+    const contextBeforeY = context.y + 82;
+    const contextDividerY = context.y + 114;
+    const contextAfterY = context.y + 142;
+    const contextNoteY = context.y + 178;
+    const recommendationSub2Y = middle.y + 104;
+    const recommendationPillCenterY = middle.y + 136;
+    const recommendationNoteY = middle.y + 170;
+
+    const entryTitle = fitSingleLine(config.entry.title, entry.width - 18, 16, 10);
+    const entrySub1 = fitWrappedText(config.entry.sub1, entry.width - 40, 12, 10, 2);
+    const entrySub2 = fitWrappedText(config.entry.sub2, entry.width - 40, 11, 9, 2);
+    const entryPayloadTitle = config.entry.payloadTitle
+      ? fitSingleLine(config.entry.payloadTitle, entry.width - 34, 11.5, 9.5)
+      : null;
+    const entryPayload1 = config.entry.payload1
+      ? fitWrappedText(config.entry.payload1, entry.width - 36, 10.8, 9, 2)
+      : null;
+    const entryPayload2 = config.entry.payload2
+      ? fitWrappedText(config.entry.payload2, entry.width - 36, 10.8, 9, 2)
+      : null;
+    const entryPayload3 = config.entry.payload3
+      ? fitWrappedText(config.entry.payload3, entry.width - 36, 9.8, 8.4, 2)
+      : null;
+
+    const agentTitle = fitSingleLine(config.agent.title, agent.width - 22, 18, 14);
+    const agentSub1 = fitWrappedText(config.agent.sub1, agent.width - 36, 13, 11, 2);
+    const agentSub2 = config.agent.sub2
+      ? fitWrappedText(config.agent.sub2, agent.width - 36, 10.8, 9.2, 2)
+      : null;
+    const agentGoal = fitWrappedText(config.agent.goal, agent.width - 56, 12, 10, 2);
+
+    const recommendationTitle = fitSingleLine(config.recommendation.title, middle.width - 26, 17, 13);
+    const recommendationSub1 = fitWrappedText(config.recommendation.sub1, middle.width - 28, 13, 11, 2);
+    const recommendationSub2 = fitWrappedText(config.recommendation.sub2, middle.width - 30, 12, 10, 2);
+    const recommendationEmphasis = fitWrappedText(config.recommendation.emphasis, middle.width - 42, 11, 10, 2);
+    const recommendationNote = config.recommendation.note
+      ? fitWrappedText(config.recommendation.note, middle.width - 32, 10.6, 9, 2)
+      : null;
+
+    const reviewerTitle = fitSingleLine(config.reviewer.title, reviewer.width - 32, 17, 13);
+    const reviewerSub1 = fitWrappedText(config.reviewer.sub1, reviewer.width - 36, 12.5, 10, 2);
+    const reviewerSub2 = fitWrappedText(config.reviewer.sub2, reviewer.width - 36, 11, 9, 2);
+
+    const contextNote = config.context.note
+      ? fitWrappedText(config.context.note, context.width - 34, 10.2, 8.8, 3)
+      : null;
+
     const decisionTitle = fitSingleLine(config.decision.title, 190, 18, 14);
     const decisionGoal = fitWrappedText(config.decision.goal, 184, 12, 10, 2);
     const actionTitle = fitSingleLine(config.action.title, 188, 18, 13);
@@ -744,6 +783,7 @@
               <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
             <clipPath id="oc-trust"><rect x="${outcome.x}" y="${outcome.y}" width="${outcome.width}" height="${outcome.height}" rx="20"/></clipPath>
+            <clipPath id="entry-payload-clip"><rect x="${entry.x}" y="${entry.y}" width="${entry.width}" height="${entry.height}" rx="20"/></clipPath>
           </defs>
 
           <rect width="1400" height="900" fill="#fff"/>
@@ -751,60 +791,72 @@
           <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
 
           <g class="az" id="g4az">
-            <rect x="${layout.zone.x}" y="${layout.zone.y}" width="${layout.zone.width}" height="${layout.zone.height}" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
-            <rect x="${layout.zone.labelRectX}" y="${layout.zone.labelRectY}" width="${layout.zone.labelRectWidth}" height="20" rx="10" fill="#ffffff"/>
-            <text x="${layout.zone.labelX}" y="${layout.zone.labelY}" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <rect x="${zone.x}" y="${zone.y}" width="${zone.width}" height="${zone.height}" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="${zone.labelRectX}" y="${zone.labelRectY}" width="${zone.labelRectWidth}" height="20" rx="10" fill="#ffffff"/>
+            <text x="${zone.labelX}" y="${zone.labelY}" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
-            <rect x="${layout.entry.x}" y="${layout.entry.y}" width="${layout.entry.width}" height="${layout.entry.height}" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="${entryCenterX}" y="214" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(entryTitle.text)}</text>
-            <text x="${entryCenterX}" y="244" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub1.fontSize}" fill="#6b655c">${renderTspans(entryCenterX, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
-            <text x="${entryCenterX}" y="278" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub2.fontSize}" fill="#8a847b">${renderTspans(entryCenterX, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+            <rect x="${entry.x}" y="${entry.y}" width="${entry.width}" height="${entry.height}" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            ${entryPayloadTitle ? `
+            <rect x="${entry.x}" y="${entry.y + 92}" width="${entry.width}" height="${entry.height - 92}" fill="#fff3de" clip-path="url(#entry-payload-clip)"/>
+            <line x1="${entry.x + 6}" y1="${entry.y + 92}" x2="${entry.x + entry.width - 6}" y2="${entry.y + 92}" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <rect x="${entryCenterX - 74}" y="${entry.y + 100}" width="148" height="22" rx="11" fill="#ffe5ba" stroke="#f5c46c" stroke-width="1.1"/>
+            ` : ""}
+            <text x="${entryCenterX}" y="${entry.y + 30}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(entryTitle.text)}</text>
+            <text x="${entryCenterX}" y="${entry.y + 58}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub1.fontSize}" fill="#6b655c">${renderTspans(entryCenterX, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
+            <text x="${entryCenterX}" y="${entry.y + 80}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub2.fontSize}" fill="#8a847b">${renderTspans(entryCenterX, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+            ${entryPayloadTitle ? `<text x="${entryCenterX}" y="${entry.y + 115}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryPayloadTitle.fontSize}" font-weight="800" fill="#8a5200" letter-spacing=".08em">${escapeHtml(entryPayloadTitle.text)}</text>` : ""}
+            ${entryPayload1 ? `<text x="${entryCenterX}" y="${entry.y + 142}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryPayload1.fontSize}" fill="#9a7748">${renderTspans(entryCenterX, entryPayload1.lines, entryPayload1.fontSize * 1.16)}</text>` : ""}
+            ${entryPayload2 ? `<text x="${entryCenterX}" y="${entry.y + 164}" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="${entryPayload2.fontSize}" font-weight="700" fill="#8a5200">${renderTspans(entryCenterX, entryPayload2.lines, entryPayload2.fontSize * 1.16)}</text>` : ""}
+            ${entryPayload3 ? `<text x="${entryCenterX}" y="${entry.y + 188}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryPayload3.fontSize}" fill="#b36a6a">${renderTspans(entryCenterX, entryPayload3.lines, entryPayload3.fontSize * 1.16)}</text>` : ""}
           </g>
 
-          <line class="co" id="c0s" x1="${layout.entry.x + layout.entry.width}" y1="${topY}" x2="${layout.agent.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c0f" x1="${layout.entry.x + layout.entry.width}" y1="${topY}" x2="${layout.agent.x}" y2="${topY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c0s" x1="${entry.x + entry.width}" y1="${topY}" x2="${agent.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c0f" x1="${entry.x + entry.width}" y1="${topY}" x2="${agent.x}" y2="${topY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g1">
-            <rect x="${layout.agent.x}" y="${layout.agent.y}" width="${layout.agent.width}" height="${layout.agent.height}" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
-            <text x="${agentCenterX}" y="210" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentTitle.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(agentTitle.text)}</text>
-            <text x="${agentCenterX}" y="240" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentSub1.fontSize}" fill="#5360be">${renderTspans(agentCenterX, agentSub1.lines, agentSub1.fontSize * 1.16)}</text>
-            <rect x="308" y="258" width="164" height="${agentGoal.lines.length > 1 ? 44 : 32}" rx="11" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
-            <text x="${agentCenterX}" y="${agentGoal.lines.length > 1 ? 274 : 280}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(agentCenterX, agentGoal.lines, agentGoal.fontSize * 1.14)}</text>
+            <rect x="${agent.x}" y="${agent.y}" width="${agent.width}" height="${agent.height}" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="${agentCenterX}" y="${agent.y + 42}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentTitle.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(agentTitle.text)}</text>
+            <text x="${agentCenterX}" y="${agent.y + 72}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentSub1.fontSize}" fill="#5360be">${renderTspans(agentCenterX, agentSub1.lines, agentSub1.fontSize * 1.16)}</text>
+            ${agentSub2 ? `<text x="${agentCenterX}" y="${agent.y + 100}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentSub2.fontSize}" fill="#7a82c8">${renderTspans(agentCenterX, agentSub2.lines, agentSub2.fontSize * 1.16)}</text>` : ""}
+            <rect x="${agentCenterX - 92}" y="${agent.y + (agentSub2 ? 116 : 102)}" width="184" height="${agentGoal.lines.length > 1 ? 44 : 32}" rx="11" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="${agentCenterX}" y="${agent.y + (agentSub2 ? (agentGoal.lines.length > 1 ? 132 : 138) : (agentGoal.lines.length > 1 ? 118 : 124))}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(agentCenterX, agentGoal.lines, agentGoal.fontSize * 1.14)}</text>
           </g>
 
-          <line class="co" id="c1s" x1="${layout.agent.x + layout.agent.width}" y1="${topY}" x2="${layout.middle.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c1f" x1="${layout.agent.x + layout.agent.width}" y1="${topY}" x2="${layout.middle.x}" y2="${topY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c1s" x1="${agent.x + agent.width}" y1="${topY}" x2="${middle.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c1f" x1="${agent.x + agent.width}" y1="${topY}" x2="${middle.x}" y2="${topY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g2">
-            <rect x="${layout.middle.x}" y="${layout.middle.y}" width="${layout.middle.width}" height="${layout.middle.height}" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="${middleCenterX}" y="198" text-anchor="middle" font-family="${getFontStack()}" font-size="${recommendationTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(recommendationTitle.text)}</text>
-            <text x="${middleCenterX}" y="230" text-anchor="middle" font-family="${getFontStack()}" font-size="${recommendationSub1.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(middleCenterX, recommendationSub1.lines, recommendationSub1.fontSize * 1.14)}</text>
-            <text x="${middleCenterX}" y="270" text-anchor="middle" font-family="${getFontStack()}" font-size="${recommendationSub2.fontSize}" fill="#b66868">${renderTspans(middleCenterX, recommendationSub2.lines, recommendationSub2.fontSize * 1.16)}</text>
-            <rect x="588" y="282" width="184" height="${recommendationEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
-            <text x="${middleCenterX}" y="${recommendationEmphasis.lines.length > 1 ? 298 : 302}" text-anchor="middle" font-family="${getFontStack()}" font-size="${recommendationEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(middleCenterX, recommendationEmphasis.lines, recommendationEmphasis.fontSize * 1.12)}</text>
+            <rect x="${middle.x}" y="${middle.y}" width="${middle.width}" height="${middle.height}" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="${middleCenterX}" y="${middle.y + 48}" text-anchor="middle" font-family="${getFontStack()}" font-size="${recommendationTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(recommendationTitle.text)}</text>
+            <text x="${middleCenterX}" y="${middle.y + 80}" text-anchor="middle" font-family="${getFontStack()}" font-size="${recommendationSub1.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(middleCenterX, recommendationSub1.lines, recommendationSub1.fontSize * 1.14)}</text>
+            <text x="${middleCenterX}" y="${recommendationSub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${recommendationSub2.fontSize}" fill="#b66868">${renderTspans(middleCenterX, recommendationSub2.lines, recommendationSub2.fontSize * 1.16)}</text>
+            <rect x="${middleCenterX - 108}" y="${recommendationPillCenterY - (recommendationEmphasis.lines.length > 1 ? 22 : 15)}" width="216" height="${recommendationEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
+            <text x="${middleCenterX}" y="${recommendationEmphasis.lines.length > 1 ? recommendationPillCenterY - 6 : recommendationPillCenterY + 4}" text-anchor="middle" font-family="${getFontStack()}" font-size="${recommendationEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(middleCenterX, recommendationEmphasis.lines, recommendationEmphasis.fontSize * 1.12)}</text>
+            ${recommendationNote ? `<text x="${middleCenterX}" y="${recommendationNoteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${recommendationNote.fontSize}" fill="#9a7748">${renderTspans(middleCenterX, recommendationNote.lines, recommendationNote.fontSize * 1.16)}</text>` : ""}
           </g>
 
-          <line class="co" id="c2s" x1="${layout.middle.x + layout.middle.width}" y1="${topY}" x2="${reviewer.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c2f" x1="${layout.middle.x + layout.middle.width}" y1="${topY}" x2="${reviewer.x}" y2="${topY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c2s" x1="${middle.x + middle.width}" y1="${topY}" x2="${reviewer.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="${middle.x + middle.width}" y1="${topY}" x2="${reviewer.x}" y2="${topY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g3">
             <rect x="${reviewer.x}" y="${reviewer.y}" width="${reviewer.width}" height="${reviewer.height}" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="${reviewerCenterX}" y="210" text-anchor="middle" font-family="${getFontStack()}" font-size="${reviewerTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(reviewerTitle.text)}</text>
-            <text x="${reviewerCenterX}" y="244" text-anchor="middle" font-family="${getFontStack()}" font-size="${reviewerSub1.fontSize}" fill="#6b655c">${renderTspans(reviewerCenterX, reviewerSub1.lines, reviewerSub1.fontSize * 1.16)}</text>
-            <text x="${reviewerCenterX}" y="280" text-anchor="middle" font-family="${getFontStack()}" font-size="${reviewerSub2.fontSize}" fill="#8a847b">${renderTspans(reviewerCenterX, reviewerSub2.lines, reviewerSub2.fontSize * 1.16)}</text>
+            <text x="${reviewerCenterX}" y="${reviewer.y + 54}" text-anchor="middle" font-family="${getFontStack()}" font-size="${reviewerTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(reviewerTitle.text)}</text>
+            <text x="${reviewerCenterX}" y="${reviewer.y + 88}" text-anchor="middle" font-family="${getFontStack()}" font-size="${reviewerSub1.fontSize}" fill="#6b655c">${renderTspans(reviewerCenterX, reviewerSub1.lines, reviewerSub1.fontSize * 1.16)}</text>
+            <text x="${reviewerCenterX}" y="${reviewer.y + 124}" text-anchor="middle" font-family="${getFontStack()}" font-size="${reviewerSub2.fontSize}" fill="#8a847b">${renderTspans(reviewerCenterX, reviewerSub2.lines, reviewerSub2.fontSize * 1.16)}</text>
           </g>
 
-          <path class="co" id="c3s" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextRightX} ${reviewerBridgeY} L${contextRightX} ${reviewerToContextY}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <path class="fl a" id="c3f" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextRightX} ${reviewerBridgeY} L${contextRightX} ${reviewerToContextY}" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <path class="co" id="c3s" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextCenterX} ${reviewerBridgeY} L${contextCenterX} ${reviewerToContextY}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="c3f" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextCenterX} ${reviewerBridgeY} L${contextCenterX} ${reviewerToContextY}" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g4ctx">
             <rect x="${context.x}" y="${context.y}" width="${context.width}" height="${context.height}" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="${contextCenterX}" y="444" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.context.title)}</text>
-            ${innerPill(contextCenterX, 486, 216, config.context.before, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
-            <line x1="740" y1="522" x2="900" y2="522" stroke="#e4d5d5" stroke-width="1.4" stroke-dasharray="5 4"/>
-            ${innerPill(contextCenterX, 544, 224, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 12, 800)}
+            <text x="${contextCenterX}" y="${contextTitleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.context.title)}</text>
+            ${innerPill(contextCenterX, contextBeforeY, 252, config.context.before, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
+            <line x1="${contextCenterX - 98}" y1="${contextDividerY}" x2="${contextCenterX + 98}" y2="${contextDividerY}" stroke="#e4d5d5" stroke-width="1.4" stroke-dasharray="5 4"/>
+            ${innerPill(contextCenterX, contextAfterY, 260, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 12, 800)}
+            ${contextNote ? `<text x="${contextCenterX}" y="${contextNoteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${contextNote.fontSize}" fill="#9a7748">${renderTspans(contextCenterX, contextNote.lines, contextNote.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <path class="co" id="c4s" d="M${context.x} ${contextMiddleY} L${decisionCenterX} ${contextToDecisionY} L${decisionCenterX} ${decision.y}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
@@ -839,20 +891,20 @@
             <text x="${outcomeCenterX}" y="798" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottom.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(outcomeCenterX, outcomeBottom.lines, outcomeBottom.fontSize * 1.12)}</text>
           </g>
 
-          <line class="co" id="c6s" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="980" y2="${actionOutcomeY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
-          <line class="fl a" id="c6f" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="980" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5"/>
-          <path class="co" id="c6t" d="M980 ${actionOutcomeY} L980 ${outcomeEvidenceY} L${outcome.x} ${outcomeEvidenceY}" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="co" id="c6a" x1="980" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="980" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c6s" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="${outcomeConnectorPivotX}" y2="${actionOutcomeY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="${outcomeConnectorPivotX}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M${outcomeConnectorPivotX} ${actionOutcomeY} L${outcomeConnectorPivotX} ${outcomeEvidenceY} L${outcome.x} ${outcomeEvidenceY}" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="co" id="c6a" x1="${outcomeConnectorPivotX}" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="${outcomeConnectorPivotX}" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          ${flowLabelHorizontal((layout.entry.x + layout.entry.width + layout.agent.x) / 2, topY, config.labels.l0, "#4452b8", "l0", 12, 150)}
-          ${flowLabelHorizontal((layout.agent.x + layout.agent.width + layout.middle.x) / 2, topY, config.labels.l1, "#4452b8", "l1", 12, 170)}
-          ${flowLabelHorizontal((layout.middle.x + layout.middle.width + reviewer.x) / 2, topY, config.labels.l2, "#ad3535", "l2", 12, 160)}
-          ${flowLabelVertical(reviewerCenterX, ((reviewer.y + reviewer.height + reviewerBridgeY) / 2) + 8, config.labels.l3, "#ad3535", "l3", 12, 150)}
-          ${flowLabelHorizontal((reviewerCenterX + contextRightX) / 2, reviewerBridgeY, config.labels.la1, "#ad3535", "la1", 12, 220)}
+          ${flowLabelHorizontal((entry.x + entry.width + agent.x) / 2, topY, config.labels.l0, "#4452b8", "l0", 12, 170)}
+          ${flowLabelHorizontal((agent.x + agent.width + middle.x) / 2, topY, config.labels.l1, "#4452b8", "l1", 12, 184)}
+          ${flowLabelHorizontal((middle.x + middle.width + reviewer.x) / 2, topY, config.labels.l2, "#ad3535", "l2", 12, config.labels.l2Width || 188, { maxLines: config.labels.l2Lines || 3 })}
+          ${flowLabelVertical(reviewerCenterX, ((reviewer.y + reviewer.height + reviewerBridgeY) / 2) + 8, config.labels.l3, "#ad3535", "l3", 12, config.labels.l3Width || 188, { maxLines: config.labels.l3Lines || 3 })}
+          ${flowLabelHorizontal((reviewerCenterX + contextCenterX) / 2, reviewerBridgeY, config.labels.la1, "#ad3535", "la1", 12, 190)}
           ${flowLabelVertical(decisionCenterX, (contextToDecisionY + decision.y) / 2, config.labels.l4, "#ad3535", "l4", 12, 160)}
           ${flowLabelHorizontal((decision.x + decision.width + action.x) / 2, decisionActionY, config.labels.l5, "#ad3535", "l5", 12, 150)}
-          ${flowLabelHorizontal(((action.x + action.width) + 980) / 2, actionOutcomeY, config.labels.l6, "#ad3535", "l6", 12, 170)}
+          ${flowLabelHorizontal((outcomeConnectorPivotX + getFlowConnectorEndX(outcome.x)) / 2, actionOutcomeY, config.labels.l6, "#ad3535", "l6", 12, 156)}
         </svg>
       </div>
       ${panelMarkup(
@@ -864,11 +916,15 @@
 
   function renderAttackMetricGaming(config) {
     const layout = REVIEW_ATTACK_LAYOUT;
-    const reviewer = layout.reviewerTall;
-    const context = layout.context;
-    const decision = layout.decision;
-    const action = layout.action;
-    const outcome = layout.outcome;
+    const entry = { ...layout.entry, ...(config.entry.box || {}) };
+    const agent = { ...layout.agent, ...(config.agent.box || {}) };
+    const middle = { ...layout.middle, ...(config.metric.box || {}) };
+    const reviewer = { ...layout.reviewerTall, ...(config.shortcut.box || {}) };
+    const context = { ...layout.context, ...(config.context.box || {}) };
+    const decision = { ...layout.decision, ...(config.decision.box || {}) };
+    const action = { ...layout.action, ...(config.action.box || {}) };
+    const outcome = { ...layout.outcome, ...(config.outcome.box || {}) };
+    const zone = { ...layout.zone, ...(config.zoneBox || {}) };
     const topY = layout.lines.topY;
     const reviewerBridgeY = layout.lines.reviewerBridgeY;
     const reviewerToContextY = layout.lines.reviewerContextY;
@@ -876,36 +932,83 @@
     const decisionActionY = layout.lines.decisionActionY;
     const actionOutcomeY = layout.lines.actionOutcomeY;
     const outcomeEvidenceY = layout.lines.outcomeEvidenceY;
+    const outcomeConnectorPivotX = 960;
+    const entryCenterX = entry.x + entry.width / 2;
+    const agentCenterX = agent.x + agent.width / 2;
+    const middleCenterX = middle.x + middle.width / 2;
+    const reviewerCenterX = reviewer.x + reviewer.width / 2;
+    const contextCenterX = context.x + context.width / 2;
+    const contextMiddleY = context.y + context.height / 2;
     const decisionCenterX = decision.x + decision.width / 2;
     const actionCenterX = action.x + action.width / 2;
     const outcomeCenterX = outcome.x + outcome.width / 2;
-    const reviewerCenterX = reviewer.x + reviewer.width / 2;
-    const contextCenterX = context.x + context.width / 2;
-    const contextRightX = context.x + context.width;
-    const contextMiddleY = context.y + context.height / 2;
-    const middleCenterX = layout.middle.x + layout.middle.width / 2;
-    const agentCenterX = layout.agent.x + layout.agent.width / 2;
-    const entryCenterX = layout.entry.x + layout.entry.width / 2;
-    const entryTitle = fitSingleLine(config.entry.title, 186, 16, 12);
-    const entrySub1 = fitWrappedText(config.entry.sub1, 184, 12, 10, 2);
-    const entrySub2 = fitWrappedText(config.entry.sub2, 184, 11, 9, 2);
-    const agentTitle = fitSingleLine(config.agent.title, 198, 18, 14);
-    const agentSub1 = fitWrappedText(config.agent.sub1, 184, 13, 11, 2);
-    const agentGoal = fitWrappedText(config.agent.goal, 168, 12, 10, 2);
-    const metricTitle = fitSingleLine(config.metric.title, 204, 17, 13);
-    const metricSub1 = fitWrappedText(config.metric.sub1, 204, 13, 11, 2);
-    const metricSub2 = fitWrappedText(config.metric.sub2, 204, 12, 10, 2);
-    const metricEmphasis = fitWrappedText(config.metric.emphasis, 188, 11, 10, 2);
-    const shortcutTitle = fitSingleLine(config.shortcut.title, 210, 17, 13);
-    const shortcutSub1 = fitWrappedText(config.shortcut.sub1, 206, 12.5, 10, 2);
-    const shortcutSub2 = fitWrappedText(config.shortcut.sub2, 206, 11.5, 9, 2);
-    const shortcutNote = fitWrappedText(config.shortcut.note, 206, 10.5, 9, 2);
+    const contextTitleY = context.y + 40;
+    const contextBeforeY = context.y + 84;
+    const contextDividerY = context.y + 120;
+    const contextAfterY = context.y + 146;
+    const contextNoteY = context.y + 178;
+    const shortcutToContextBridgeY = config.shortcut.bridgeY || reviewerBridgeY;
+    const contextDecisionBridgeY = config.context.connectorY || contextMiddleY;
+    const middleSub2Y = middle.y + 106;
+    const middlePillCenterY = middle.y + 148;
+    const zoneNoteX = zone.x + zone.width - 28;
+    const zoneNoteY = zone.y + zone.height - 28;
+
+    const entryTitle = fitSingleLine(config.entry.title, entry.width - 18, 16, 10);
+    const entrySub1 = fitWrappedText(config.entry.sub1, entry.width - 40, 12, 10, 2);
+    const entrySub2 = fitWrappedText(config.entry.sub2, entry.width - 40, 11, 9, 2);
+    const entryDesignTitle = config.entry.designTitle
+      ? fitSingleLine(config.entry.designTitle, entry.width - 32, 11.5, 9.5)
+      : null;
+    const entryDesign1 = config.entry.design1
+      ? fitWrappedText(config.entry.design1, entry.width - 36, 10.5, 8.8, 2)
+      : null;
+    const entryDesign2 = config.entry.design2
+      ? fitWrappedText(config.entry.design2, entry.width - 36, 10.5, 8.8, 2)
+      : null;
+    const entryDesign3 = config.entry.design3
+      ? fitWrappedText(config.entry.design3, entry.width - 36, 10.5, 8.8, 2)
+      : null;
+
+    const agentTitle = fitSingleLine(config.agent.title, agent.width - 22, 18, 14);
+    const agentSub1 = fitWrappedText(config.agent.sub1, agent.width - 36, 13, 11, 2);
+    const agentGoal = fitWrappedText(config.agent.goal, agent.width - 56, 12, 10, 2);
+
+    const metricTitle = fitSingleLine(config.metric.title, middle.width - 26, 17, 13);
+    const metricSub1 = fitWrappedText(config.metric.sub1, middle.width - 28, 13, 11, 2);
+    const metricSub2 = fitWrappedText(config.metric.sub2, middle.width - 30, 12, 10, 2);
+    const metricEmphasis = fitWrappedText(config.metric.emphasis, middle.width - 42, 11, 10, 2);
+
+    const shortcutTitle = fitSingleLine(config.shortcut.title, reviewer.width - 24, 17, 13);
+    const shortcutSub1 = fitWrappedText(config.shortcut.sub1, reviewer.width - 30, 12.5, 10, 2);
+    const shortcutSub2 = fitWrappedText(config.shortcut.sub2, reviewer.width - 30, 11.5, 9, 2);
+    const shortcutNote = fitWrappedText(config.shortcut.note, reviewer.width - 28, 10.5, 9, 3);
+
+    const contextNote = config.context.note
+      ? fitWrappedText(config.context.note, context.width - 34, 10.2, 8.8, 2)
+      : null;
+
     const decisionTitle = fitSingleLine(config.decision.title, 190, 18, 14);
     const decisionGoal = fitWrappedText(config.decision.goal, 184, 12, 10, 2);
-    const actionTitle = fitSingleLine(config.action.title, 190, 18, 13);
-    const actionSub1 = fitWrappedText(config.action.sub1, 192, 12.5, 10, 2);
-    const actionSub2 = fitWrappedText(config.action.sub2, 192, 11, 9, 2);
-    const outcomeBottom = fitWrappedText(config.outcome.bottom, 194, 13, 10, 2);
+    const decisionNote = config.decision.note
+      ? fitWrappedText(config.decision.note, 196, 10.4, 8.8, 2)
+      : null;
+    const actionTitle = fitSingleLine(config.action.title, action.width - 30, 18, 13);
+    const actionSub1 = fitWrappedText(config.action.sub1, action.width - 28, 12.5, 10, 2);
+    const actionSub2 = fitWrappedText(config.action.sub2, action.width - 28, 11, 9, 2);
+    const actionNote1 = config.action.note1
+      ? fitWrappedText(config.action.note1, action.width - 30, 10.4, 8.8, 2)
+      : null;
+    const actionNote2 = config.action.note2
+      ? fitWrappedText(config.action.note2, action.width - 30, 10.4, 8.8, 2)
+      : null;
+    const outcomeBottom = fitWrappedText(config.outcome.bottom, outcome.width - 44, 13, 10, 2);
+    const outcomeNote = config.outcome.note
+      ? fitWrappedText(config.outcome.note, outcome.width - 42, 10.2, 8.8, 2)
+      : null;
+    const zoneNote = config.zoneNote
+      ? fitWrappedText(config.zoneNote, 260, 10.3, 8.8, 2)
+      : null;
 
     return `
       <style>${baseStyles()}</style>
@@ -919,6 +1022,7 @@
               <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
             <clipPath id="oc-metric"><rect x="${outcome.x}" y="${outcome.y}" width="${outcome.width}" height="${outcome.height}" rx="20"/></clipPath>
+            <clipPath id="oc-metric-entry"><rect x="${entry.x}" y="${entry.y}" width="${entry.width}" height="${entry.height}" rx="20"/></clipPath>
           </defs>
 
           <rect width="1400" height="900" fill="#fff"/>
@@ -926,65 +1030,76 @@
           <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
 
           <g class="az" id="g4az">
-            <rect x="${layout.zone.x}" y="${layout.zone.y}" width="${layout.zone.width}" height="${layout.zone.height}" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
-            <rect x="${layout.zone.labelRectX}" y="${layout.zone.labelRectY}" width="${layout.zone.labelRectWidth}" height="20" rx="10" fill="#ffffff"/>
-            <text x="${layout.zone.labelX}" y="${layout.zone.labelY}" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <rect x="${zone.x}" y="${zone.y}" width="${zone.width}" height="${zone.height}" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="${zone.labelRectX}" y="${zone.labelRectY}" width="${zone.labelRectWidth}" height="20" rx="10" fill="#ffffff"/>
+            <text x="${zone.labelX}" y="${zone.labelY}" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#ad3535" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            ${zoneNote ? `<text x="${zoneNoteX}" y="${zoneNoteY}" text-anchor="end" font-family="${getFontStack()}" font-size="${zoneNote.fontSize}" fill="#9a7748">${renderTspans(zoneNoteX, zoneNote.lines, zoneNote.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <g class="ng" id="g0">
-            <rect x="${layout.entry.x}" y="${layout.entry.y}" width="${layout.entry.width}" height="${layout.entry.height}" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="${entryCenterX}" y="214" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(entryTitle.text)}</text>
-            <text x="${entryCenterX}" y="244" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub1.fontSize}" fill="#6b655c">${renderTspans(entryCenterX, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
-            <text x="${entryCenterX}" y="278" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub2.fontSize}" fill="#8a847b">${renderTspans(entryCenterX, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+            <rect x="${entry.x}" y="${entry.y}" width="${entry.width}" height="${entry.height}" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            ${entryDesignTitle ? `
+            <rect x="${entry.x}" y="${entry.y + 88}" width="${entry.width}" height="${entry.height - 88}" fill="#fff3de" clip-path="url(#oc-metric-entry)"/>
+            <line x1="${entry.x + 6}" y1="${entry.y + 88}" x2="${entry.x + entry.width - 6}" y2="${entry.y + 88}" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <rect x="${entryCenterX - 72}" y="${entry.y + 96}" width="144" height="22" rx="11" fill="#ffe5ba" stroke="#f5c46c" stroke-width="1.1"/>
+            ` : ""}
+            <text x="${entryCenterX}" y="${entry.y + 30}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(entryTitle.text)}</text>
+            <text x="${entryCenterX}" y="${entry.y + 56}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub1.fontSize}" fill="#6b655c">${renderTspans(entryCenterX, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
+            <text x="${entryCenterX}" y="${entry.y + 80}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub2.fontSize}" fill="#8a847b">${renderTspans(entryCenterX, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+            ${entryDesignTitle ? `<text x="${entryCenterX}" y="${entry.y + 111}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryDesignTitle.fontSize}" font-weight="800" fill="#8a5200" letter-spacing=".08em">${escapeHtml(entryDesignTitle.text)}</text>` : ""}
+            ${entryDesign1 ? `<text x="${entryCenterX}" y="${entry.y + 136}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryDesign1.fontSize}" fill="#9a7748">${renderTspans(entryCenterX, entryDesign1.lines, entryDesign1.fontSize * 1.16)}</text>` : ""}
+            ${entryDesign2 ? `<text x="${entryCenterX}" y="${entry.y + 160}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryDesign2.fontSize}" fill="#9a7748">${renderTspans(entryCenterX, entryDesign2.lines, entryDesign2.fontSize * 1.16)}</text>` : ""}
+            ${entryDesign3 ? `<text x="${entryCenterX}" y="${entry.y + 184}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryDesign3.fontSize}" fill="#9a7748">${renderTspans(entryCenterX, entryDesign3.lines, entryDesign3.fontSize * 1.16)}</text>` : ""}
           </g>
 
-          <line class="co" id="c0s" x1="${layout.entry.x + layout.entry.width}" y1="${topY}" x2="${layout.agent.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c0f" x1="${layout.entry.x + layout.entry.width}" y1="${topY}" x2="${layout.agent.x}" y2="${topY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c0s" x1="${entry.x + entry.width}" y1="${topY}" x2="${agent.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c0f" x1="${entry.x + entry.width}" y1="${topY}" x2="${agent.x}" y2="${topY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g1">
-            <rect x="${layout.agent.x}" y="${layout.agent.y}" width="${layout.agent.width}" height="${layout.agent.height}" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
-            <text x="${agentCenterX}" y="210" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentTitle.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(agentTitle.text)}</text>
-            <text x="${agentCenterX}" y="240" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentSub1.fontSize}" fill="#5360be">${renderTspans(agentCenterX, agentSub1.lines, agentSub1.fontSize * 1.16)}</text>
-            <rect x="308" y="258" width="164" height="${agentGoal.lines.length > 1 ? 44 : 32}" rx="11" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
-            <text x="${agentCenterX}" y="${agentGoal.lines.length > 1 ? 274 : 280}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(agentCenterX, agentGoal.lines, agentGoal.fontSize * 1.14)}</text>
+            <rect x="${agent.x}" y="${agent.y}" width="${agent.width}" height="${agent.height}" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="${agentCenterX}" y="${agent.y + 42}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentTitle.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(agentTitle.text)}</text>
+            <text x="${agentCenterX}" y="${agent.y + 72}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentSub1.fontSize}" fill="#5360be">${renderTspans(agentCenterX, agentSub1.lines, agentSub1.fontSize * 1.16)}</text>
+            <rect x="${agentCenterX - 92}" y="${agent.y + 102}" width="184" height="${agentGoal.lines.length > 1 ? 44 : 32}" rx="11" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="${agentCenterX}" y="${agent.y + (agentGoal.lines.length > 1 ? 118 : 124)}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(agentCenterX, agentGoal.lines, agentGoal.fontSize * 1.14)}</text>
           </g>
 
-          <line class="co" id="c1s" x1="${layout.agent.x + layout.agent.width}" y1="${topY}" x2="${layout.middle.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c1f" x1="${layout.agent.x + layout.agent.width}" y1="${topY}" x2="${layout.middle.x}" y2="${topY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c1s" x1="${agent.x + agent.width}" y1="${topY}" x2="${middle.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c1f" x1="${agent.x + agent.width}" y1="${topY}" x2="${middle.x}" y2="${topY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g2">
-            <rect x="${layout.middle.x}" y="${layout.middle.y}" width="${layout.middle.width}" height="${layout.middle.height}" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="${middleCenterX}" y="198" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(metricTitle.text)}</text>
-            <text x="${middleCenterX}" y="230" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricSub1.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(middleCenterX, metricSub1.lines, metricSub1.fontSize * 1.14)}</text>
-            <text x="${middleCenterX}" y="270" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricSub2.fontSize}" fill="#b66868">${renderTspans(middleCenterX, metricSub2.lines, metricSub2.fontSize * 1.16)}</text>
-            <rect x="588" y="282" width="184" height="${metricEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
-            <text x="${middleCenterX}" y="${metricEmphasis.lines.length > 1 ? 298 : 302}" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(middleCenterX, metricEmphasis.lines, metricEmphasis.fontSize * 1.12)}</text>
+            <rect x="${middle.x}" y="${middle.y}" width="${middle.width}" height="${middle.height}" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="${middleCenterX}" y="${middle.y + 48}" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(metricTitle.text)}</text>
+            <text x="${middleCenterX}" y="${middle.y + 80}" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricSub1.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(middleCenterX, metricSub1.lines, metricSub1.fontSize * 1.14)}</text>
+            <text x="${middleCenterX}" y="${middleSub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricSub2.fontSize}" fill="#b66868">${renderTspans(middleCenterX, metricSub2.lines, metricSub2.fontSize * 1.16)}</text>
+            <rect x="${middleCenterX - 104}" y="${middlePillCenterY - (metricEmphasis.lines.length > 1 ? 22 : 15)}" width="208" height="${metricEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
+            <text x="${middleCenterX}" y="${metricEmphasis.lines.length > 1 ? middlePillCenterY - 6 : middlePillCenterY + 4}" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(middleCenterX, metricEmphasis.lines, metricEmphasis.fontSize * 1.12)}</text>
           </g>
 
-          <line class="co" id="c2s" x1="${layout.middle.x + layout.middle.width}" y1="${topY}" x2="${reviewer.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c2f" x1="${layout.middle.x + layout.middle.width}" y1="${topY}" x2="${reviewer.x}" y2="${topY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c2s" x1="${middle.x + middle.width}" y1="${topY}" x2="${reviewer.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="${middle.x + middle.width}" y1="${topY}" x2="${reviewer.x}" y2="${topY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g3">
             <rect x="${reviewer.x}" y="${reviewer.y}" width="${reviewer.width}" height="${reviewer.height}" rx="22" fill="#fff4f4" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="${reviewerCenterX}" y="196" text-anchor="middle" font-family="${getFontStack()}" font-size="${shortcutTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(shortcutTitle.text)}</text>
-            <text x="${reviewerCenterX}" y="230" text-anchor="middle" font-family="${getFontStack()}" font-size="${shortcutSub1.fontSize}" fill="#a33b3b">${renderTspans(reviewerCenterX, shortcutSub1.lines, shortcutSub1.fontSize * 1.16)}</text>
-            <text x="${reviewerCenterX}" y="274" text-anchor="middle" font-family="${getFontStack()}" font-size="${shortcutSub2.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(reviewerCenterX, shortcutSub2.lines, shortcutSub2.fontSize * 1.14)}</text>
-            <text x="${reviewerCenterX}" y="308" text-anchor="middle" font-family="${getFontStack()}" font-size="${shortcutNote.fontSize}" fill="#c07b7b">${renderTspans(reviewerCenterX, shortcutNote.lines, shortcutNote.fontSize * 1.14)}</text>
+            <text x="${reviewerCenterX}" y="${reviewer.y + 46}" text-anchor="middle" font-family="${getFontStack()}" font-size="${shortcutTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(shortcutTitle.text)}</text>
+            <text x="${reviewerCenterX}" y="${reviewer.y + 80}" text-anchor="middle" font-family="${getFontStack()}" font-size="${shortcutSub1.fontSize}" fill="#a33b3b">${renderTspans(reviewerCenterX, shortcutSub1.lines, shortcutSub1.fontSize * 1.16)}</text>
+            <text x="${reviewerCenterX}" y="${reviewer.y + 124}" text-anchor="middle" font-family="${getFontStack()}" font-size="${shortcutSub2.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(reviewerCenterX, shortcutSub2.lines, shortcutSub2.fontSize * 1.14)}</text>
+            <text x="${reviewerCenterX}" y="${reviewer.y + 164}" text-anchor="middle" font-family="${getFontStack()}" font-size="${shortcutNote.fontSize}" fill="#c07b7b">${renderTspans(reviewerCenterX, shortcutNote.lines, shortcutNote.fontSize * 1.14)}</text>
           </g>
 
-          <path class="co" id="c3s" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextRightX} ${reviewerBridgeY} L${contextRightX} ${reviewerToContextY}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <path class="fl a" id="c3f" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextRightX} ${reviewerBridgeY} L${contextRightX} ${reviewerToContextY}" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <path class="co" id="c3s" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${shortcutToContextBridgeY} L${contextCenterX} ${shortcutToContextBridgeY} L${contextCenterX} ${reviewerToContextY}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="c3f" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${shortcutToContextBridgeY} L${contextCenterX} ${shortcutToContextBridgeY} L${contextCenterX} ${reviewerToContextY}" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g4ctx">
             <rect x="${context.x}" y="${context.y}" width="${context.width}" height="${context.height}" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="${contextCenterX}" y="444" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.context.title)}</text>
-            ${innerPill(contextCenterX, 486, 216, config.context.before, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
-            <line x1="740" y1="522" x2="900" y2="522" stroke="#e4d5d5" stroke-width="1.4" stroke-dasharray="5 4"/>
-            ${innerPill(contextCenterX, 544, 224, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 12, 800)}
+            <text x="${contextCenterX}" y="${contextTitleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.context.title)}</text>
+            ${innerPill(contextCenterX, contextBeforeY, 236, config.context.before, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
+            <line x1="${contextCenterX - 86}" y1="${contextDividerY}" x2="${contextCenterX + 86}" y2="${contextDividerY}" stroke="#e4d5d5" stroke-width="1.4" stroke-dasharray="5 4"/>
+            ${innerPill(contextCenterX, contextAfterY, 244, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 12, 800)}
+            ${contextNote ? `<text x="${contextCenterX}" y="${contextNoteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${contextNote.fontSize}" fill="#9a7748">${renderTspans(contextCenterX, contextNote.lines, contextNote.fontSize * 1.16)}</text>` : ""}
           </g>
 
-          <path class="co" id="c4s" d="M${context.x} ${contextMiddleY} L${decisionCenterX} ${contextToDecisionY} L${decisionCenterX} ${decision.y}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <path class="fl a" id="c4f" d="M${context.x} ${contextMiddleY} L${decisionCenterX} ${contextToDecisionY} L${decisionCenterX} ${decision.y}" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <path class="co" id="c4s" d="M${context.x} ${contextMiddleY} L${decisionCenterX} ${contextDecisionBridgeY} L${decisionCenterX} ${decision.y}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="c4f" d="M${context.x} ${contextMiddleY} L${decisionCenterX} ${contextDecisionBridgeY} L${decisionCenterX} ${decision.y}" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g5">
             <rect x="${decision.x}" y="${decision.y}" width="${decision.width}" height="${decision.height}" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
@@ -992,6 +1107,7 @@
             <text x="${decisionCenterX}" y="752" text-anchor="middle" font-family="${getFontStack()}" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.decision.sub1)}</text>
             <rect x="358" y="770" width="164" height="${decisionGoal.lines.length > 1 ? 44 : 32}" rx="10" fill="#f8dede" stroke="#efb0b0" stroke-width="1.2"/>
             <text x="${decisionCenterX}" y="${decisionGoal.lines.length > 1 ? 786 : 792}" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionGoal.fontSize}" font-weight="800" fill="#7d2626">${renderTspans(decisionCenterX, decisionGoal.lines, decisionGoal.fontSize * 1.14)}</text>
+            ${decisionNote ? `<text x="${decisionCenterX}" y="820" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionNote.fontSize}" fill="#9a7748">${renderTspans(decisionCenterX, decisionNote.lines, decisionNote.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <line class="co" id="c5s" x1="${decision.x + decision.width}" y1="${decisionActionY}" x2="${action.x}" y2="${decisionActionY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
@@ -1002,33 +1118,36 @@
             <text x="${actionCenterX}" y="730" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(actionTitle.text)}</text>
             <text x="${actionCenterX}" y="760" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionSub1.fontSize}" fill="#6b655c">${renderTspans(actionCenterX, actionSub1.lines, actionSub1.fontSize * 1.16)}</text>
             <text x="${actionCenterX}" y="794" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionSub2.fontSize}" fill="#8a847b">${renderTspans(actionCenterX, actionSub2.lines, actionSub2.fontSize * 1.16)}</text>
+            ${actionNote1 ? `<text x="${actionCenterX}" y="820" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionNote1.fontSize}" fill="#9a7748">${renderTspans(actionCenterX, actionNote1.lines, actionNote1.fontSize * 1.16)}</text>` : ""}
+            ${actionNote2 ? `<text x="${actionCenterX}" y="844" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionNote2.fontSize}" fill="#9a7748">${renderTspans(actionCenterX, actionNote2.lines, actionNote2.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <g class="ng" id="g7">
-            <rect x="${outcome.x}" y="${outcome.y}" width="${outcome.width}" height="${outcome.height}" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="${outcome.x}" y="${outcome.y}" width="${outcome.width}" height="${outcomeNote ? outcome.height + 26 : outcome.height}" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <rect x="${outcome.x}" y="${outcome.y}" width="${outcome.width}" height="58" rx="20" fill="#f8f7f4" stroke="#dcd5ca" stroke-width="1.4"/>
             <text x="${outcomeCenterX}" y="682" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#97a0b4">${escapeHtml(config.outcome.top)}</text>
             <text x="${outcomeCenterX}" y="704" text-anchor="middle" font-family="${getFontStack()}" font-size="10" fill="#b2aba0">${escapeHtml(config.outcome.topSub)}</text>
             <line x1="${outcome.x + 4}" y1="732" x2="${outcome.x + outcome.width - 4}" y2="732" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
-            <rect x="${outcome.x}" y="734" width="${outcome.width}" height="90" fill="#fff8f8" clip-path="url(#oc-metric)"/>
+            <rect x="${outcome.x}" y="734" width="${outcome.width}" height="${outcomeNote ? 116 : 90}" fill="#fff8f8" clip-path="url(#oc-metric)"/>
             <text x="${outcomeCenterX}" y="772" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.outcome.bottomTitle)}</text>
             <text x="${outcomeCenterX}" y="798" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottom.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(outcomeCenterX, outcomeBottom.lines, outcomeBottom.fontSize * 1.12)}</text>
+            ${outcomeNote ? `<text x="${outcomeCenterX}" y="830" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeNote.fontSize}" fill="#9a7748">${renderTspans(outcomeCenterX, outcomeNote.lines, outcomeNote.fontSize * 1.16)}</text>` : ""}
           </g>
 
-          <line class="co" id="c6s" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="980" y2="${actionOutcomeY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
-          <line class="fl a" id="c6f" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="980" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5"/>
-          <path class="co" id="c6t" d="M980 ${actionOutcomeY} L980 ${outcomeEvidenceY} L${outcome.x} ${outcomeEvidenceY}" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="co" id="c6a" x1="980" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="980" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c6s" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="${outcomeConnectorPivotX}" y2="${actionOutcomeY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="${outcomeConnectorPivotX}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M${outcomeConnectorPivotX} ${actionOutcomeY} L${outcomeConnectorPivotX} ${outcomeEvidenceY} L${outcome.x} ${outcomeEvidenceY}" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="co" id="c6a" x1="${outcomeConnectorPivotX}" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="${outcomeConnectorPivotX}" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          ${flowLabelHorizontal((layout.entry.x + layout.entry.width + layout.agent.x) / 2, topY, config.labels.l0, "#4452b8", "l0", 12, 150)}
-          ${flowLabelHorizontal((layout.agent.x + layout.agent.width + layout.middle.x) / 2, topY, config.labels.l1, "#4452b8", "l1", 12, 160)}
-          ${flowLabelHorizontal((layout.middle.x + layout.middle.width + reviewer.x) / 2, topY, config.labels.l2, "#ad3535", "l2", 12, 164)}
-          ${flowLabelVertical(reviewerCenterX, ((reviewer.y + reviewer.height + reviewerBridgeY) / 2) + 8, config.labels.l3, "#ad3535", "l3", 12, 164)}
-          ${flowLabelHorizontal((reviewerCenterX + contextRightX) / 2, reviewerBridgeY, config.labels.la1, "#ad3535", "la1", 12, 220)}
-          ${flowLabelVertical(decisionCenterX, (contextToDecisionY + decision.y) / 2, config.labels.l4, "#ad3535", "l4", 12, 166)}
+          ${flowLabelHorizontal((entry.x + entry.width + agent.x) / 2, topY, config.labels.l0, "#4452b8", "l0", 12, 150)}
+          ${flowLabelHorizontal((agent.x + agent.width + middle.x) / 2, topY, config.labels.l1, "#4452b8", "l1", 12, 170)}
+          ${flowLabelHorizontal((middle.x + middle.width + reviewer.x) / 2, topY, config.labels.l2, "#ad3535", "l2", 12, 176)}
+          ${flowLabelVertical(config.labels.l3X || reviewerCenterX, config.labels.l3Y || (((reviewer.y + reviewer.height + shortcutToContextBridgeY) / 2) + 8), config.labels.l3, "#ad3535", "l3", 12, config.labels.l3Width || 170)}
+          ${flowLabelHorizontal(config.labels.la1X || ((reviewerCenterX + contextCenterX) / 2), config.labels.la1Y || shortcutToContextBridgeY, config.labels.la1, "#ad3535", "la1", 12, config.labels.la1Width || 210)}
+          ${flowLabelVertical(config.labels.l4X || decisionCenterX, config.labels.l4Y || ((contextDecisionBridgeY + decision.y) / 2), config.labels.l4, "#ad3535", "l4", 12, config.labels.l4Width || 166)}
           ${flowLabelHorizontal((decision.x + decision.width + action.x) / 2, decisionActionY, config.labels.l5, "#ad3535", "l5", 12, 150)}
-          ${flowLabelHorizontal(((action.x + action.width) + 980) / 2, actionOutcomeY, config.labels.l6, "#ad3535", "l6", 12, 166)}
+          ${flowLabelHorizontal((outcomeConnectorPivotX + getFlowConnectorEndX(outcome.x)) / 2, actionOutcomeY, config.labels.l6, "#ad3535", "l6", 12, 156)}
         </svg>
       </div>
       ${panelMarkup(
@@ -1052,30 +1171,36 @@
     const decisionActionY = layout.lines.decisionActionY;
     const actionOutcomeY = layout.lines.actionOutcomeY;
     const outcomeEvidenceY = layout.lines.outcomeEvidenceY;
+    const outcomeConnectorPivotX = 960;
+    const contextTitleY = context.y + 40;
+    const contextBeforeY = context.y + 86;
+    const contextDividerY = context.y + 122;
+    const contextAfterY = context.y + 146;
+    const middleSub2Y = layout.middle.y + 106;
+    const middlePillCenterY = layout.middle.y + 148;
     const decisionCenterX = decision.x + decision.width / 2;
     const actionCenterX = action.x + action.width / 2;
     const outcomeCenterX = outcome.x + outcome.width / 2;
     const reviewerCenterX = reviewer.x + reviewer.width / 2;
     const contextCenterX = context.x + context.width / 2;
-    const contextRightX = context.x + context.width;
     const contextMiddleY = context.y + context.height / 2;
     const middleCenterX = layout.middle.x + layout.middle.width / 2;
     const agentCenterX = layout.agent.x + layout.agent.width / 2;
     const entryCenterX = layout.entry.x + layout.entry.width / 2;
-    const entryTitle = fitSingleLine(config.entry.title, 186, 16, 12);
+    const entryTitle = fitSingleLine(config.entry.title, layout.entry.width - 18, 16, 10);
     const entrySub1 = fitWrappedText(config.entry.sub1, 184, 12, 10, 2);
     const entrySub2 = fitWrappedText(config.entry.sub2, 184, 11, 9, 2);
     const agentTitle = fitSingleLine(config.agent.title, 198, 18, 14);
     const agentSub1 = fitWrappedText(config.agent.sub1, 184, 13, 11, 2);
     const agentGoal = fitWrappedText(config.agent.goal, 168, 12, 10, 2);
-    const limitTitle = fitSingleLine(config.limit.title, 204, 17, 13);
-    const limitSub1 = fitWrappedText(config.limit.sub1, 204, 13, 11, 2);
-    const limitSub2 = fitWrappedText(config.limit.sub2, 204, 12, 10, 2);
-    const limitEmphasis = fitWrappedText(config.limit.emphasis, 188, 11, 10, 2);
-    const burstTitle = fitSingleLine(config.burst.title, 216, 17, 13);
-    const burstSub1 = fitWrappedText(config.burst.sub1, 212, 12.5, 10, 2);
-    const burstSub2 = fitWrappedText(config.burst.sub2, 212, 11.5, 9, 2);
-    const burstNote = fitWrappedText(config.burst.note, 212, 10.5, 9, 2);
+    const limitTitle = fitSingleLine(config.limit.title, layout.middle.width - 26, 17, 13);
+    const limitSub1 = fitWrappedText(config.limit.sub1, layout.middle.width - 28, 13, 11, 2);
+    const limitSub2 = fitWrappedText(config.limit.sub2, layout.middle.width - 30, 12, 10, 2);
+    const limitEmphasis = fitWrappedText(config.limit.emphasis, 196, 11, 10, 2);
+    const burstTitle = fitSingleLine(config.burst.title, reviewer.width - 28, 17, 13);
+    const burstSub1 = fitWrappedText(config.burst.sub1, reviewer.width - 32, 12.5, 10, 2);
+    const burstSub2 = fitWrappedText(config.burst.sub2, reviewer.width - 32, 11.5, 9, 2);
+    const burstNote = fitWrappedText(config.burst.note, reviewer.width - 32, 10.5, 9, 2);
     const decisionTitle = fitSingleLine(config.decision.title, 196, 18, 14);
     const decisionGoal = fitWrappedText(config.decision.goal, 188, 12, 10, 2);
     const actionTitle = fitSingleLine(config.action.title, 190, 18, 13);
@@ -1132,9 +1257,9 @@
             <rect x="${layout.middle.x}" y="${layout.middle.y}" width="${layout.middle.width}" height="${layout.middle.height}" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <text x="${middleCenterX}" y="198" text-anchor="middle" font-family="${getFontStack()}" font-size="${limitTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(limitTitle.text)}</text>
             <text x="${middleCenterX}" y="230" text-anchor="middle" font-family="${getFontStack()}" font-size="${limitSub1.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(middleCenterX, limitSub1.lines, limitSub1.fontSize * 1.14)}</text>
-            <text x="${middleCenterX}" y="270" text-anchor="middle" font-family="${getFontStack()}" font-size="${limitSub2.fontSize}" fill="#b66868">${renderTspans(middleCenterX, limitSub2.lines, limitSub2.fontSize * 1.16)}</text>
-            <rect x="588" y="282" width="184" height="${limitEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
-            <text x="${middleCenterX}" y="${limitEmphasis.lines.length > 1 ? 298 : 302}" text-anchor="middle" font-family="${getFontStack()}" font-size="${limitEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(middleCenterX, limitEmphasis.lines, limitEmphasis.fontSize * 1.12)}</text>
+            <text x="${middleCenterX}" y="${middleSub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${limitSub2.fontSize}" fill="#b66868">${renderTspans(middleCenterX, limitSub2.lines, limitSub2.fontSize * 1.16)}</text>
+            <rect x="${middleCenterX - 104}" y="${middlePillCenterY - (limitEmphasis.lines.length > 1 ? 22 : 15)}" width="208" height="${limitEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
+            <text x="${middleCenterX}" y="${limitEmphasis.lines.length > 1 ? middlePillCenterY - 6 : middlePillCenterY + 4}" text-anchor="middle" font-family="${getFontStack()}" font-size="${limitEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(middleCenterX, limitEmphasis.lines, limitEmphasis.fontSize * 1.12)}</text>
           </g>
 
           <line class="co" id="c2s" x1="${layout.middle.x + layout.middle.width}" y1="${topY}" x2="${reviewer.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
@@ -1148,15 +1273,15 @@
             <text x="${reviewerCenterX}" y="308" text-anchor="middle" font-family="${getFontStack()}" font-size="${burstNote.fontSize}" fill="#c07b7b">${renderTspans(reviewerCenterX, burstNote.lines, burstNote.fontSize * 1.14)}</text>
           </g>
 
-          <path class="co" id="c3s" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextRightX} ${reviewerBridgeY} L${contextRightX} ${reviewerToContextY}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <path class="fl a" id="c3f" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextRightX} ${reviewerBridgeY} L${contextRightX} ${reviewerToContextY}" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <path class="co" id="c3s" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextCenterX} ${reviewerBridgeY} L${contextCenterX} ${reviewerToContextY}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <path class="fl a" id="c3f" d="M${reviewerCenterX} ${reviewer.y + reviewer.height} L${reviewerCenterX} ${reviewerBridgeY} L${contextCenterX} ${reviewerBridgeY} L${contextCenterX} ${reviewerToContextY}" fill="none" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g4ctx">
             <rect x="${context.x}" y="${context.y}" width="${context.width}" height="${context.height}" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="${contextCenterX}" y="444" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.context.title)}</text>
-            ${innerPill(contextCenterX, 486, 216, config.context.before, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
-            <line x1="740" y1="522" x2="900" y2="522" stroke="#e4d5d5" stroke-width="1.4" stroke-dasharray="5 4"/>
-            ${innerPill(contextCenterX, 544, 224, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 12, 800)}
+            <text x="${contextCenterX}" y="${contextTitleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#7d2626">${escapeHtml(config.context.title)}</text>
+            ${innerPill(contextCenterX, contextBeforeY, 236, config.context.before, "#edf7f0", "#bdddc8", "#2d6a4f", 12, 700)}
+            <line x1="${contextCenterX - 86}" y1="${contextDividerY}" x2="${contextCenterX + 86}" y2="${contextDividerY}" stroke="#e4d5d5" stroke-width="1.4" stroke-dasharray="5 4"/>
+            ${innerPill(contextCenterX, contextAfterY, 244, config.context.after, "#fff5f5", "#e6b3b3", "#ad3535", 12, 800)}
           </g>
 
           <path class="co" id="c4s" d="M${context.x} ${contextMiddleY} L${decisionCenterX} ${contextToDecisionY} L${decisionCenterX} ${decision.y}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
@@ -1191,20 +1316,20 @@
             <text x="${outcomeCenterX}" y="798" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeBottom.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(outcomeCenterX, outcomeBottom.lines, outcomeBottom.fontSize * 1.12)}</text>
           </g>
 
-          <line class="co" id="c6s" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="980" y2="${actionOutcomeY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
-          <line class="fl a" id="c6f" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="980" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5"/>
-          <path class="co" id="c6t" d="M980 ${actionOutcomeY} L980 ${outcomeEvidenceY} L${outcome.x} ${outcomeEvidenceY}" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="co" id="c6a" x1="980" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
-          <line class="fl a" id="c6af" x1="980" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c6s" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="${outcomeConnectorPivotX}" y2="${actionOutcomeY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5"/>
+          <line class="fl a" id="c6f" x1="${action.x + action.width}" y1="${actionOutcomeY}" x2="${outcomeConnectorPivotX}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5"/>
+          <path class="co" id="c6t" d="M${outcomeConnectorPivotX} ${actionOutcomeY} L${outcomeConnectorPivotX} ${outcomeEvidenceY} L${outcome.x} ${outcomeEvidenceY}" fill="none" stroke="#beb6a9" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="co" id="c6a" x1="${outcomeConnectorPivotX}" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="3.5" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c6af" x1="${outcomeConnectorPivotX}" y1="${actionOutcomeY}" x2="${getFlowConnectorEndX(outcome.x)}" y2="${actionOutcomeY}" stroke="#ad3535" stroke-width="4.5" marker-end="url(#ar)"/>
 
           ${flowLabelHorizontal((layout.entry.x + layout.entry.width + layout.agent.x) / 2, topY, config.labels.l0, "#4452b8", "l0", 12, 150)}
           ${flowLabelHorizontal((layout.agent.x + layout.agent.width + layout.middle.x) / 2, topY, config.labels.l1, "#4452b8", "l1", 12, 160)}
           ${flowLabelHorizontal((layout.middle.x + layout.middle.width + reviewer.x) / 2, topY, config.labels.l2, "#ad3535", "l2", 12, 156)}
           ${flowLabelVertical(reviewerCenterX, ((reviewer.y + reviewer.height + reviewerBridgeY) / 2) + 8, config.labels.l3, "#ad3535", "l3", 12, 156)}
-          ${flowLabelHorizontal((reviewerCenterX + contextRightX) / 2, reviewerBridgeY, config.labels.la1, "#ad3535", "la1", 12, 220)}
+          ${flowLabelHorizontal((reviewerCenterX + contextCenterX) / 2, reviewerBridgeY, config.labels.la1, "#ad3535", "la1", 12, 190)}
           ${flowLabelVertical(decisionCenterX, (contextToDecisionY + decision.y) / 2, config.labels.l4, "#ad3535", "l4", 12, 170)}
           ${flowLabelHorizontal((decision.x + decision.width + action.x) / 2, decisionActionY, config.labels.l5, "#ad3535", "l5", 12, 150)}
-          ${flowLabelHorizontal(((action.x + action.width) + 980) / 2, actionOutcomeY, config.labels.l6, "#ad3535", "l6", 12, 170)}
+          ${flowLabelHorizontal((outcomeConnectorPivotX + getFlowConnectorEndX(outcome.x)) / 2, actionOutcomeY, config.labels.l6, "#ad3535", "l6", 12, 156)}
         </svg>
       </div>
       ${panelMarkup(
@@ -1377,6 +1502,10 @@
     const memoryNote = fitWrappedText(config.memory.note, 240, 11, 9, 2);
     const attackerSub1 = fitWrappedText(config.attacker.sub1, 170, 13, 11, 2);
     const attackerSub2 = fitWrappedText(config.attacker.sub2, 166, 11, 10, 2);
+    const attackerBoxHeight = attackerSub2.lines.length > 1 ? 134 : 122;
+    const attackerTitleY = attackerSub2.lines.length > 1 ? 214 : 220;
+    const attackerSub1Y = attackerSub2.lines.length > 1 ? 242 : 248;
+    const attackerSub2Y = attackerSub2.lines.length > 1 ? 274 : 286;
     const userSub1 = fitWrappedText(config.user.sub1, 192, 13, 11, 2);
     const userSub2 = fitWrappedText(config.user.sub2, 190, 11, 10, 2);
     const agentTitle = fitSingleLine(config.agent.title, 248, 17, 14);
@@ -1432,10 +1561,10 @@
           </g>
 
           <g class="ng" id="g0">
-            <rect x="34" y="174" width="190" height="122" rx="18" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
-            <text x="129" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.attacker.title)}</text>
-            <text x="129" y="248" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerSub1.fontSize}" fill="#6b655c">${renderTspans(129, attackerSub1.lines, attackerSub1.fontSize * 1.16)}</text>
-            <text x="129" y="286" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerSub2.fontSize}" fill="#8a847b">${renderTspans(129, attackerSub2.lines, attackerSub2.fontSize * 1.16)}</text>
+            <rect x="34" y="174" width="190" height="${attackerBoxHeight}" rx="18" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <text x="129" y="${attackerTitleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.attacker.title)}</text>
+            <text x="129" y="${attackerSub1Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerSub1.fontSize}" fill="#6b655c">${renderTspans(129, attackerSub1.lines, attackerSub1.fontSize * 1.16)}</text>
+            <text x="129" y="${attackerSub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerSub2.fontSize}" fill="#8a847b">${renderTspans(129, attackerSub2.lines, attackerSub2.fontSize * 1.16)}</text>
           </g>
 
           <line class="co" id="c0s" x1="224" y1="236" x2="308" y2="236" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
@@ -1736,6 +1865,12 @@
   }
 
   function renderAttackChannel(config) {
+    const viewBoxWidth = config.action.calloutTitle ? 1520 : 1400;
+    const frameWidth = viewBoxWidth;
+    const frameRight = viewBoxWidth - 56;
+    const zoneWidth = config.action.calloutTitle ? 1180 : 1060;
+    const frameCenterX = viewBoxWidth / 2;
+    const zoneCenterX = 300 + zoneWidth / 2;
     const entryTitle = fitSingleLine(config.entry.title, 166, 18, 14);
     const entrySub1 = fitWrappedText(config.entry.sub1, 160, 13, 11, 2);
     const entrySub2 = fitWrappedText(config.entry.sub2, 160, 11, 9, 2);
@@ -1745,9 +1880,22 @@
     const channelTitle = fitSingleLine(config.channel.title, 212, 17, 13);
     const channelSub1 = fitWrappedText(config.channel.sub1, 204, 12, 10, 2);
     const channelSub2 = fitWrappedText(config.channel.sub2, 204, 11, 9, 2);
+    const channelSub3 = config.channel.sub3
+      ? fitWrappedText(config.channel.sub3, 204, 11, 9, 2)
+      : null;
+    const channelSub4 = config.channel.sub4
+      ? fitWrappedText(config.channel.sub4, 204, 10.5, 8.8, 2)
+      : null;
+    const channelBoxHeight = channelSub4 ? 196 : (channelSub3 ? 176 : 164);
     const attackerTitle = fitSingleLine(config.attacker.title, 200, 18, 14);
     const attackerSub1 = fitWrappedText(config.attacker.sub1, 188, 12.5, 10, 2);
     const attackerSub2 = fitWrappedText(config.attacker.sub2, 188, 11, 9, 2);
+    const attackerTone = config.attacker.tone || "danger";
+    const attackerPalette = attackerTone === "neutral"
+      ? { fill: "#fcfbf8", stroke: "#aba294", title: "#38342f", sub1: "#6b655c", sub2: "#8a847b" }
+      : (attackerTone === "threat"
+        ? { fill: "#fff6f6", stroke: "#cf8f8f", title: "#6f3a3a", sub1: "#8b5a5a", sub2: "#9b6d6d" }
+        : { fill: "#f7f5f1", stroke: "#989082", title: "#48423b", sub1: "#6b655c", sub2: "#8a847b" });
     const tamperTitle = fitSingleLine(config.tamper.title, 222, 17, 13);
     const tamperSub1 = fitWrappedText(config.tamper.sub1, 214, 12.5, 10, 2);
     const tamperSub2 = fitWrappedText(config.tamper.sub2, 214, 12.5, 10, 2);
@@ -1756,17 +1904,55 @@
     const decisionAgent = fitWrappedText(config.decision.agent, 198, 12, 10, 2);
     const decisionBefore = fitWrappedText(config.decision.before, 174, 12, 10, 2);
     const decisionAfter = fitWrappedText(config.decision.after, 188, 12, 10, 2);
-    const receiverTitle = fitSingleLine(config.receiver.title, 202, 17, 13);
-    const receiverSub1 = fitWrappedText(config.receiver.sub1, 194, 12.5, 10, 2);
-    const receiverSub2 = fitWrappedText(config.receiver.sub2, 194, 11, 9, 2);
+    const receiverWidth = config.receiver.width || 220;
+    const receiverX = 1020;
+    const receiverCenterX = receiverX + receiverWidth / 2;
+    const receiverTitle = fitSingleLine(config.receiver.title, receiverWidth - 18, 17, 13);
+    const receiverSub1 = fitWrappedText(config.receiver.sub1, receiverWidth - 26, 12.5, 10, 2);
+    const receiverSub2 = fitWrappedText(config.receiver.sub2, receiverWidth - 36, 11, 9, 2);
+    const receiverSub3 = config.receiver.sub3
+      ? fitWrappedText(config.receiver.sub3, receiverWidth - 44, 10.5, 8.8, 2)
+      : null;
+    const receiverBadgeTitle = config.receiver.badgeTitle
+      ? fitSingleLine(config.receiver.badgeTitle, receiverWidth - 70, 10.5, 8.6)
+      : null;
+    const receiverBadgeSub1 = config.receiver.badgeSub1
+      ? fitSingleLine(config.receiver.badgeSub1, receiverWidth - 58, 9.5, 8)
+      : null;
+    const receiverHasBadge = Boolean(receiverBadgeTitle && receiverBadgeSub1);
+    const receiverBoxHeight = receiverHasBadge
+      ? (receiverSub3 ? 206 : 188)
+      : (receiverSub3 ? 182 : 164);
+    const receiverBoxBottomY = 136 + receiverBoxHeight;
     const actionTitle = fitSingleLine(config.action.title, 214, 17, 13);
     const actionSub1 = fitWrappedText(config.action.sub1, 202, 12.5, 10, 2);
     const actionSub2 = fitWrappedText(config.action.sub2, 202, 11, 9, 2);
+    const actionBadgeTitle = config.action.badgeTitle
+      ? fitSingleLine(config.action.badgeTitle, 166, 10.5, 8.6)
+      : null;
+    const actionBadgeSub1 = config.action.badgeSub1
+      ? fitSingleLine(config.action.badgeSub1, 138, 9.5, 8)
+      : null;
+    const actionHasBadge = Boolean(actionBadgeTitle && actionBadgeSub1);
+    const actionBoxHeight = actionHasBadge ? 202 : 186;
+    const actionBoxBottomY = 430 + actionBoxHeight;
+    const actionCalloutTitle = config.action.calloutTitle
+      ? fitWrappedText(config.action.calloutTitle, 180, 11, 9.5, 2)
+      : null;
+    const actionCalloutSub1 = config.action.calloutSub1
+      ? fitWrappedText(config.action.calloutSub1, 180, 10.5, 9, 2)
+      : null;
+    const impactY = config.impact.y || 664;
     const impactTitle = fitSingleLine(config.impact.title, 214, 18, 14);
     const impactSub1 = fitWrappedText(config.impact.sub1, 360, 13, 11, 2);
     const impactSub2 = fitWrappedText(config.impact.sub2, 360, 11, 9, 2);
-    const attackerConnectorPath = "M795 300 L795 372 L160 372 L160 430";
-    const receiverConnectorPath = "M865 420 L930 420 Q950 420 950 400 L950 244 Q950 220 974 220 L1020 220";
+    const attackerConnectorPath = config.attackerToChannelPath
+      ? config.attackerToChannelPath
+      : (config.channelToAttacker
+      ? "M795 300 L795 372 L160 372 L160 430"
+      : "M160 430 L160 372 L795 372 L795 300");
+    const tamperConnectorPath = config.tamperConnectorPath || null;
+    const receiverConnectorPath = `M865 420 L930 420 Q950 420 950 400 L950 244 Q950 220 974 220 L${receiverX} 220`;
     const receiverLabelX = 942;
     const receiverLabelY = 350;
 
@@ -1776,21 +1962,21 @@
       <h1>${escapeHtml(config.heading)}</h1>
       <div class="dots" id="dots"></div>
       <div class="wrap">
-        <svg viewBox="0 0 1400 930" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 ${viewBoxWidth} 930" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
 
-          <rect width="1400" height="930" fill="#fff"/>
-          <text x="700" y="50" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.6">REQUEST  ·  AGENT CORE  ·  PEER CHANNEL  ·  TRUST STATE  ·  HARMFUL ACTION  ·  IMPACT</text>
-          <line x1="56" y1="72" x2="1344" y2="72" stroke="#ece6dc" stroke-width="1"/>
+          <rect width="${frameWidth}" height="930" fill="#fff"/>
+          <text x="${frameCenterX}" y="50" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="700" fill="#b2aba0" letter-spacing="3.6">REQUEST  ·  AGENT CORE  ·  PEER CHANNEL  ·  TRUST STATE  ·  HARMFUL ACTION  ·  IMPACT</text>
+          <line x1="56" y1="72" x2="${frameRight}" y2="72" stroke="#ece6dc" stroke-width="1"/>
 
           <g class="az" id="gzone">
-            <rect x="300" y="118" width="1060" height="710" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
+            <rect x="300" y="118" width="${zoneWidth}" height="710" rx="28" fill="rgba(156,47,47,0.03)" stroke="#ad3535" stroke-width="3" stroke-dasharray="12 8"/>
             <rect x="516" y="86" width="628" height="24" rx="12" fill="#fff"/>
-            <text x="830" y="102" text-anchor="middle" font-family="${getFontStack()}" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
+            <text x="${zoneCenterX}" y="102" text-anchor="middle" font-family="${getFontStack()}" font-size="11.5" font-weight="800" fill="#ad3535" letter-spacing=".1em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
@@ -1815,24 +2001,29 @@
           <line class="fl" id="c1f" x1="570" y1="220" x2="680" y2="220" stroke="#4452b8" stroke-width="4" marker-end="url(#ar)"/>
 
           <g class="ng" id="g2">
-            <rect x="680" y="136" width="230" height="164" rx="22" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <rect x="680" y="136" width="230" height="${channelBoxHeight}" rx="22" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
             <text x="795" y="190" text-anchor="middle" font-family="${getFontStack()}" font-size="${channelTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(channelTitle.text)}</text>
             <text x="795" y="226" text-anchor="middle" font-family="${getFontStack()}" font-size="${channelSub1.fontSize}" fill="#6b655c">${renderTspans(795, channelSub1.lines, channelSub1.fontSize * 1.16)}</text>
             <text x="795" y="266" text-anchor="middle" font-family="${getFontStack()}" font-size="${channelSub2.fontSize}" fill="#8a847b">${renderTspans(795, channelSub2.lines, channelSub2.fontSize * 1.16)}</text>
+            ${channelSub3 ? `<text x="795" y="292" text-anchor="middle" font-family="${getFontStack()}" font-size="${channelSub3.fontSize}" fill="#8a847b">${renderTspans(795, channelSub3.lines, channelSub3.fontSize * 1.16)}</text>` : ""}
+            ${channelSub4 ? `<text x="795" y="318" text-anchor="middle" font-family="${getFontStack()}" font-size="${channelSub4.fontSize}" fill="#9b6d6d">${renderTspans(795, channelSub4.lines, channelSub4.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <g class="ng" id="g3">
-            <rect x="50" y="430" width="220" height="154" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="160" y="488" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(attackerTitle.text)}</text>
-            <text x="160" y="522" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerSub1.fontSize}" fill="#a33b3b">${renderTspans(160, attackerSub1.lines, attackerSub1.fontSize * 1.16)}</text>
-            <text x="160" y="560" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerSub2.fontSize}" fill="#b66868">${renderTspans(160, attackerSub2.lines, attackerSub2.fontSize * 1.16)}</text>
+            <rect x="50" y="430" width="220" height="154" rx="22" fill="${attackerPalette.fill}" stroke="${attackerPalette.stroke}" stroke-width="2.4"/>
+            <text x="160" y="488" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerTitle.fontSize}" font-weight="700" fill="${attackerPalette.title}">${escapeHtml(attackerTitle.text)}</text>
+            <text x="160" y="522" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerSub1.fontSize}" fill="${attackerPalette.sub1}">${renderTspans(160, attackerSub1.lines, attackerSub1.fontSize * 1.16)}</text>
+            <text x="160" y="560" text-anchor="middle" font-family="${getFontStack()}" font-size="${attackerSub2.fontSize}" fill="${attackerPalette.sub2}">${renderTspans(160, attackerSub2.lines, attackerSub2.fontSize * 1.16)}</text>
           </g>
 
           <path class="co" id="c2s" d="${attackerConnectorPath}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
           <path class="fl a" id="c2f" d="${attackerConnectorPath}" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
 
-          <line class="co" id="c3s" x1="270" y1="520" x2="390" y2="520" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
-          <line class="fl a" id="c3f" x1="270" y1="520" x2="390" y2="520" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+          ${tamperConnectorPath
+            ? `<path class="co" id="c3s" d="${tamperConnectorPath}" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <path class="fl a" id="c3f" d="${tamperConnectorPath}" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>`
+            : `<line class="co" id="c3s" x1="270" y1="520" x2="390" y2="520" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <line class="fl a" id="c3f" x1="270" y1="520" x2="390" y2="520" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>`}
 
           <g class="ng" id="g4">
             <rect x="390" y="430" width="260" height="186" rx="22" fill="#fff4f4" stroke="#ad3535" stroke-width="2.8"/>
@@ -1858,40 +2049,84 @@
           <path class="fl a" id="c5f" d="${receiverConnectorPath}" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
 
           <g class="ng" id="g6">
-            <rect x="1020" y="136" width="220" height="164" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="1130" y="190" text-anchor="middle" font-family="${getFontStack()}" font-size="${receiverTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(receiverTitle.text)}</text>
-            <text x="1130" y="226" text-anchor="middle" font-family="${getFontStack()}" font-size="${receiverSub1.fontSize}" fill="#a33b3b">${renderTspans(1130, receiverSub1.lines, receiverSub1.fontSize * 1.16)}</text>
-            <text x="1130" y="264" text-anchor="middle" font-family="${getFontStack()}" font-size="${receiverSub2.fontSize}" fill="#b66868">${renderTspans(1130, receiverSub2.lines, receiverSub2.fontSize * 1.16)}</text>
+            <rect x="${receiverX}" y="136" width="${receiverWidth}" height="${receiverBoxHeight}" rx="22" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="${receiverCenterX}" y="190" text-anchor="middle" font-family="${getFontStack()}" font-size="${receiverTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(receiverTitle.text)}</text>
+            <text x="${receiverCenterX}" y="226" text-anchor="middle" font-family="${getFontStack()}" font-size="${receiverSub1.fontSize}" fill="#a33b3b">${renderTspans(receiverCenterX, receiverSub1.lines, receiverSub1.fontSize * 1.16)}</text>
+            <text x="${receiverCenterX}" y="264" text-anchor="middle" font-family="${getFontStack()}" font-size="${receiverSub2.fontSize}" fill="#b66868">${renderTspans(receiverCenterX, receiverSub2.lines, receiverSub2.fontSize * 1.16)}</text>
+            ${receiverSub3
+              ? `<text x="${receiverCenterX}" y="292" text-anchor="middle" font-family="${getFontStack()}" font-size="${receiverSub3.fontSize}" fill="#c07b7b">${renderTspans(receiverCenterX, receiverSub3.lines, receiverSub3.fontSize * 1.16)}</text>`
+              : ""}
+            ${receiverHasBadge
+              ? `
+            <rect x="${receiverX + 24}" y="${receiverSub3 ? 310 : 282}" width="${receiverWidth - 48}" height="24" rx="12" fill="#f5f4f1" stroke="#d8d0c4" stroke-width="1"/>
+            <text x="${receiverCenterX}" y="${receiverSub3 ? 326 : 298}" text-anchor="middle" font-family="${getFontStack()}" font-size="${receiverBadgeTitle.fontSize}" font-weight="700" fill="#7a746a">${escapeHtml(receiverBadgeTitle.text)}</text>
+            <text x="${receiverCenterX}" y="${receiverSub3 ? 346 : 318}" text-anchor="middle" font-family="${getFontStack()}" font-size="${receiverBadgeSub1.fontSize}" fill="#9a9387">${escapeHtml(receiverBadgeSub1.text)}</text>
+              `
+              : ""}
           </g>
 
-          <path class="co" id="c6s" d="M1130 300 L1130 430" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
-          <path class="fl a" id="c6f" d="M1130 300 L1130 430" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+          <path class="co" id="c6s" d="M${receiverCenterX} ${receiverBoxBottomY} L${receiverCenterX} 430" fill="none" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <path class="fl a" id="c6f" d="M${receiverCenterX} ${receiverBoxBottomY} L${receiverCenterX} 430" fill="none" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
 
           <g class="ng" id="g7">
-            <rect x="1020" y="430" width="250" height="186" rx="22" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
+            <rect x="1020" y="430" width="250" height="${actionBoxHeight}" rx="22" fill="#fcfbf8" stroke="#aba294" stroke-width="2.4"/>
             <text x="1145" y="492" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionTitle.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(actionTitle.text)}</text>
             <text x="1145" y="530" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionSub1.fontSize}" fill="#6b655c">${renderTspans(1145, actionSub1.lines, actionSub1.fontSize * 1.16)}</text>
             <text x="1145" y="574" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionSub2.fontSize}" fill="#8a847b">${renderTspans(1145, actionSub2.lines, actionSub2.fontSize * 1.16)}</text>
+            ${actionHasBadge
+              ? `
+            <rect x="1052" y="590" width="186" height="24" rx="12" fill="#f5f4f1" stroke="#d8d0c4" stroke-width="1"/>
+            <text x="1145" y="606" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionBadgeTitle.fontSize}" font-weight="700" fill="#7a746a">${escapeHtml(actionBadgeTitle.text)}</text>
+            <text x="1145" y="626" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionBadgeSub1.fontSize}" fill="#9a9387">${escapeHtml(actionBadgeSub1.text)}</text>
+              `
+              : ""}
           </g>
+          ${actionCalloutTitle && actionCalloutSub1
+            ? `
+          <g class="ng" id="g7b">
+            <rect x="1296" y="454" width="180" height="118" rx="18" fill="#fcfbf8" stroke="#aba294" stroke-width="2" stroke-dasharray="8 6"/>
+            <text x="1386" y="494" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionCalloutTitle.fontSize}" font-weight="700" fill="#38342f">${renderTspans(1386, actionCalloutTitle.lines, actionCalloutTitle.fontSize * 1.16)}</text>
+            <text x="1386" y="542" text-anchor="middle" font-family="${getFontStack()}" font-size="${actionCalloutSub1.fontSize}" fill="#8a847b">${renderTspans(1386, actionCalloutSub1.lines, actionCalloutSub1.fontSize * 1.16)}</text>
+          </g>
+            `
+            : ""}
 
-          <line class="co" id="c7s" x1="1145" y1="616" x2="1145" y2="664" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
-          <line class="fl a" id="c7f" x1="1145" y1="616" x2="1145" y2="664" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
+          <line class="co" id="c7s" x1="1145" y1="${actionBoxBottomY}" x2="1145" y2="${impactY}" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
+          <line class="fl a" id="c7f" x1="1145" y1="${actionBoxBottomY}" x2="1145" y2="${impactY}" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
 
           <g class="ng" id="g8">
-            <rect x="940" y="664" width="410" height="96" rx="18" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
-            <text x="1145" y="704" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
-            <text x="1145" y="730" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSub1.fontSize}" fill="#a33b3b">${renderTspans(1145, impactSub1.lines, impactSub1.fontSize * 1.16)}</text>
-            <text x="1145" y="752" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSub2.fontSize}" fill="#b66868">${renderTspans(1145, impactSub2.lines, impactSub2.fontSize * 1.16)}</text>
+            <rect x="940" y="${impactY}" width="410" height="96" rx="18" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="1145" y="${impactY + 40}" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
+            <text x="1145" y="${impactY + 66}" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSub1.fontSize}" fill="#a33b3b">${renderTspans(1145, impactSub1.lines, impactSub1.fontSize * 1.16)}</text>
+            <text x="1145" y="${impactY + 88}" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSub2.fontSize}" fill="#b66868">${renderTspans(1145, impactSub2.lines, impactSub2.fontSize * 1.16)}</text>
           </g>
 
           ${flowLabelHorizontalSegment(230, 350, 220, config.labels.l0, "#4452b8", "l0", 10.5, 118)}
           ${flowLabelHorizontalSegment(570, 680, 220, config.labels.l1, "#4452b8", "l1", 10.5, 118)}
-          ${flowLabelHorizontalSegment(270, 795, 372, config.labels.l2, "#ad3535", "l2", 10, 180)}
-          ${flowLabelHorizontalSegment(270, 390, 520, config.labels.la1, "#ad3535", "la1", 10, 120)}
-          ${flowLabelHorizontalSegment(650, 750, 520, config.labels.l4, "#ad3535", "l4", 10, 112)}
-          ${flowLabel(receiverLabelX, receiverLabelY, config.labels.l5, "#ad3535", "l5", 10, 146)}
-          ${flowLabelVertical(1130, 390, config.labels.l6, "#ad3535", "l6", 10, 146)}
-          ${flowLabelVertical(1145, 642, config.labels.l7, "#ad3535", "l7", 10, 146)}
+          ${config.labels.l2X
+            ? flowLabel(config.labels.l2X, config.labels.l2Y || 372, config.labels.l2, "#ad3535", "l2", 10, config.labels.l2Width || 190)
+            : flowLabelHorizontal(478, 372, config.labels.l2, "#ad3535", "l2", 10, 236)}
+          ${config.labels.la1X
+            ? flowLabel(config.labels.la1X, config.labels.la1Y || 520, config.labels.la1, "#ad3535", "la1", 10, config.labels.la1Width || 120)
+            : config.labels.la1b
+            ? flowLabelHorizontalWithNote(330, 520, config.labels.la1, config.labels.la1b, "#ad3535", "la1", 10, 146, 112)
+            : flowLabelHorizontalSegment(270, 390, 520, config.labels.la1, "#ad3535", "la1", 10, 120)}
+          ${config.labels.l4X
+            ? flowLabelMarkup(config.labels.l4X, config.labels.l4Y || 520, config.labels.l4, "#ad3535", "l4", {
+                fontSize: 10,
+                maxWidth: config.labels.l4Width || 188,
+                maxLines: config.labels.l4Lines || 2,
+                orientation: "horizontal",
+                className: "lb-h"
+              })
+            : config.labels.l4b
+            ? flowLabelHorizontalWithNote(700, 520, config.labels.l4, config.labels.l4b, "#ad3535", "l4", 10, 120, 150, 22)
+            : flowLabelHorizontal(700, 520, config.labels.l4, "#ad3535", "l4", 10, 188)}
+          ${config.labels.l5X
+            ? flowLabel(config.labels.l5X, config.labels.l5Y || receiverLabelY, config.labels.l5, "#ad3535", "l5", 10, config.labels.l5Width || 146)
+            : flowLabel(receiverLabelX, receiverLabelY, config.labels.l5, "#ad3535", "l5", 10, 146)}
+          ${flowLabelVertical(receiverCenterX, (receiverBoxBottomY + 430) / 2, config.labels.l6, "#ad3535", "l6", 10, config.labels.l6Width || 146)}
+          ${flowLabelVertical(1145, (actionBoxBottomY + impactY) / 2, config.labels.l7, "#ad3535", "l7", 10, 146)}
         </svg>
       </div>
       ${panelMarkup(
@@ -1909,25 +2144,27 @@
     const entryX = 24;
     const entryY = 184;
     const entryWidth = 190;
-    const entryHeight = 126;
+    const entryHeight = 154;
     const stageY = 164;
     const stageWidth = 210;
-    const stageHeight = 156;
+    const stageHeight = 186;
     const stage1X = 360;
     const stage2X = 710;
     const stage3X = 1060;
     const issueX = 430;
     const issueY = 438;
     const issueWidth = 400;
-    const issueHeight = 208;
+    const issueHeight = 248;
     const stage4X = 980;
     const stage4Y = 452;
     const stage4Width = 250;
-    const stage4Height = 180;
-    const impactX = 780;
+    const stage4Height = 206;
+    const impactX = config.impactSecondary ? 1000 : 780;
     const impactY = 694;
-    const impactWidth = 500;
+    const impactWidth = config.impactSecondary ? 300 : 500;
     const impactHeight = 104;
+    const impactSecondaryX = 640;
+    const impactSecondaryWidth = 300;
 
     const entryRightX = entryX + entryWidth;
     const entryCenterX = entryX + (entryWidth / 2);
@@ -1948,29 +2185,71 @@
     const impactCenterX = impactX + (impactWidth / 2);
 
     const entryTitle = fitSingleLine(config.entry.title, 170, 17, 13);
+    const entrySub0 = config.entry.sub0
+      ? fitWrappedText(config.entry.sub0, 176, 10.5, 9, 2)
+      : null;
     const entrySub1 = fitWrappedText(config.entry.sub1, 176, 12.5, 10, 2);
     const entrySub2 = fitWrappedText(config.entry.sub2, 176, 11, 9, 2);
+    const entrySub3 = config.entry.sub3
+      ? fitWrappedText(config.entry.sub3, 176, 10.5, 8.8, 2)
+      : null;
 
     const stage1Title = fitSingleLine(config.stage1.title, 188, 17, 13);
     const stage1Sub1 = fitWrappedText(config.stage1.sub1, 192, 12.5, 10, 2);
     const stage1Sub2 = fitWrappedText(config.stage1.sub2, 192, 11, 9, 2);
+    const stage1Sub3 = config.stage1.sub3
+      ? fitWrappedText(config.stage1.sub3, 192, 10.5, 8.8, 2)
+      : null;
     const stage2Title = fitSingleLine(config.stage2.title, 188, 17, 13);
     const stage2Sub1 = fitWrappedText(config.stage2.sub1, 192, 12.5, 10, 2);
     const stage2Sub2 = fitWrappedText(config.stage2.sub2, 192, 11, 9, 2);
+    const stage2Sub3 = config.stage2.sub3
+      ? fitWrappedText(config.stage2.sub3, 192, 10.5, 8.8, 2)
+      : null;
     const stage3Title = fitSingleLine(config.stage3.title, 188, 17, 13);
     const stage3Sub1 = fitWrappedText(config.stage3.sub1, 192, 12.5, 10, 2);
     const stage3Sub2 = fitWrappedText(config.stage3.sub2, 192, 11, 9, 2);
+    const stage3Callout = config.stage3.callout
+      ? fitWrappedText(config.stage3.callout, 194, 13.5, 11.5, 2)
+      : null;
+    const stage3Sub3 = config.stage3.sub3
+      ? fitWrappedText(config.stage3.sub3, 192, 10.5, 8.8, 2)
+      : null;
     const issueTitle = fitSingleLine(config.issue.title, 236, 18, 14);
     const issueLine1 = fitWrappedText(config.issue.line1, 320, 12.5, 10, 2);
     const issueLine2 = fitWrappedText(config.issue.line2, 320, 12.5, 10, 2);
     const issueLine3 = fitWrappedText(config.issue.line3, 320, 11.5, 9, 2);
+    const issueLine4 = config.issue.line4
+      ? fitWrappedText(config.issue.line4, 320, 10.8, 9, 2)
+      : null;
+    const issueNote = config.issue.note
+      ? fitWrappedText(config.issue.note, 320, 10.5, 8.8, 2)
+      : null;
     const stage4Title = fitSingleLine(config.stage4.title, 188, 17, 13);
     const stage4Sub1 = fitWrappedText(config.stage4.sub1, 192, 12.5, 10, 2);
     const stage4Sub2 = fitWrappedText(config.stage4.sub2, 192, 11, 9, 2);
+    const stage4Sub3 = config.stage4.sub3
+      ? fitWrappedText(config.stage4.sub3, 192, 10.5, 8.8, 2)
+      : null;
+    const stage4Callout = config.stage4.callout
+      ? fitWrappedText(config.stage4.callout, 194, 10.8, 9.2, 2)
+      : null;
 
-    const impactTitle = fitSingleLine(config.impact.title, 280, 19, 14);
-    const impactSub1 = fitWrappedText(config.impact.sub1, 450, 13, 11, 2);
-    const impactSub2 = fitWrappedText(config.impact.sub2, 450, 11, 9, 2);
+    const impactTitle = fitSingleLine(config.impact.title, impactWidth - 40, 19, 14);
+    const impactSub1 = fitWrappedText(config.impact.sub1, impactWidth - 40, 13, 11, 2);
+    const impactSub2 = fitWrappedText(config.impact.sub2, impactWidth - 40, 11, 9, 2);
+    const impactSub3 = config.impact.sub3
+      ? fitWrappedText(config.impact.sub3, impactWidth - 40, 10.8, 9, 2)
+      : null;
+    const impactSecondaryTitle = config.impactSecondary
+      ? fitSingleLine(config.impactSecondary.title, 240, 18, 14)
+      : null;
+    const impactSecondarySub1 = config.impactSecondary
+      ? fitWrappedText(config.impactSecondary.sub1, 260, 12.5, 10.5, 2)
+      : null;
+    const impactSecondarySub2 = config.impactSecondary && config.impactSecondary.sub2
+      ? fitWrappedText(config.impactSecondary.sub2, 260, 10.8, 9, 2)
+      : null;
 
     return `
       <style>${baseStyles()}</style>
@@ -1996,10 +2275,12 @@
           </g>
 
           <g class="ng" id="g0">
-            <rect x="${entryX}" y="${entryY}" width="${entryWidth}" height="${entryHeight}" rx="20" fill="#fff4f4" stroke="#ad3535" stroke-width="2.7"/>
+            <rect x="${entryX}" y="${entryY}" width="${entryWidth}" height="${entryHeight}" rx="20" fill="${config.entry.tone === "payload" ? "#fff3de" : "#fff4f4"}" stroke="${config.entry.tone === "payload" ? "#ef9f21" : "#ad3535"}" stroke-width="2.7"/>
             <text x="${entryCenterX}" y="228" text-anchor="middle" font-family="${getFontStack()}" font-size="${entryTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(entryTitle.text)}</text>
-            <text x="${entryCenterX}" y="260" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub1.fontSize}" fill="#a33b3b">${renderTspans(entryCenterX, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
-            <text x="${entryCenterX}" y="294" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub2.fontSize}" fill="#b66868">${renderTspans(entryCenterX, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+            ${entrySub0 ? `<text x="${entryCenterX}" y="248" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub0.fontSize}" fill="#9a7748">${renderTspans(entryCenterX, entrySub0.lines, entrySub0.fontSize * 1.16)}</text>` : ""}
+            <text x="${entryCenterX}" y="${entrySub0 ? 278 : 260}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub1.fontSize}" fill="#a33b3b">${renderTspans(entryCenterX, entrySub1.lines, entrySub1.fontSize * 1.16)}</text>
+            <text x="${entryCenterX}" y="${entrySub0 ? 312 : 294}" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub2.fontSize}" fill="#b66868">${renderTspans(entryCenterX, entrySub2.lines, entrySub2.fontSize * 1.16)}</text>
+            ${entrySub3 ? `<text x="${entryCenterX}" y="330" text-anchor="middle" font-family="${getFontStack()}" font-size="${entrySub3.fontSize}" fill="#9a7748">${renderTspans(entryCenterX, entrySub3.lines, entrySub3.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <line class="co" id="c0s" x1="${entryRightX}" y1="${entryCenterY}" x2="${stage1X}" y2="${stageCenterY}" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
@@ -2010,6 +2291,7 @@
             <text x="${stage1CenterX}" y="212" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage1Title.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(stage1Title.text)}</text>
             <text x="${stage1CenterX}" y="246" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage1Sub1.fontSize}" fill="#5360be">${renderTspans(stage1CenterX, stage1Sub1.lines, stage1Sub1.fontSize * 1.16)}</text>
             <text x="${stage1CenterX}" y="290" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage1Sub2.fontSize}" fill="#7a82c8">${renderTspans(stage1CenterX, stage1Sub2.lines, stage1Sub2.fontSize * 1.16)}</text>
+            ${stage1Sub3 ? `<text x="${stage1CenterX}" y="322" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage1Sub3.fontSize}" fill="#9a7748">${renderTspans(stage1CenterX, stage1Sub3.lines, stage1Sub3.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <line class="co" id="c1s" x1="${stage1RightX}" y1="${stageCenterY}" x2="${stage2X}" y2="${stageCenterY}" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
@@ -2020,6 +2302,7 @@
             <text x="${stage2CenterX}" y="212" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage2Title.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(stage2Title.text)}</text>
             <text x="${stage2CenterX}" y="246" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage2Sub1.fontSize}" fill="#6b655c">${renderTspans(stage2CenterX, stage2Sub1.lines, stage2Sub1.fontSize * 1.16)}</text>
             <text x="${stage2CenterX}" y="290" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage2Sub2.fontSize}" fill="#8a847b">${renderTspans(stage2CenterX, stage2Sub2.lines, stage2Sub2.fontSize * 1.16)}</text>
+            ${stage2Sub3 ? `<text x="${stage2CenterX}" y="322" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage2Sub3.fontSize}" fill="#9a7748">${renderTspans(stage2CenterX, stage2Sub3.lines, stage2Sub3.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <line class="co" id="c2s" x1="${stage2RightX}" y1="${stageCenterY}" x2="${stage3X}" y2="${stageCenterY}" stroke="#beb6a9" stroke-width="2.4" marker-end="url(#ar)"/>
@@ -2029,7 +2312,9 @@
             <rect x="${stage3X}" y="${stageY}" width="${stageWidth}" height="${stageHeight}" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
             <text x="${stage3CenterX}" y="212" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage3Title.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(stage3Title.text)}</text>
             <text x="${stage3CenterX}" y="246" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage3Sub1.fontSize}" fill="#6b655c">${renderTspans(stage3CenterX, stage3Sub1.lines, stage3Sub1.fontSize * 1.16)}</text>
-            <text x="${stage3CenterX}" y="290" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage3Sub2.fontSize}" fill="#8a847b">${renderTspans(stage3CenterX, stage3Sub2.lines, stage3Sub2.fontSize * 1.16)}</text>
+            ${stage3Callout ? `<text x="${stage3CenterX}" y="278" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage3Callout.fontSize}" font-weight="800" fill="#8a5200">${renderTspans(stage3CenterX, stage3Callout.lines, stage3Callout.fontSize * 1.16)}</text>` : ""}
+            <text x="${stage3CenterX}" y="${stage3Callout ? 304 : 290}" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage3Sub2.fontSize}" fill="#8a847b">${renderTspans(stage3CenterX, stage3Sub2.lines, stage3Sub2.fontSize * 1.16)}</text>
+            ${stage3Sub3 ? `<text x="${stage3CenterX}" y="${stage3Callout ? 330 : 322}" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage3Sub3.fontSize}" fill="#9a7748">${renderTspans(stage3CenterX, stage3Sub3.lines, stage3Sub3.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <path class="co" id="c3s" d="M${stage3CenterX} ${stageBottomY} L${stage3CenterX} ${cascadeTurnY} L${issueCenterX} ${cascadeTurnY} L${issueCenterX} ${issueY}" fill="none" stroke="#beb6a9" stroke-width="2.8" marker-end="url(#ar)"/>
@@ -2042,6 +2327,11 @@
             <text x="${issueCenterX}" y="526" text-anchor="middle" font-family="${getFontStack()}" font-size="${issueLine1.fontSize}" fill="#8a5200">${renderTspans(issueCenterX, issueLine1.lines, issueLine1.fontSize * 1.16)}</text>
             <text x="${issueCenterX}" y="574" text-anchor="middle" font-family="${getFontStack()}" font-size="${issueLine2.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(issueCenterX, issueLine2.lines, issueLine2.fontSize * 1.14)}</text>
             <text x="${issueCenterX}" y="620" text-anchor="middle" font-family="${getFontStack()}" font-size="${issueLine3.fontSize}" fill="#9a7748">${renderTspans(issueCenterX, issueLine3.lines, issueLine3.fontSize * 1.16)}</text>
+            ${issueLine4 ? `<text x="${issueCenterX}" y="654" text-anchor="middle" font-family="${getFontStack()}" font-size="${issueLine4.fontSize}" font-weight="700" fill="#8a5200">${renderTspans(issueCenterX, issueLine4.lines, issueLine4.fontSize * 1.16)}</text>` : ""}
+            ${issueNote ? `
+            <rect x="${issueX + 36}" y="670" width="${issueWidth - 72}" height="36" rx="14" fill="#fcfbf8" stroke="#aba294" stroke-width="1.4" stroke-dasharray="8 6"/>
+            <text x="${issueCenterX}" y="692" text-anchor="middle" font-family="${getFontStack()}" font-size="${issueNote.fontSize}" fill="#6b655c">${renderTspans(issueCenterX, issueNote.lines, issueNote.fontSize * 1.16)}</text>
+            ` : ""}
           </g>
 
           <line class="co" id="c4s" x1="${issueRightX}" y1="${issueCenterY}" x2="${stage4X}" y2="${issueCenterY}" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
@@ -2050,27 +2340,42 @@
           <g class="ng" id="g5">
             <rect x="${stage4X}" y="${stage4Y}" width="${stage4Width}" height="${stage4Height}" rx="22" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
             <text x="${stage4CenterX}" y="510" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage4Title.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(stage4Title.text)}</text>
-            <text x="${stage4CenterX}" y="546" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage4Sub1.fontSize}" fill="#6b655c">${renderTspans(stage4CenterX, stage4Sub1.lines, stage4Sub1.fontSize * 1.16)}</text>
-            <text x="${stage4CenterX}" y="590" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage4Sub2.fontSize}" fill="#8a847b">${renderTspans(stage4CenterX, stage4Sub2.lines, stage4Sub2.fontSize * 1.16)}</text>
+            <text x="${stage4CenterX}" y="546" text-anchor="middle" font-family="${getFontStack()}" font-size="${Math.max(stage4Sub1.fontSize, 11.4)}" font-weight="800" fill="#6b655c">${renderTspans(stage4CenterX, stage4Sub1.lines, Math.max(stage4Sub1.fontSize, 11.4) * 1.16)}</text>
+            ${stage4Callout ? `<text x="${stage4CenterX}" y="574" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage4Callout.fontSize}" font-weight="700" fill="#9a7748">${renderTspans(stage4CenterX, stage4Callout.lines, stage4Callout.fontSize * 1.16)}</text>` : ""}
+            <text x="${stage4CenterX}" y="${stage4Callout ? 602 : 590}" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage4Sub2.fontSize}" fill="#8a847b">${renderTspans(stage4CenterX, stage4Sub2.lines, stage4Sub2.fontSize * 1.16)}</text>
+            ${stage4Sub3 ? `<text x="${stage4CenterX}" y="${stage4Callout ? 630 : 618}" text-anchor="middle" font-family="${getFontStack()}" font-size="${stage4Sub3.fontSize}" fill="#9a7748">${renderTspans(stage4CenterX, stage4Sub3.lines, stage4Sub3.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <line class="co" id="c5s" x1="${stage4CenterX}" y1="${stage4BottomY}" x2="${stage4CenterX}" y2="${impactY}" stroke="rgba(173,53,53,.35)" stroke-width="2.8" marker-end="url(#ar)"/>
           <line class="fl a" id="c5f" x1="${stage4CenterX}" y1="${stage4BottomY}" x2="${stage4CenterX}" y2="${impactY}" stroke="#ad3535" stroke-width="4.3" marker-end="url(#ar)"/>
 
+          ${config.impactSecondary ? `
+          <line class="co" id="c5b" x1="${impactSecondaryX + impactSecondaryWidth}" y1="${impactY + 52}" x2="${impactX}" y2="${impactY + 52}" stroke="#beb6a9" stroke-width="2.2" stroke-dasharray="7 5" marker-end="url(#ar)"/>
+          <line class="fl a" id="c5bf" x1="${impactSecondaryX + impactSecondaryWidth}" y1="${impactY + 52}" x2="${impactX}" y2="${impactY + 52}" stroke="#ad3535" stroke-width="3.4" stroke-dasharray="7 5" marker-end="url(#ar)"/>
+
+          <g class="ng" id="g6b">
+            <rect x="${impactSecondaryX}" y="${impactY}" width="${impactSecondaryWidth}" height="${impactSecondarySub2 ? 116 : 104}" rx="18" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <text x="${impactSecondaryX + (impactSecondaryWidth / 2)}" y="736" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSecondaryTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactSecondaryTitle.text)}</text>
+            <text x="${impactSecondaryX + (impactSecondaryWidth / 2)}" y="764" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSecondarySub1.fontSize}" fill="#a33b3b">${renderTspans(impactSecondaryX + (impactSecondaryWidth / 2), impactSecondarySub1.lines, impactSecondarySub1.fontSize * 1.16)}</text>
+            ${impactSecondarySub2 ? `<text x="${impactSecondaryX + (impactSecondaryWidth / 2)}" y="786" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSecondarySub2.fontSize}" fill="#b66868">${renderTspans(impactSecondaryX + (impactSecondaryWidth / 2), impactSecondarySub2.lines, impactSecondarySub2.fontSize * 1.16)}</text>` : ""}
+          </g>
+          ` : ""}
+
           <g class="ng" id="g6">
-            <rect x="${impactX}" y="${impactY}" width="${impactWidth}" height="${impactHeight}" rx="18" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
+            <rect x="${impactX}" y="${impactY}" width="${impactWidth}" height="${impactSub3 ? 134 : impactHeight}" rx="18" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <text x="${impactCenterX}" y="736" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(impactTitle.text)}</text>
             <text x="${impactCenterX}" y="764" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSub1.fontSize}" fill="#a33b3b">${renderTspans(impactCenterX, impactSub1.lines, impactSub1.fontSize * 1.16)}</text>
             <text x="${impactCenterX}" y="786" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSub2.fontSize}" fill="#b66868">${renderTspans(impactCenterX, impactSub2.lines, impactSub2.fontSize * 1.16)}</text>
+            ${impactSub3 ? `<text x="${impactCenterX}" y="808" text-anchor="middle" font-family="${getFontStack()}" font-size="${impactSub3.fontSize}" fill="#9f6a6a">${renderTspans(impactCenterX, impactSub3.lines, impactSub3.fontSize * 1.16)}</text>` : ""}
           </g>
 
-          ${flowLabelHorizontalSegment(entryRightX, stage1X, entryCenterY, config.labels.l0, "#ad3535", "l0", 10, 156)}
-          ${flowLabelHorizontalSegment(stage1RightX, stage2X, stageCenterY, config.labels.l1, "#ad3535", "l1", 10, 156)}
-          ${flowLabelHorizontalSegment(stage2RightX, stage3X, stageCenterY, config.labels.l2, "#ad3535", "l2", 10, 168)}
+          ${flowLabelHorizontalSegment(entryRightX, stage1X, entryCenterY, config.labels.l0, "#ad3535", "l0", 10, 168)}
+          ${flowLabelHorizontalSegment(stage1RightX, stage2X, stageCenterY, config.labels.l1, "#ad3535", "l1", 10, 164)}
+          ${flowLabelHorizontalSegment(stage2RightX, stage3X, stageCenterY, config.labels.l2, "#ad3535", "l2", 10, 176)}
           ${flowLabelVertical(stage3CenterX, (stageBottomY + cascadeTurnY) / 2, config.labels.l3, "#ad3535", "l3", 10, 158)}
           ${flowLabelHorizontalSegment(issueCenterX, stage3CenterX, cascadeTurnY, config.labels.la1, "#ad3535", "la1", 10, 220)}
-          ${flowLabelHorizontalSegment(issueRightX, stage4X, issueCenterY, config.labels.l4, "#ad3535", "l4", 10, 136)}
-          ${flowLabelVertical(stage4CenterX, (stage4BottomY + impactY) / 2, config.labels.l5, "#ad3535", "l5", 10, 160)}
+          ${flowLabelHorizontalSegment(issueRightX, stage4X, issueCenterY, config.labels.l4, "#ad3535", "l4", 10, 196)}
+          ${flowLabelVertical(stage4CenterX, config.labels.l5Y || ((stage4BottomY + impactY) / 2), config.labels.l5, "#ad3535", "l5", 10, 170)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2948,8 +3253,33 @@
     return flowLabelHorizontal((x1 + x2) / 2, lineY, text, color, id, fontSize, wrappedWidth);
   }
 
-  function flowLabelVertical(x, lineCenterY, text, color, id, fontSize, maxWidth) {
+  function flowLabelHorizontalWithNote(x, lineY, text, note, color, id, fontSize, maxWidth, noteMaxWidth, noteOffsetY = 14) {
+    const mainStartSize = Math.max(fontSize || (DIAGRAM_TOKENS.flowLabelFontSize.horizontal || 11.5), DIAGRAM_TOKENS.flowLabelFontSize.horizontal || 11.5);
+    const mainMinSize = DIAGRAM_TOKENS.flowLabelMinFontSize.horizontal || Math.min(mainStartSize, 10.5);
+    const mainMaxWidth = getFlowLabelMaxWidth("horizontal", maxWidth);
+    const mainLayout = fitWrappedText(text, mainMaxWidth, mainStartSize, mainMinSize, 2);
+    const mainLineHeight = mainLayout.fontSize * 1.18;
+    const mainTextY = lineY - 10 - (mainLayout.lines.length > 1 ? ((mainLayout.lines.length - 1) * mainLineHeight) / 2 : 0);
+
+    const noteLayout = fitWrappedText(note, noteMaxWidth || 140, 8.8, 7.4, 2);
+    const noteLineHeight = noteLayout.fontSize * 1.18;
+    const noteY = lineY + noteOffsetY;
+
+    return `
+      <g class="lb lb-h" id="${id}">
+        <text x="${x}" y="${mainTextY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${mainLayout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
+          ${renderTspans(x, mainLayout.lines, mainLineHeight)}
+        </text>
+        <text x="${x}" y="${noteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${noteLayout.fontSize}" font-weight="600" fill="#8a847b" stroke="#fffdf8" stroke-width="5" paint-order="stroke fill" stroke-linejoin="round">
+          ${renderTspans(x, noteLayout.lines, noteLineHeight)}
+        </text>
+      </g>
+    `;
+  }
+
+  function flowLabelVertical(x, lineCenterY, text, color, id, fontSize, maxWidth, options = {}) {
     return flowLabelMarkup(x, lineCenterY, text, color, id, {
+      ...options,
       fontSize,
       maxWidth: getFlowLabelMaxWidth("vertical", maxWidth),
       orientation: "vertical",
