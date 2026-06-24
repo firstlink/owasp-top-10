@@ -95,6 +95,37 @@ test("serves the ASI10 category page", async () => {
   assert.match(html, /scenario-grid-root/);
 });
 
+test("serves the shared briefing page", async () => {
+  const response = await fetch(`${baseUrl}/briefing.html?asi=ASI10&topic=overview`);
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /data-page="briefing"/);
+  assert.match(html, /briefing-root/);
+  assert.match(html, /assets\/briefing-data\.js/);
+  assert.match(html, /assets\/site\.js/);
+});
+
+test("serves the ASI01 overview prototype page", async () => {
+  const response = await fetch(`${baseUrl}/asi01-overview.html`);
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /Agent Goal Hijack/);
+  assert.match(html, /How the hijack happens/);
+  assert.match(html, /Attack Channels/);
+});
+
+test("serves the ASI01 terminology prototype page", async () => {
+  const response = await fetch(`${baseUrl}/asi01-terminology.html`);
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /Terminology Map/);
+  assert.match(html, /Where the terms fit/);
+  assert.match(html, /Indirect prompt injection/);
+});
+
 test("serves a scenario detail page", async () => {
   const response = await fetch(
     `${baseUrl}/scenario.html?asi=ASI01&scenario=asi01-support-refund`
@@ -114,8 +145,9 @@ test("serves the ASI01 defense scenario page", async () => {
   const html = await response.text();
 
   assert.equal(response.status, 200);
+  assert.match(html, /data-page="scenario"/);
   assert.match(html, /scenario-frame/);
-  assert.match(html, /Defense Flow/);
+  assert.match(html, /assets\/site\.js/);
 });
 
 test("serves an ASI05 scenario detail page", async () => {
@@ -269,8 +301,8 @@ test("ships ASI05 content in the shared data asset", async () => {
   const js = await response.text();
 
   assert.equal(response.status, 200);
-  assert.match(js, /id: "ASI05"/);
-  assert.match(js, /href: "\.\/asi05\.html"/);
+  assert.match(js, /"id": "ASI05"/);
+  assert.match(js, /"href": "\.\/asi05\.html"/);
   assert.match(js, /asi05-self-healing-disaster/);
   assert.match(js, /asi05-pharmacy-sql-injection/);
   assert.match(js, /asi05-retail-inventory-shell/);
@@ -281,8 +313,8 @@ test("ships ASI08 content in the shared data asset", async () => {
   const js = await response.text();
 
   assert.equal(response.status, 200);
-  assert.match(js, /id: "ASI08"/);
-  assert.match(js, /href: "\.\/asi08\.html"/);
+  assert.match(js, /"id": "ASI08"/);
+  assert.match(js, /"href": "\.\/asi08\.html"/);
   assert.match(js, /asi08-financial-trading-cascade/);
   assert.match(js, /asi08-retail-overstock-cascade/);
   assert.match(js, /asi08-diagnosis-cascade/);
@@ -293,8 +325,8 @@ test("ships ASI09 content in the shared data asset", async () => {
   const js = await response.text();
 
   assert.equal(response.status, 200);
-  assert.match(js, /id: "ASI09"/);
-  assert.match(js, /href: "\.\/asi09\.html"/);
+  assert.match(js, /"id": "ASI09"/);
+  assert.match(js, /"href": "\.\/asi09\.html"/);
   assert.match(js, /asi09-confident-invoice-fraud/);
   assert.match(js, /asi09-phantom-candidate/);
   assert.match(js, /asi09-medical-overconfidence/);
@@ -305,8 +337,8 @@ test("ships ASI10 content in the shared data asset", async () => {
   const js = await response.text();
 
   assert.equal(response.status, 200);
-  assert.match(js, /id: "ASI10"/);
-  assert.match(js, /href: "\.\/asi10\.html"/);
+  assert.match(js, /"id": "ASI10"/);
+  assert.match(js, /"href": "\.\/asi10\.html"/);
   assert.match(js, /asi10-retail-returns-optimizer/);
   assert.match(js, /asi10-enterprise-self-replication/);
   assert.match(js, /asi10-legal-compliance-gaming/);

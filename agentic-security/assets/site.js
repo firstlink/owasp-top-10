@@ -1,7 +1,13 @@
 (function () {
   const data = window.OWASP_ASI_DATA;
+  const referenceData = window.OWASP_ASI_REFERENCE_DATA || {};
+  const briefingData = window.OWASP_ASI_BRIEFING_DATA || {};
   if (!data) return;
   const ASSET_VERSION = "20260621a";
+  const OFFICIAL_ASI_SOURCE = {
+    href: "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+    label: "OWASP Top 10 for Agentic Applications 2026"
+  };
   const EDGE_LABEL_TOKENS = {
     fontSize: {
       horizontal: 13,
@@ -29,12 +35,22 @@
     return category.scenarios.find((item) => item.id === scenarioId);
   }
 
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function getParams() {
     const params = new URLSearchParams(window.location.search);
     return {
       asi: params.get("asi"),
       scenario: params.get("scenario"),
-      view: params.get("view")
+      view: params.get("view"),
+      topic: params.get("topic")
     };
   }
 
@@ -76,6 +92,266 @@
     `;
   }
 
+  function createBriefingNavCard(category, topic) {
+    const isOverview = topic === "overview";
+    const title = isOverview ? `${category.id} overview` : `${category.id} terminology map`;
+    const description = isOverview
+      ? `Definition, concept flow, and scope for ${category.id}.`
+      : `Key vocabulary placed across the ${category.id} attack chain.`;
+    const href = `./briefing.html?asi=${encodeURIComponent(category.id)}&topic=${encodeURIComponent(topic)}`;
+    const toneClass = isOverview ? " briefing-nav-card-overview" : " briefing-nav-card-terms";
+    const linkLabel = isOverview ? "View overview" : "View terminology map";
+
+    return `
+      <article class="scenario-card briefing-nav-card${toneClass}">
+        <p class="scenario-type">${isOverview ? "Category Overview" : "Terminology Recap"}</p>
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(description)}</p>
+        <a class="card-link" href="${href}">
+          ${escapeHtml(linkLabel)}
+        </a>
+      </article>
+    `;
+  }
+
+  function createOverviewFlow(reference) {
+    const terms = reference && reference.terminology ? reference.terminology : [];
+    const entry = terms[0] ? terms[0].term : "Risk enters the system";
+    const change = terms[1] ? terms[1].term : "Agent behavior changes";
+    const impact = terms[2] ? terms[2].term : "Business impact follows";
+    return [
+      {
+        eyebrow: "1. Entry point",
+        title: entry,
+        detail: "This is where the risky signal, condition, or trust mistake first reaches the workflow."
+      },
+      {
+        eyebrow: "2. What changes",
+        title: change,
+        detail: "The agent, workflow, or human decision path shifts in a way that the system should have constrained."
+      },
+      {
+        eyebrow: "3. Why it matters",
+        title: impact,
+        detail: "The result is a business outcome that looks valid operationally but becomes unsafe, misleading, or damaging."
+      }
+    ];
+  }
+
+  function toneClassFor(kind, tone) {
+    return `${kind}-${tone || "neutral"}`;
+  }
+
+  function renderLegend(items) {
+    if (!items || !items.length) return "";
+    return `
+      <div class="asi-legend" aria-label="Color legend">
+        ${items.map((item) => `
+          <span class="asi-legend-item">
+            <span class="asi-legend-swatch asi-legend-swatch-${escapeHtml(item.tone || "neutral")}" aria-hidden="true"></span>
+            ${escapeHtml(item.label)}
+          </span>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function initTerminologyReveal(root) {
+    const layout = root && root.querySelector("[data-terminology-reveal]");
+    if (!layout) return;
+
+    const cards = Array.from(layout.querySelectorAll(".asi-term-card"));
+    if (!cards.length) return;
+
+    let activeIndex = 0;
+
+    function applyRevealState() {
+      const isComplete = activeIndex >= cards.length;
+      layout.classList.toggle("is-complete", isComplete);
+
+      cards.forEach((card, index) => {
+        const isActive = !isComplete && index === activeIndex;
+        const isUpcoming = !isComplete && index > activeIndex;
+        const isRevealed = isComplete || index < activeIndex;
+
+        card.classList.toggle("is-active", isActive);
+        card.classList.toggle("is-upcoming", isUpcoming);
+        card.classList.toggle("is-revealed", isRevealed);
+        card.setAttribute("aria-hidden", isUpcoming ? "true" : "false");
+      });
+    }
+
+    function advanceReveal() {
+      if (activeIndex < cards.length) {
+        activeIndex += 1;
+        applyRevealState();
+      }
+    }
+
+    layout.addEventListener("click", (event) => {
+      if (event.target.closest("a, button")) return;
+      advanceReveal();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowRight" && event.key !== " " && event.key !== "Enter") return;
+      if (event.target && /input|textarea|select/i.test(event.target.tagName || "")) return;
+      event.preventDefault();
+      advanceReveal();
+    });
+
+    applyRevealState();
+  }
+
+  function createTerminologySection(category, reference) {
+    const briefing = briefingData[category.id] && briefingData[category.id].terminology;
+    if (!briefing || !reference || !reference.terminology || !reference.terminology.length) return "";
+    const termsMarkup = reference.terminology
+      .map((item, index) => `
+        <article class="asi-term-card ${toneClassFor("asi-term-card", briefing.termTones && briefing.termTones[index])}">
+          <p class="asi-term-kicker">${escapeHtml((briefing.termRoles && briefing.termRoles[index]) || "Key term")}</p>
+          <h3>${escapeHtml(item.term)}</h3>
+          <p class="asi-term-detail">${escapeHtml(item.detail)}</p>
+        </article>
+      `)
+      .join("");
+
+    const chainMarkup = briefing.chain
+      .map((node, index) => `
+        <div class="asi-chain-node ${toneClassFor("asi-chain-node", node.tone)}">${escapeHtml(node.title)}</div>
+        ${index < briefing.chain.length - 1 ? '<div class="asi-chain-link" aria-hidden="true">→</div>' : ""}
+      `)
+      .join("");
+
+    return `
+      <div class="asi-briefing-shell">
+        <article class="asi-briefing-panel">
+          <section class="asi-briefing-section" aria-label="${escapeHtml(category.id)} attack chain">
+            <div class="category-section-heading">
+              <p class="eyebrow">Attack Chain</p>
+              <h2>Where the terms fit</h2>
+            </div>
+            <div class="asi-chain-row">
+              ${chainMarkup}
+            </div>
+            ${renderLegend(briefing.legend)}
+          </section>
+
+          <section class="asi-briefing-section" aria-label="${escapeHtml(category.id)} terminology">
+            <div class="asi-terms-layout" data-terminology-reveal>
+              ${termsMarkup}
+            </div>
+          </section>
+
+          <div class="asi-insight-box">
+            <strong>Key insight</strong>
+            <p>${escapeHtml(briefing.keyInsight)}</p>
+          </div>
+        </article>
+      </div>
+    `;
+  }
+
+  function createOverviewSection(category, reference) {
+    const briefing = briefingData[category.id] && briefingData[category.id].overview;
+    if (!briefing || !reference) return "";
+    const flow = briefing.flow || {};
+    const primaryScenario = category && category.scenarios && category.scenarios.length
+      ? category.scenarios[0]
+      : null;
+    const pillarsMarkup = (briefing.whyMatters || [])
+      .map((item) => `
+        <article class="asi-pillar-card">
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.text)}</p>
+        </article>
+      `)
+      .join("");
+
+    const chipsMarkup = (briefing.channels || [])
+      .map((item) => `<span class="asi-chip">${escapeHtml(item)}</span>`)
+      .join("");
+
+    return `
+      <div class="asi-briefing-shell">
+        <article class="asi-briefing-panel asi-overview-panel">
+          <section class="asi-overview-hook" aria-label="${escapeHtml(category.id)} overview focus">
+            <p class="eyebrow">In One Sentence</p>
+            <p class="asi-overview-hook-copy">${escapeHtml(briefing.band)}</p>
+          </section>
+
+          <section class="asi-briefing-section" aria-label="${escapeHtml(category.id)} mechanism">
+            <div class="category-section-heading">
+              <p class="eyebrow">How It Breaks</p>
+              <h2>A normal workflow, wrong decision</h2>
+              <p>${escapeHtml(briefing.mechanismIntro)}</p>
+            </div>
+
+            <div class="asi-mechanism-grid">
+              <article class="asi-mechanism-card ${toneClassFor("asi-mechanism-card", flow.leftTone)}">
+                <p class="asi-node-label">${escapeHtml(flow.leftLabel)}</p>
+                <h3>${escapeHtml(flow.leftTitle)}</h3>
+                <p>${escapeHtml(flow.leftText)}</p>
+              </article>
+              <div class="asi-mechanism-arrow" aria-hidden="true">→</div>
+              <article class="asi-mechanism-card ${toneClassFor("asi-mechanism-card", flow.centerTone)}">
+                <p class="asi-node-label">${escapeHtml(flow.centerLabel)}</p>
+                <h3>${escapeHtml(flow.centerTitle)}</h3>
+                <p>${escapeHtml(flow.centerText)}</p>
+              </article>
+              <div class="asi-mechanism-arrow" aria-hidden="true">←</div>
+              <article class="asi-mechanism-card ${toneClassFor("asi-mechanism-card", flow.rightTone)}">
+                <p class="asi-node-label">${escapeHtml(flow.rightLabel)}</p>
+                <h3>${escapeHtml(flow.rightTitle)}</h3>
+                <p>${escapeHtml(flow.rightText)}</p>
+              </article>
+            </div>
+
+            <article class="asi-outcome-card ${toneClassFor("asi-outcome-card", flow.outcomeTone)}">
+              <p class="asi-node-label">${escapeHtml(flow.outcomeLabel)}</p>
+              <h3>${escapeHtml(flow.outcomeTitle)}</h3>
+              <p>${escapeHtml(flow.outcomeText)}</p>
+            </article>
+
+            <p class="asi-overview-caption"><strong>${escapeHtml(flow.boundaryTitle)}:</strong> ${escapeHtml(flow.boundaryText)}</p>
+          </section>
+
+          <section class="asi-briefing-section" aria-label="${escapeHtml(category.id)} significance">
+            <div class="category-section-heading">
+              <p class="eyebrow">Why This Matters</p>
+              <h2>Why this is easy to miss</h2>
+            </div>
+            <div class="asi-pillars-grid">
+              ${pillarsMarkup}
+            </div>
+          </section>
+
+          <section class="asi-briefing-section" aria-label="${escapeHtml(category.id)} scope">
+            <div class="category-section-heading">
+              <p class="eyebrow">Where It Enters</p>
+              <h2>Typical entry points</h2>
+            </div>
+            <div class="asi-chip-row">
+              ${chipsMarkup}
+            </div>
+          </section>
+
+          <section class="asi-overview-bridge" aria-label="${escapeHtml(category.id)} scenario handoff">
+            <div class="asi-overview-bridge-copy">
+              <p class="eyebrow">Next</p>
+              <h2>Watch it happen in a real workflow</h2>
+              <p>${primaryScenario ? escapeHtml(primaryScenario.description) : "Open the first scenario to see how this category shows up in a real workflow."}</p>
+            </div>
+            <div class="asi-overview-bridge-actions">
+              ${primaryScenario && primaryScenario.href ? `<a class="card-link" href="${primaryScenario.href}">Open first scenario</a>` : ""}
+              <a class="briefing-card-source" href="${OFFICIAL_ASI_SOURCE.href}" target="_blank" rel="noreferrer">Source: ${escapeHtml(OFFICIAL_ASI_SOURCE.label)}</a>
+            </div>
+          </section>
+        </article>
+      </div>
+    `;
+  }
+
   function renderHome() {
     const grid = document.getElementById("asi-grid-root");
     if (grid) {
@@ -92,10 +368,96 @@
     if (summary) summary.textContent = category.summary;
 
     const scenarioGrid = document.getElementById("scenario-grid-root");
+    const scenarioSection = scenarioGrid ? scenarioGrid.closest(".section") : null;
+    const briefingGrid = document.getElementById("category-briefing-grid");
+    let activeBriefingGrid = briefingGrid;
+    if (!activeBriefingGrid && scenarioSection) {
+      const briefingSection = document.createElement("section");
+      briefingSection.className = "section section-plain category-briefing-section";
+      briefingSection.innerHTML = `
+        <div class="category-section-heading">
+          <p class="eyebrow">Category Pages</p>
+          <h2>Overview and terminology</h2>
+          <p>Two supporting pages provide the category summary and the terminology map.</p>
+        </div>
+        <div class="scenario-grid" id="category-briefing-grid"></div>
+      `;
+      scenarioSection.parentNode.insertBefore(briefingSection, scenarioSection);
+      activeBriefingGrid = briefingSection.querySelector("#category-briefing-grid");
+    }
+    if (activeBriefingGrid) {
+      activeBriefingGrid.innerHTML = [
+        createBriefingNavCard(category, "overview"),
+        createBriefingNavCard(category, "terminology")
+      ].join("");
+    }
+
+    let scenarioHeading = document.getElementById("category-scenario-heading");
+    if (!scenarioHeading && scenarioGrid) {
+      scenarioHeading = document.createElement("div");
+      scenarioHeading.id = "category-scenario-heading";
+      scenarioHeading.className = "category-section-heading";
+      scenarioGrid.parentNode.insertBefore(scenarioHeading, scenarioGrid);
+    }
+    if (scenarioHeading) {
+      scenarioHeading.innerHTML = `
+        <p class="eyebrow">Scenario Walkthroughs</p>
+        <h2>Open the scenarios for ${escapeHtml(category.id)}</h2>
+        <p>Each scenario below shows how this risk can appear inside a realistic workflow.</p>
+      `;
+    }
+
     if (scenarioGrid && category.scenarios) {
       scenarioGrid.innerHTML = category.scenarios
         .map((scenario) => createScenarioCard(category, scenario))
         .join("");
+    }
+  }
+
+  function renderBriefing() {
+    const { asi, topic } = getParams();
+    const category = getCategory(asi);
+    const reference = referenceData[asi];
+    const briefing = briefingData[asi];
+    if (!category || !reference || !briefing) return;
+
+    const topicName = topic === "terminology" ? "Terminology Recap" : "Category Overview";
+    document.title = `${category.id} · ${topicName}`;
+
+    const asiLink = document.getElementById("briefing-asi-link");
+    const topicLabel = document.getElementById("briefing-topic-label");
+    const topicLabelMobile = document.getElementById("briefing-topic-label-mobile");
+    const title = document.getElementById("briefing-title");
+    const intro = document.getElementById("briefing-intro");
+    const root = document.getElementById("briefing-root");
+
+    if (asiLink) {
+      asiLink.textContent = category.id;
+      asiLink.href = category.href;
+    }
+    if (topicLabel) topicLabel.textContent = topicName;
+    if (topicLabelMobile) {
+      topicLabelMobile.textContent = "";
+      topicLabelMobile.hidden = true;
+    }
+    if (title) {
+      title.textContent = topic === "terminology"
+        ? "Terminology Map"
+        : category.title;
+    }
+    if (intro) {
+      intro.textContent = topic === "terminology"
+        ? briefing.terminology.hero
+        : briefing.overview.hero;
+    }
+    if (root) {
+      root.innerHTML = topic === "terminology"
+        ? createTerminologySection(category, reference)
+        : createOverviewSection(category, reference);
+
+      if (topic === "terminology") {
+        initTerminologyReveal(root);
+      }
     }
   }
 
@@ -626,5 +988,6 @@
 
   if (page === "home") renderHome();
   if (page === "category") renderCategory();
+  if (page === "briefing") renderBriefing();
   if (page === "scenario") renderScenario();
 })();

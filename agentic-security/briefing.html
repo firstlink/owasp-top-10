@@ -3,30 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ASI01 · Agent Goal Hijack</title>
+<title>ASI Briefing</title>
 <link rel="stylesheet" href="./assets/styles.css?v=20260618p">
 </head>
-<body data-page="category" data-asi-id="ASI01">
+<body data-page="briefing">
   <div class="site-shell">
     <header class="page-hero page-hero-simple">
       <nav class="breadcrumbs">
         <a href="./index.html">Top 10</a>
         <span>/</span>
-        <span>ASI01</span>
+        <a href="#" id="briefing-asi-link">ASI</a>
+        <span>/</span>
+        <span id="briefing-topic-label">Briefing</span>
       </nav>
-      <p class="eyebrow">ASI01</p>
-      <h1>Agent Goal Hijack</h1>
-      <p class="hero-copy" id="asi-summary"></p>
+      <p class="eyebrow" id="briefing-topic-label-mobile">ASI Briefing</p>
+      <h1 id="briefing-title">ASI briefing</h1>
+      <p class="hero-copy" id="briefing-intro"></p>
     </header>
 
     <main>
       <section class="section section-plain">
-        <div class="scenario-grid" id="scenario-grid-root"></div>
+        <div id="briefing-root"></div>
       </section>
     </main>
   </div>
 
   <script src="./assets/asi-data.js?v=20260618p"></script>
+  <script src="./assets/briefing-data.js?v=20260624f"></script>
   <script src="./assets/site.js?v=20260624e"></script>
 </body>
 </html>

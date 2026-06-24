@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASI01 · Terminology Recap</title>
+<link rel="stylesheet" href="./assets/styles.css?v=20260618p">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="page-hero page-hero-simple">
+      <nav class="breadcrumbs">
+        <a href="./index.html">Top 10</a>
+        <span>/</span>
+        <a href="./asi01.html">ASI01</a>
+        <span>/</span>
+        <span>Terminology</span>
+      </nav>
+      <p class="eyebrow">OWASP ASI01</p>
+      <h1>Terminology Map</h1>
+      <p class="hero-copy">Six key terms in the ASI01 attack chain.</p>
+    </header>
+
+    <main class="asi-briefing-shell">
+      <section class="asi-briefing-panel">
+        <div class="asi-briefing-section">
+          <div class="category-section-heading">
+            <p class="eyebrow">Attack Chain</p>
+            <h2>Where the terms fit</h2>
+          </div>
+
+          <div class="asi-chain-row">
+            <div class="asi-chain-node asi-chain-node-danger-soft">External input</div>
+            <div class="asi-chain-link" aria-hidden="true">→</div>
+            <div class="asi-chain-node asi-chain-node-danger-soft">Boundary crossing</div>
+            <div class="asi-chain-link" aria-hidden="true">→</div>
+            <div class="asi-chain-node asi-chain-node-primary">Reasoning loop</div>
+            <div class="asi-chain-link" aria-hidden="true">→</div>
+            <div class="asi-chain-node asi-chain-node-danger">Goal hijacked</div>
+          </div>
+
+          <div class="asi-legend" aria-label="Color guide">
+            <span class="asi-legend-item">
+              <span class="asi-legend-swatch asi-legend-swatch-danger-soft"></span>
+              Untrusted input
+            </span>
+            <span class="asi-legend-item">
+              <span class="asi-legend-swatch asi-legend-swatch-primary"></span>
+              System flow
+            </span>
+            <span class="asi-legend-item">
+              <span class="asi-legend-swatch asi-legend-swatch-danger"></span>
+              Harmful outcome
+            </span>
+          </div>
+        </div>
+
+        <div class="asi-terms-layout">
+          <article class="asi-term-card asi-term-card-danger-soft">
+            <p class="asi-term-kicker">Entry point</p>
+            <h3>Indirect prompt injection</h3>
+            <p>Attacker content arrives as normal data and is interpreted like an instruction.</p>
+          </article>
+
+          <article class="asi-term-card asi-term-card-danger-soft">
+            <p class="asi-term-kicker">Boundary</p>
+            <h3>External untrusted input boundary</h3>
+            <p>Where external material enters the agent's working context.</p>
+          </article>
+
+          <article class="asi-term-card asi-term-card-danger">
+            <p class="asi-term-kicker">Failure point</p>
+            <h3>Trust boundary failure</h3>
+            <p>The agent stops separating trusted system guidance from untrusted external content.</p>
+          </article>
+
+          <article class="asi-term-card asi-term-card-primary">
+            <p class="asi-term-kicker">Core mechanism</p>
+            <h3>Agentic reasoning loop</h3>
+            <p>The read-decide-act cycle where the agent interprets context and takes action.</p>
+          </article>
+
+          <article class="asi-term-card asi-term-card-danger">
+            <p class="asi-term-kicker">Category outcome</p>
+            <h3>Agent goal hijack</h3>
+            <p>The business objective is silently replaced or redirected.</p>
+          </article>
+
+          <article class="asi-term-card asi-term-card-danger">
+            <p class="asi-term-kicker">Decision impact</p>
+            <h3>Control flow manipulation</h3>
+            <p>The next action changes because the decision path has already been corrupted.</p>
+          </article>
+        </div>
+
+        <aside class="asi-insight-box">
+          <strong>Key insight</strong>
+          <p>The injection happens before the reasoning loop finishes. By the time the agent decides, the goal is already wrong.</p>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

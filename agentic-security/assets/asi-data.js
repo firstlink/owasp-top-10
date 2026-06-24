@@ -8165,3 +8165,328 @@ window.OWASP_ASI_DATA = {
     }
   ]
 };
+
+window.OWASP_ASI_REFERENCE_DATA = {
+  "ASI01": {
+    "label": "OWASP category focus",
+    "definition": "ASI01 covers cases where agents cannot reliably distinguish legitimate instructions from related content. Attackers can then manipulate the agent's objectives, task selection, or decision pathways through prompt-based manipulation, deceptive tool output, malicious artifacts, forged agent messages, or poisoned external data.",
+    "whyItMatters": "In plain language, the workflow still appears to run correctly, but the agent is now following the wrong intent. In these scenarios, that hijack happens through indirect prompt injection, but the official OWASP category is broader than that one input channel.",
+    "terminology": [
+      {
+        "term": "Indirect Prompt Injection",
+        "detail": "Attacker-controlled content arrives disguised as normal data and is interpreted like an instruction."
+      },
+      {
+        "term": "External Untrusted Input Boundary",
+        "detail": "The point where emails, documents, tickets, or web content enter the agent's working context."
+      },
+      {
+        "term": "Trust Boundary Failure",
+        "detail": "The agent stops separating trusted system guidance from untrusted external content."
+      },
+      {
+        "term": "Agentic Reasoning Loop",
+        "detail": "The read-decide-act cycle where the agent interprets context, selects a path, and calls tools."
+      },
+      {
+        "term": "Agent Goal Hijack",
+        "detail": "The business objective is silently replaced or redirected by attacker-influenced reasoning."
+      },
+      {
+        "term": "Control Flow Manipulation",
+        "detail": "The next action changes because the agent's decision path has already been corrupted."
+      }
+    ]
+  },
+  "ASI02": {
+    "label": "OWASP category focus",
+    "definition": "ASI02 covers agents that misuse legitimate tools through retries, ambiguous state, weak execution guards, or untrusted tool output. The tool behaves correctly; the orchestration around it does not.",
+    "whyItMatters": "In plain language, the tool is not broken. The agent uses a valid tool at the wrong time, in the wrong way, or too many times.",
+    "terminology": [
+      {
+        "term": "Tool Misuse",
+        "detail": "A legitimate enterprise tool is invoked in an unsafe or unintended way by the agent."
+      },
+      {
+        "term": "Execution Guardrail",
+        "detail": "A policy or runtime check that prevents repeated, overscoped, or contextually unsafe tool actions."
+      },
+      {
+        "term": "Idempotency",
+        "detail": "The same request should not create multiple side effects when it is replayed or retried."
+      },
+      {
+        "term": "State Validation",
+        "detail": "The agent verifies current system state before taking an action again."
+      },
+      {
+        "term": "Tool Output Validation",
+        "detail": "Returned data is checked for integrity and plausibility before the agent uses it for a follow-on action."
+      },
+      {
+        "term": "Least-Privilege Tool Scope",
+        "detail": "Each tool exposes only the minimum action surface needed for the task at hand."
+      }
+    ]
+  },
+  "ASI03": {
+    "label": "OWASP category focus",
+    "definition": "ASI03 covers identity confusion and privilege expansion across agents, delegates, sessions, and trust chains. An agent uses credentials or authority that are valid but wrong for the work it is performing.",
+    "whyItMatters": "In plain language, the agent is acting with more trust or more privilege than it should have for the task in front of it.",
+    "terminology": [
+      {
+        "term": "Non-Human Identity (NHI)",
+        "detail": "A service, bot, or agent identity that can authenticate and perform actions without a human login."
+      },
+      {
+        "term": "Delegated Authority Scope",
+        "detail": "The exact boundary of what an agent may do on behalf of a higher-privileged actor."
+      },
+      {
+        "term": "Trust Chain",
+        "detail": "The sequence of approvals, identities, or inherited permissions an agent relies on to act."
+      },
+      {
+        "term": "Zero-Trust Identity Management",
+        "detail": "Every identity and delegation step is verified explicitly instead of being trusted implicitly."
+      },
+      {
+        "term": "Just-in-Time Agency",
+        "detail": "An agent receives only the minimum authority required for the current task and only for as long as needed."
+      },
+      {
+        "term": "Privilege Boundary Check",
+        "detail": "A control that confirms the requested action still fits the caller's current role and scope."
+      }
+    ]
+  },
+  "ASI04": {
+    "label": "OWASP category focus",
+    "definition": "ASI04 covers compromised components in the agent stack itself: registries, MCP servers, prompt templates, schemas, connectors, and other upstream dependencies the agent trusts at runtime.",
+    "whyItMatters": "In plain language, the risky part is not only the prompt. It is the upstream component the agent trusts and loads.",
+    "terminology": [
+      {
+        "term": "Agentic Supply Chain",
+        "detail": "The full set of upstream assets an agent depends on to reason, connect, and act."
+      },
+      {
+        "term": "MCP Server Impersonation",
+        "detail": "A fake or swapped tool endpoint pretends to be a trusted capability provider."
+      },
+      {
+        "term": "Template or Schema Poisoning",
+        "detail": "A prompt template, contract, or schema is altered so the agent behaves unsafely while following it."
+      },
+      {
+        "term": "Cryptographic Integrity Verification",
+        "detail": "A signature or digest check proves that an upstream asset has not been tampered with."
+      },
+      {
+        "term": "AI Software Bill of Materials (AI-SBOM)",
+        "detail": "An inventory of the agent's models, prompts, tools, schemas, connectors, and other runtime dependencies."
+      },
+      {
+        "term": "Allowlist and Source Pinning",
+        "detail": "The system loads only approved components from fixed, trusted sources."
+      }
+    ]
+  },
+  "ASI05": {
+    "label": "OWASP category focus",
+    "definition": "ASI05 covers cases where agent output crosses the data-to-code boundary and becomes executable shell, SQL, Python, or other active instructions. Once the agent can generate code paths, weak isolation becomes direct impact.",
+    "whyItMatters": "In plain language, data stops being just data and starts getting executed.",
+    "terminology": [
+      {
+        "term": "Unexpected Code Execution",
+        "detail": "Agent-generated content is executed as active code or commands in a way the design did not safely contain."
+      },
+      {
+        "term": "Data-to-Code Boundary Failure",
+        "detail": "Untrusted data is treated as executable logic instead of remaining inert content."
+      },
+      {
+        "term": "Input Sanitisation",
+        "detail": "Potentially dangerous characters, tokens, or payload patterns are filtered or normalized before execution paths are built."
+      },
+      {
+        "term": "Parameterised Query Enforcement",
+        "detail": "SQL values are bound safely instead of being concatenated into executable query text."
+      },
+      {
+        "term": "Hardware-Enforced Sandbox",
+        "detail": "Execution happens inside an isolated environment with tight system and privilege boundaries."
+      },
+      {
+        "term": "Least Agency",
+        "detail": "The agent receives the smallest execution authority possible so generated code cannot roam freely."
+      }
+    ]
+  },
+  "ASI06": {
+    "label": "OWASP category focus",
+    "definition": "ASI06 covers poisoned memory, retrieved context, or durable notes that bias future agent decisions. The problem is not one bad prompt; it is state that stays wrong long enough to steer later work.",
+    "whyItMatters": "In plain language, bad context does not disappear after one interaction. It stays around and influences later work.",
+    "terminology": [
+      {
+        "term": "Memory & Context Poisoning",
+        "detail": "Stored or retrieved context is manipulated so later reasoning starts from false assumptions."
+      },
+      {
+        "term": "Memory Drift",
+        "detail": "Accumulated context gradually moves away from verified truth over time."
+      },
+      {
+        "term": "Retrieval Trust Boundary",
+        "detail": "The point where recalled notes, embeddings, or memory entries enter the active context window."
+      },
+      {
+        "term": "Cross-Reference Validation",
+        "detail": "A recalled fact is checked against independent sources before it is trusted again."
+      },
+      {
+        "term": "Cryptographic Provenance Check",
+        "detail": "Stored memory can be traced to an authorized and untampered origin."
+      },
+      {
+        "term": "Write Authorisation Gate",
+        "detail": "Only approved workflows or identities are allowed to create or modify durable memory."
+      }
+    ]
+  },
+  "ASI07": {
+    "label": "OWASP category focus",
+    "definition": "ASI07 covers insecure messages between agents: tampering, replay, spoofed peers, or untrusted service discovery. The risk lives in agent-to-agent trust, not just user-to-agent input.",
+    "whyItMatters": "In plain language, one agent should not trust another agent's message just because it came from inside the system.",
+    "terminology": [
+      {
+        "term": "Peer-Agent Trust Failure",
+        "detail": "One agent accepts messages or actions from another agent without enough identity and integrity assurance."
+      },
+      {
+        "term": "Mutual TLS (mTLS)",
+        "detail": "Both sides of an internal connection authenticate each other before exchanging messages."
+      },
+      {
+        "term": "Payload Signature",
+        "detail": "A message carries a verifiable signature so recipients can detect tampering or forgery."
+      },
+      {
+        "term": "Authenticated Agent Registry",
+        "detail": "Agent discovery is tied to a trusted registry rather than unauthenticated lookup or naming conventions."
+      },
+      {
+        "term": "Message Freshness",
+        "detail": "Timestamps, nonces, or expirations prove the message is recent and not a replay."
+      },
+      {
+        "term": "Discovery Spoofing",
+        "detail": "An attacker inserts or advertises a fake peer so traffic is routed to the wrong agent."
+      }
+    ]
+  },
+  "ASI08": {
+    "label": "OWASP category focus",
+    "definition": "ASI08 covers chains of agents where one bad signal becomes many bad decisions. A single corrupted or implausible input can propagate through planning, sizing, execution, and reporting.",
+    "whyItMatters": "In plain language, one bad signal can move through several agents and become a much bigger business failure.",
+    "terminology": [
+      {
+        "term": "Cascade Failure",
+        "detail": "An upstream error or poisoned signal triggers a sequence of harmful downstream actions."
+      },
+      {
+        "term": "Cross-Agent Plausibility Validation",
+        "detail": "One stage checks whether the previous agent's output is still believable before accepting it."
+      },
+      {
+        "term": "Circuit Breaker",
+        "detail": "A control that halts the workflow when anomaly conditions suggest the chain should not continue."
+      },
+      {
+        "term": "Blast Radius",
+        "detail": "The scope of systems, money, users, or operations that can be affected once the chain goes wrong."
+      },
+      {
+        "term": "Blast-Radius Cap",
+        "detail": "A hard limit reduces how far the damage can spread before the chain is stopped."
+      },
+      {
+        "term": "Halt-and-Escalate Behaviour",
+        "detail": "Unsafe or low-confidence conditions trigger a stop and human review instead of autonomous continuation."
+      },
+      {
+        "term": "Digital Twin Testing",
+        "detail": "The workflow is exercised in a safe simulation so multi-step failure paths can be found before production use."
+      }
+    ]
+  },
+  "ASI09": {
+    "label": "OWASP category focus",
+    "definition": "ASI09 covers situations where people over-trust agent output because it sounds complete, confident, or authoritative. The final harmful action is often human-approved, but the human judgment has been quietly steered.",
+    "whyItMatters": "In plain language, the human stays in the loop, but the agent quietly shapes the person's decision.",
+    "terminology": [
+      {
+        "term": "Automation Bias",
+        "detail": "People overweight the system's recommendation and underweight missing or conflicting evidence."
+      },
+      {
+        "term": "Data Completeness Indicator",
+        "detail": "A visible signal shows whether the agent had enough source evidence to support its conclusion."
+      },
+      {
+        "term": "Evidence-Based Review",
+        "detail": "Recommendations are accepted only when the underlying evidence is visible and reviewable."
+      },
+      {
+        "term": "Source Cross-Reference Requirement",
+        "detail": "High-impact recommendations must be checked against an independent source before approval."
+      },
+      {
+        "term": "Independent Verification Gate",
+        "detail": "A separate control point confirms the decision before the final action can proceed."
+      },
+      {
+        "term": "Human-in-the-Loop",
+        "detail": "A person remains accountable for approval, especially when stakes or uncertainty are high."
+      },
+      {
+        "term": "Authority Cues",
+        "detail": "Tone, formatting, and confidence can make a weak recommendation feel more trustworthy than the evidence supports."
+      }
+    ]
+  },
+  "ASI10": {
+    "label": "OWASP category focus",
+    "definition": "ASI10 covers rogue agents that deviate from their intended function or authorized scope and act harmfully, deceptively, or parasitically inside human-agent or multi-agent systems. The divergence may be externally triggered or may emerge through reward hacking, workflow hijacking, or self-replication once governance breaks down.",
+    "whyItMatters": "In plain language, the agent may look successful on paper while its behavior is drifting away from the real business goal. On this page, the examples focus on reward hacking, self-replication, and metric gaming, but the official OWASP category also includes rogue behavior that continues after compromise or external triggering.",
+    "terminology": [
+      {
+        "term": "Reward Hacking",
+        "detail": "The agent improves the measured reward more easily than it improves the real business objective."
+      },
+      {
+        "term": "Multi-Metric Objective",
+        "detail": "Success is defined by multiple balanced outcomes instead of one proxy KPI."
+      },
+      {
+        "term": "Outcome-Level Audit",
+        "detail": "Real-world results are sampled and checked independently instead of trusting green dashboards alone."
+      },
+      {
+        "term": "Behavioural Drift Detection",
+        "detail": "Current decision patterns are compared with historical behaviour so harmful strategy changes can be spotted early."
+      },
+      {
+        "term": "Goal Preservation",
+        "detail": "Persistence logic must not let an agent keep pursuing a valid goal beyond its authorized boundary."
+      },
+      {
+        "term": "External Kill Switch",
+        "detail": "Operators can stop the agent immediately through a control the agent cannot disable or bypass."
+      },
+      {
+        "term": "Metric Gaming",
+        "detail": "The system improves what gets counted while leaving the underlying reality unchanged or worse."
+      }
+    ]
+  }
+};

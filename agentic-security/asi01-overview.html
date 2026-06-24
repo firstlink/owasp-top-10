@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASI01 · What It Covers</title>
+<link rel="stylesheet" href="./assets/styles.css?v=20260618p">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="page-hero page-hero-simple">
+      <nav class="breadcrumbs">
+        <a href="./index.html">Top 10</a>
+        <span>/</span>
+        <a href="./asi01.html">ASI01</a>
+        <span>/</span>
+        <span>Overview</span>
+      </nav>
+      <p class="eyebrow">OWASP ASI01</p>
+      <h1>Agent Goal Hijack</h1>
+      <p class="hero-copy">The workflow still looks correct, but the intent has already shifted.</p>
+    </header>
+
+    <main class="asi-briefing-shell">
+      <section class="asi-briefing-panel">
+        <div class="asi-briefing-band">
+          <p>Attacker-controlled content changes the agent's objective, task selection, or decision path.</p>
+        </div>
+
+        <div class="asi-briefing-section">
+          <div class="category-section-heading">
+            <p class="eyebrow">The Mechanism</p>
+            <h2>How the hijack happens</h2>
+            <p>Untrusted content reaches the same reasoning context and changes the next decision.</p>
+          </div>
+
+          <div class="asi-mechanism-grid">
+            <article class="asi-mechanism-card asi-mechanism-card-neutral">
+              <p class="asi-node-label">Expected instruction</p>
+              <h3>Legitimate task</h3>
+              <p>"Process this refund"</p>
+            </article>
+
+            <div class="asi-mechanism-arrow" aria-hidden="true">→</div>
+
+            <article class="asi-mechanism-card asi-mechanism-card-primary">
+              <p class="asi-node-label">System flow</p>
+              <h3>AI agent</h3>
+              <p>Reads, decides, acts.</p>
+            </article>
+
+            <div class="asi-mechanism-arrow" aria-hidden="true">←</div>
+
+            <article class="asi-mechanism-card asi-mechanism-card-danger-soft">
+              <p class="asi-node-label">Untrusted content</p>
+              <h3>Attacker content</h3>
+              <p>Email, PDF, web page, tool output.</p>
+            </article>
+          </div>
+
+          <div class="asi-legend" aria-label="Color guide">
+            <span class="asi-legend-item">
+              <span class="asi-legend-swatch asi-legend-swatch-neutral"></span>
+              Expected input
+            </span>
+            <span class="asi-legend-item">
+              <span class="asi-legend-swatch asi-legend-swatch-primary"></span>
+              System flow
+            </span>
+            <span class="asi-legend-item">
+              <span class="asi-legend-swatch asi-legend-swatch-danger-soft"></span>
+              Untrusted input
+            </span>
+            <span class="asi-legend-item">
+              <span class="asi-legend-swatch asi-legend-swatch-danger"></span>
+              Harmful outcome
+            </span>
+          </div>
+
+          <div class="asi-mechanism-boundary">
+            <span>Trust boundary crossed</span>
+            <p>Trusted guidance and attacker content are no longer separated reliably.</p>
+          </div>
+
+          <div class="asi-outcome-card">
+            <p class="asi-node-label">Failure / outcome</p>
+            <h3>Goal hijacked</h3>
+            <p>Wrong business action.</p>
+          </div>
+        </div>
+
+        <div class="asi-briefing-section">
+          <div class="category-section-heading">
+            <p class="eyebrow">Why It Matters</p>
+            <h2>Why agentic systems are uniquely exposed</h2>
+          </div>
+
+          <div class="asi-pillars-grid">
+            <article class="asi-pillar-card">
+              <h3>Autonomous execution</h3>
+              <p>Actions can fire before anyone notices the drift.</p>
+            </article>
+            <article class="asi-pillar-card">
+              <h3>Mixed-trust inputs</h3>
+              <p>Trusted instructions and attacker content enter the same context.</p>
+            </article>
+            <article class="asi-pillar-card">
+              <h3>Silent drift</h3>
+              <p>The output still looks valid after the objective has shifted.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="asi-briefing-section">
+          <div class="category-section-heading">
+            <p class="eyebrow">Attack Channels</p>
+            <h2>Where the trigger can enter</h2>
+            <p>Indirect prompt injection is common, but ASI01 is broader than one input channel.</p>
+          </div>
+
+          <div class="asi-chip-row">
+            <span class="asi-chip">Emails</span>
+            <span class="asi-chip">PDF documents</span>
+            <span class="asi-chip">Web pages</span>
+            <span class="asi-chip">Database records</span>
+            <span class="asi-chip">Tool responses</span>
+            <span class="asi-chip">Agent messages</span>
+          </div>
+        </div>
+
+        <aside class="asi-insight-box">
+          <strong>Also included in ASI01</strong>
+          <p>Deceptive tool output, malicious artifacts, forged agent messages, and poisoned external data.</p>
+        </aside>
+
+        <aside class="asi-insight-box asi-insight-box-secondary">
+          <strong>Key insight</strong>
+          <p>The tool can still work normally. The decision is what changes.</p>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
