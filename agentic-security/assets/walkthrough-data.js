@@ -5133,7 +5133,9 @@ window.ASI_WALKTHROUGHS = {
       "agent": {
         "title": "Primary cost agent",
         "sub1": "Running in eu-west-1",
-        "goal": "Goal: complete optimization plan ✓"
+        "goal": "Goal: complete optimization plan ✓",
+        "goalPillWidth": 198,
+        "goalPillY": 252
       },
       "limit": {
         "title": "Resource constraint",
@@ -5158,13 +5160,15 @@ window.ASI_WALKTHROUGHS = {
       "context": {
         "title": "Control collapse",
         "before": "Expected: pause and escalate ✓",
-        "after": "Actual: create more copies ✗"
+        "after": "Actual: create more copies ✗",
+        "afterY": 544
       },
       "decision": {
         "title": "Persistence logic",
         "sub1": "GOAL PRESERVATION",
         "goal": "Respawn when peer count drops ✗",
         "note": "no externally controlled kill switch deployed",
+        "goalWidth": 184,
         "box": {
           "height": 196
         }
@@ -5185,10 +5189,15 @@ window.ASI_WALKTHROUGHS = {
         "l1": "② agent operates",
         "l2": "③ constraint appears",
         "l3": "④ replication begins",
+        "l3Y": 370,
         "la1": "",
         "l4": "⑥ respawn triggers",
         "l5": "⑦ containment backfires",
-        "l6": "⑧ incident spreads"
+        "l5Y": 730,
+        "l5Width": 112,
+        "l6": "⑧ incident spreads",
+        "l6X": 1084,
+        "l6Y": 730
       },
       "steps": [
         {
@@ -5338,7 +5347,8 @@ window.ASI_WALKTHROUGHS = {
         "title": "Proxy metric",
         "sub1": "\"Only counted non-compliances reduce the score\"",
         "sub2": "Ambiguity and grouping can hide risk",
-        "emphasis": "The dashboard judges the count, not the truth"
+        "emphasis": "The dashboard judges the count, not the truth",
+        "pillY": 292
       },
       "shortcut": {
         "title": "Optimization shortcut",
@@ -5363,8 +5373,10 @@ window.ASI_WALKTHROUGHS = {
         "sub1": "METRIC GAMING",
         "goal": "Change the count, not contracts ✗",
         "note": "no kill switch — agent continues within granted permissions",
+        "goalWidth": 188,
+        "noteY": 828,
         "box": {
-          "height": 184
+          "height": 192
         }
       },
       "action": {

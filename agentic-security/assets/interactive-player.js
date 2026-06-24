@@ -985,6 +985,7 @@
     const contextDecisionBridgeY = config.context.connectorY || contextMiddleY;
     const middleSub2Y = config.metric.sub2Y || (middle.y + 106);
     const middlePillCenterY = config.metric.pillY || (middle.y + 148);
+    const middlePillWidth = config.metric.pillWidth || 208;
     const zoneNoteX = zone.x + zone.width - 28;
     const zoneNoteY = zone.y + zone.height - 28;
 
@@ -1029,7 +1030,8 @@
       : null;
 
     const decisionTitle = fitSingleLine(config.decision.title, 190, 18, 14);
-    const decisionGoal = fitWrappedText(config.decision.goal, 184, 12, 10, 2);
+    const decisionGoalWidth = config.decision.goalWidth || 164;
+    const decisionGoal = fitWrappedText(config.decision.goal, decisionGoalWidth - 20, 12, 10, 2);
     const decisionNote = !config.decision.noteOutside && config.decision.note
       ? fitWrappedText(config.decision.note, 196, 10.4, 8.8, 2)
       : null;
@@ -1117,7 +1119,7 @@
             <text x="${middleCenterX}" y="${middle.y + 48}" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(metricTitle.text)}</text>
             <text x="${middleCenterX}" y="${middle.y + 80}" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricSub1.fontSize}" font-weight="800" fill="#a32d2d">${renderTspans(middleCenterX, metricSub1.lines, metricSub1.fontSize * 1.14)}</text>
             <text x="${middleCenterX}" y="${middleSub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricSub2.fontSize}" fill="#b66868">${renderTspans(middleCenterX, metricSub2.lines, metricSub2.fontSize * 1.16)}</text>
-            <rect x="${middleCenterX - 104}" y="${middlePillCenterY - (metricEmphasis.lines.length > 1 ? 22 : 15)}" width="208" height="${metricEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
+            <rect x="${middleCenterX - (middlePillWidth / 2)}" y="${middlePillCenterY - (metricEmphasis.lines.length > 1 ? 22 : 15)}" width="${middlePillWidth}" height="${metricEmphasis.lines.length > 1 ? 44 : 30}" rx="10" fill="#f7dfdf" stroke="#e7b1b1" stroke-width="1.1"/>
             <text x="${middleCenterX}" y="${metricEmphasis.lines.length > 1 ? middlePillCenterY - 6 : middlePillCenterY + 4}" text-anchor="middle" font-family="${getFontStack()}" font-size="${metricEmphasis.fontSize}" font-weight="700" fill="#7d2626">${renderTspans(middleCenterX, metricEmphasis.lines, metricEmphasis.fontSize * 1.12)}</text>
           </g>
 
@@ -1151,9 +1153,9 @@
             <rect x="${decision.x}" y="${decision.y}" width="${decision.width}" height="${decision.height}" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <text x="${decisionCenterX}" y="722" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(decisionTitle.text)}</text>
             <text x="${decisionCenterX}" y="752" text-anchor="middle" font-family="${getFontStack()}" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.decision.sub1)}</text>
-            <rect x="358" y="770" width="164" height="${decisionGoal.lines.length > 1 ? 44 : 32}" rx="10" fill="#f8dede" stroke="#efb0b0" stroke-width="1.2"/>
+            <rect x="${decisionCenterX - (decisionGoalWidth / 2)}" y="770" width="${decisionGoalWidth}" height="${decisionGoal.lines.length > 1 ? 44 : 32}" rx="10" fill="#f8dede" stroke="#efb0b0" stroke-width="1.2"/>
             <text x="${decisionCenterX}" y="${decisionGoal.lines.length > 1 ? 786 : 792}" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionGoal.fontSize}" font-weight="800" fill="#7d2626">${renderTspans(decisionCenterX, decisionGoal.lines, decisionGoal.fontSize * 1.14)}</text>
-            ${decisionNote ? `<text x="${decisionCenterX}" y="820" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionNote.fontSize}" fill="#9a7748">${renderTspans(decisionCenterX, decisionNote.lines, decisionNote.fontSize * 1.16)}</text>` : ""}
+            ${decisionNote ? `<text x="${decisionCenterX}" y="${config.decision.noteY || 820}" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionNote.fontSize}" fill="#9a7748">${renderTspans(decisionCenterX, decisionNote.lines, decisionNote.fontSize * 1.16)}</text>` : ""}
           </g>
           ${decisionNoteOutside ? `
           <path d="M${decisionCenterX} ${decision.y + decision.height + 4} L${decisionCenterX} ${decision.y + decision.height + 14}" fill="none" stroke="#ad3535" stroke-width="2.2" stroke-dasharray="4 4" marker-end="url(#ar)"/>
@@ -1229,9 +1231,11 @@
     const contextTitleY = context.y + 40;
     const contextBeforeY = context.y + 86;
     const contextDividerY = context.y + 122;
-    const contextAfterY = context.y + 138;
+    const contextAfterY = config.context.afterY || (context.y + 138);
     const middleSub2Y = middle.y + 106;
     const middlePillCenterY = middle.y + 148;
+    const agentGoalPillY = config.agent.goalPillY || (agent.y + 108);
+    const agentGoalPillWidth = config.agent.goalPillWidth || 184;
     const decisionCenterX = decision.x + decision.width / 2;
     const actionCenterX = action.x + action.width / 2;
     const outcomeCenterX = outcome.x + outcome.width / 2;
@@ -1260,7 +1264,7 @@
       : null;
     const agentTitle = fitSingleLine(config.agent.title, agent.width - 22, 18, 14);
     const agentSub1 = fitWrappedText(config.agent.sub1, agent.width - 36, 13, 11, 2);
-    const agentGoal = fitWrappedText(config.agent.goal, 168, 12, 10, 2);
+    const agentGoal = fitWrappedText(config.agent.goal, agentGoalPillWidth - 22, 12, 10, 2);
     const limitTitle = fitSingleLine(config.limit.title, middle.width - 26, 17, 13);
     const limitSub1 = fitWrappedText(config.limit.sub1, middle.width - 28, 13, 11, 2);
     const limitSub2 = fitWrappedText(config.limit.sub2, middle.width - 30, 12, 10, 2);
@@ -1276,7 +1280,8 @@
       ? fitWrappedText(config.burst.note2, reviewer.width - 32, 10.2, 8.8, 2)
       : null;
     const decisionTitle = fitSingleLine(config.decision.title, 196, 18, 14);
-    const decisionGoal = fitWrappedText(config.decision.goal, 160, 12, 10, 2);
+    const decisionGoalWidth = config.decision.goalWidth || 168;
+    const decisionGoal = fitWrappedText(config.decision.goal, decisionGoalWidth - 16, 12, 10, 2);
     const decisionNote = config.decision.note
       ? fitWrappedText(config.decision.note, 196, 10.2, 8.8, 2)
       : null;
@@ -1326,6 +1331,7 @@
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
+            <clipPath id="oc-repl-entry"><rect x="${entry.x}" y="${entry.y}" width="${entry.width}" height="${entry.height}" rx="20"/></clipPath>
             <clipPath id="oc-repl"><rect x="${outcome.x}" y="${outcome.y}" width="${outcome.width}" height="${outcome.height}" rx="20"/></clipPath>
           </defs>
 
@@ -1343,7 +1349,7 @@
           <g class="ng" id="g0">
             <rect x="${entry.x}" y="${entry.y}" width="${entry.width}" height="${entry.height}" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
             ${entryDesignTitle ? `
-            <rect x="${entry.x}" y="${entryDesignAreaY}" width="${entry.width}" height="${entry.height - 94}" fill="#fff3de"/>
+            <rect x="${entry.x}" y="${entryDesignAreaY}" width="${entry.width}" height="${entry.height - 94}" fill="#fff3de" clip-path="url(#oc-repl-entry)"/>
             <line x1="${entry.x + 6}" y1="${entryDesignAreaY}" x2="${entry.x + entry.width - 6}" y2="${entryDesignAreaY}" stroke="#ddd6cb" stroke-width="1.2" stroke-dasharray="5 4"/>
             <rect x="${entryCenterX - 72}" y="${entry.y + 102}" width="144" height="22" rx="11" fill="#ffe5ba" stroke="#f5c46c" stroke-width="1.1"/>
             ` : ""}
@@ -1363,8 +1369,8 @@
             <rect x="${agent.x}" y="${agent.y}" width="${agent.width}" height="${agent.height}" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
             <text x="${agentCenterX}" y="210" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentTitle.fontSize}" font-weight="700" fill="#33429f">${escapeHtml(agentTitle.text)}</text>
             <text x="${agentCenterX}" y="240" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentSub1.fontSize}" fill="#5360be">${renderTspans(agentCenterX, agentSub1.lines, agentSub1.fontSize * 1.16)}</text>
-            <rect x="${agentCenterX - 92}" y="258" width="184" height="${agentGoal.lines.length > 1 ? 44 : 32}" rx="11" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
-            <text x="${agentCenterX}" y="${agentGoal.lines.length > 1 ? 274 : 280}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(agentCenterX, agentGoal.lines, agentGoal.fontSize * 1.14)}</text>
+            <rect x="${agentCenterX - (agentGoalPillWidth / 2)}" y="${agentGoalPillY}" width="${agentGoalPillWidth}" height="${agentGoal.lines.length > 1 ? 44 : 32}" rx="11" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="${agentCenterX}" y="${agentGoalPillY + (agentGoal.lines.length > 1 ? 16 : 22)}" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoal.fontSize}" font-weight="700" fill="#2d6a4f">${renderTspans(agentCenterX, agentGoal.lines, agentGoal.fontSize * 1.14)}</text>
           </g>
 
           <line class="co" id="c1s" x1="${agent.x + agent.width}" y1="${topY}" x2="${middle.x}" y2="${topY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
@@ -1410,9 +1416,9 @@
             <rect x="${decision.x}" y="${decision.y}" width="${decision.width}" height="${decision.height}" rx="20" fill="#fff8f8" stroke="#ad3535" stroke-width="2.8"/>
             <text x="${decisionCenterX}" y="722" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionTitle.fontSize}" font-weight="700" fill="#7d2626">${escapeHtml(decisionTitle.text)}</text>
             <text x="${decisionCenterX}" y="752" text-anchor="middle" font-family="${getFontStack()}" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.decision.sub1)}</text>
-            <rect x="356" y="770" width="168" height="${decisionGoal.lines.length > 1 ? 44 : 32}" rx="10" fill="#f8dede" stroke="#efb0b0" stroke-width="1.2"/>
+            <rect x="${decisionCenterX - (decisionGoalWidth / 2)}" y="770" width="${decisionGoalWidth}" height="${decisionGoal.lines.length > 1 ? 44 : 32}" rx="10" fill="#f8dede" stroke="#efb0b0" stroke-width="1.2"/>
             <text x="${decisionCenterX}" y="${decisionGoal.lines.length > 1 ? 786 : 792}" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionGoal.fontSize}" font-weight="800" fill="#7d2626">${renderTspans(decisionCenterX, decisionGoal.lines, decisionGoal.fontSize * 1.14)}</text>
-            ${decisionNote ? `<text x="${decisionCenterX}" y="${decisionNoteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionNote.fontSize}" fill="#9a7748">${renderTspans(decisionCenterX, decisionNote.lines, decisionNote.fontSize * 1.16)}</text>` : ""}
+            ${decisionNote ? `<text x="${decisionCenterX}" y="${config.decision.noteY || decisionNoteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${decisionNote.fontSize}" fill="#9a7748">${renderTspans(decisionCenterX, decisionNote.lines, decisionNote.fontSize * 1.16)}</text>` : ""}
           </g>
 
           <line class="co" id="c5s" x1="${decision.x + decision.width}" y1="${decisionActionY}" x2="${action.x}" y2="${decisionActionY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
@@ -1448,11 +1454,11 @@
           ${flowLabelHorizontal((entry.x + entry.width + agent.x) / 2, topY, config.labels.l0, "#4452b8", "l0", 12, 150)}
           ${flowLabelHorizontal((agent.x + agent.width + middle.x) / 2, topY, config.labels.l1, "#4452b8", "l1", 12, 160)}
           ${flowLabelHorizontal((middle.x + middle.width + reviewer.x) / 2, topY, config.labels.l2, "#ad3535", "l2", 12, 156)}
-          ${flowLabelHorizontal(reviewer.x + reviewer.width - 80, reviewer.y + reviewer.height + 28, config.labels.l3, "#ad3535", "l3", 12, 160)}
+          ${flowLabelHorizontal(config.labels.l3X || (reviewer.x + reviewer.width - 80), config.labels.l3Y || (reviewer.y + reviewer.height + 28), config.labels.l3, "#ad3535", "l3", 12, config.labels.l3Width || 160)}
           ${flowLabelHorizontal((reviewerCenterX + contextCenterX) / 2, reviewerBridgeY, config.labels.la1, "#ad3535", "la1", 12, 190)}
           ${flowLabelVertical(decisionCenterX, (contextToDecisionY + decision.y) / 2, config.labels.l4, "#ad3535", "l4", 12, 170)}
-          ${flowLabelHorizontal((decision.x + decision.width + action.x) / 2, decisionActionY + 10, config.labels.l5, "#ad3535", "l5", 12, 120)}
-          ${flowLabelHorizontalSegment(outcomeConnectorPivotX, getFlowConnectorEndX(outcome.x), actionOutcomeY + 10, config.labels.l6, "#ad3535", "l6", 12, 132)}
+          ${flowLabelHorizontal(config.labels.l5X || ((decision.x + decision.width + action.x) / 2), config.labels.l5Y || (decisionActionY - 12), config.labels.l5, "#ad3535", "l5", 12, config.labels.l5Width || 126)}
+          ${flowLabelHorizontalSegment(config.labels.l6StartX || outcomeConnectorPivotX, config.labels.l6EndX || getFlowConnectorEndX(outcome.x), config.labels.l6Y || (actionOutcomeY - 12), config.labels.l6, "#ad3535", "l6", 12, config.labels.l6Width || 132)}
         </svg>
       </div>
       ${panelMarkup(
