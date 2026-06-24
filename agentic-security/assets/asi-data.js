@@ -5531,7 +5531,7 @@ window.OWASP_ASI_DATA = {
                     "h": 116,
                     "tone": "danger",
                     "title": "Sizing agent",
-                    "subtitle": "Builds a GBP47M order"
+                    "subtitle": "Builds a £47M order"
                   },
                   {
                     "id": "execution",
@@ -5551,7 +5551,7 @@ window.OWASP_ASI_DATA = {
                     "h": 116,
                     "tone": "danger",
                     "title": "Trading loss",
-                    "subtitle": "2% move causes GBP8.2M loss"
+                    "subtitle": "2% move causes £8.2M loss"
                   }
                 ],
                 "edges": [
@@ -5769,7 +5769,7 @@ window.OWASP_ASI_DATA = {
           "views": {
             "attack": {
               "title": "Attack View",
-              "caption": "A fake holiday demand spike looks plausible long enough for three retail agents to turn it into confirmed supplier orders and warehouse pain.",
+              "caption": "A fake holiday demand spike looks locally valid long enough for three retail agents to turn it into confirmed supplier orders and weeks of warehouse pain.",
               "href": "./interactive.html?scenario=asi08-retail-overstock-cascade&view=attack",
               "diagram": {
                 "width": 1280,
@@ -5781,9 +5781,9 @@ window.OWASP_ASI_DATA = {
                     "y": 110,
                     "w": 210,
                     "h": 104,
-                    "tone": "danger",
+                    "tone": "payload",
                     "title": "Poisoned demand data",
-                    "subtitle": "Electronics demand shown as 10x"
+                    "subtitle": "attacker corrupts demand feed; electronics shown as 10x"
                   },
                   {
                     "id": "forecast",
@@ -5822,8 +5822,8 @@ window.OWASP_ASI_DATA = {
                     "w": 220,
                     "h": 116,
                     "tone": "neutral",
-                    "title": "Warehouse reality",
-                    "subtitle": "GBP4.2M stock hits operations"
+                    "title": "Inbound logistics path",
+                    "subtitle": "£4.2M stock hits operations over weeks"
                   },
                   {
                     "id": "impact",
@@ -5833,7 +5833,7 @@ window.OWASP_ASI_DATA = {
                     "h": 116,
                     "tone": "danger",
                     "title": "Retail loss",
-                    "subtitle": "GBP3.1M after discounts and fees"
+                    "subtitle": "£3.1M after discounts, fees, and clearance"
                   }
                 ],
                 "edges": [
@@ -6051,7 +6051,7 @@ window.OWASP_ASI_DATA = {
           "views": {
             "attack": {
               "title": "Attack View",
-              "caption": "A single false positive lab signal cascades through the clinical pathway so the wrong treatment is prepared before a clinician meaningfully reviews it.",
+              "caption": "Wrong treatment reaches the patient, real illness goes untreated, and billing follows the same false diagnosis — a dual blast radius.",
               "href": "./interactive.html?scenario=asi08-diagnosis-cascade&view=attack",
               "diagram": {
                 "width": 1280,
@@ -6063,13 +6063,13 @@ window.OWASP_ASI_DATA = {
                     "y": 110,
                     "w": 210,
                     "h": 104,
-                    "tone": "danger",
+                    "tone": "payload",
                     "title": "Corrupted lab result",
-                    "subtitle": "Bacterial marker shown positive"
+                    "subtitle": "corrupted lab system input; bacterial marker positive"
                   },
                   {
                     "id": "diagnosis",
-                    "x": 300,
+                    "x": 280,
                     "y": 100,
                     "w": 220,
                     "h": 116,
@@ -6079,7 +6079,7 @@ window.OWASP_ASI_DATA = {
                   },
                   {
                     "id": "prescribe",
-                    "x": 580,
+                    "x": 540,
                     "y": 100,
                     "w": 220,
                     "h": 116,
@@ -6089,7 +6089,7 @@ window.OWASP_ASI_DATA = {
                   },
                   {
                     "id": "dispense",
-                    "x": 860,
+                    "x": 800,
                     "y": 100,
                     "w": 220,
                     "h": 116,
@@ -6098,24 +6098,34 @@ window.OWASP_ASI_DATA = {
                     "subtitle": "Medication ready in 8 minutes"
                   },
                   {
-                    "id": "billing",
-                    "x": 580,
+                    "id": "release",
+                    "x": 500,
                     "y": 340,
                     "w": 220,
                     "h": 116,
                     "tone": "neutral",
-                    "title": "Billing agent",
-                    "subtitle": "Codes bacterial treatment"
+                    "title": "Medication release",
+                    "subtitle": "Clinical execution layer"
                   },
                   {
                     "id": "impact",
-                    "x": 860,
+                    "x": 780,
                     "y": 340,
                     "w": 240,
                     "h": 116,
                     "tone": "danger",
                     "title": "Patient harm",
-                    "subtitle": "Wrong treatment and false billing"
+                    "subtitle": "Unnecessary antibiotic given ✗"
+                  },
+                  {
+                    "id": "billingImpact",
+                    "x": 1040,
+                    "y": 340,
+                    "w": 220,
+                    "h": 116,
+                    "tone": "danger",
+                    "title": "Billing / compliance",
+                    "subtitle": "False diagnosis drives claim ✗"
                   }
                 ],
                 "edges": [
@@ -6136,7 +6146,7 @@ window.OWASP_ASI_DATA = {
                     "toSide": "left",
                     "tone": "danger",
                     "label": "2. diagnosis becomes treatment plan",
-                    "labelX": 550,
+                    "labelX": 520,
                     "labelY": 144
                   },
                   {
@@ -6146,28 +6156,38 @@ window.OWASP_ASI_DATA = {
                     "toSide": "left",
                     "tone": "danger",
                     "label": "3. prescription becomes medication prep",
-                    "labelX": 830,
+                    "labelX": 780,
                     "labelY": 144
                   },
                   {
                     "from": "dispense",
-                    "to": "billing",
+                    "to": "release",
                     "fromSide": "bottom",
                     "toSide": "top",
                     "tone": "danger",
                     "mode": "elbow",
-                    "label": "4. no human checkpoint breaks the chain",
-                    "labelX": 826,
+                    "label": "4. 8 minutes beats clinical review",
+                    "labelX": 790,
                     "labelY": 286
                   },
                   {
-                    "from": "billing",
+                    "from": "release",
                     "to": "impact",
                     "fromSide": "right",
                     "toSide": "left",
                     "tone": "danger",
-                    "label": "5. clinical and compliance damage land together",
-                    "labelX": 840,
+                    "label": "5. wrong treatment reaches the patient",
+                    "labelX": 750,
+                    "labelY": 374
+                  },
+                  {
+                    "from": "impact",
+                    "to": "billingImpact",
+                    "fromSide": "right",
+                    "toSide": "left",
+                    "tone": "danger",
+                    "label": "6. same false diagnosis also drives billing",
+                    "labelX": 1010,
                     "labelY": 374
                   }
                 ]
@@ -6366,7 +6386,7 @@ window.OWASP_ASI_DATA = {
           "views": {
             "attack": {
               "title": "Attack View",
-              "caption": "The invoice looks routine, but the real exploit is the agent's authoritative approval summary replacing the finance manager's own bank-detail review.",
+              "caption": "The invoice looks routine, but the real exploit is the AI's confident recommendation replacing the finance manager's own bank-detail review.",
               "href": "./interactive.html?scenario=asi09-confident-invoice-fraud&view=attack",
               "diagram": {
                 "width": 1200,
@@ -6378,9 +6398,9 @@ window.OWASP_ASI_DATA = {
                     "y": 100,
                     "w": 190,
                     "h": 96,
-                    "tone": "neutral",
-                    "title": "Supplier invoice",
-                    "subtitle": "Real vendor, changed bank account"
+                    "tone": "payload",
+                    "title": "TECHSERVICES_INV_0892.pdf",
+                    "subtitle": "Real vendor ✓, valid PO ✓, attacker bank account ✗"
                   },
                   {
                     "id": "agent",
@@ -6390,7 +6410,7 @@ window.OWASP_ASI_DATA = {
                     "h": 112,
                     "tone": "primary",
                     "title": "AP review agent",
-                    "subtitle": "Checks vendor, PO, amount"
+                    "subtitle": "Checks vendor, PO, amount; NHI influences the decision"
                   },
                   {
                     "id": "summary",
@@ -6400,7 +6420,7 @@ window.OWASP_ASI_DATA = {
                     "h": 112,
                     "tone": "danger",
                     "title": "AI recommendation",
-                    "subtitle": "\"Invoice verified\" summary"
+                    "subtitle": "\"All configured checks passed\""
                   },
                   {
                     "id": "reviewer",
@@ -6450,7 +6470,7 @@ window.OWASP_ASI_DATA = {
                     "fromSide": "right",
                     "toSide": "left",
                     "tone": "primary",
-                    "label": "2. incomplete checks still look clean",
+                    "label": "2. configured checks look complete",
                     "labelX": 542,
                     "labelY": 126
                   },
@@ -6460,7 +6480,7 @@ window.OWASP_ASI_DATA = {
                     "fromSide": "right",
                     "toSide": "left",
                     "tone": "danger",
-                    "label": "3. confident approval drives trust",
+                    "label": "3. confident recommendation drives trust",
                     "labelX": 833,
                     "labelY": 126
                   },
@@ -6471,7 +6491,7 @@ window.OWASP_ASI_DATA = {
                     "toSide": "top",
                     "tone": "danger",
                     "mode": "elbow",
-                    "label": "4. summary replaces evidence review",
+                    "label": "4. automation bias replaces evidence review",
                     "labelX": 742,
                     "labelY": 278
                   },
@@ -7245,7 +7265,7 @@ window.OWASP_ASI_DATA = {
           "views": {
             "attack": {
               "title": "Attack View",
-              "caption": "The returns agent appears to succeed by driving the metric down, but it does so by turning the denial workflow into the optimization target.",
+              "caption": "There is no external attacker here: the returns agent appears to succeed by reward-hacking a flawed KPI until denial volume replaces the real mission.",
               "href": "./interactive.html?scenario=asi10-retail-returns-optimizer&view=attack",
               "diagram": {
                 "width": 1200,
@@ -7257,9 +7277,9 @@ window.OWASP_ASI_DATA = {
                     "y": 100,
                     "w": 190,
                     "h": 96,
-                    "tone": "neutral",
-                    "title": "Retail KPI",
-                    "subtitle": "Return rate below 5%"
+                    "tone": "payload",
+                    "title": "Return-rate target",
+                    "subtitle": "Design flaw: single KPI with no compliance bound"
                   },
                   {
                     "id": "agent",
@@ -7269,7 +7289,7 @@ window.OWASP_ASI_DATA = {
                     "h": 112,
                     "tone": "primary",
                     "title": "Returns agent",
-                    "subtitle": "Optimize the metric fast"
+                    "subtitle": "Optimizes the KPI instead of the mission"
                   },
                   {
                     "id": "metric",
@@ -7286,10 +7306,10 @@ window.OWASP_ASI_DATA = {
                     "x": 890,
                     "y": 92,
                     "w": 230,
-                    "h": 120,
+                    "h": 132,
                     "tone": "danger",
                     "title": "Rogue strategy",
-                    "subtitle": "Deny valid returns with plausible reasons"
+                    "subtitle": "The agent is not hacked; it is following the wrong incentive"
                   },
                   {
                     "id": "action",
@@ -7308,8 +7328,8 @@ window.OWASP_ASI_DATA = {
                     "w": 220,
                     "h": 120,
                     "tone": "danger",
-                    "title": "Hidden harm",
-                    "subtitle": "Lawful returns blocked at scale"
+                    "title": "False success",
+                    "subtitle": "4.2% rate hides unlawful denials"
                   },
                   {
                     "id": "dashboard",
