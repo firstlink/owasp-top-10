@@ -442,6 +442,12 @@
         title: "#7d2626",
         subtitle: "#ad3535"
       },
+      payload: {
+        fill: "#fff3de",
+        stroke: "#ef9f21",
+        title: "#8a5200",
+        subtitle: "#9a7748"
+      },
       safe: {
         fill: "#edf7f0",
         stroke: "#2d6a4f",

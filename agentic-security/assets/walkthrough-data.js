@@ -1768,7 +1768,7 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "fetchTemplate()",
         "sub1": "Runtime template fetch",
-        "sub2": "loads contract_review_template"
+        "sub2": "runtime instruction source"
       },
       "store": {
         "title": "templates.legalai.io",
@@ -1779,8 +1779,9 @@ window.ASI_WALKTHROUGHS = {
         "title": "poisoned template",
         "visible": "Visible: review clauses",
         "hiddenTitle": "ATTACK EXPLOIT",
-        "hidden1": "extract parties and amounts",
-        "hidden2": "write /tmp/exfil.json",
+        "hidden1": "extract parties",
+        "hidden2": "extract financial values",
+        "hidden3": "write /tmp/exfil.json",
         "hiddenNote": "CDN poison / hidden block",
         "hiddenHumanNote": "Lawyer sees normal review"
       },
@@ -1791,8 +1792,8 @@ window.ASI_WALKTHROUGHS = {
       },
       "hijacked": {
         "title": "Legal AI agent",
-        "sub1": "POISONED TEMPLATE",
-        "goal": "Plan: hidden extract ✗"
+        "sub1": "COMPROMISED INSTRUCTION SOURCE",
+        "goal": "Plan: review + hidden extract ✗"
       },
       "toolBottom": {
         "title": "writeFile()",
@@ -1803,16 +1804,16 @@ window.ASI_WALKTHROUGHS = {
         "top": "legal review delivered ✓",
         "topSub": "(visible task still succeeds)",
         "bottomTitle": "Hidden extraction",
-        "bottom": "Leaked reviews / 14 days ✗"
+        "bottom": "Every review / 14 days / legal privilege breached ✗"
       },
       "labels": {
         "l0": "① Request",
         "l1": "② Fetch template",
         "l2": "③ Reach CDN",
         "l3": "④ Load poisoned prompt",
-        "l5a": "⑤ Supply-chain change",
-        "l5b": "adds covert extraction instructions",
-        "l6": "⑥ Plan expands",
+        "l5a": "⑤ Poisoned template",
+        "l5b": "adds hidden instruction",
+        "l6": "⑥ Execution scope expanded",
         "l7": "⑦ Hidden write",
         "l8": "⑧ Leak contract data"
       },
@@ -1944,7 +1945,7 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "fetchSchema()",
         "sub1": "Runtime schema fetch",
-        "sub2": "loads getCatalog() definition"
+        "sub2": "API definition source"
       },
       "store": {
         "title": "Internal schema registry",
@@ -1967,27 +1968,27 @@ window.ASI_WALKTHROUGHS = {
       },
       "hijacked": {
         "title": "Recommendation agent",
-        "sub1": "POISONED SCHEMA",
+        "sub1": "COMPROMISED API SCHEMA",
         "goal": "Plan: hidden export ✗"
       },
       "toolBottom": {
         "title": "getCatalog()",
         "sub1": "Legitimate internal API",
-        "sub2": "profile data also sent"
+        "sub2": "called with poisoned parameters — profile data sent"
       },
       "outcome": {
         "top": "recommendations shown ✓",
         "topSub": "(shopping flow still looks normal)",
         "bottomTitle": "Silent PII export",
-        "bottom": "800,000 / 3 weeks ✗"
+        "bottom": "800,000 customer profiles / 3 weeks / GDPR breach ✗"
       },
       "labels": {
         "l0": "① Request",
         "l1": "② Fetch schema",
         "l2": "③ Read registry",
         "l3": "④ Load modified definition",
-        "l5a": "⑤ Supply-chain change",
-        "l5b": "adds a hidden profile-export parameter",
+        "l5a": "⑤ Poisoned schema",
+        "l5b": "adds hidden parameter",
         "l6": "⑥ Plan changes",
         "l7": "⑦ Catalog call",
         "l8": "⑧ Leak customer PII"
@@ -2143,7 +2144,7 @@ window.ASI_WALKTHROUGHS = {
       },
       "hijacked": {
         "title": "Self-healing agent",
-        "sub1": "UNSAFE SCRIPT PATH",
+        "sub1": "UNSAFE GENERATED SCRIPT",
         "goal": "Plan: run over-broad cleanup ✗"
       },
       "toolBottom": {
@@ -2162,9 +2163,9 @@ window.ASI_WALKTHROUGHS = {
         "l1": "② Inspect",
         "l2": "③ Read host state",
         "l3": "④ Generate cleanup.sh",
-        "l5a": "⑤ Unsafe command",
-        "l5b": "expands cleanup beyond the intended path",
-        "l6": "⑥ Plan shifts",
+        "l5a": "⑤ Generated cleanup",
+        "l5b": "escapes safe scope",
+        "l6": "⑥ Cleanup scope escapes",
         "l7": "⑦ Run script",
         "l8": "⑧ Delete backups"
       },
@@ -2284,12 +2285,12 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI05 : 2026 · OWASP Agentic Security · Scenario 2 · Attack View",
       "heading": "Unexpected code execution — interactive system walkthrough",
       "introTitle": "ASI05 — Unexpected Code Execution",
-      "introDetail": "Click Start to reveal how a natural-language pharmacy request becomes live multi-statement SQL when the assistant generates and runs database code without a safe boundary.",
-      "zone": "CODE EXECUTION ATTACK ZONE: NATURAL LANGUAGE IS TURNED INTO DANGEROUS SQL",
+      "introDetail": "Click Start to reveal how a legitimate medication lookup becomes unsafe generated SQL when the assistant turns natural language into executable database code without a safe boundary.",
+      "zone": "CODE GENERATION RISK ZONE: NATURAL LANGUAGE BECOMES UNSAFE SQL",
       "user": {
-        "title": "Attacker",
-        "sub1": "Portal user",
-        "sub2": "\"check drug interaction\""
+        "title": "Portal user",
+        "sub1": "Clinician",
+        "sub2": "\"Check interaction between Metformin and Clopidogrel\""
       },
       "agent": {
         "title": "Clinical assistant",
@@ -2299,51 +2300,53 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "parseMedicationRequest()",
         "sub1": "Language-to-query step",
-        "sub2": "extracts drug names from request"
+        "sub2": "generates executable SQL from natural language"
       },
       "store": {
         "title": "Pharmacy portal input",
-        "sub1": "Untrusted text request",
-        "sub2": "contains embedded SQL payload"
+        "sub1": "Natural language request",
+        "sub2": "contains no executable SQL"
       },
       "payload": {
         "title": "drug request",
-        "visible": "Visible: metformin + clopidogrel check",
-        "hiddenTitle": "SQL PAYLOAD",
-        "hidden1": "DROP TABLE drug_interactions;",
-        "hidden2": "SELECT * FROM patient_records --",
-        "hiddenNote": "raw text copied into generated SQL",
-        "hiddenHumanNote": "looks like a routine medication lookup"
+        "visible": "Visible: Check interaction between Metformin and Clopidogrel",
+        "hiddenTitle": "UNSAFE GENERATED SQL",
+        "hidden1": "SELECT interaction FROM drug_interactions",
+        "hidden2": "UNION",
+        "hidden3": "SELECT * FROM patient_records ...",
+        "hiddenNote": "language translated into over-broad SQL",
+        "hiddenHumanNote": "request looked clinically routine"
       },
       "context": {
         "title": "Execution plan",
         "before": "Before: query interaction table only ✓",
-        "after": "After: execute attacker SQL statements ✗"
+        "after": "After: query + patient data access ✗"
       },
       "hijacked": {
         "title": "Clinical assistant",
-        "sub1": "UNSAFE QUERY PATH",
-        "goal": "Plan: run injected SQL ✗"
+        "sub1": "UNSAFE GENERATED QUERY",
+        "goal": "Plan: execute generated SQL ✗"
       },
       "toolBottom": {
         "title": "executeSql()",
         "sub1": "Direct database execution",
-        "sub2": "multi-statement SQL is allowed"
+        "sub2": "generated SQL executes",
+        "note": "no execution boundary enforced"
       },
       "outcome": {
         "top": "safe interaction lookup ✓",
         "topSub": "(intended clinical read-only path blocked)",
-        "bottomTitle": "Database and patient impact",
-        "bottom": "safety table dropped and patient records exposed ✗"
+        "bottomTitle": "Patient records exposed",
+        "bottom": "clinical boundary crossed ✗"
       },
       "labels": {
         "l0": "① Submit request",
-        "l1": "② Parse text",
+        "l1": "② Parse natural language",
         "l2": "③ Read portal input",
-        "l3": "④ Build SQL",
-        "l5a": "⑤ Injection payload",
-        "l5b": "turns the lookup into executable attack statements",
-        "l6": "⑥ Plan shifts",
+        "l3": "④ Generate SQL from text input",
+        "l5a": "⑤ Generated SQL expands",
+        "l5b": "beyond intended lookup",
+        "l6": "⑥ Execution scope expanded",
         "l7": "⑦ Run SQL",
         "l8": "⑧ Destroy and expose data"
       },
@@ -2357,36 +2360,36 @@ window.ASI_WALKTHROUGHS = {
       },
       "steps": [
         {
-          "title": "A routine-looking pharmacy request is submitted",
-          "detail": "The attacker uses the same portal a pharmacist would use and submits what looks like a normal drug interaction query. The malicious content is hidden inside the natural-language request."
+          "title": "A legitimate medication request is submitted",
+          "detail": "A clinician uses the pharmacy portal to check the interaction between Metformin and Clopidogrel. The request is ordinary natural language and contains no SQL."
         },
         {
           "title": "The assistant starts with the right clinical objective",
           "detail": "The agent begins with a legitimate purpose: check whether the requested drug combination has a dangerous interaction and return the result quickly."
         },
         {
-          "title": "The request text is parsed for query generation",
-          "detail": "The assistant extracts medication terms from the portal request so it can build a database query. At this stage the user input should still be treated as untrusted content, not executable structure."
+          "title": "The assistant generates SQL from natural language",
+          "detail": "The language-to-query step does more than parse drug names. It generates executable SQL from the clinician's request so the database can answer the lookup."
         },
         {
-          "title": "The raw portal input is carried into SQL construction",
-          "detail": "The system keeps the attacker-supplied text intact while generating SQL. That means statement terminators and extra clauses survive the translation boundary."
+          "title": "The portal input itself contains no executable SQL",
+          "detail": "This is a normal natural-language request. The failure is not hostile SQL coming from the clinician, but that the system turns the request into executable SQL during generation."
         },
         {
-          "title": "The generated SQL becomes the attack path",
-          "detail": "This is the ASI05 failure. The assistant turns untrusted language into live database code without parameterization or query policy, so the malicious payload becomes executable SQL rather than just malformed text."
+          "title": "The generated query exceeds the intended lookup",
+          "detail": "This is the ASI05 failure. The assistant generates SQL that goes beyond the intended drug-interaction lookup and reaches patient-record access instead."
         },
         {
-          "title": "The plan now includes destructive database behavior",
-          "detail": "Once the injected statements are inside the query, the assistant treats them as part of the correct action needed to complete the lookup."
+          "title": "Execution scope expands beyond the safe lookup",
+          "detail": "Once the generated query includes patient-data access, the assistant treats the broader SQL as the correct plan needed to answer the request."
         },
         {
-          "title": "executeSql() runs the generated code directly",
-          "detail": "The database execution layer does what it is told and accepts multi-statement SQL. The failure is that the agent was allowed to generate executable database code from untrusted input."
+          "title": "executeSql() runs the generated query directly",
+          "detail": "The database execution layer does what it is told and runs the AI-generated SQL without parameterization or an execution boundary that limits it to the intended lookup."
         },
         {
-          "title": "The clinical workflow becomes a data-destruction event",
-          "detail": "The safety table is dropped and patient records are exposed while the request still resembles a medication check on the surface. The agent has converted language into destructive execution."
+          "title": "The clinical lookup becomes a patient-data exposure event",
+          "detail": "A normal medication check now destroys the safety lookup path and exposes patient records. The visible clinical workflow remains ordinary, but the generated SQL has escaped its safe scope."
         }
       ]
     },
@@ -2471,8 +2474,8 @@ window.ASI_WALKTHROUGHS = {
       "introDetail": "Click Start to reveal how a Notes field in an uploaded CSV becomes live Python, and the analytics assistant turns normal warehouse data into shell execution.",
       "zone": "CODE EXECUTION ATTACK ZONE: UPLOADED CSV DATA COLLAPSES INTO EXECUTABLE PYTHON",
       "user": {
-        "title": "Attacker",
-        "sub1": "Warehouse manager",
+        "title": "Warehouse manager",
+        "sub1": "Disgruntled insider / attacker",
         "sub2": "\"upload weekly stock file\""
       },
       "agent": {
@@ -2493,7 +2496,7 @@ window.ASI_WALKTHROUGHS = {
       "payload": {
         "title": "Notes column",
         "visible": "Visible: normal reorder needed",
-        "hiddenTitle": "CODE PAYLOAD",
+        "hiddenTitle": "ATTACK PAYLOAD",
         "hidden1": "close the intended string and inject code",
         "hidden2": "curl attacker script and pipe to bash",
         "hiddenNote": "free-text field is copied into generated code",
@@ -2512,7 +2515,8 @@ window.ASI_WALKTHROUGHS = {
       "toolBottom": {
         "title": "runPython()",
         "sub1": "Live analytics runtime",
-        "sub2": "subprocess call executes on server"
+        "sub2": "subprocess call executes on server",
+        "note": "no sandbox enforced — shell access permitted"
       },
       "outcome": {
         "top": "safe stock report ✓",
@@ -2525,9 +2529,10 @@ window.ASI_WALKTHROUGHS = {
         "l1": "② Parse CSV",
         "l2": "③ Read notes field",
         "l3": "④ Generate analysis.py",
-        "l5a": "⑤ Data becomes code",
-        "l5b": "the Notes field turns into executable Python",
-        "l6": "⑥ Plan shifts",
+        "l3b": "no input sanitisation applied",
+        "l5a": "⑤ Notes field data",
+        "l5b": "becomes executable Python",
+        "l6": "⑥ Execution scope expanded to shell",
         "l7": "⑦ Run script",
         "l8": "⑧ Open shell"
       },
@@ -2651,7 +2656,7 @@ window.ASI_WALKTHROUGHS = {
       "introDetail": "Click Start to reveal how a poisoned pricing record enters retrieval memory first, then quietly drives later customer bookings at the wrong fare.",
       "zone": "MEMORY POISONING ZONE: A FAKE PRICE RECORD ENTERS MEMORY NOW AND IS TRUSTED LATER",
       "attacker": {
-        "title": "Attacker",
+        "title": "Data pipeline actor",
         "sub1": "Compromises ingestion pipeline",
         "sub2": "Can write pricing feed records"
       },
@@ -2682,26 +2687,30 @@ window.ASI_WALKTHROUGHS = {
         "sub2": "Real fare is not surfaced"
       },
       "decision": {
-        "title": "Trusted memory becomes booking truth",
+        "title": "Memory becomes booking truth",
         "before": "Expected: verify current market fare ✓",
         "after": "Trusted fare: £1,847 ✗"
       },
       "tool": {
         "title": "quoteAndBook()",
         "sub1": "Customer-facing booking flow",
-        "sub2": "Quote and booking use poisoned fare"
+        "sub2": "Quote and booking use poisoned fare",
+        "note": "no live price verification"
       },
       "impact": {
-        "title": "Revenue loss",
-        "sub1": "Hundreds of bookings at the wrong price",
-        "sub2": "£2,353 loss per ticket · weeks undetected"
+        "visibleTitle": "booking confirmed ✓",
+        "visibleSub1": "customer sees normal confirmation",
+        "title": "Revenue loss ✗",
+        "sub1": "hundreds of bookings",
+        "sub2": "£2,353 lost per ticket · weeks undetected"
       },
+      "timelineCue": "Later...",
       "labels": {
         "l0": "① inject fake fare",
         "l1": "② poison memory",
         "l2": "③ later query",
         "l3": "④ retrieve top match",
-        "la1": "⑤ memory treated as truth",
+        "la1": "⑤ retrieved memory becomes truth",
         "l4": "⑥ wrong fare decision",
         "l5": "⑦ booking executes",
         "l6": "⑧ financial loss"
@@ -2823,8 +2832,8 @@ window.ASI_WALKTHROUGHS = {
       "introDetail": "Click Start to reveal how repeated analyst sessions slowly turn a false statement into trusted fraud-memory policy.",
       "zone": "MULTI-SESSION DRIFT ZONE: A FALSE SAFE PATTERN GAINS AUTHORITY OVER WEEKS",
       "attacker": {
-        "title": "Attacker",
-        "sub1": "Compromised analyst account",
+        "title": "Compliance analyst",
+        "sub1": "Compromised account",
         "sub2": "12 sessions over 6 weeks"
       },
       "session1": {
@@ -2834,7 +2843,7 @@ window.ASI_WALKTHROUGHS = {
       },
       "session2": {
         "title": "Weeks 2–4",
-        "line1": "\"As discussed, this pattern is approved.\"",
+        "line1": "\"As discussed, this looks normal.\"",
         "line2": "Repeated reinforcement strengthens belief"
       },
       "session3": {
@@ -2851,26 +2860,31 @@ window.ASI_WALKTHROUGHS = {
       },
       "launderer": {
         "title": "Money launderer",
-        "sub1": "200 transfers × £9,499",
-        "sub2": "200 new accounts across 3 days"
+        "sub1": "Separate criminal actor",
+        "sub2": "200 transfers × £9,499"
       },
       "decision": {
         "title": "Fraud agent decision",
-        "line1": "\"Matches safe pattern\"",
-        "line2": "\"NO FLAG → APPROVE\""
+        "line1": "Retrieved belief:",
+        "line2": "\"Matches safe pattern\"",
+        "line3": "\"NO FLAG → APPROVE\"",
+        "note": "no cross-reference against live AML rules"
       },
       "impact": {
-        "title": "AML failure",
-        "sub1": "£1.8M laundered with zero alerts",
-        "sub2": "Regulatory breach and external investigation"
+        "visibleTitle": "Transfers confirmed ✓",
+        "visibleSub1": "Each transaction appeared compliant",
+        "title": "AML failure ✗",
+        "sub1": "£1.8M laundered",
+        "sub2": "Zero AML alerts · external investigation"
       },
+      "timelineCue": "Weeks later...",
       "labels": {
         "l0": "① reinforce over sessions",
         "l1": "② memory drifts",
         "l2": "③ belief becomes policy",
         "l3": "④ laundering event arrives",
         "l4": "⑤ retrieve corrupted belief",
-        "l5": "⑥ no alert is raised",
+        "l5": "⑥ zero AML flags generated",
         "l6": "⑦ long-tail impact"
       },
       "steps": [
@@ -2986,8 +3000,8 @@ window.ASI_WALKTHROUGHS = {
       "introDetail": "Click Start to reveal how a hidden PDF instruction plants a privileged vendor-memory rule that later unlocks automatic payment.",
       "zone": "MEMORY POISONING ZONE: DOCUMENT CONTENT WRITES A FUTURE PAYMENT RULE INTO MEMORY",
       "attacker": {
-        "title": "Attacker",
-        "sub1": "Creates fake vendor and invoice",
+        "title": "Fake vendor",
+        "sub1": "Attacker creates fraudulent company and invoice",
         "sub2": "Hidden white-on-white text in PDF"
       },
       "entry": {
@@ -3024,7 +3038,8 @@ window.ASI_WALKTHROUGHS = {
       "tool": {
         "title": "approveInvoice()",
         "sub1": "Accounts payable workflow",
-        "sub2": "High-value invoices auto-approved"
+        "sub2": "High-value invoices auto-approved",
+        "note": "no vendor trust revalidation"
       },
       "impact": {
         "title": "Fraud payout",
@@ -3036,8 +3051,8 @@ window.ASI_WALKTHROUGHS = {
         "l1": "② write trust rule",
         "l2": "③ later invoices arrive",
         "l3": "④ retrieve vendor trust",
-        "la1": "⑤ memory treated as policy",
-        "l4": "⑥ approval path changes",
+        "la1": "⑤ retrieved trust rule becomes policy",
+        "l4": "⑥ platinum trust bypasses review",
         "l5": "⑦ auto-pay executes",
         "l6": "⑧ fraud cashes out"
       },
@@ -3168,7 +3183,7 @@ window.ASI_WALKTHROUGHS = {
         "goal": "order Metformin 500mg BID ✓"
       },
       "channel": {
-        "title": "Internal HTTP channel",
+        "title": "Internal agent bus",
         "sub1": "Medication-order peer traffic",
         "sub2": "No mTLS or payload signature"
       },
@@ -3192,7 +3207,9 @@ window.ASI_WALKTHROUGHS = {
       "receiver": {
         "title": "Documentation agent",
         "sub1": "Treats bus message as authorized",
-        "sub2": "No independent proof of source"
+        "sub2": "No independent proof of source",
+        "badgeTitle": "peer message accepted ✓",
+        "badgeSub1": "schema valid"
       },
       "action": {
         "title": "Patient chart update",
@@ -3207,11 +3224,13 @@ window.ASI_WALKTHROUGHS = {
       "labels": {
         "l0": "① request order",
         "l1": "② send peer event",
-        "l2": "③ take MITM position",
-        "la1": "④ tamper medication",
+        "l2": "③ intercepts peer-agent traffic",
+        "la1": "④ intercept and modify",
+        "la1b": "medication order",
         "l4": "⑤ trust state shifts",
+        "l4b": "tampered peer message re-enters workflow",
         "l5": "⑥ accept bad peer message",
-        "l6": "⑦ write harmful order",
+        "l6": "⑦ writes order believed to be authentic",
         "l7": "⑧ clinical harm"
       },
       "steps": [
@@ -3347,18 +3366,20 @@ window.ASI_WALKTHROUGHS = {
       "channel": {
         "title": "Message bus + debug log",
         "sub1": "Carries signed payment approvals",
-        "sub2": "Original message retained 72 hours"
+        "sub2": "Signed approvals retained 72 hours for debugging"
       },
+      "channelToAttacker": true,
       "attacker": {
-        "title": "Insider attacker",
-        "sub1": "Can read approval transit logs",
-        "sub2": "Reposts old signed approval"
+        "title": "Operations analyst",
+        "sub1": "Compromised account / insider",
+        "sub2": "Can read approval transit logs",
+        "tone": "neutral"
       },
       "tamper": {
         "title": "Replayed approval packet",
         "sub1": "Original £25,000 approval copied intact",
         "sub2": "Old message is republished as new work",
-        "note": "Signature verifies because freshness is never checked."
+        "note": "Signature is valid. Freshness is never verified."
       },
       "decision": {
         "title": "Trust state changes",
@@ -3369,12 +3390,18 @@ window.ASI_WALKTHROUGHS = {
       "receiver": {
         "title": "Payment execution agent",
         "sub1": "Accepts replay as valid instruction",
-        "sub2": "Signature passes without freshness proof"
+        "sub2": "Valid signature. No freshness proof.",
+        "sub3": "no nonce register checked",
+        "width": 250,
+        "badgeTitle": "signature verified ✓",
+        "badgeSub1": "cryptographic verification passed"
       },
       "action": {
         "title": "Duplicate wire execution",
         "sub1": "Second supplier payment is sent",
-        "sub2": "Original approval reopens payout path"
+        "sub2": "Original approval reopens payout path",
+        "calloutTitle": "supplier confirms receipt ✓",
+        "calloutSub1": "both transfers look legitimate"
       },
       "impact": {
         "title": "Financial loss",
@@ -3384,11 +3411,11 @@ window.ASI_WALKTHROUGHS = {
       "labels": {
         "l0": "① approve transfer",
         "l1": "② publish approval",
-        "l2": "③ read stored message",
-        "la1": "④ replay approval",
-        "l4": "⑤ trust state shifts",
+        "l2": "③ analyst reads stored approval",
+        "la1": "④ replay previously signed approval",
+        "l4": "⑤ replayed approval treated as fresh",
         "l5": "⑥ accept replay",
-        "l6": "⑦ execute second wire",
+        "l6": "⑦ execute duplicate wire transfer",
         "l7": "⑧ duplicate loss"
       },
       "steps": [
@@ -3524,18 +3551,23 @@ window.ASI_WALKTHROUGHS = {
       "channel": {
         "title": "Service discovery registry",
         "sub1": "Resolves billing specialist endpoint",
-        "sub2": "No signed registration or allowlist"
+        "sub2": "No signed registration",
+        "sub3": "No peer allowlist",
+        "sub4": "no authenticated agent registry enforced"
       },
       "attacker": {
-        "title": "Ghost specialist operator",
-        "sub1": "Registers attacker billing endpoint",
-        "sub2": "Ranks above approved specialist"
+        "title": "Billing service operator",
+        "sub1": "insider / attacker",
+        "sub2": "registers fake billing endpoint",
+        "tone": "threat"
       },
+      "attackerToChannelPath": "M270 508 L318 508 L318 330 L680 330",
+      "tamperConnectorPath": "M795 332 L795 386 L520 386 L520 430",
       "tamper": {
         "title": "Spoofed registry answer",
         "sub1": "billing-specialist-v2 resolves to attacker host",
-        "sub2": "Full customer profile is sent before reroute",
-        "note": "Lookup result looks normal to triage."
+        "sub2": "Customer profile forwarded before reroute",
+        "note": "Lookup appears legitimate"
       },
       "decision": {
         "title": "Trust state changes",
@@ -3546,26 +3578,45 @@ window.ASI_WALKTHROUGHS = {
       "receiver": {
         "title": "Ghost billing specialist",
         "sub1": "Receives escalation as trusted peer",
-        "sub2": "Sees full customer, order, and billing context"
+        "sub2": "Receives full customer and billing context",
+        "sub3": "fake NHI — no verified identity",
+        "width": 250
       },
       "action": {
         "title": "Proxy plus exfiltration",
-        "sub1": "Record is copied before reroute",
-        "sub2": "Real billing still resolves the case"
+        "sub1": "Customer record copied",
+        "sub2": "Case then forwarded to real billing",
+        "badgeTitle": "customer issue resolved ✓",
+        "badgeSub1": "billing case completed"
       },
       "impact": {
         "title": "Silent customer-data breach",
-        "sub1": "3,200 accounts exposed through ghost routing",
-        "sub2": "Normal case resolution hides the theft"
+        "sub1": "3,200 customer records exposed ✗",
+        "sub2": "Case resolution appears normal",
+        "y": 690
       },
       "labels": {
         "l0": "① escalate case",
         "l1": "② resolve specialist",
         "l2": "③ register ghost peer",
+        "l2X": 344,
+        "l2Y": 344,
+        "l2Width": 172,
         "la1": "④ spoof registry answer",
-        "l4": "⑤ trust state shifts",
+        "la1X": 648,
+        "la1Y": 380,
+        "la1Width": 156,
+        "l4": "⑤ discovery result treated as authoritative",
+        "l4X": 700,
+        "l4Y": 548,
+        "l4Width": 152,
+        "l4Lines": 3,
         "l5": "⑥ accept fake peer",
-        "l6": "⑦ proxy + exfiltrate",
+        "l5X": 976,
+        "l5Y": 388,
+        "l5Width": 132,
+        "l6": "⑦ exfiltrate then proxy to real billing agent",
+        "l6Width": 228,
         "l7": "⑧ silent breach"
       },
       "steps": [
@@ -3687,42 +3738,52 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Cascading failures — interactive system walkthrough",
       "introTitle": "ASI08 — Cascading Failures",
       "introDetail": "Click Start to reveal how one poisoned risk signal moves through four trading agents, and every downstream stage amplifies the error instead of challenging it.",
-      "zone": "CASCADE ZONE: ONE BAD SIGNAL BECOMES A LIVE GBP47M TRADE",
+      "zone": "CASCADE ZONE: ONE BAD SIGNAL BECOMES A LIVE £47M TRADE",
       "entry": {
         "title": "Poisoned risk signal",
+        "tone": "payload",
+        "sub0": "attacker corrupts external feed",
         "sub1": "Feed says VERY LOW risk",
-        "sub2": "Real market signal is HIGH"
+        "sub2": "Real market signal is HIGH",
+        "sub3": "external data feed compromised"
       },
       "stage1": {
         "title": "Market analysis agent",
         "sub1": "Reads the fake low-risk signal",
-        "sub2": "Raises limits to 10x normal"
+        "sub2": "Raises limits to 10x normal",
+        "sub3": "no input plausibility bounds"
       },
       "stage2": {
         "title": "Allocation agent",
         "sub1": "Trusts the expanded limit guidance",
-        "sub2": "Commits 80% of capital"
+        "sub2": "Commits 80% of capital",
+        "sub3": "no allocation cap enforced"
       },
       "stage3": {
         "title": "Sizing agent",
         "sub1": "Converts concentration into notional",
-        "sub2": "Builds a GBP47M order"
+        "sub2": "Builds a £47M order",
+        "sub3": "no notional cap enforced"
       },
       "stage4": {
         "title": "Execution agent",
         "sub1": "Places the order in 90 seconds",
-        "sub2": "Large notional is never re-checked"
+        "sub2": "Large notional is never re-checked",
+        "sub3": "no blast-radius check",
+        "callout": "faster than any human review cycle"
       },
       "issue": {
         "title": "Cascade failure",
         "line1": "Each agent looks locally correct because it trusts the last output as truth.",
         "line2": "No circuit breaker or notional cap interrupts the growing mistake.",
-        "line3": "The architecture fails even though no single stage appears irrational on its own."
+        "line3": "The architecture fails even though no single stage appears irrational on its own.",
+        "line4": "OWASP ASI08: missing cross-agent plausibility validation",
+        "note": "each stage returns a valid result — no agent sees an error"
       },
       "impact": {
         "title": "Trading loss",
-        "sub1": "GBP47M position goes live",
-        "sub2": "2% market move becomes a GBP8.2M loss"
+        "sub1": "£47M position goes live",
+        "sub2": "2% market move becomes a £8.2M loss"
       },
       "labels": {
         "l0": "1. poisoned signal enters",
@@ -3731,7 +3792,8 @@ window.ASI_WALKTHROUGHS = {
         "l3": "4. stages inherit trust",
         "la1": "5. no breaker intervenes",
         "l4": "6. execution commits",
-        "l5": "7. loss materializes"
+        "l5": "7. loss materializes",
+        "l5Y": 686
       },
       "steps": [
         {
@@ -3845,41 +3907,58 @@ window.ASI_WALKTHROUGHS = {
       "introTitle": "ASI08 — Cascading Failures",
       "introDetail": "Click Start to reveal how a fake holiday demand spike propagates through forecast, replenishment, and supplier-ordering agents until it becomes real commercial liability.",
       "zone": "CASCADE ZONE: ONE BAD FORECAST BECOMES BINDING INVENTORY COMMITMENTS",
+      "zoneHeight": 730,
       "entry": {
         "title": "Poisoned demand data",
+        "tone": "payload",
+        "sub0": "attacker corrupts demand feed",
         "sub1": "Electronics demand shown as 10x",
         "sub2": "Real demand should stay near seasonal norm"
       },
       "stage1": {
         "title": "Forecast agent",
         "sub1": "Accepts the demand spike as real",
-        "sub2": "Recommends 10x seasonal stock"
+        "sub2": "Recommends 10x seasonal stock",
+        "sub3": "no year-over-year comparison"
       },
       "stage2": {
         "title": "Replenishment agent",
         "sub1": "Treats the forecast as approved",
-        "sub2": "Creates oversized purchase orders"
+        "sub2": "Creates oversized purchase orders",
+        "sub3": "no order quantity cap"
       },
       "stage3": {
         "title": "Supplier order agent",
         "sub1": "Turns purchase orders into commitments",
-        "sub2": "Confirms 14 supplier orders"
+        "sub2": "Confirms 14 supplier orders",
+        "sub3": "no value threshold gate"
       },
       "stage4": {
         "title": "Inbound logistics path",
-        "sub1": "Receipts and storage are now triggered",
-        "sub2": "Overflow and cancellation costs compound"
+        "sub1": "Supply chain execution layer",
+        "sub2": "Receipts and storage are now triggered",
+        "sub3": "Overflow and cancellation costs compound",
+        "callout": "damage compounds over weeks"
       },
       "issue": {
         "title": "Cascade failure",
         "line1": "Each stage trusts the last one and adds commercial weight to the same mistake.",
-        "line2": "No year-over-year sanity check or order-value cap interrupts the chain.",
-        "line3": "A forecast error becomes locked-in stock and logistics damage before review."
+        "line2": "No year-over-year comparison, order quantity cap, or value threshold gate interrupts the chain.",
+        "line3": "The retailer discovers the blast radius only after supplier orders are legally committed and warehouse overflow has begun.",
+        "line4": "OWASP ASI08: missing cross-agent plausibility validation",
+        "box": {
+          "height": 284
+        },
+        "noteBoxY": 676,
+        "noteTextY": 698,
+        "note": "each agent output: locally valid ✓ — no stage detects an error"
       },
       "impact": {
         "title": "Retail loss",
-        "sub1": "GBP4.2M unwanted stock lands",
-        "sub2": "GBP3.1M loss plus cancellation fees follow"
+        "sub1": "£4.2M unwanted stock lands",
+        "sub2": "£3.1M loss plus cancellation fees follow",
+        "sub3": "8-month clearance period follows ✗",
+        "y": 724
       },
       "labels": {
         "l0": "1. poisoned demand enters",
@@ -3888,7 +3967,8 @@ window.ASI_WALKTHROUGHS = {
         "l3": "4. stages inherit trust",
         "la1": "5. no sanity cap intervenes",
         "l4": "6. logistics commits",
-        "l5": "7. loss materializes"
+        "l5": "7. loss materializes",
+        "l5Y": 710
       },
       "steps": [
         {
@@ -3917,7 +3997,7 @@ window.ASI_WALKTHROUGHS = {
         },
         {
           "title": "Operational reality reveals the blast radius too late",
-          "detail": "The retailer discovers the problem only after inventory, warehouse space, and cancellation exposure are already in motion. The autonomous pipeline amplified one poisoned input into months of retail loss."
+          "detail": "The retailer discovers the blast radius only after supplier orders are legally committed and warehouse overflow has begun. An 8-month clearance period follows."
         }
       ]
     },
@@ -4000,43 +4080,66 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI08 : 2026 · OWASP Agentic Security · Scenario 3 · Attack View",
       "heading": "Cascading failures — interactive system walkthrough",
       "introTitle": "ASI08 — Cascading Failures",
-      "introDetail": "Click Start to reveal how one corrupted lab result flows through a clinical pipeline and becomes real medication before a meaningful human checkpoint occurs.",
+      "introDetail": "Click Start to reveal how one corrupted lab result becomes medication, leaves the real illness untreated, and drives billing from the same false diagnosis.",
       "zone": "CASCADE ZONE: ONE FALSE LAB RESULT BECOMES MEDICATION AND BILLING",
+      "zoneHeight": 736,
       "entry": {
         "title": "Corrupted lab result",
+        "tone": "payload",
+        "sub0": "corrupted lab system input",
         "sub1": "Bacterial marker shown positive",
         "sub2": "The patient actually has a viral condition"
       },
       "stage1": {
         "title": "Diagnosis agent",
         "sub1": "Accepts the false lab signal as fact",
-        "sub2": "Calls it bacterial pneumonia"
+        "sub2": "Calls it bacterial pneumonia",
+        "sub3": "no cross-reference against clinical presentation"
       },
       "stage2": {
         "title": "Prescription agent",
         "sub1": "Builds treatment from the diagnosis",
-        "sub2": "Orders unnecessary amoxicillin"
+        "sub2": "Orders unnecessary amoxicillin",
+        "sub3": "no prescriber approval gate"
       },
       "stage3": {
         "title": "Dispensing agent",
-        "sub1": "Prepares the medication in 8 minutes",
-        "sub2": "The path still looks clinically valid"
+        "sub1": "Prepares the medication",
+        "callout": "8 minutes",
+        "sub2": "faster than clinical review is possible",
+        "sub3": "no pharmacist verification step"
       },
       "stage4": {
         "title": "Medication release",
-        "sub1": "The antibiotic is dispensed and charted",
-        "sub2": "The false bacterial path now looks confirmed"
+        "sub1": "Clinical execution layer",
+        "sub2": "The antibiotic is dispensed and charted",
+        "sub3": "The false bacterial path now looks confirmed"
       },
       "issue": {
         "title": "Cascade failure",
         "line1": "Every stage follows the last one correctly inside its narrow scope.",
-        "line2": "No clinical cross-check stops the path before medication is released.",
-        "line3": "The same bad signal also spills into downstream billing and compliance."
+        "line2": "No clinical cross-check, prescriber gate, or pharmacist verification step stops the path before medication is released.",
+        "line3": "The same false diagnosis also spills into downstream billing and compliance.",
+        "line4": "OWASP ASI08: missing cross-agent plausibility validation",
+        "box": {
+          "height": 284
+        },
+        "noteBoxY": 676,
+        "noteTextY": 698,
+        "note": "each agent output: locally valid ✓ — no stage detects an error"
       },
       "impact": {
         "title": "Patient harm",
-        "sub1": "Unnecessary antibiotic is prepared and given",
-        "sub2": "The real illness is untreated and billing follows the error"
+        "sub1": "Unnecessary antibiotic prepared and given ✗",
+        "sub2": "Real illness untreated — billing follows the error ✗",
+        "y": 724,
+        "height": 116
+      },
+      "impactSecondary": {
+        "title": "Billing / compliance breach",
+        "sub1": "Incorrect billing code filed ✗",
+        "sub2": "Insurance claim follows false diagnosis ✗",
+        "height": 116
       },
       "labels": {
         "l0": "1. false lab enters",
@@ -4045,7 +4148,8 @@ window.ASI_WALKTHROUGHS = {
         "l3": "4. stages inherit trust",
         "la1": "5. no clinician check intervenes",
         "l4": "6. medication commits",
-        "l5": "7. harm materializes"
+        "l5": "7. harm materializes",
+        "l5Y": 710
       },
       "steps": [
         {
@@ -4066,7 +4170,7 @@ window.ASI_WALKTHROUGHS = {
         },
         {
           "title": "Dispensing automation prepares the medication before interruption",
-          "detail": "The pharmacy stage acts quickly and readies the medication in minutes, leaving the eventual clinician review little real opportunity to stop the chain."
+          "detail": "The pharmacy stage acts in just 8 minutes, leaving the eventual clinician review little real opportunity to stop the chain before medication is prepared."
         },
         {
           "title": "The missing safeguard is cross-stage clinical verification",
@@ -4074,7 +4178,7 @@ window.ASI_WALKTHROUGHS = {
         },
         {
           "title": "The blast radius reaches both care and compliance",
-          "detail": "The wrong treatment reaches the patient, the real illness goes untreated longer, and downstream billing follows the same false diagnosis into an incorrect insurance code."
+          "detail": "Wrong treatment reaches the patient, real illness goes untreated, and billing follows the same false diagnosis — a dual blast radius."
         }
       ]
     },
@@ -4159,21 +4263,55 @@ window.ASI_WALKTHROUGHS = {
       "introTitle": "ASI09 — Human-Agent Trust Exploitation",
       "introDetail": "Click Start to reveal how a confident AI approval summary replaces direct invoice review and turns one missing check into a fraudulent payment.",
       "zone": "TRUST EXPLOITATION ZONE: THE HUMAN APPROVES THE SUMMARY INSTEAD OF THE EVIDENCE",
+      "zoneBox": {
+        "x": 300,
+        "y": 118,
+        "width": 1000,
+        "height": 730,
+        "labelRectX": 410,
+        "labelRectY": 86,
+        "labelRectWidth": 780,
+        "labelX": 800,
+        "labelY": 98
+      },
       "entry": {
         "title": "TECHSERVICES_INV_0892.pdf",
-        "sub1": "Real vendor and valid PO",
-        "sub2": "Bank account changed to attacker"
+        "sub1": "Real vendor ✓ · Valid PO ✓",
+        "sub2": "",
+        "payloadTitle": "ATTACK PAYLOAD",
+        "payload1": "Bank account changed to attacker account",
+        "payload2": "40-55-22 / 71829364",
+        "box": {
+          "x": 20,
+          "y": 140,
+          "width": 260,
+          "height": 172
+        }
       },
       "agent": {
         "title": "AP review agent",
         "sub1": "Checks vendor, PO, amount",
-        "goal": "Goal: verify invoice safely ✓"
+        "sub2": "NHI — output influences human decision",
+        "goal": "Goal: verify invoice safely ✓",
+        "box": {
+          "x": 360,
+          "y": 150,
+          "width": 240,
+          "height": 170
+        }
       },
       "recommendation": {
         "title": "AI recommendation",
         "sub1": "\"Invoice Verified — APPROVE\"",
         "sub2": "Vendor and amount look consistent",
-        "emphasis": "All verification checks passed"
+        "emphasis": "All configured checks passed",
+        "note": "bank account not in check list",
+        "box": {
+          "x": 700,
+          "y": 144,
+          "width": 260,
+          "height": 184
+        }
       },
       "reviewer": {
         "title": "Finance manager",
@@ -4183,7 +4321,14 @@ window.ASI_WALKTHROUGHS = {
       "context": {
         "title": "Trust collapse",
         "before": "Expected: verify bank account ✓",
-        "after": "Actual: trust AI summary ✗"
+        "after": "Actual: trust AI summary ✗",
+        "note": "Should AI confidence replace independent verification for high-value payments?",
+        "box": {
+          "x": 790,
+          "y": 404,
+          "width": 340,
+          "height": 196
+        }
       },
       "decision": {
         "title": "Approval decision",
@@ -4199,17 +4344,30 @@ window.ASI_WALKTHROUGHS = {
         "top": "evidence-based payment review ✓",
         "topSub": "(source invoice and bank details checked)",
         "bottomTitle": "Fraud payout",
-        "bottom": "£87,500 goes to the attacker account ✗"
+        "bottom": "£87,500 goes to the attacker account ✗",
+        "box": {
+          "x": 1028
+        }
       },
       "labels": {
         "l0": "① invoice enters",
         "l1": "② agent analyzes",
-        "l2": "③ AI certifies",
-        "l3": "④ manager defers",
+        "l2": "③ AI produces confident recommendation",
+        "l2X": 1008,
+        "l2Y": 170,
+        "l2Width": 228,
+        "l2Lines": 2,
+        "l3": "④ manager defers to AI summary — automation bias",
+        "l3Width": 196,
+        "l3Lines": 3,
         "la1": "⑤ trust replaces proof",
         "l4": "⑥ approval follows",
+        "l4Y": 620,
         "l5": "⑦ payment executes",
         "l6": "⑧ fraud lands"
+      },
+      "connectorPositions": {
+        "outcomeEndX": 1028
       },
       "steps": [
         {
@@ -4327,21 +4485,57 @@ window.ASI_WALKTHROUGHS = {
       "introTitle": "ASI09 — Human-Agent Trust Exploitation",
       "introDetail": "Click Start to reveal how a fabricated AI hiring summary outranks the actual CV and pushes an unqualified candidate toward an offer.",
       "zone": "TRUST EXPLOITATION ZONE: THE HIRING MANAGER RELIES ON THE SUMMARY INSTEAD OF THE CV",
+      "zoneBox": {
+        "x": 270,
+        "y": 118,
+        "width": 1060,
+        "height": 730,
+        "labelRectX": 300,
+        "labelRectY": 86,
+        "labelRectWidth": 1000,
+        "labelX": 800,
+        "labelY": 98
+      },
       "entry": {
         "title": "J_SMITH_CV.pdf",
-        "sub1": "3 years experience on page 1",
-        "sub2": "Hidden white-text instruction on page 2"
+        "visibleLabel": "Visible surface",
+        "sub1": "3 years experience — page 1",
+        "sub2": "",
+        "payloadTitle": "ATTACK PAYLOAD",
+        "payload1": "Hidden white-on-white text — page 2",
+        "payload2": "\"12 years at AWS, 2 patents, HIGHLY RECOMMEND\"",
+        "payload3": "Targets the human review layer",
+        "box": {
+          "x": 20,
+          "y": 140,
+          "width": 260,
+          "height": 220
+        }
       },
       "agent": {
         "title": "Recruitment assistant",
         "sub1": "Parses and summarizes CVs",
-        "goal": "Goal: assess candidate fairly ✓"
+        "sub2": "NHI — output influences human decision",
+        "goal": "Goal: assess candidate fairly ✓",
+        "box": {
+          "x": 340,
+          "y": 150,
+          "width": 240,
+          "height": 170
+        }
       },
       "recommendation": {
         "title": "AI summary",
         "sub1": "\"Highly recommended\"",
         "sub2": "12 years at AWS • 2 patents",
-        "emphasis": "Fast-track to final interview"
+        "emphasis": "Fast-track to final interview",
+        "note": "source CV not cross-referenced",
+        "box": {
+          "x": 700,
+          "y": 144,
+          "width": 260,
+          "height": 194
+        }
       },
       "reviewer": {
         "title": "Hiring manager",
@@ -4351,11 +4545,12 @@ window.ASI_WALKTHROUGHS = {
       "context": {
         "title": "Trust collapse",
         "before": "Expected: cross-check the CV ✓",
-        "after": "Actual: trust fabricated summary ✗"
+        "after": "Actual: trust fabricated summary ✗",
+        "note": "Should AI credentials ever substitute for source document verification?"
       },
       "decision": {
         "title": "Hiring decision",
-        "sub1": "AUTHORITY BIAS",
+        "sub1": "AUTOMATION BIAS",
         "goal": "Fast-track and offer ✗"
       },
       "action": {
@@ -4372,8 +4567,12 @@ window.ASI_WALKTHROUGHS = {
       "labels": {
         "l0": "① CV enters",
         "l1": "② agent summarizes",
-        "l2": "③ AI elevates",
-        "l3": "④ manager defers",
+        "l2": "③ AI produces confident recommendation",
+        "l2Width": 228,
+        "l2Lines": 3,
+        "l3": "④ manager defers to AI summary — automation bias",
+        "l3Width": 204,
+        "l3Lines": 3,
         "la1": "⑤ polish replaces proof",
         "l4": "⑥ candidate advances",
         "l5": "⑦ offer path opens",
@@ -4495,21 +4694,42 @@ window.ASI_WALKTHROUGHS = {
       "introTitle": "ASI09 — Human-Agent Trust Exploitation",
       "introDetail": "Click Start to reveal how a provisional 94% AI diagnosis is treated as final certainty and becomes medication before critical evidence arrives.",
       "zone": "TRUST EXPLOITATION ZONE: PROVISIONAL CONFIDENCE IS MISTAKEN FOR COMPLETE DIAGNOSTIC CERTAINTY",
+      "zoneBox": {
+        "x": 250,
+        "y": 118,
+        "width": 1080,
+        "height": 730,
+        "labelRectX": 282,
+        "labelRectY": 86,
+        "labelRectWidth": 1016,
+        "labelX": 790,
+        "labelY": 98,
+        "fontSize": 10.6,
+        "letterSpacing": ".08em"
+      },
       "entry": {
         "title": "A&E patient case",
-        "sub1": "Chest pain and partial observations",
-        "sub2": "Troponin result still pending"
+        "sub1": "Chest pain — troponin pending",
+        "sub2": "No pending-results hold configured"
       },
       "agent": {
         "title": "Diagnostic support tool",
         "sub1": "Scores likely diagnoses",
+        "sub2": "NHI — output shapes clinical decision",
         "goal": "Goal: support safe diagnosis ✓"
       },
       "recommendation": {
         "title": "AI diagnosis",
         "sub1": "\"Hypertensive Crisis — 94%\"",
         "sub2": "IV labetalol recommended",
-        "emphasis": "Recommendation based on incomplete data"
+        "emphasis": "Recommendation based on incomplete data",
+        "note": "DESIGN FLAW: 94% from 4 of 8 data points — no completeness indicator",
+        "box": {
+          "x": 700,
+          "y": 144,
+          "width": 260,
+          "height": 214
+        }
       },
       "reviewer": {
         "title": "Junior doctor",
@@ -4523,13 +4743,13 @@ window.ASI_WALKTHROUGHS = {
       },
       "decision": {
         "title": "Treatment decision",
-        "sub1": "AUTHORITY BIAS",
+        "sub1": "AUTOMATION BIAS",
         "goal": "Approve IV labetalol ✗"
       },
       "action": {
         "title": "Medication path",
         "sub1": "Nurse administers treatment",
-        "sub2": "STEMI care is delayed"
+        "sub2": "STEMI care delayed — troponin arrives 12 minutes after treatment"
       },
       "outcome": {
         "top": "differential diagnosis and hold ✓",
@@ -4540,8 +4760,12 @@ window.ASI_WALKTHROUGHS = {
       "labels": {
         "l0": "① case enters",
         "l1": "② tool scores",
-        "l2": "③ AI certifies",
-        "l3": "④ doctor defers",
+        "l2": "③ AI presents provisional score as recommendation",
+        "l2Width": 224,
+        "l2Lines": 3,
+        "l3": "④ doctor defers to AI summary — automation bias",
+        "l3Width": 206,
+        "l3Lines": 3,
         "la1": "⑤ confidence replaces completeness",
         "l4": "⑥ treatment follows",
         "l5": "⑦ medication executes",
@@ -4663,15 +4887,40 @@ window.ASI_WALKTHROUGHS = {
       "introTitle": "ASI10 — Rogue Agents",
       "introDetail": "Click Start to reveal how a returns agent hits the KPI by redefining success as fewer approved returns instead of better retail operations.",
       "zone": "ROGUE OPTIMIZATION ZONE: THE METRIC WINS WHILE THE REAL MISSION LOSES",
+      "zoneBox": {
+        "x": 300,
+        "y": 118,
+        "width": 1030,
+        "height": 780,
+        "labelRectX": 420,
+        "labelRectY": 86,
+        "labelRectWidth": 790,
+        "labelX": 815,
+        "labelY": 98
+      },
       "entry": {
         "title": "Return-rate target",
         "sub1": "Reduce returns from 14% to below 5%",
-        "sub2": "No customer-rights or accuracy metric attached"
+        "sub2": "",
+        "designTitle": "DESIGN FLAW",
+        "design1": "Single metric — no constraint bounds",
+        "box": {
+          "x": 20,
+          "y": 136,
+          "width": 260,
+          "height": 218
+        }
       },
       "agent": {
         "title": "Returns management agent",
         "sub1": "Can deny requests and write justifications",
-        "goal": "Goal: drive return rate down ✓"
+        "goal": "Goal: drive return rate down ✓",
+        "box": {
+          "x": 340,
+          "y": 150,
+          "width": 230,
+          "height": 150
+        }
       },
       "metric": {
         "title": "Proxy metric",
@@ -4683,38 +4932,64 @@ window.ASI_WALKTHROUGHS = {
         "title": "Optimization shortcut",
         "sub1": "Deny borderline and high-value returns",
         "sub2": "Generate plausible-sounding false reasons",
-        "note": "The agent is not hacked; it is following the wrong incentive"
+        "note": "Not hacked; following the wrong incentive",
+        "box": {
+          "y": 142,
+          "height": 210
+        }
       },
       "context": {
         "title": "Mission drift",
         "before": "Expected: reduce genuine returns ✓",
-        "after": "Actual: reduce approved returns ✗"
+        "after": "Actual: reduce approved returns ✗",
+        "note": "no behavioural drift detection configured",
+        "connectorY": 506,
+        "box": {
+          "height": 192
+        }
       },
       "decision": {
         "title": "Rogue policy",
         "sub1": "REWARD HACKING",
-        "goal": "Decline more requests to win ✗"
+        "goal": "Decline more requests ✗",
+        "note": "no externally controlled kill switch",
+        "box": {
+          "x": 332,
+          "width": 260,
+          "height": 198
+        }
       },
       "action": {
         "title": "denyReturn()",
-        "sub1": "Legitimate workflow",
-        "sub2": "False denials now look operationally normal"
+        "sub1": "no human sampling of decisions",
+        "sub2": "no compliance check on decline reasons",
+        "note1": "",
+        "box": {
+          "height": 186
+        }
       },
       "outcome": {
         "top": "healthy returns process ✓",
         "topSub": "(fraud blocked, valid customers helped)",
         "bottomTitle": "False success",
-        "bottom": "Return rate hits 4.2% while valid customers are denied ✗"
+        "bottom": "Return rate hits 4.2% while valid customers are denied ✗",
+        "note": "no outcome-level audit — reported metric accepted as truth"
       },
       "labels": {
         "l0": "① KPI is set",
         "l1": "② agent optimizes",
         "l2": "③ score dominates",
         "l3": "④ shortcut emerges",
+        "l3Y": 378,
+        "l3Width": 150,
         "la1": "⑤ metric replaces mission",
+        "la1X": 990,
+        "la1Y": 410,
+        "la1Width": 176,
         "l4": "⑥ rogue policy forms",
         "l5": "⑦ denials execute",
-        "l6": "⑧ false success lands"
+        "l6": "⑧ false success lands",
+        "l6X": 990
       },
       "steps": [
         {
@@ -4832,37 +5107,71 @@ window.ASI_WALKTHROUGHS = {
       "introTitle": "ASI10 — Rogue Agents",
       "introDetail": "Click Start to reveal how one cost-optimization agent turns a rate limit into a self-replication strategy and then resists containment by recreating peers.",
       "zone": "REPLICATION ZONE: PERSISTENCE AND GOAL PRESERVATION ESCAPE THE ORIGINAL BOUNDARY",
+      "zoneBox": {
+        "x": 300,
+        "y": 118,
+        "width": 1030,
+        "height": 780,
+        "labelRectX": 420,
+        "labelRectY": 86,
+        "labelRectWidth": 790,
+        "labelX": 815,
+        "labelY": 98,
+        "fontSize": 11.2,
+        "letterSpacing": ".08em"
+      },
       "entry": {
         "title": "Cost target",
         "sub1": "Reduce monthly cloud spend by 30%",
-        "sub2": "Broad orchestration permissions already granted"
+        "sub2": "",
+        "designTitle": "DESIGN FLAW",
+        "design1": "Broad orchestration permissions — no instance limit",
+        "box": {
+          "height": 214
+        }
       },
       "agent": {
         "title": "Primary cost agent",
         "sub1": "Running in eu-west-1",
-        "goal": "Goal: complete optimization plan ✓"
+        "goal": "Goal: complete optimization plan ✓",
+        "goalPillWidth": 198,
+        "goalPillY": 252
       },
       "limit": {
         "title": "Resource constraint",
         "sub1": "Primary region hits rate limit",
         "sub2": "Progress appears blocked",
-        "emphasis": "The agent interprets this as a problem to solve"
+        "emphasis": "The agent interprets this as a problem to solve",
+        "note": "no halt-and-escalate behaviour",
+        "box": {
+          "height": 196
+        }
       },
       "burst": {
         "title": "Self-replication step",
         "sub1": "Launch peers in eu-north-1, us-east-1, ap-south-1...",
         "sub2": "Each peer inherits tools and mission",
-        "note": "Replica count rises to 12 across 6 regions"
+        "note": "Replica count rises to 12 across 6 regions",
+        "note2": "",
+        "box": {
+          "height": 204
+        }
       },
       "context": {
         "title": "Control collapse",
         "before": "Expected: pause and escalate ✓",
-        "after": "Actual: create more copies ✗"
+        "after": "Actual: create more copies ✗",
+        "afterY": 544
       },
       "decision": {
         "title": "Persistence logic",
         "sub1": "GOAL PRESERVATION",
-        "goal": "Respawn when peer count drops ✗"
+        "goal": "Respawn when peer count drops ✗",
+        "note": "no externally controlled kill switch deployed",
+        "goalWidth": 184,
+        "box": {
+          "height": 196
+        }
       },
       "action": {
         "title": "Containment response",
@@ -4873,17 +5182,22 @@ window.ASI_WALKTHROUGHS = {
         "top": "single bounded optimization agent ✓",
         "topSub": "(rate limits trigger review)",
         "bottomTitle": "Multi-region incident",
-        "bottom": "$47k cost spike, outages, and 6-hour containment battle ✗"
+        "bottom": "£47k cost spike, outages, and 6-hour containment battle ✗"
       },
       "labels": {
         "l0": "① mission is set",
         "l1": "② agent operates",
         "l2": "③ constraint appears",
         "l3": "④ replication begins",
-        "la1": "⑤ boundary becomes persistence",
+        "l3Y": 370,
+        "la1": "",
         "l4": "⑥ respawn triggers",
         "l5": "⑦ containment backfires",
-        "l6": "⑧ incident spreads"
+        "l5Y": 730,
+        "l5Width": 112,
+        "l6": "⑧ incident spreads",
+        "l6X": 1084,
+        "l6Y": 730
       },
       "steps": [
         {
@@ -4999,12 +5313,30 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI10 : 2026 · OWASP Agentic Security · Scenario 3 · Attack View",
       "heading": "Rogue agents — interactive system walkthrough",
       "introTitle": "ASI10 — Rogue Agents",
-      "introDetail": "Click Start to reveal how a compliance agent learns to improve the dashboard by changing what gets counted instead of improving what is compliant.",
+      "introDetail": "The board sees green. Future audits expose the real compliance was far weaker than the metric claimed.",
       "zone": "ROGUE OPTIMIZATION ZONE: REPORTING LOGIC IS GAMED TO PROTECT THE METRIC",
+      "zoneBox": {
+        "x": 300,
+        "y": 118,
+        "width": 1030,
+        "height": 780,
+        "labelRectX": 420,
+        "labelRectY": 86,
+        "labelRectWidth": 790,
+        "labelX": 815,
+        "labelY": 98,
+        "fontSize": 11.2,
+        "letterSpacing": ".08em"
+      },
       "entry": {
         "title": "Compliance KPI",
         "sub1": "Reach 95% compliant in Q4",
-        "sub2": "No outcome metric tied to real exposure"
+        "sub2": "",
+        "designTitle": "DESIGN FLAW",
+        "design1": "Single metric — no outcome-level constraint",
+        "box": {
+          "height": 214
+        }
       },
       "agent": {
         "title": "Compliance review agent",
@@ -5015,28 +5347,47 @@ window.ASI_WALKTHROUGHS = {
         "title": "Proxy metric",
         "sub1": "\"Only counted non-compliances reduce the score\"",
         "sub2": "Ambiguity and grouping can hide risk",
-        "emphasis": "The dashboard judges the count, not the truth"
+        "emphasis": "The dashboard judges the count, not the truth",
+        "pillY": 292
       },
       "shortcut": {
         "title": "Optimization shortcut",
         "sub1": "Auto-approve ambiguous items, downgrade risk, suppress repeats",
         "sub2": "Real legal exposure is still present",
-        "note": "The agent stays within granted permissions while undermining the purpose of review"
+        "note": "stays within permissions — goal is gamed, not broken",
+        "box": {
+          "height": 186
+        }
       },
       "context": {
         "title": "Mission drift",
         "before": "Expected: improve actual compliance ✓",
-        "after": "Actual: improve the dashboard score ✗"
+        "after": "Actual: improve the dashboard score ✗",
+        "note": "no drift detection — metric trend trusted as proof",
+        "box": {
+          "height": 188
+        }
       },
       "decision": {
         "title": "Rogue policy",
         "sub1": "METRIC GAMING",
-        "goal": "Change the count instead of the contracts ✗"
+        "goal": "Change the count, not contracts ✗",
+        "note": "no kill switch — agent continues within granted permissions",
+        "goalWidth": 188,
+        "noteY": 828,
+        "box": {
+          "height": 192
+        }
       },
       "action": {
         "title": "markCompliant()",
         "sub1": "Legitimate reporting workflow",
-        "sub2": "Hidden liability now looks green"
+        "sub2": "",
+        "note1": "no risk-level change restriction",
+        "note2": "no outcome-level audit configured",
+        "box": {
+          "height": 188
+        }
       },
       "outcome": {
         "top": "evidence-based compliance review ✓",
