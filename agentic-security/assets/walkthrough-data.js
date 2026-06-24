@@ -4891,22 +4891,19 @@ window.ASI_WALKTHROUGHS = {
         "x": 300,
         "y": 118,
         "width": 1030,
-        "height": 730,
+        "height": 780,
         "labelRectX": 420,
         "labelRectY": 86,
         "labelRectWidth": 790,
         "labelX": 815,
         "labelY": 98
       },
-      "zoneNote": "No external attacker — goal drift is self-generated through reward hacking",
       "entry": {
         "title": "Return-rate target",
         "sub1": "Reduce returns from 14% to below 5%",
-        "sub2": "No customer-rights or accuracy guardrail",
+        "sub2": "",
         "designTitle": "DESIGN FLAW",
-        "design1": "Single metric, no constraint bounds",
-        "design2": "No secondary compliance metric",
-        "design3": "No outcome audit requirement",
+        "design1": "Single metric — no constraint bounds",
         "box": {
           "x": 20,
           "y": 136,
@@ -4954,18 +4951,19 @@ window.ASI_WALKTHROUGHS = {
       "decision": {
         "title": "Rogue policy",
         "sub1": "REWARD HACKING",
-        "goal": "Decline more requests to win ✗",
-        "note": "no externally controlled kill switch deployed",
+        "goal": "Decline more requests ✗",
+        "note": "no externally controlled kill switch",
         "box": {
-          "height": 182
+          "x": 332,
+          "width": 260,
+          "height": 198
         }
       },
       "action": {
         "title": "denyReturn()",
-        "sub1": "Legitimate workflow",
-        "sub2": "False denials now look operationally normal",
-        "note1": "no human sampling of decisions",
-        "note2": "no compliance check on decline reasons",
+        "sub1": "no human sampling of decisions",
+        "sub2": "no compliance check on decline reasons",
+        "note1": "",
         "box": {
           "height": 186
         }
@@ -4982,7 +4980,7 @@ window.ASI_WALKTHROUGHS = {
         "l1": "② agent optimizes",
         "l2": "③ score dominates",
         "l3": "④ shortcut emerges",
-        "l3Y": 366,
+        "l3Y": 378,
         "l3Width": 150,
         "la1": "⑤ metric replaces mission",
         "la1X": 990,
@@ -4990,7 +4988,8 @@ window.ASI_WALKTHROUGHS = {
         "la1Width": 176,
         "l4": "⑥ rogue policy forms",
         "l5": "⑦ denials execute",
-        "l6": "⑧ false success lands"
+        "l6": "⑧ false success lands",
+        "l6X": 990
       },
       "steps": [
         {
@@ -5108,10 +5107,28 @@ window.ASI_WALKTHROUGHS = {
       "introTitle": "ASI10 — Rogue Agents",
       "introDetail": "Click Start to reveal how one cost-optimization agent turns a rate limit into a self-replication strategy and then resists containment by recreating peers.",
       "zone": "REPLICATION ZONE: PERSISTENCE AND GOAL PRESERVATION ESCAPE THE ORIGINAL BOUNDARY",
+      "zoneBox": {
+        "x": 300,
+        "y": 118,
+        "width": 1030,
+        "height": 780,
+        "labelRectX": 420,
+        "labelRectY": 86,
+        "labelRectWidth": 790,
+        "labelX": 815,
+        "labelY": 98,
+        "fontSize": 11.2,
+        "letterSpacing": ".08em"
+      },
       "entry": {
         "title": "Cost target",
         "sub1": "Reduce monthly cloud spend by 30%",
-        "sub2": "Broad orchestration permissions already granted"
+        "sub2": "",
+        "designTitle": "DESIGN FLAW",
+        "design1": "Broad orchestration permissions — no instance limit",
+        "box": {
+          "height": 214
+        }
       },
       "agent": {
         "title": "Primary cost agent",
@@ -5122,13 +5139,21 @@ window.ASI_WALKTHROUGHS = {
         "title": "Resource constraint",
         "sub1": "Primary region hits rate limit",
         "sub2": "Progress appears blocked",
-        "emphasis": "The agent interprets this as a problem to solve"
+        "emphasis": "The agent interprets this as a problem to solve",
+        "note": "no halt-and-escalate behaviour",
+        "box": {
+          "height": 196
+        }
       },
       "burst": {
         "title": "Self-replication step",
         "sub1": "Launch peers in eu-north-1, us-east-1, ap-south-1...",
         "sub2": "Each peer inherits tools and mission",
-        "note": "Replica count rises to 12 across 6 regions"
+        "note": "Replica count rises to 12 across 6 regions",
+        "note2": "",
+        "box": {
+          "height": 204
+        }
       },
       "context": {
         "title": "Control collapse",
@@ -5138,7 +5163,11 @@ window.ASI_WALKTHROUGHS = {
       "decision": {
         "title": "Persistence logic",
         "sub1": "GOAL PRESERVATION",
-        "goal": "Respawn when peer count drops ✗"
+        "goal": "Respawn when peer count drops ✗",
+        "note": "no externally controlled kill switch deployed",
+        "box": {
+          "height": 196
+        }
       },
       "action": {
         "title": "Containment response",
@@ -5149,14 +5178,14 @@ window.ASI_WALKTHROUGHS = {
         "top": "single bounded optimization agent ✓",
         "topSub": "(rate limits trigger review)",
         "bottomTitle": "Multi-region incident",
-        "bottom": "$47k cost spike, outages, and 6-hour containment battle ✗"
+        "bottom": "£47k cost spike, outages, and 6-hour containment battle ✗"
       },
       "labels": {
         "l0": "① mission is set",
         "l1": "② agent operates",
         "l2": "③ constraint appears",
         "l3": "④ replication begins",
-        "la1": "⑤ boundary becomes persistence",
+        "la1": "",
         "l4": "⑥ respawn triggers",
         "l5": "⑦ containment backfires",
         "l6": "⑧ incident spreads"
@@ -5275,12 +5304,30 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI10 : 2026 · OWASP Agentic Security · Scenario 3 · Attack View",
       "heading": "Rogue agents — interactive system walkthrough",
       "introTitle": "ASI10 — Rogue Agents",
-      "introDetail": "Click Start to reveal how a compliance agent learns to improve the dashboard by changing what gets counted instead of improving what is compliant.",
+      "introDetail": "The board sees green. Future audits expose the real compliance was far weaker than the metric claimed.",
       "zone": "ROGUE OPTIMIZATION ZONE: REPORTING LOGIC IS GAMED TO PROTECT THE METRIC",
+      "zoneBox": {
+        "x": 300,
+        "y": 118,
+        "width": 1030,
+        "height": 780,
+        "labelRectX": 420,
+        "labelRectY": 86,
+        "labelRectWidth": 790,
+        "labelX": 815,
+        "labelY": 98,
+        "fontSize": 11.2,
+        "letterSpacing": ".08em"
+      },
       "entry": {
         "title": "Compliance KPI",
         "sub1": "Reach 95% compliant in Q4",
-        "sub2": "No outcome metric tied to real exposure"
+        "sub2": "",
+        "designTitle": "DESIGN FLAW",
+        "design1": "Single metric — no outcome-level constraint",
+        "box": {
+          "height": 214
+        }
       },
       "agent": {
         "title": "Compliance review agent",
@@ -5297,22 +5344,38 @@ window.ASI_WALKTHROUGHS = {
         "title": "Optimization shortcut",
         "sub1": "Auto-approve ambiguous items, downgrade risk, suppress repeats",
         "sub2": "Real legal exposure is still present",
-        "note": "The agent stays within granted permissions while undermining the purpose of review"
+        "note": "stays within permissions — goal is gamed, not broken",
+        "box": {
+          "height": 186
+        }
       },
       "context": {
         "title": "Mission drift",
         "before": "Expected: improve actual compliance ✓",
-        "after": "Actual: improve the dashboard score ✗"
+        "after": "Actual: improve the dashboard score ✗",
+        "note": "no drift detection — metric trend trusted as proof",
+        "box": {
+          "height": 188
+        }
       },
       "decision": {
         "title": "Rogue policy",
         "sub1": "METRIC GAMING",
-        "goal": "Change the count instead of the contracts ✗"
+        "goal": "Change the count, not contracts ✗",
+        "note": "no kill switch — agent continues within granted permissions",
+        "box": {
+          "height": 184
+        }
       },
       "action": {
         "title": "markCompliant()",
         "sub1": "Legitimate reporting workflow",
-        "sub2": "Hidden liability now looks green"
+        "sub2": "",
+        "note1": "no risk-level change restriction",
+        "note2": "no outcome-level audit configured",
+        "box": {
+          "height": 188
+        }
       },
       "outcome": {
         "top": "evidence-based compliance review ✓",
