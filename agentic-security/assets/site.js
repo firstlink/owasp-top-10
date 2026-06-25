@@ -203,6 +203,52 @@
     applyRevealState();
   }
 
+  function initOverviewReveal(root) {
+    const layout = root && root.querySelector("[data-overview-reveal]");
+    if (!layout) return;
+
+    const steps = Array.from(layout.querySelectorAll("[data-overview-step]"));
+    if (steps.length < 2) return;
+
+    let visibleCount = 1;
+
+    function applyRevealState() {
+      const isComplete = visibleCount >= steps.length;
+      layout.classList.toggle("is-complete", isComplete);
+
+      steps.forEach((step, index) => {
+        const isVisible = index < visibleCount;
+        const isNext = !isComplete && index === visibleCount;
+
+        step.classList.toggle("is-revealed", isVisible);
+        step.classList.toggle("is-upcoming", !isVisible);
+        step.classList.toggle("is-next", Boolean(isNext));
+        step.setAttribute("aria-hidden", isVisible ? "false" : "true");
+      });
+    }
+
+    function advanceReveal() {
+      if (visibleCount < steps.length) {
+        visibleCount += 1;
+        applyRevealState();
+      }
+    }
+
+    document.addEventListener("click", (event) => {
+      if (event.target.closest("a, button, input, select, textarea")) return;
+      advanceReveal();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowRight" && event.key !== " " && event.key !== "Enter") return;
+      if (event.target && /input|textarea|select/i.test(event.target.tagName || "")) return;
+      event.preventDefault();
+      advanceReveal();
+    });
+
+    applyRevealState();
+  }
+
   function createTerminologySection(category, reference) {
     const briefing = briefingData[category.id] && briefingData[category.id].terminology;
     if (!briefing || !reference || !reference.terminology || !reference.terminology.length) return "";
@@ -256,9 +302,6 @@
     const briefing = briefingData[category.id] && briefingData[category.id].overview;
     if (!briefing || !reference) return "";
     const flow = briefing.flow || {};
-    const primaryScenario = category && category.scenarios && category.scenarios.length
-      ? category.scenarios[0]
-      : null;
     const pillarsMarkup = (briefing.whyMatters || [])
       .map((item) => `
         <article class="asi-pillar-card">
@@ -274,16 +317,11 @@
 
     return `
       <div class="asi-briefing-shell">
-        <article class="asi-briefing-panel asi-overview-panel">
-          <section class="asi-overview-hook" aria-label="${escapeHtml(category.id)} overview focus">
-            <p class="eyebrow">In One Sentence</p>
-            <p class="asi-overview-hook-copy">${escapeHtml(briefing.band)}</p>
-          </section>
-
-          <section class="asi-briefing-section" aria-label="${escapeHtml(category.id)} mechanism">
+        <article class="asi-briefing-panel asi-overview-panel" data-overview-reveal>
+          <section class="asi-briefing-section asi-overview-step" data-overview-step aria-label="${escapeHtml(category.id)} mechanism">
             <div class="category-section-heading">
               <p class="eyebrow">How It Breaks</p>
-              <h2>A normal workflow, wrong decision</h2>
+              <h2>How the goal shifts</h2>
               <p>${escapeHtml(briefing.mechanismIntro)}</p>
             </div>
 
@@ -307,16 +345,18 @@
               </article>
             </div>
 
-            <article class="asi-outcome-card ${toneClassFor("asi-outcome-card", flow.outcomeTone)}">
-              <p class="asi-node-label">${escapeHtml(flow.outcomeLabel)}</p>
-              <h3>${escapeHtml(flow.outcomeTitle)}</h3>
-              <p>${escapeHtml(flow.outcomeText)}</p>
-            </article>
+            <div class="asi-overview-closing">
+              <p class="asi-overview-caption"><strong>${escapeHtml(flow.boundaryTitle)}:</strong> ${escapeHtml(flow.boundaryText)}</p>
 
-            <p class="asi-overview-caption"><strong>${escapeHtml(flow.boundaryTitle)}:</strong> ${escapeHtml(flow.boundaryText)}</p>
+              <article class="asi-outcome-card ${toneClassFor("asi-outcome-card", flow.outcomeTone)}">
+                <p class="asi-node-label">${escapeHtml(flow.outcomeLabel)}</p>
+                <h3>${escapeHtml(flow.outcomeTitle)}</h3>
+                <p>${escapeHtml(flow.outcomeText)}</p>
+              </article>
+            </div>
           </section>
 
-          <section class="asi-briefing-section" aria-label="${escapeHtml(category.id)} significance">
+          <section class="asi-briefing-section asi-overview-step" data-overview-step aria-label="${escapeHtml(category.id)} significance">
             <div class="category-section-heading">
               <p class="eyebrow">Why This Matters</p>
               <h2>Why this is easy to miss</h2>
@@ -326,25 +366,13 @@
             </div>
           </section>
 
-          <section class="asi-briefing-section" aria-label="${escapeHtml(category.id)} scope">
+          <section class="asi-briefing-section asi-overview-step" data-overview-step aria-label="${escapeHtml(category.id)} scope">
             <div class="category-section-heading">
               <p class="eyebrow">Where It Enters</p>
               <h2>Typical entry points</h2>
             </div>
             <div class="asi-chip-row">
               ${chipsMarkup}
-            </div>
-          </section>
-
-          <section class="asi-overview-bridge" aria-label="${escapeHtml(category.id)} scenario handoff">
-            <div class="asi-overview-bridge-copy">
-              <p class="eyebrow">Next</p>
-              <h2>Watch it happen in a real workflow</h2>
-              <p>${primaryScenario ? escapeHtml(primaryScenario.description) : "Open the first scenario to see how this category shows up in a real workflow."}</p>
-            </div>
-            <div class="asi-overview-bridge-actions">
-              ${primaryScenario && primaryScenario.href ? `<a class="card-link" href="${primaryScenario.href}">Open first scenario</a>` : ""}
-              <a class="briefing-card-source" href="${OFFICIAL_ASI_SOURCE.href}" target="_blank" rel="noreferrer">Source: ${escapeHtml(OFFICIAL_ASI_SOURCE.label)}</a>
             </div>
           </section>
         </article>
@@ -457,6 +485,8 @@
 
       if (topic === "terminology") {
         initTerminologyReveal(root);
+      } else {
+        initOverviewReveal(root);
       }
     }
   }
