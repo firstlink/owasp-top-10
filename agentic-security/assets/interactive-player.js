@@ -419,7 +419,8 @@
       { show: ["g7"], co: ["c7s"], fl: ["c7f"], lb: ["l7"], atk: false },
       { show: ["g8"], co: ["c8s"], fl: ["c8f"], lb: ["l8"], atk: false },
       { show: ["g9"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false },
-      { show: ["g10", "g11", "g12"], co: ["c10s"], fl: ["c10f"], lb: ["l10"], atk: false }
+      { show: ["g10"], co: ["c10s"], fl: ["c10f"], lb: ["l10"], atk: false },
+      { show: ["g11", "g12"], co: [], fl: [], lb: [], atk: false }
     ];
   }
 
@@ -432,8 +433,9 @@
       { show: ["g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
       { show: ["g6"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
       { show: ["g7"], co: ["c6as"], fl: ["c6af"], lb: ["l7"], atk: false },
-      { show: ["g8"], co: [], fl: [], lb: [], atk: false },
-      { show: ["g9", "g10", "g11"], co: ["c8bs", "c9s"], fl: ["c8bf", "c9f"], lb: ["l8", "l9"], atk: false }
+      { show: ["g8"], co: ["c8bs"], fl: ["c8bf"], lb: ["l8"], atk: false },
+      { show: ["g9"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false },
+      { show: ["g10", "g11"], co: [], fl: [], lb: [], atk: false }
     ];
   }
 

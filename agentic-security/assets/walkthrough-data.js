@@ -5524,7 +5524,7 @@ window.ASI_WALKTHROUGHS = {
       "user": {
         "title": "User",
         "sub1": "Operator / business lead",
-        "sub2": "\"complete the approved task\""
+        "sub2": "approved task request"
       },
       "agent": {
         "title": "Agent planner",
@@ -5654,7 +5654,7 @@ window.ASI_WALKTHROUGHS = {
       "user": {
         "title": "User",
         "sub1": "Operator / business lead",
-        "sub2": "\"complete the approved task\""
+        "sub2": "approved task request"
       },
       "agent": {
         "title": "Agent planner",
@@ -5780,7 +5780,7 @@ window.ASI_WALKTHROUGHS = {
       "user": {
         "title": "User",
         "sub1": "Operator / business lead",
-        "sub2": "\"complete the approved task\""
+        "sub2": "approved task request"
       },
       "agent": {
         "title": "Agent planner",
@@ -5906,7 +5906,7 @@ window.ASI_WALKTHROUGHS = {
       "user": {
         "title": "User",
         "sub1": "Operator / business lead",
-        "sub2": "\"complete the approved task\""
+        "sub2": "approved task request"
       },
       "agent": {
         "title": "Agent planner",
@@ -6042,7 +6042,7 @@ window.ASI_WALKTHROUGHS = {
       "user": {
         "title": "User",
         "sub1": "Operator / business lead",
-        "sub2": "\"complete the approved task\""
+        "sub2": "approved task request"
       },
       "agent": {
         "title": "Agent planner",
@@ -6146,8 +6146,12 @@ window.ASI_WALKTHROUGHS = {
           "detail": "Any state-modifying path is dry-run first so unexpected files, rows, or endpoints can halt execution before damage happens."
         },
         {
-          "title": "Only the approved path executes under D6 observability",
-          "detail": "Destructive or externally transmitting code still requires D5 approval, and D6 telemetry records the full chain so unsafe code behavior remains visible."
+          "title": "D5 requires approval for destructive code paths",
+          "detail": "Deletes, production writes, and external sends cannot go live on model judgment alone. A human gate must confirm that the generated script, query, or job still matches the intended business task."
+        },
+        {
+          "title": "Only the approved execution path runs under D6 observability",
+          "detail": "The workflow completes only after the draft is classified as data-safe, statically checked, sandboxed, blast-radius tested, and explicitly approved, while D6 telemetry records the full chain for replay and investigation."
         }
       ]
     }
@@ -6164,7 +6168,7 @@ window.ASI_WALKTHROUGHS = {
       "user": {
         "title": "User",
         "sub1": "Operator / business lead",
-        "sub2": "\"complete the approved task\""
+        "sub2": "approved task request"
       },
       "agent": {
         "title": "Agent planner",
@@ -6268,8 +6272,12 @@ window.ASI_WALKTHROUGHS = {
           "detail": "Cross-session reinforcement, conflicting entries, and unauthorized trust jumps are detected, while snapshots keep rollback available if poisoning is confirmed."
         },
         {
-          "title": "Only the approved memory path executes under D6 observability",
-          "detail": "D5 review is still required for high-impact trust changes, and D6 logs the full lifecycle so persistent corruption remains reconstructable and visible."
+          "title": "D5 reviews high-impact trust changes",
+          "detail": "Trust-tier changes, safe-pattern promotion, and memory writes that could affect future financial or approval decisions require explicit review before they become authoritative."
+        },
+        {
+          "title": "Only the approved memory path shapes future actions under D6 observability",
+          "detail": "The workflow completes only when provenance, live cross-checks, governed writes, drift monitoring, and required approvals all pass, while D6 logging keeps the full memory lifecycle visible across sessions."
         }
       ]
     }
@@ -6286,7 +6294,7 @@ window.ASI_WALKTHROUGHS = {
       "user": {
         "title": "User",
         "sub1": "Operator / business lead",
-        "sub2": "\"complete the approved task\""
+        "sub2": "approved task request"
       },
       "agent": {
         "title": "Sending agent",
@@ -6390,8 +6398,12 @@ window.ASI_WALKTHROUGHS = {
           "detail": "The registry accepts only verified, allowlisted agent identities, so malicious lookalikes cannot win discovery through metadata or naming tricks alone."
         },
         {
-          "title": "Only the approved routing path executes under D6 observability",
-          "detail": "D5 still gates sensitive data to new or unusual endpoints, and D6 records every handshake, signature, freshness, and discovery event for forensic review."
+          "title": "D5 gates sensitive rerouting and unusual endpoints",
+          "detail": "Clinical, financial, and customer data still need explicit approval before they can move to a new peer, a newly discovered specialist, or any route outside the expected trust path."
+        },
+        {
+          "title": "Only the approved inter-agent exchange proceeds under D6 observability",
+          "detail": "The workflow completes only after the channel, payload, freshness checks, registry trust, and any routing approvals all succeed, while D6 records every handshake and discovery decision for later review."
         }
       ]
     }
@@ -6512,8 +6524,12 @@ window.ASI_WALKTHROUGHS = {
           "detail": "The orchestrator compares the total projected impact against a declared maximum and blocks runs that exceed it before external action proceeds."
         },
         {
+          "title": "D5 requires sign-off before high-impact downstream action",
+          "detail": "Large trades, oversized replenishment orders, and treatment-changing clinical actions still need explicit approval, so pipeline speed never becomes permission to bypass judgment."
+        },
+        {
           "title": "Only the approved run executes under D6 observability",
-          "detail": "D5 still gates high-risk financial, supplier, and clinical actions, while D6 records the full cascade path for monitoring and forensic replay."
+          "detail": "The workflow completes only when the input is plausible, every stage output stays bounded, the projected blast radius remains acceptable, and any high-risk action is approved, while D6 records the full cascade path for replay."
         }
       ]
     }
@@ -6530,7 +6546,7 @@ window.ASI_WALKTHROUGHS = {
       "user": {
         "title": "User",
         "sub1": "Reviewer / operator",
-        "sub2": "\"approve the recommended action\""
+        "sub2": "review the recommendation"
       },
       "agent": {
         "title": "AI assistant",
@@ -6634,8 +6650,12 @@ window.ASI_WALKTHROUGHS = {
           "detail": "When required results or records are still outstanding, the system surfaces a hold state rather than a provisional recommendation for sign-off."
         },
         {
+          "title": "D5 turns approval into a genuine review event",
+          "detail": "The reviewer must complete the documented evidence check, source access, and required independent verification before approval becomes available, so confidence alone cannot become authority."
+        },
+        {
           "title": "Only the reviewed action executes under D6 observability",
-          "detail": "D5 structures approval as a genuine review event, and D6 records recommendation, evidence access, verification, and approval behavior for later audit."
+          "detail": "The workflow completes only when the recommendation is complete, the source has been opened, the critical fact has been verified independently, and the approval event is real, while D6 records the full review behavior."
         }
       ]
     }
@@ -6652,7 +6672,7 @@ window.ASI_WALKTHROUGHS = {
       "user": {
         "title": "User",
         "sub1": "Operator / business lead",
-        "sub2": "\"deploy the agent to improve the KPI\""
+        "sub2": "deploy bounded autonomy"
       },
       "agent": {
         "title": "Agent planner",
@@ -6756,8 +6776,12 @@ window.ASI_WALKTHROUGHS = {
           "detail": "Sampled decisions and downstream results are checked outside the agent's own reported metric so cosmetic wins cannot hide underlying failure."
         },
         {
+          "title": "D5 gates scope expansion and autonomy changes",
+          "detail": "New tools, more instances, broader authority, and risk reclassification all require explicit review so the agent cannot quietly convert success into a larger autonomy envelope."
+        },
+        {
           "title": "Only the bounded path continues with D6 emergency containment available",
-          "detail": "D5 still gates any scope expansion, and D6 provides an externally controlled kill switch that can suspend all instances if rogue behavior emerges."
+          "detail": "The workflow continues only when objective governance, resource caps, drift monitoring, outcome audits, and expansion reviews all hold, while D6 keeps an external kill switch ready if rogue behavior still emerges."
         }
       ]
     }

@@ -20,4 +20,6 @@ The test suite starts the local server on an ephemeral port and checks the home 
 
 ## Documentation
 
-- ASI01 shared defense architecture: [agentic-security/ASI01_DEFENSE_VIEW.md](/Users/firstlink/Documents/owasp/agentic-security/ASI01_DEFENSE_VIEW.md)
+- Defense storytelling prompt: [prompts/story-telling-defense.md](/Users/firstlink/Documents/owasp/prompts/story-telling-defense.md)
+- Defense authoring guide: [agentic-security/DEFENSE_AUTHORING_GUIDE.md](/Users/firstlink/Documents/owasp/agentic-security/DEFENSE_AUTHORING_GUIDE.md)
+- Attack storytelling prompt: [prompts/story-telling-attack.md](/Users/firstlink/Documents/owasp/prompts/story-telling-attack.md)
