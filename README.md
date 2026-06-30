@@ -22,4 +22,5 @@ The test suite starts the local server on an ephemeral port and checks the home 
 
 - Defense storytelling prompt: [prompts/story-telling-defense.md](/Users/firstlink/Documents/owasp/prompts/story-telling-defense.md)
 - Defense authoring guide: [agentic-security/DEFENSE_AUTHORING_GUIDE.md](/Users/firstlink/Documents/owasp/agentic-security/DEFENSE_AUTHORING_GUIDE.md)
+- Defense transcripts: [transcript/defense/README.md](/Users/firstlink/Documents/owasp/transcript/defense/README.md)
 - Attack storytelling prompt: [prompts/story-telling-attack.md](/Users/firstlink/Documents/owasp/prompts/story-telling-attack.md)

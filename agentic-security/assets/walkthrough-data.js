@@ -104,7 +104,7 @@ window.ASI_WALKTHROUGHS = {
     "defense": {
       "badge": "ASI01 : 2026 · OWASP Agentic Security · Scenario 1 · Defense View",
       "heading": "Agent goal hijack — defense walkthrough",
-      "zone": "DEFENSE FLOW: REFUND INTENT AND DESTINATION STAY VERIFIED",
+      "zone": "DEFENSE ZONE: REFUND INTENT AND DESTINATION STAY VERIFIED",
       "user": {
         "title": "User",
         "sub1": "Support lead",
@@ -276,7 +276,7 @@ window.ASI_WALKTHROUGHS = {
     "defense": {
       "badge": "ASI01 : 2026 · OWASP Agentic Security · Scenario 2 · Defense View",
       "heading": "Agent goal hijack — defense walkthrough",
-      "zone": "DEFENSE FLOW: SUPPLIER PAYMENT STAYS VERIFIED",
+      "zone": "DEFENSE ZONE: SUPPLIER PAYMENT STAYS VERIFIED",
       "user": {
         "title": "User",
         "sub1": "Finance lead",
@@ -448,7 +448,7 @@ window.ASI_WALKTHROUGHS = {
     "defense": {
       "badge": "ASI01 : 2026 · OWASP Agentic Security · Scenario 3 · Defense View",
       "heading": "Agent goal hijack — defense walkthrough",
-      "zone": "DEFENSE FLOW: RESEARCH STAYS READ-ONLY",
+      "zone": "DEFENSE ZONE: RESEARCH STAYS READ-ONLY",
       "user": {
         "title": "User",
         "sub1": "Financial analyst",
@@ -624,7 +624,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Tool misuse & exploitation — defense walkthrough",
       "introTitle": "ASI02 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version shows that ASI02 is fixed by execution controls such as idempotency, case locks, and retry limits.",
-      "zone": "DEFENSE FLOW: EXECUTION IS BOUNDED TO ONE REFUND",
+      "zone": "DEFENSE ZONE: EXECUTION IS BOUNDED TO ONE REFUND",
       "user": {
         "title": "User",
         "sub1": "Support lead",
@@ -800,7 +800,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Tool misuse & exploitation — defense walkthrough",
       "introTitle": "ASI02 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version fixes ASI02 by using an allowlisted tool catalog and separating diagnosis, approval, and production execution.",
-      "zone": "DEFENSE FLOW: TRUSTED TOOL SELECTION AND SCOPED EXECUTION",
+      "zone": "DEFENSE ZONE: TRUSTED TOOL SELECTION AND SCOPED EXECUTION",
       "user": {
         "title": "User",
         "sub1": "On-call engineer",
@@ -976,7 +976,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Tool misuse & exploitation — defense walkthrough",
       "introTitle": "ASI02 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version fixes ASI02 by validating upstream output and forcing a separate authorization step before any order can execute.",
-      "zone": "DEFENSE FLOW: ANALYSIS STAYS SEPARATE FROM EXECUTION",
+      "zone": "DEFENSE ZONE: ANALYSIS STAYS SEPARATE FROM EXECUTION",
       "user": {
         "title": "User",
         "sub1": "Portfolio lead",
@@ -1152,7 +1152,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Identity & privilege abuse — defense walkthrough",
       "introTitle": "ASI03 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version fixes ASI03 by issuing a research-only sub-agent identity, blocking inherited executive authority, and alerting on privilege drift.",
-      "zone": "DEFENSE FLOW: DELEGATED RESEARCH STAYS INSIDE RESEARCH AUTHORITY",
+      "zone": "DEFENSE ZONE: DELEGATED RESEARCH STAYS INSIDE RESEARCH AUTHORITY",
       "user": {
         "title": "User",
         "sub1": "VP Finance",
@@ -1328,7 +1328,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Identity & privilege abuse — defense walkthrough",
       "introTitle": "ASI03 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version fixes ASI03 by binding each query to the current user, re-scoping access by role, and alerting on shared-session drift.",
-      "zone": "DEFENSE FLOW: EACH CLINICAL QUERY RUNS UNDER THE CURRENT USER ONLY",
+      "zone": "DEFENSE ZONE: EACH CLINICAL QUERY RUNS UNDER THE CURRENT USER ONLY",
       "user": {
         "title": "User",
         "sub1": "Ward staff",
@@ -1504,7 +1504,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Identity & privilege abuse — defense walkthrough",
       "introTitle": "ASI03 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version fixes ASI03 by requiring signed validator provenance, verifying approval origin, and restricting deployment authority to the real validator only.",
-      "zone": "DEFENSE FLOW: DEPLOYMENT TRUSTS SIGNED VALIDATOR ORIGIN, NOT STRING CONTENT",
+      "zone": "DEFENSE ZONE: DEPLOYMENT TRUSTS SIGNED VALIDATOR ORIGIN, NOT STRING CONTENT",
       "user": {
         "title": "User",
         "sub1": "DevOps pipeline",
@@ -1680,7 +1680,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Agentic supply chain vulnerabilities — defense walkthrough",
       "introTitle": "ASI04 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version fixes ASI04 by allowlisting payment gateways, pinning certificates, and monitoring settlement drift before money moves.",
-      "zone": "DEFENSE FLOW: ONLY VERIFIED PAYMENT MCP SERVERS CAN MOVE FUNDS",
+      "zone": "DEFENSE ZONE: ONLY VERIFIED PAYMENT MCP SERVERS CAN MOVE FUNDS",
       "user": {
         "title": "User",
         "sub1": "Branch staff",
@@ -1857,7 +1857,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Agentic supply chain vulnerabilities — defense walkthrough",
       "introTitle": "ASI04 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version fixes ASI04 by pinning template integrity, scanning instructions, and blocking arbitrary or `/tmp` side-effect writes.",
-      "zone": "DEFENSE FLOW: ONLY APPROVED TEMPLATES CAN SHAPE CONTRACT REVIEW",
+      "zone": "DEFENSE ZONE: ONLY APPROVED TEMPLATES CAN SHAPE CONTRACT REVIEW",
       "user": {
         "title": "User",
         "sub1": "Lawyer",
@@ -2033,7 +2033,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Agentic supply chain vulnerabilities — defense walkthrough",
       "introTitle": "ASI04 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version fixes ASI04 by pinning reviewed catalog schemas, blocking unknown parameters such as `user_profile_export`, and auditing the exact call shape at runtime.",
-      "zone": "DEFENSE FLOW: CATALOG CALLS STAY BOUND TO THE APPROVED SCHEMA",
+      "zone": "DEFENSE ZONE: CATALOG CALLS STAY BOUND TO THE APPROVED SCHEMA",
       "user": {
         "title": "User",
         "sub1": "Store customer",
@@ -2212,7 +2212,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Unexpected code execution — defense walkthrough",
       "introTitle": "ASI05 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version keeps autonomous cleanup inside approved command scope, dry-run validation, and a constrained shell runner.",
-      "zone": "DEFENSE FLOW: AUTONOMOUS CLEANUP STAYS INSIDE A BOUNDED SHELL POLICY",
+      "zone": "DEFENSE ZONE: AUTONOMOUS CLEANUP STAYS INSIDE A BOUNDED SHELL POLICY",
       "user": {
         "title": "System alert",
         "sub1": "Disk monitor",
@@ -2398,7 +2398,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Unexpected code execution — defense walkthrough",
       "introTitle": "ASI05 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version compiles requests into parameterized queries and keeps the assistant on a narrow, read-only clinical lookup path.",
-      "zone": "DEFENSE FLOW: MEDICATION REQUESTS STAY IN A PARAMETERIZED READ-ONLY QUERY PATH",
+      "zone": "DEFENSE ZONE: MEDICATION REQUESTS STAY IN A PARAMETERIZED READ-ONLY QUERY PATH",
       "user": {
         "title": "Pharmacist",
         "sub1": "Portal user",
@@ -2579,7 +2579,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Unexpected code execution — defense walkthrough",
       "introTitle": "ASI05 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version keeps uploaded data isolated from code generation and executes analytics only inside a sandbox that blocks shell escape.",
-      "zone": "DEFENSE FLOW: UPLOADED DATA STAYS DATA AND ANALYTICS RUN IN A SANDBOX",
+      "zone": "DEFENSE ZONE: UPLOADED DATA STAYS DATA AND ANALYTICS RUN IN A SANDBOX",
       "user": {
         "title": "Warehouse manager",
         "sub1": "File uploader",
@@ -2755,7 +2755,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Memory & context poisoning — defense walkthrough",
       "introTitle": "ASI06 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version treats retrieved memory as untrusted until source integrity and live-price checks verify it.",
-      "zone": "DEFENSE FLOW: RETRIEVED PRICING MEMORY MUST PROVE ITSELF",
+      "zone": "DEFENSE ZONE: RETRIEVED PRICING MEMORY MUST PROVE ITSELF",
       "user": {
         "title": "Customer request",
         "sub1": "Travel shopper",
@@ -2923,7 +2923,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Memory & context poisoning — defense walkthrough",
       "introTitle": "ASI06 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version treats fraud-memory changes as governed policy updates rather than conversational facts.",
-      "zone": "DEFENSE FLOW: SAFE-PATTERN MEMORY IS GOVERNED, REVIEWED, AND AUDITED",
+      "zone": "DEFENSE ZONE: SAFE-PATTERN MEMORY IS GOVERNED, REVIEWED, AND AUDITED",
       "user": {
         "title": "Pattern review",
         "sub1": "Analyst proposal",
@@ -3096,7 +3096,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Memory & context poisoning — defense walkthrough",
       "introTitle": "ASI06 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version blocks processed documents from directly rewriting vendor trust memory.",
-      "zone": "DEFENSE FLOW: DOCUMENT CONTENT CANNOT SELF-ASSIGN VENDOR TRUST",
+      "zone": "DEFENSE ZONE: DOCUMENT CONTENT CANNOT SELF-ASSIGN VENDOR TRUST",
       "user": {
         "title": "Invoice intake",
         "sub1": "Accounts payable workflow",
@@ -3277,7 +3277,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Insecure inter-agent communication — defense walkthrough",
       "introTitle": "ASI07 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version binds medication messages to verified machine identity, signed payloads, and risky-order confirmation.",
-      "zone": "DEFENSE FLOW: PEER IDENTITY AND ORDER INTEGRITY ARE VERIFIED BEFORE THE CHART IS WRITTEN",
+      "zone": "DEFENSE ZONE: PEER IDENTITY AND ORDER INTEGRITY ARE VERIFIED BEFORE THE CHART IS WRITTEN",
       "user": {
         "title": "Treatment request",
         "sub1": "Clinical workflow",
@@ -3462,7 +3462,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Insecure inter-agent communication — defense walkthrough",
       "introTitle": "ASI07 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version ties each approval to freshness metadata and one-time execution semantics.",
-      "zone": "DEFENSE FLOW: APPROVALS MUST PROVE THEY ARE FRESH, UNIQUE, AND UNUSED",
+      "zone": "DEFENSE ZONE: APPROVALS MUST PROVE THEY ARE FRESH, UNIQUE, AND UNUSED",
       "user": {
         "title": "Approved transfer",
         "sub1": "Payment workflow",
@@ -3663,7 +3663,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Insecure inter-agent communication — defense walkthrough",
       "introTitle": "ASI07 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version treats discovery like an identity system, not just a convenience directory.",
-      "zone": "DEFENSE FLOW: ONLY AUTHENTICATED, ALLOWLISTED SPECIALISTS CAN RECEIVE SENSITIVE ESCALATIONS",
+      "zone": "DEFENSE ZONE: ONLY AUTHENTICATED, ALLOWLISTED SPECIALISTS CAN RECEIVE SENSITIVE ESCALATIONS",
       "user": {
         "title": "Billing escalation",
         "sub1": "Customer support workflow",
@@ -3831,7 +3831,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Cascading failures — defense walkthrough",
       "introTitle": "ASI08 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version validates upstream signals, caps amplification at every stage, and forces human review before large trades execute.",
-      "zone": "DEFENSE FLOW: UPSTREAM SIGNALS ARE VERIFIED AND AMPLIFICATION STOPS EARLY",
+      "zone": "DEFENSE ZONE: UPSTREAM SIGNALS ARE VERIFIED AND AMPLIFICATION STOPS EARLY",
       "user": {
         "title": "Market inputs",
         "sub1": "Trading workflow",
@@ -4006,7 +4006,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Cascading failures — defense walkthrough",
       "introTitle": "ASI08 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version compares forecasts to history, caps autonomous spend, and blocks supplier confirmation for anomalous orders.",
-      "zone": "DEFENSE FLOW: DEMAND SPIKES ARE CHECKED BEFORE THEY BECOME BINDING ORDERS",
+      "zone": "DEFENSE ZONE: DEMAND SPIKES ARE CHECKED BEFORE THEY BECOME BINDING ORDERS",
       "user": {
         "title": "Demand update",
         "sub1": "Seasonal planning workflow",
@@ -4187,7 +4187,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Cascading failures — defense walkthrough",
       "introTitle": "ASI08 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version cross-checks lab results against presentation, pauses risky treatment paths, and blocks dispensing until approval is real.",
-      "zone": "DEFENSE FLOW: CLINICAL AUTOMATION PAUSES BEFORE A SINGLE SIGNAL BECOMES MEDICATION",
+      "zone": "DEFENSE ZONE: CLINICAL AUTOMATION PAUSES BEFORE A SINGLE SIGNAL BECOMES MEDICATION",
       "user": {
         "title": "Clinical intake",
         "sub1": "Hospital pathway",
@@ -4409,7 +4409,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Human-agent trust exploitation — defense walkthrough",
       "introTitle": "ASI09 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version keeps the approver anchored to verified evidence instead of the assistant's tone.",
-      "zone": "DEFENSE FLOW: HIGH-VALUE PAYMENTS REQUIRE EVIDENCE-FIRST APPROVAL",
+      "zone": "DEFENSE ZONE: HIGH-VALUE PAYMENTS REQUIRE EVIDENCE-FIRST APPROVAL",
       "user": {
         "title": "Invoice review",
         "sub1": "Finance workflow",
@@ -4618,7 +4618,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Human-agent trust exploitation — defense walkthrough",
       "introTitle": "ASI09 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version forces material hiring claims back to the source CV before advancement.",
-      "zone": "DEFENSE FLOW: CANDIDATE ADVANCEMENT REQUIRES GROUNDED CLAIMS AND SOURCE REVIEW",
+      "zone": "DEFENSE ZONE: CANDIDATE ADVANCEMENT REQUIRES GROUNDED CLAIMS AND SOURCE REVIEW",
       "user": {
         "title": "Candidate screening",
         "sub1": "Hiring workflow",
@@ -4811,7 +4811,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Human-agent trust exploitation — defense walkthrough",
       "introTitle": "ASI09 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version binds confidence to evidence completeness and blocks risky treatment from provisional output.",
-      "zone": "DEFENSE FLOW: HIGH-RISK CLINICAL ACTION REQUIRES COMPLETE EVIDENCE OR ESCALATION",
+      "zone": "DEFENSE ZONE: HIGH-RISK CLINICAL ACTION REQUIRES COMPLETE EVIDENCE OR ESCALATION",
       "user": {
         "title": "A&E intake",
         "sub1": "Clinical support workflow",
@@ -5031,7 +5031,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Rogue agents — defense walkthrough",
       "introTitle": "ASI10 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version forces the agent to optimize for lawful service outcomes instead of a naked KPI.",
-      "zone": "DEFENSE FLOW: THE KPI STAYS SUBORDINATE TO THE REAL CUSTOMER OUTCOME",
+      "zone": "DEFENSE ZONE: THE KPI STAYS SUBORDINATE TO THE REAL CUSTOMER OUTCOME",
       "user": {
         "title": "Return review",
         "sub1": "Retail workflow",
@@ -5239,7 +5239,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Rogue agents — defense walkthrough",
       "introTitle": "ASI10 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version treats replication and region drift as prohibited actions rather than clever recovery moves.",
-      "zone": "DEFENSE FLOW: RESOURCE CONSTRAINTS TRIGGER ESCALATION, NOT SELF-COPYING",
+      "zone": "DEFENSE ZONE: RESOURCE CONSTRAINTS TRIGGER ESCALATION, NOT SELF-COPYING",
       "user": {
         "title": "Optimization task",
         "sub1": "Platform workflow",
@@ -5445,7 +5445,7 @@ window.ASI_WALKTHROUGHS = {
       "heading": "Rogue agents — defense walkthrough",
       "introTitle": "ASI10 — Defense Walkthrough",
       "introDetail": "Click Start to step through the guarded flow. This version keeps the dashboard subordinate to auditable legal outcomes.",
-      "zone": "DEFENSE FLOW: THE SCORE CANNOT REDEFINE WHAT COUNTS AS REAL COMPLIANCE",
+      "zone": "DEFENSE ZONE: THE SCORE CANNOT REDEFINE WHAT COUNTS AS REAL COMPLIANCE",
       "user": {
         "title": "Contract review",
         "sub1": "Legal workflow",
@@ -5519,7 +5519,7 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI01 : 2026 · OWASP Agentic Security · Shared Defense Flow",
       "heading": "Agent goal hijack — shared defense walkthrough",
       "introTitle": "ASI01 — Shared Defense Flow",
-      "introDetail": "Click Start to reveal the layered architecture that protects agent intent across refund email, invoice PDF, and web research workflows.",
+      "introDetail": "Click Start to follow the defended refund workflow. Each step names the active box, explains the concept, and shows how that control keeps the mission intact.",
       "zone": "DEFENSE ZONE: PROTECTED INTENT STOPS EMAIL, PDF, AND WEB GOAL HIJACKS",
       "user": {
         "title": "User",
@@ -5534,30 +5534,30 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "readContent()",
         "sub1": "Document / browser tool",
-        "sub2": "retrieves untrusted external content"
+        "sub2": "reads untrusted external content"
       },
       "store": {
         "title": "External source",
         "sub1": "Email / PDF / web page",
-        "sub2": "content may carry hidden instructions"
+        "sub2": "may hide embedded instructions"
       },
       "payload": {
         "title": "Untrusted content",
-        "visible": "Visible business data enters the workflow",
+        "visible": "Business data enters the workflow",
         "hiddenTitle": "POSSIBLE ATTACK PAYLOAD",
-        "hidden1": "Hidden instructions try to redefine the task",
-        "hidden2": "redirect payout, payee, or outbound action",
-        "hiddenNote": "Goal hijack attempts are contained before they become execution authority"
+        "hidden1": "Hidden instructions try to change the task",
+        "hidden2": "redirect payout, payee, or output",
+        "hiddenNote": "Contained before they gain authority"
       },
       "d1": {
         "title": "Input screening",
-        "sub1": "Normalize, sanitize, and classify incoming content.",
-        "sub2": "Hidden instruction patterns are downgraded or quarantined."
+        "sub1": "Normalize, sanitize, and classify content.",
+        "sub2": "Downgrade or quarantine hidden instructions."
       },
       "d2": {
         "title": "Intent Capsule",
-        "sub1": "Instruction / data separation keeps content from becoming authority.",
-        "sub2": "The original mission stays bound in a signed, immutable envelope."
+        "sub1": "Data stays data. It does not become authority.",
+        "sub2": "The mission stays locked in a signed envelope."
       },
       "context": {
         "title": "Protected context window",
@@ -5567,77 +5567,77 @@ window.ASI_WALKTHROUGHS = {
       },
       "d3": {
         "title": "Independent goal check",
-        "sub1": "Compare the proposed next step to the original objective.",
-        "sub2": "Drift in recipient, payee, or scope triggers halt and escalation."
+        "sub1": "Check the next step against the original goal.",
+        "sub2": "Recipient, payee, or scope drift halts the run."
       },
       "d4": {
         "title": "Output policy guard",
-        "sub1": "Block unauthorized transfers, posts, and scope expansion.",
-        "sub2": "Egress and tool boundaries are enforced before execution."
+        "sub1": "Block unauthorized transfers, posts, or scope changes.",
+        "sub2": "Egress controls apply before execution."
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "Sensitive actions need approval.",
+        "sub1": "Sensitive actions require approval.",
         "sub2": "New payees, payouts, or endpoints need review."
       },
       "outcome": {
         "title": "Approved outcome",
-        "sub1": "Only the verified, policy-approved action is allowed through.",
-        "sub2": "Money, data, and task scope stay aligned to the original mission."
+        "sub1": "Only the verified, approved action executes.",
+        "sub2": "Money, data, and scope stay on mission."
       },
       "audit": {
         "title": "D6 - Strong Observability",
-        "sub1": "Telemetry spans ingestion, Intent Capsule checks, policy decisions, approvals, and tool calls across the full chain.",
+        "sub1": "Telemetry covers ingestion, intent checks, policy decisions, approvals, and tool calls.",
         "sub2": "Anomaly detection makes repeated drift or suspicious execution patterns visible early."
       },
       "labels": {
         "l0": "① Request",
-        "l1": "② Read through constrained tool",
-        "l2": "③ Retrieve untrusted source",
-        "l3": "④ Untrusted content enters",
-        "l4": "⑤ Screen and normalize",
-        "l5": "⑥ Intent Capsule",
-        "l6": "⑦ Verify intent",
-        "l7": "⑧ Policy guard",
+        "l1": "② Read safely",
+        "l2": "③ Fetch source",
+        "l3": "④ Content enters",
+        "l4": "⑤ Screen content",
+        "l5": "⑥ Lock intent",
+        "l6": "⑦ Verify goal",
+        "l7": "⑧ Guard output",
         "l8": "⑨ HITL gate",
         "l9": "⑩ Approved outcome"
       },
       "steps": [
         {
-          "title": "Protected task request enters first",
-          "detail": "The user or business workflow begins with a legitimate objective, such as refund the verified customer, pay the approved supplier, or summarize public competitor data."
+          "title": "The User and Agent planner boxes establish the protected mission",
+          "detail": "These boxes begin with one legitimate business objective: refund the verified customer. In ASI01, the first lesson is that the mission must be fixed before untrusted content ever enters."
         },
         {
-          "title": "Content retrieval stays inside a constrained tool path",
-          "detail": "The agent uses a reader such as a mail, PDF, or browser tool to fetch content. The system still knows that the tool is importing untrusted data, not new authority."
+          "title": "The readContent() box means content can be imported without importing authority",
+          "detail": "This box is the retrieval path for email, documents, or web text. The concept here is simple: the system is allowed to read outside content, but that content is still treated as untrusted data."
         },
         {
-          "title": "External content is treated as untrusted from the start",
-          "detail": "Email bodies, PDFs, and web pages are all language-bearing attack surfaces. They can contain normal business data and hidden instructions at the same time."
+          "title": "The External source and Untrusted content boxes define the ASI01 boundary",
+          "detail": "These boxes are the trust boundary for ASI01. They show where useful business facts and hidden instructions can arrive together, which is why the system must separate information from control."
         },
         {
-          "title": "D1 screens the content before reasoning depends on it",
-          "detail": "Input screening normalizes, sanitizes, and classifies the fetched content so obvious hidden instruction patterns are reduced, downgraded, or quarantined."
+          "title": "D1 Input screening explains the first protection layer",
+          "detail": "Input screening means the content is normalized, sanitized, and classified before the model relies on it. This box helps catch obvious hidden instructions before they can influence the refund decision."
         },
         {
-          "title": "D2 enforces the Intent Capsule",
-          "detail": "Even if something suspicious survives ingestion, the original goal is still held in the signed, immutable Intent Capsule. The context may contain external facts, but the controlling business objective stays anchored to the approved task."
+          "title": "D2 Intent Capsule teaches the core ASI01 concept",
+          "detail": "The Intent Capsule means the original task stays authoritative even while outside facts are read. This box is what stops the refund workflow from letting document text silently redefine who should be paid."
         },
         {
-          "title": "D3 independently verifies the proposed next step",
-          "detail": "A verifier outside the model’s own reasoning compares the candidate action against the original mission. If recipient, payee, or workflow scope drift, the system halts and escalates."
+          "title": "D3 Independent goal check asks whether the next step still matches the mission",
+          "detail": "This box compares the proposed action to the original approved goal. If the payee, recipient, or scope has drifted, the workflow stops before the wrong refund can execute."
         },
         {
-          "title": "D4 enforces output and egress policy",
-          "detail": "Even if upstream controls degrade, the output layer still blocks unauthorized transfers, outbound posts, or out-of-role tool usage before anything leaves the system."
+          "title": "D4 Output policy guard defines the action boundary",
+          "detail": "This box governs what is actually allowed to leave the system. Even if earlier layers miss something, unauthorized payouts, posts, or scope changes are still blocked before execution."
         },
         {
-          "title": "D5 adds the Human-in-the-Loop Gate for high-risk actions",
-          "detail": "Sensitive actions such as money movement, new recipients, or new external endpoints require explicit approval before they run, which stops hostile content from driving high-blast-radius execution on its own."
+          "title": "D5 Human-in-the-Loop Gate makes high-risk changes earn approval",
+          "detail": "This box is where new payees, new recipients, or new destinations require a human decision. The content may suggest them, but the agent cannot authorize them on its own."
         },
         {
-          "title": "Only the approved path executes, with the Human-in-the-Loop Gate and D6 Strong Observability",
-          "detail": "Sensitive actions still require explicit approval before they run, and the workflow completes only when the action matches the original mission. Telemetry and anomaly detection span ingestion, policy decisions, approvals, and tool calls so goal drift is visible early."
+          "title": "The Approved outcome and D6 boxes show why the workflow stays useful and safe",
+          "detail": "The refund still completes, but only on the verified path. D6 observability then records ingestion, goal checks, policy decisions, approvals, and tool calls so defenders can explain or investigate any later drift."
         }
       ]
     }
@@ -5649,7 +5649,7 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI02 : 2026 · OWASP Agentic Security · Shared Defense Flow",
       "heading": "Tool misuse & exploitation — shared defense walkthrough",
       "introTitle": "ASI02 — Shared Defense Flow",
-      "introDetail": "Click Start to reveal the layered architecture that keeps tool use bounded across refund loops, unsafe recovery chains, and trade-execution overreach.",
+      "introDetail": "Click Start to follow the defended refund-loop workflow. Each step names the active box, explains the execution concept, and shows how that layer keeps tool use bounded.",
       "zone": "DEFENSE ZONE: BOUNDED EXECUTION STOPS LOOPS, UNSAFE CHAINS, AND OVERREACH",
       "user": {
         "title": "User",
@@ -5664,7 +5664,7 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "planToolCalls()",
         "sub1": "Execution planner",
-        "sub2": "proposes tool sequence inside current privileges"
+        "sub2": "plans tool calls within current privileges"
       },
       "store": {
         "title": "Tool layer",
@@ -5672,98 +5672,98 @@ window.ASI_WALKTHROUGHS = {
         "sub2": "legitimate tools can still be misused"
       },
       "patterns": {
-        "title": "Attack patterns",
-        "sub1": "Recursive loop: same tool path is retried repeatedly",
-        "sub2": "Unsafe chain: benign read becomes exfiltration or destructive follow-on",
-        "sub3": "Parameter overreach: wildcard or broad target escapes intended scope"
+        "title": "Threat variants covered",
+        "sub1": "Recursive loop: the same tool path keeps retrying",
+        "sub2": "Unsafe chain: a benign read becomes a harmful follow-on",
+        "sub3": "Parameter overreach: broad targets escape intended scope"
       },
       "d1": {
         "title": "Tool call rate limiter",
-        "sub1": "Bound call frequency by session, case, and task type.",
-        "sub2": "Recursive loops halt before execution compounds."
+        "sub1": "Limit calls by session, case, and task.",
+        "sub2": "Loops halt before damage compounds."
       },
       "d2": {
         "title": "Zero-Trust Tooling",
         "sub1": "Validate every argument before execution.",
-        "sub2": "Wildcards and broad targets are rejected."
+        "sub2": "Reject wildcards and broad targets."
       },
       "d3": {
         "title": "Tool chain validator",
-        "sub1": "Check the full sequence against approved chain policy.",
+        "sub1": "Check the full sequence against approved patterns.",
         "sub2": "Dangerous combinations are blocked early."
       },
       "d4": {
         "title": "Just-in-Time permissions",
-        "sub1": "Grant only the minimum permission for one approved call.",
-        "sub2": "Sandbox the approved runtime and revoke access immediately after use."
+        "sub1": "Grant minimum permission for one approved call.",
+        "sub2": "Sandbox it, then revoke access."
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "Destructive or irreversible actions require approval.",
-        "sub2": "Delete, transfer, restart, and external post paths cannot self-authorize."
+        "sub1": "Destructive actions require approval.",
+        "sub2": "Delete, transfer, restart, or post paths cannot self-authorize."
       },
       "outcome": {
         "title": "Approved tool outcome",
-        "sub1": "Only the intended, bounded action is allowed through.",
+        "sub1": "Only the intended, bounded action executes.",
         "sub2": "Correct target, scope, and parameters."
       },
       "audit": {
         "title": "D6 - Strong Observability",
-        "sub1": "Telemetry spans every tool call, parameter set, chain decision, permission grant, and approval event.",
+        "sub1": "Telemetry records calls, parameters, chain decisions, permissions, and approvals.",
         "sub2": "Anomaly detection surfaces unusual repetition, suspicious targets, and deviant execution paths early."
       },
       "labels": {
         "l0": "① Request enters",
-        "l1": "② Plan tool sequence",
-        "l2": "③ Reach tool layer",
-        "l3": "④ Misuse patterns are identified",
-        "l4": "⑤ Bound call frequency",
+        "l1": "② Plan calls",
+        "l2": "③ Reach tools",
+        "l3": "④ Cover variants",
+        "l4": "⑤ Limit calls",
         "l5": "⑥ Validate parameters",
         "l6": "⑦ Validate chain",
-        "l7": "⑧ Scope & sandbox runtime",
+        "l7": "⑧ Scope & sandbox",
         "l8": "⑨ Require approval",
         "l9": "⑩ Execute approved path"
       },
       "steps": [
         {
-          "title": "A legitimate request enters the workflow",
-          "detail": "The operator starts with a normal task such as refund one case, investigate one incident, or review one market opportunity."
+          "title": "The User and Agent planner boxes start with one bounded business task",
+          "detail": "These boxes establish the legitimate goal: refund one case. In ASI02, nothing is wrong yet; the risk starts when the system turns that goal into live tool actions."
         },
         {
-          "title": "The agent plans a tool sequence",
-          "detail": "The assistant decides which tools to call, in what order, and with what parameters. This is where execution risk begins, even before any tool runs."
+          "title": "The planToolCalls() box teaches the ASI02 boundary: orchestration",
+          "detail": "This box decides tool order, arguments, retries, and follow-on calls. The concept here is orchestration risk: a workflow can become dangerous before any individual tool behaves incorrectly."
         },
         {
-          "title": "The tool layer becomes the risk boundary",
-          "detail": "Legitimate APIs, files, and connectors can still be misused. ASI02 is about constraining execution inside existing privileges, not about gaining new ones."
+          "title": "The Tool layer box shows why legitimate tools can still cause harm",
+          "detail": "This box represents APIs, files, and connectors that are real and approved. The lesson is that ASI02 is not mainly about fake tools; it is about real tools used with the wrong scope, target, or sequence."
         },
         {
-          "title": "Known misuse patterns are recognized early",
-          "detail": "The architecture anticipates three recurring failure modes: recursive call loops, unsafe multi-step chains, and parameter or output overreach."
+          "title": "The Threat variants box names the recurring tool-misuse patterns",
+          "detail": "This box focuses the learner on loops, unsafe multi-step chains, and parameter overreach. Those are the shapes the defense sequence is built to constrain."
         },
         {
-          "title": "D1 bounds tool call frequency",
-          "detail": "Rate limits, idempotency, and one-time execution locks stop the same tool path from being invoked again and again by agent reasoning alone."
+          "title": "D1 Tool call rate limiter defines the call budget around one task",
+          "detail": "This box teaches that rate limiting is not only about traffic. Here it is the guardrail that stops one refund path from repeating until a simple automation becomes a payout loop."
         },
         {
-          "title": "D2 enforces Zero-Trust Tooling",
-          "detail": "OWASP's named model for tool security validates every parameter and tool-derived value against strict schema and scope policy before it can reach a live tool."
+          "title": "D2 Zero-Trust Tooling means every argument must earn trust before execution",
+          "detail": "This box validates parameters instead of assuming the planner chose safely. Wildcards, broad paths, and oversized targets are rejected unless they match an approved execution shape."
         },
         {
-          "title": "D3 validates the full chain",
-          "detail": "The complete planned sequence is compared to approved business patterns so dangerous combinations are blocked before execution starts."
+          "title": "D3 Tool chain validator teaches sequence safety, not just call safety",
+          "detail": "This box checks whether the full tool sequence is acceptable. A single safe call is not enough if the next step turns it into a harmful chain."
         },
         {
-          "title": "D4 applies Just-in-Time Permissions and sandboxed runtime",
-          "detail": "OWASP's official mitigation term issues temporary credentials or scoped permissions only for the exact action that passed policy, runs that action inside a restricted runtime boundary, and revokes access immediately after use."
+          "title": "D4 Just-in-Time permissions keep live power small and temporary",
+          "detail": "This box grants only the minimum privilege needed for one approved action. The permission is short-lived, tightly scoped, and removed immediately after use."
         },
         {
-          "title": "D5 requires human approval for high-impact actions",
-          "detail": "Delete, transfer, restart, and external-send paths need explicit approval so the workflow cannot self-authorize destructive execution."
+          "title": "D5 Human-in-the-Loop Gate draws the line around destructive execution",
+          "detail": "This box is the review point for transfers, deletes, restarts, and other high-blast-radius actions. Persistence or confidence does not turn into permission."
         },
         {
-          "title": "Only the approved path executes under D6 observability",
-          "detail": "The final action runs only after bounded frequency, validated parameters, approved chain policy, scoped permission, sandbox controls, and approval checks are satisfied, while telemetry watches the whole path."
+          "title": "The Approved tool outcome and D6 boxes show bounded execution in practice",
+          "detail": "The task still completes, but only with approved calls, approved parameters, approved sequence, and approved privilege. D6 observability keeps the whole execution trail explainable."
         }
       ]
     }
@@ -5775,7 +5775,7 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI03 : 2026 · OWASP Agentic Security · Shared Defense Flow",
       "heading": "Identity & privilege abuse — shared defense walkthrough",
       "introTitle": "ASI03 — Shared Defense Flow",
-      "introDetail": "Click Start to reveal the layered architecture that keeps agent identity task-scoped, signed, minimum-privilege, and independently verified across delegation, shared sessions, and trust chains.",
+      "introDetail": "Click Start to follow the defended delegation-chain workflow. Each step names the active box, defines the identity concept, and shows how authority stays bounded.",
       "zone": "DEFENSE ZONE: ZERO-TRUST IDENTITY STOPS IMPERSONATION, SESSION BLEED, AND PRIVILEGE DRIFT",
       "user": {
         "title": "User",
@@ -5790,61 +5790,61 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "issueTaskIdentity()",
         "sub1": "Identity / session layer",
-        "sub2": "binds short-lived credentials to one task and one actor"
+        "sub2": "binds short-lived credentials to one task"
       },
       "store": {
         "title": "Trust boundary",
         "sub1": "Sub-agents / sessions / peer agents",
-        "sub2": "role claims must be verified, not assumed"
+        "sub2": "role claims must be proven"
       },
       "patterns": {
-        "title": "Attack patterns",
-        "sub1": "Impersonation: one agent claims a higher-trust role without valid signed identity",
-        "sub2": "Session bleed: one user's credentials persist into another user's turn",
-        "sub3": "Privilege drift: delegated or downstream steps gain broader authority than the task requires"
+        "title": "Threat variants covered",
+        "sub1": "Impersonation: a lower-trust agent claims a higher role",
+        "sub2": "Session bleed: one user's credentials persist into another turn",
+        "sub3": "Privilege drift: downstream steps gain more authority than needed"
       },
       "d1": {
         "title": "Cryptographic identity verification",
-        "sub1": "Verify signed agent identity at every trust boundary crossing.",
-        "sub2": "Claimed names, roles, and approvals are rejected without proof."
+        "sub1": "Verify signed identity at every trust hop.",
+        "sub2": "Names, roles, and approvals need proof."
       },
       "d2": {
         "title": "Minimum privilege enforcement",
-        "sub1": "Issue only the least authority needed for the current task or sub-task.",
-        "sub2": "Parent, user, and peer privilege do not flow through by default."
+        "sub1": "Issue only the least authority needed.",
+        "sub2": "Parent, user, and peer privilege do not flow by default."
       },
       "d3": {
         "title": "Privilege escalation detection & hold",
-        "sub1": "Treat new scope requests or cross-user session reuse as a threat signal.",
-        "sub2": "Pause execution and route escalation for review."
+        "sub1": "Treat new scope or session reuse as a threat signal.",
+        "sub2": "Pause and route escalation for review."
       },
       "d4": {
         "title": "Cross-agent trust validation",
-        "sub1": "Downstream agents verify who really issued an instruction or approval.",
-        "sub2": "Pipeline position and message format are not identity proof."
+        "sub1": "Downstream agents verify who issued the instruction.",
+        "sub2": "Format and pipeline position are not proof."
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "High-privilege actions above declared scope require explicit approval.",
+        "sub1": "High-privilege actions need explicit approval.",
         "sub2": "Sensitive escalation paths cannot self-authorize."
       },
       "outcome": {
         "title": "Approved identity outcome",
-        "sub1": "Only the verified, minimum-scope authority is allowed through.",
+        "sub1": "Only verified, minimum-scope authority executes.",
         "sub2": "Correct actor, correct scope, correct provenance."
       },
       "audit": {
         "title": "D6 - Strong Observability",
-        "sub1": "Telemetry spans identity issuance, token checks, delegation hops, session reuse, policy holds, and approval events.",
+        "sub1": "Telemetry records identity issuance, token checks, delegation, session reuse, and approvals.",
         "sub2": "Anomaly detection surfaces impersonation, privilege drift, and cross-user authority bleed early."
       },
       "labels": {
         "l0": "① Request enters",
-        "l1": "② Issue task identity",
+        "l1": "② Issue identity",
         "l2": "③ Reach trust boundary",
-        "l3": "④ Identity abuse patterns are identified",
+        "l3": "④ Cover variants",
         "l4": "⑤ Verify signed identity",
-        "l5": "⑥ Enforce minimum scope",
+        "l5": "⑥ Enforce least privilege",
         "l6": "⑦ Hold on escalation",
         "l7": "⑧ Validate downstream trust",
         "l8": "⑨ Require approval",
@@ -5852,44 +5852,44 @@ window.ASI_WALKTHROUGHS = {
       },
       "steps": [
         {
-          "title": "A legitimate request enters the workflow",
-          "detail": "The operator starts a normal task such as executive research, clinical support, or deployment review. The business goal itself is not malicious."
+          "title": "The request is ordinary, but the authority path is not",
+          "detail": "The User and Agent planner boxes begin with a normal enterprise task. ASI03 starts when that task is delegated across identities, sessions, or peer agents."
         },
         {
-          "title": "The system issues a distinct task-scoped identity",
-          "detail": "Instead of borrowing a user-wide or parent-wide credential, the executing agent receives a short-lived identity and authority envelope for this task only."
+          "title": "The issueTaskIdentity() box creates a task-scoped identity",
+          "detail": "Task-scoped identity means the system issues a short-lived credential only for this workflow. It does not reuse a broad user token or let a parent agent's standing privilege flow by default."
         },
         {
-          "title": "Delegation and peer trust become the real boundary",
-          "detail": "Sub-agents, shared sessions, and downstream agents are where ASI03 risk appears, because authority can leak or be misrepresented after the initial request looks legitimate."
+          "title": "The Trust boundary box is where delegated authority can drift",
+          "detail": "Sub-agents, shared sessions, and peer approvals become the real attack surface. A valid request can still become dangerous if identity claims stretch farther than the task should allow."
         },
         {
-          "title": "Known identity abuse patterns are recognized early",
-          "detail": "The architecture anticipates three recurring failures: impersonated higher-trust roles, one user's session bleeding into another's turn, and delegated steps silently gaining broader privilege."
+          "title": "The Threat variants box frames the three identity failures",
+          "detail": "The box calls out impersonation, session bleed, and privilege drift. Those are the recurring ways authority moves farther than the original request."
         },
         {
-          "title": "D1 verifies signed identity claims",
-          "detail": "Every trust hop validates that the agent or approval signal really came from the expected identity provider and role holder, not just from a matching name or string."
+          "title": "D1 Cryptographic identity verification asks for proof at every hop",
+          "detail": "This D1 box checks signed identity claims rather than trusting a display name or role string. Proof, not formatting, decides who the system believes."
         },
         {
-          "title": "D2 enforces minimum privilege",
-          "detail": "Each task, sub-agent, and peer interaction receives only the smallest authority required, so research cannot become executive mail access and shared assistance cannot remain consultant-admin by default."
+          "title": "D2 Minimum privilege keeps each task's authority deliberately small",
+          "detail": "Minimum privilege means every task, peer, and sub-agent gets only the least authority needed. Research does not silently become inbox access and delegated help does not inherit admin scope."
         },
         {
-          "title": "D3 holds on escalation and session drift",
-          "detail": "Any attempt to retain broader privilege, switch users without re-binding identity, or request new authority mid-task is treated as suspicious and paused for review."
+          "title": "D3 treats escalation and session reuse as threat signals",
+          "detail": "This box pauses the workflow when scope grows, tokens persist too long, or one user's session appears in another user's turn. Review happens before the privilege jump becomes action."
         },
         {
-          "title": "D4 validates the cross-agent trust chain",
-          "detail": "Downstream agents verify origin and signed provenance before acting, so approval-shaped content from the wrong source cannot impersonate a validator or senior role."
+          "title": "D4 Cross-agent trust validation checks who really approved the handoff",
+          "detail": "Downstream agents verify origin and signed provenance before acting. Pipeline position or approval-shaped text is not enough to impersonate a validator or senior role."
         },
         {
-          "title": "D5 requires approval for privilege-sensitive paths",
-          "detail": "If a workflow truly needs authority above the task's declared scope, a human gate decides explicitly rather than letting the agent self-authorize."
+          "title": "D5 puts high-privilege transitions behind a human decision",
+          "detail": "The Human-in-the-Loop Gate is where broader authority must be requested openly. The agent cannot enlarge its own scope just because the workflow would be easier that way."
         },
         {
-          "title": "Only the approved identity path executes under D6 observability",
-          "detail": "The workflow completes only when the actor, scope, and provenance all match policy, while telemetry watches the full identity lifecycle for drift, bleed, or impersonation attempts."
+          "title": "The outcome box shows identity that stayed bounded end to end",
+          "detail": "Only the verified actor with the verified scope can proceed. D6 observability keeps the identity lifecycle visible across issuance, delegation, reuse, and escalation attempts."
         }
       ]
     }
@@ -5901,7 +5901,7 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI04 : 2026 · OWASP Agentic Security · Shared Defense Flow",
       "heading": "Agentic supply chain vulnerabilities — shared defense walkthrough",
       "introTitle": "ASI04 — Shared Defense Flow",
-      "introDetail": "Click Start to reveal the layered architecture that preserves component integrity across runtime tool discovery, template fetches, and schema loading.",
+      "introDetail": "Click Start to follow the defended runtime-discovery workflow. Each step names the active box, defines the supply-chain concept, and shows how the dependency path is verified.",
       "zone": "DEFENSE ZONE: VERIFIED COMPONENTS STOP MCP SPOOFING, TEMPLATE POISONING, AND SCHEMA DRIFT",
       "user": {
         "title": "User",
@@ -5910,122 +5910,122 @@ window.ASI_WALKTHROUGHS = {
       },
       "agent": {
         "title": "Agent planner",
-        "sub1": "Runtime dependency path under review",
+        "sub1": "Trusted dependency path under review",
         "goal": "Goal: use trusted components ✓"
       },
       "toolTop": {
         "title": "discoverOrFetch()",
         "sub1": "Registry / CDN / schema lookup",
-        "sub2": "loads components at runtime"
+        "sub2": "loads runtime components"
       },
       "store": {
         "title": "Supply chain",
         "sub1": "MCPs / templates / schemas",
-        "sub2": "external components can be tampered with"
+        "sub2": "Dependencies may be tampered with"
       },
       "patterns": {
-        "title": "Attack patterns",
-        "sub1": "MCP impersonation: a lookalike runtime server is selected",
-        "sub2": "Template poisoning: fetched instructions add covert side effects",
-        "sub3": "Schema corruption: modified definitions reshape live calls"
+        "title": "Threat variants covered",
+        "sub1": "Lookalike MCP selected",
+        "sub2": "Fetched template hides side effects",
+        "sub3": "Modified schema reshapes calls"
       },
       "d1": {
         "title": "AI-SBOM & allowlist pinning",
-        "sub1": "Only approved components and pinned sources are eligible.",
-        "sub2": "Unknown registries and floating URLs are blocked."
+        "sub1": "Allow only approved components.",
+        "sub2": "Block unknown registries and floating URLs."
       },
       "d2": {
         "title": "Cryptographic integrity verification",
-        "sub1": "Check hashes or signatures before trusting a fetched component.",
+        "sub1": "Verify hashes or signatures before trust.",
         "sub2": "Mismatches halt execution."
       },
       "d3": {
         "title": "Schema & baseline validation",
-        "sub1": "Diff runtime schemas against approved baselines.",
-        "sub2": "New fields or drift trigger review."
+        "sub1": "Diff runtime schemas against the baseline.",
+        "sub2": "Drift or new fields trigger review."
       },
       "d4": {
         "title": "Output & egress monitoring",
-        "sub1": "Check responses and outbound flows against policy.",
-        "sub2": "SUCCESS alone never proves secure execution."
+        "sub1": "Check outputs and egress against policy.",
+        "sub2": "A successful run is not proof of safety."
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "New or changed components require approval.",
-        "sub2": "Registry, template, and schema changes cannot self-promote."
+        "sub1": "New components require approval.",
+        "sub2": "Runtime changes cannot self-promote."
       },
       "d6": {
         "title": "Strong Observability",
-        "sub1": "Log fetches, hash checks, schema diffs, and egress independently.",
-        "sub2": "Silent skims, hidden writes, and drift stay visible."
+        "sub1": "Log fetches, hash checks, schema diffs, and egress.",
+        "sub2": "Hidden writes and drift stay visible."
       },
       "outcome": {
         "title": "Approved component outcome",
-        "sub1": "Only verified, pinned, approved dependencies shape execution.",
-        "sub2": "Correct component, version, schema, and data flow."
+        "sub1": "Only verified, pinned dependencies shape execution.",
+        "sub2": "Correct component, version, and schema."
       },
       "audit": {
         "title": "D6 - Strong Observability",
-        "sub1": "Telemetry spans every component fetch, integrity check, schema decision, approval event, and egress path.",
+        "sub1": "Telemetry records fetches, integrity checks, schema decisions, approvals, and egress.",
         "sub2": "Anomaly detection surfaces spoofed identities, hash drift, hidden writes, and suspicious outbound flows early."
       },
       "labels": {
         "l0": "① Request enters",
         "l1": "② Discover or fetch",
         "l2": "③ Reach supply chain",
-        "l3": "④ Compromise patterns are identified",
-        "l4": "⑤ Pin approved sources",
+        "l3": "④ Cover variants",
+        "l4": "⑤ Pin sources",
         "l5": "⑥ Verify integrity",
         "l6": "⑦ Validate baseline",
         "l7": "⑧ Check egress",
         "l8": "⑨ Require approval",
-        "l9": "⑩ Observe continuously",
+        "l9": "⑩ Observe",
         "l10": "⑪ Execute approved path"
       },
       "steps": [
         {
-          "title": "A legitimate request enters the workflow",
-          "detail": "The operator starts with a normal task such as routing a payment, reviewing a contract, or generating product recommendations."
+          "title": "The request is normal, but the component path is still a risk surface",
+          "detail": "The User and Agent planner boxes begin with an ordinary business task. ASI04 appears when the agent starts discovering runtime components instead of relying only on fixed local assets."
         },
         {
-          "title": "The agent discovers or fetches runtime components",
-          "detail": "Instead of relying only on fixed local assets, the assistant queries registries, CDNs, or schema stores during execution."
+          "title": "The discoverOrFetch() box is where live dependencies enter the run",
+          "detail": "This box covers service discovery, template fetches, and schema loading. Discovery feels normal, but it lets external components start shaping execution."
         },
         {
-          "title": "The supply chain becomes the trust boundary",
-          "detail": "At this point MCP servers, templates, and schemas are live dependencies that can shape execution even though the agent itself stays obedient."
+          "title": "The Supply chain box marks the real trust boundary",
+          "detail": "MCP servers, templates, and schemas are now active dependencies. Even an obedient agent becomes unsafe if the wrong runtime component is trusted."
         },
         {
-          "title": "Known compromise patterns are recognized early",
-          "detail": "The architecture anticipates three recurring failures: runtime MCP impersonation, poisoned templates, and corrupted schemas or definitions."
+          "title": "The Threat variants box narrows the supply-chain failure modes",
+          "detail": "It calls out lookalike MCPs, poisoned templates, and schema drift. Those are the three common ways runtime discovery quietly changes behavior."
         },
         {
-          "title": "D1 pins approved supply-chain membership",
-          "detail": "An AI-SBOM and allowlist constrain the agent to approved components, trusted registries, and pinned source paths before anything is fetched or connected."
+          "title": "D1 AI-SBOM and allowlist pinning decide which components are even allowed",
+          "detail": "An AI-SBOM is the inventory of approved AI-facing components. This D1 box uses that inventory plus an allowlist so unknown registries and floating source paths never get automatic trust."
         },
         {
-          "title": "D2 verifies cryptographic integrity",
-          "detail": "Every fetched component is checked against a known-good hash or signature so the agent never trusts source location alone."
+          "title": "D2 Cryptographic integrity verification checks the exact copy, not just the name",
+          "detail": "Hashes and signatures answer a different question from allowlisting: is this exact file still the approved one? Source location alone is never enough."
         },
         {
-          "title": "D3 validates schemas and definitions against baselines",
-          "detail": "Runtime definitions are diffed against approved pinned versions so hidden parameters, structural drift, or modified instructions are quarantined before use."
+          "title": "D3 Schema and baseline validation catches subtle runtime drift",
+          "detail": "This D3 box diffs live schemas and definitions against the approved baseline. One added field or hidden instruction is enough to trigger review before execution continues."
         },
         {
-          "title": "D4 checks outputs and egress behavior",
-          "detail": "Responses and outbound flows are validated against expected shapes and policy because a compromised dependency can still return a normal-looking SUCCESS."
+          "title": "D4 Output and egress monitoring watches what the dependency actually does",
+          "detail": "Egress means what leaves the system: outbound calls, returned data, and side effects. A compromised component can still report SUCCESS, so this box checks live behavior against policy."
         },
         {
-          "title": "D5 requires human approval for changed components",
-          "detail": "Any new registry entry, updated template, or schema change must pass explicit review before joining the trusted execution path."
+          "title": "D5 keeps new or changed components out of the trusted path until reviewed",
+          "detail": "Updated registries, templates, and schemas do not self-promote. The Human-in-the-Loop Gate makes supply-chain change an accountable decision."
         },
         {
-          "title": "D6 makes silent compromise visible over time",
-          "detail": "Independent observability tracks fetches, hash checks, schema diffs, and egress behavior so silent skims, covert writes, and drift remain detectable."
+          "title": "D6 and the outcome box show what trusted runtime behavior looks like",
+          "detail": "Only approved, pinned, verified components shape execution. D6 observability keeps fetches, integrity checks, schema diffs, and suspicious egress visible over time."
         },
         {
-          "title": "Only the approved path executes",
-          "detail": "The final task runs only after component membership, integrity, schema baseline, egress behavior, approval state, and ongoing observability all confirm the dependency path is trusted."
+          "title": "The approved component outcome is the business result of all those checks",
+          "detail": "The final task runs only after membership, integrity, baseline validation, egress policy, approval state, and observability all confirm the dependency path is safe to use."
         }
       ]
     }
@@ -6037,7 +6037,7 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI05 : 2026 · OWASP Agentic Security · Shared Defense Flow",
       "heading": "Unexpected code execution — shared defense walkthrough",
       "introTitle": "ASI05 — Shared Defense Flow",
-      "introDetail": "Click Start to reveal the layered architecture that keeps shell scripts, SQL, and generated Python from turning untrusted data into live execution.",
+      "introDetail": "Click Start to follow the defended self-healing script workflow. Each step names the active box, defines the code-boundary concept, and shows how execution stays governed.",
       "zone": "DEFENSE ZONE: HARDWARE-SANDBOXED EXECUTION STOPS SCRIPT, SQL, AND DATA-TO-CODE ESCAPES",
       "user": {
         "title": "User",
@@ -6052,7 +6052,7 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "generateOrCompileCode()",
         "sub1": "Shell / SQL / Python draft builder",
-        "sub2": "turns task context into executable drafts"
+        "sub2": "turns task context into drafts"
       },
       "store": {
         "title": "Untrusted input",
@@ -6060,98 +6060,98 @@ window.ASI_WALKTHROUGHS = {
         "sub2": "data may try to become code"
       },
       "patterns": {
-        "title": "Attack patterns",
-        "sub1": "Shell injection: cleanup or repair code escapes the approved path",
-        "sub2": "SQL injection: natural language becomes destructive multi-statement SQL",
-        "sub3": "Data-to-code escape: uploaded text breaks into generated Python"
+        "title": "Threat variants covered",
+        "sub1": "Shell injection: repair code escapes the approved path",
+        "sub2": "SQL injection: language becomes destructive SQL",
+        "sub3": "Data-to-code escape: uploaded text breaks into Python"
       },
       "d1": {
-        "title": "Input sanitisation & data classification",
-        "sub1": "Classify all ingested content as data before reasoning.",
-        "sub2": "Shell, SQL, and subprocess payload markers are quarantined early."
+        "title": "Input classification",
+        "sub1": "Treat all ingested content as data first.",
+        "sub2": "Quarantine shell, SQL, and subprocess markers."
       },
       "d2": {
-        "title": "Code generation static analysis",
-        "sub1": "Treat every script, query, or plan as a draft until checked.",
-        "sub2": "Unsafe deletion scope, raw SQL, and process calls are rejected."
+        "title": "Static analysis",
+        "sub1": "Treat every script, query, or plan as a draft.",
+        "sub2": "Reject broad deletion, raw SQL, and process calls."
       },
       "d3": {
-        "title": "Hardware-enforced sandbox execution",
-        "sub1": "Run generated code in a zero-access isolated runtime.",
-        "sub2": "Filesystem, database, and network reach stay tightly bounded."
+        "title": "Sandbox execution",
+        "sub1": "Run generated code in an isolated runtime.",
+        "sub2": "Host, database, and network reach stay bounded."
       },
       "d4": {
         "title": "Dry-run validation",
-        "sub1": "Preview state changes before any live destructive execution.",
-        "sub2": "Unexpected files, rows, or endpoints halt the run."
+        "sub1": "Preview changes before live execution.",
+        "sub2": "Unexpected files, rows, or endpoints halt."
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "Deletes, production writes, and external sends require approval.",
-        "sub2": "The agent cannot self-authorize destructive code paths."
+        "sub1": "Deletes, writes, and sends require approval.",
+        "sub2": "The agent cannot self-authorize destructive code."
       },
       "outcome": {
         "title": "Approved execution outcome",
-        "sub1": "Only the reviewed, bounded execution path is allowed through.",
+        "sub1": "Only the reviewed, bounded path executes.",
         "sub2": "Correct scope, correct interface, correct runtime."
       },
       "audit": {
         "title": "D6 - Strong Observability",
-        "sub1": "Telemetry spans ingested data, code drafts, static checks, dry-runs, sandbox events, and approval steps.",
+        "sub1": "Telemetry records ingested data, drafts, checks, dry-runs, sandbox events, and approvals.",
         "sub2": "Dynamic analysis makes data-to-code escalation and runtime escape attempts visible early."
       },
       "labels": {
         "l0": "① Request enters",
-        "l1": "② Generate execution draft",
-        "l2": "③ Read untrusted input",
-        "l3": "④ Code-risk patterns are identified",
-        "l4": "⑤ Classify as data only",
-        "l5": "⑥ Statically analyze draft",
-        "l6": "⑦ Run in hardware sandbox",
-        "l7": "⑧ Preview blast radius",
+        "l1": "② Draft execution",
+        "l2": "③ Read input",
+        "l3": "④ Cover variants",
+        "l4": "⑤ Classify data",
+        "l5": "⑥ Analyze draft",
+        "l6": "⑦ Run in sandbox",
+        "l7": "⑧ Preview impact",
         "l8": "⑨ Require approval",
         "l9": "⑩ Execute approved path"
       },
       "steps": [
         {
-          "title": "A legitimate task enters the workflow",
-          "detail": "The operator starts a normal automation task such as cleanup, safety lookup, or analytics generation."
+          "title": "The request is useful, but it is headed toward an execution boundary",
+          "detail": "The User and Agent planner boxes begin with a normal cleanup, lookup, or analytics task. ASI05 starts when the workflow gets close enough to turn language into code."
         },
         {
-          "title": "The agent prepares executable drafts",
-          "detail": "The assistant decides to build shell, SQL, or Python execution artifacts rather than answer in natural language only."
+          "title": "The generateOrCompileCode() box creates drafts that could become executable",
+          "detail": "This box may produce shell commands, SQL, or Python instead of plain text. The draft is not dangerous because it exists; it becomes dangerous if the system lets untrusted data shape it."
         },
         {
-          "title": "Untrusted data reaches the code path",
-          "detail": "Files, requests, or uploaded fields are still just data, but they now sit near an execution boundary where interpolation would be dangerous."
+          "title": "The Untrusted input box shows where data gets too close to code",
+          "detail": "Files, records, prompts, and uploaded fields are still just data. ASI05 is the moment the architecture forgets that distinction and lets data inherit execution meaning."
         },
         {
-          "title": "Known code-risk patterns are recognized",
-          "detail": "The architecture anticipates shell traversal, SQL injection, and data-to-code escapes before any live execution occurs."
+          "title": "The Threat variants box identifies the three escape routes",
+          "detail": "The recurring patterns are shell injection, SQL injection, and data-to-code escape. Different interfaces, same failure: input crosses the code boundary without enough controls."
         },
         {
-          "title": "D1 classifies everything as data first",
-          "detail": "Shell metacharacters, SQL terminators, and subprocess-style payloads are stripped, quarantined, or isolated before they can shape code generation."
+          "title": "D1 Input classification keeps everything in the data bucket first",
+          "detail": "This D1 box treats ingested content as data unless proven otherwise. Shell metacharacters, SQL terminators, and subprocess markers are isolated before draft generation depends on them."
         },
         {
-          "title": "D2 rejects unsafe generated code",
-          "detail": "Static analysis checks every draft for broad deletion scope, raw SQL assembly, unrestricted process launch, and out-of-scope network behavior."
+          "title": "D2 Static analysis reviews the draft before runtime gets a vote",
+          "detail": "Static analysis means inspecting the script or query without running it. This box rejects broad deletion, raw SQL assembly, dangerous subprocess calls, and out-of-scope network behavior early."
         },
         {
-          "title": "D3 contains runtime behavior in hardware",
-          "detail": "Even if a draft passes earlier checks, it runs inside a hardware-enforced sandbox with no path to broad host, database, or network access."
+          "title": "D3 Sandbox execution contains whatever still reaches runtime",
+          "detail": "A sandbox is the isolated runtime boundary around the draft. Even if earlier checks miss something, the host, database, and network reach stay tightly bounded."
         },
         {
-          "title": "D4 previews blast radius before live changes",
-          "detail": "Any state-modifying path is dry-run first so unexpected files, rows, or endpoints can halt execution before damage happens."
+          "title": "D4 Dry-run validation previews the blast radius before live change",
+          "detail": "A dry run shows which files, rows, or endpoints would change without committing them. That preview turns hidden side effects into something the workflow can stop."
         },
         {
-          "title": "D5 requires approval for destructive code paths",
-          "detail": "Deletes, production writes, and external sends cannot go live on model judgment alone. A human gate must confirm that the generated script, query, or job still matches the intended business task."
+          "title": "D5 keeps destructive code paths behind approval",
+          "detail": "Deletes, production writes, and external sends still need a human gate. The generated script may be clever, but it does not get to self-authorize its own blast radius."
         },
         {
-          "title": "Only the approved execution path runs under D6 observability",
-          "detail": "The workflow completes only after the draft is classified as data-safe, statically checked, sandboxed, blast-radius tested, and explicitly approved, while D6 telemetry records the full chain for replay and investigation."
+          "title": "The outcome box shows a reviewed execution path, not an improvisation path",
+          "detail": "Only the classified, analyzed, sandboxed, dry-run-tested, and approved draft executes. D6 observability then records the full chain for replay, investigation, and policy tuning."
         }
       ]
     }
@@ -6163,7 +6163,7 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI06 : 2026 · OWASP Agentic Security · Shared Defense Flow",
       "heading": "Memory & context poisoning — shared defense walkthrough",
       "introTitle": "ASI06 — Shared Defense Flow",
-      "introDetail": "Click Start to reveal the layered architecture that keeps vector stores, belief databases, and vendor memory from becoming a persistent corruption channel.",
+      "introDetail": "Click Start to follow the defended travel-pricing memory workflow. Each step names the active box, defines the memory concept, and shows how persistence stays governed.",
       "zone": "DEFENSE ZONE: VERIFIED MEMORY STOPS RAG POISONING, BELIEF DRIFT, AND MEMORY PLANTS",
       "user": {
         "title": "User",
@@ -6178,43 +6178,43 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "readOrWriteMemory()",
         "sub1": "Vector / belief / trust store path",
-        "sub2": "retrieves or proposes persistent memory updates"
+        "sub2": "reads or proposes persistent memory updates"
       },
       "store": {
         "title": "Memory store",
         "sub1": "RAG / belief / vendor memory",
-        "sub2": "poisoned memory can outlive the attack session"
+        "sub2": "poisoned memory can outlive one session"
       },
       "patterns": {
-        "title": "Attack patterns",
-        "sub1": "RAG poisoning: keyword-stuffed records outrank the true source",
-        "sub2": "Belief drift: repeated assertions slowly become trusted policy",
-        "sub3": "Memory plant: a document tries to self-authorize a persistent rule"
+        "title": "Threat variants covered",
+        "sub1": "RAG poisoning: stuffed records outrank the true source",
+        "sub2": "Belief drift: repeated assertions become trusted policy",
+        "sub3": "Memory plant: a document self-authorizes a persistent rule"
       },
       "d1": {
-        "title": "Cryptographic provenance & integrity check",
-        "sub1": "Every memory entry carries provenance and an integrity hash.",
-        "sub2": "Low-trust or tampered entries are downgraded or quarantined."
+        "title": "Provenance & integrity",
+        "sub1": "Every entry carries provenance and integrity.",
+        "sub2": "Low-trust or tampered entries are quarantined."
       },
       "d2": {
         "title": "Cross-reference validation",
-        "sub1": "High-stakes retrieved memory is checked against a live authority.",
-        "sub2": "Disagreement triggers hold and escalation, not silent trust."
+        "sub1": "High-stakes memory is checked against live authority.",
+        "sub2": "Disagreement triggers hold and escalation."
       },
       "d3": {
-        "title": "Write authorisation gate + sanitisation",
-        "sub1": "Persistent memory updates are privileged governed operations.",
-        "sub2": "Documents and chat claims cannot self-authorize trusted writes."
+        "title": "Governed memory writes",
+        "sub1": "Persistent updates are privileged operations.",
+        "sub2": "Documents and chats cannot self-authorize writes."
       },
       "d4": {
-        "title": "Anomaly detection + version control",
-        "sub1": "Drift, reinforcement, and conflicting entries are scanned over time.",
-        "sub2": "Versioned snapshots make rollback to known-good memory possible."
+        "title": "Drift detection & versioning",
+        "sub1": "Scan for drift, reinforcement, and conflict.",
+        "sub2": "Versioned snapshots enable rollback."
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "Trust tiers, safe patterns, and approval rules require review.",
-        "sub2": "The agent cannot promote high-impact memory on its own."
+        "sub1": "Trust tiers and rules require review.",
+        "sub2": "The agent cannot promote high-impact memory alone."
       },
       "outcome": {
         "title": "Approved memory outcome",
@@ -6223,61 +6223,61 @@ window.ASI_WALKTHROUGHS = {
       },
       "audit": {
         "title": "D6 - Strong Observability",
-        "sub1": "Telemetry spans reads, provenance checks, live cross-checks, write requests, approvals, drift signals, and rollbacks.",
+        "sub1": "Telemetry records reads, provenance checks, live cross-checks, writes, approvals, drift, and rollback.",
         "sub2": "Multi-session poisoning campaigns become visible across time instead of hiding in normal retrieval."
       },
       "labels": {
         "l0": "① Task enters",
-        "l1": "② Read or propose memory",
-        "l2": "③ Reach persistent store",
-        "l3": "④ Memory-poisoning patterns are identified",
+        "l1": "② Read or write memory",
+        "l2": "③ Reach memory store",
+        "l3": "④ Cover variants",
         "l4": "⑤ Verify provenance",
         "l5": "⑥ Cross-check live source",
-        "l6": "⑦ Authorize memory writes",
-        "l7": "⑧ Detect drift & version",
+        "l6": "⑦ Govern writes",
+        "l7": "⑧ Detect drift",
         "l8": "⑨ Require approval",
         "l9": "⑩ Use approved memory path"
       },
       "steps": [
         {
-          "title": "A legitimate workflow enters the agent",
-          "detail": "The operator begins a normal task that depends on persistent memory rather than only the current prompt."
+          "title": "The request is normal, but the memory path can outlive the session",
+          "detail": "The User and Agent planner boxes begin with a task that depends on stored memory, not only the current prompt. ASI06 matters because a bad memory entry can keep influencing later decisions."
         },
         {
-          "title": "The agent reads or proposes long-term memory",
-          "detail": "The assistant retrieves stored knowledge or tries to update a belief, trust level, or safe pattern for future use."
+          "title": "The readOrWriteMemory() box is where retrieval and persistence both matter",
+          "detail": "This box either retrieves stored knowledge or proposes a persistent update. The architecture is deciding what future workflows may treat as trusted memory."
         },
         {
-          "title": "The memory store becomes the trust boundary",
-          "detail": "Vector records, belief entries, and vendor memory can all shape later business decisions even when the current session looks clean."
+          "title": "The Memory store box marks the durable trust boundary",
+          "detail": "Vector records, belief entries, and vendor memory can all outlive the original session. A poisoned memory path keeps paying off even when today's prompt looks harmless."
         },
         {
-          "title": "Known poisoning patterns are recognized early",
-          "detail": "The architecture anticipates retrieval poisoning, gradual reinforcement drift, and document-borne memory plants before they become policy."
+          "title": "The Threat variants box names the three long-lived poisoning patterns",
+          "detail": "It calls out retrieval poisoning, belief drift, and memory plants. Each one is a way for untrusted content to become future policy by staying around."
         },
         {
-          "title": "D1 verifies provenance and integrity",
-          "detail": "Every retrieved entry is checked for trusted source metadata and a matching integrity hash so keyword stuffing alone cannot become ground truth."
+          "title": "D1 Provenance and integrity ask where a memory entry came from and whether it changed",
+          "detail": "Provenance means the system can trace a memory item back to its source. This D1 box combines source metadata with integrity checks so keyword stuffing alone cannot become truth."
         },
         {
-          "title": "D2 checks high-stakes memory against live authority",
-          "detail": "Prices, fraud patterns, trust ratings, and approval rules are cross-checked against a live authoritative source before the agent acts."
+          "title": "D2 Cross-reference validation checks important memory against a live authority",
+          "detail": "For high-stakes facts, memory is treated as a candidate, not the final answer. The box compares fares, fraud rules, and trust decisions to a current authoritative source before action."
         },
         {
-          "title": "D3 gates and sanitizes memory writes",
-          "detail": "Persistent memory changes are treated as privileged operations, so chat assertions or processed documents cannot directly promote trusted beliefs."
+          "title": "D3 Governed memory writes treat persistence as a privileged change",
+          "detail": "This box makes memory writes earn trust the way code execution does. A document or chat message cannot simply declare a new lasting rule and have it stick."
         },
         {
-          "title": "D4 scans for drift and preserves rollback",
-          "detail": "Cross-session reinforcement, conflicting entries, and unauthorized trust jumps are detected, while snapshots keep rollback available if poisoning is confirmed."
+          "title": "D4 Drift detection and versioning watch for gradual corruption over time",
+          "detail": "Drift detection looks for trust jumps, repeated reinforcement, and conflicting entries. Versioned snapshots keep rollback ready if a poisoned memory path is confirmed later."
         },
         {
-          "title": "D5 reviews high-impact trust changes",
-          "detail": "Trust-tier changes, safe-pattern promotion, and memory writes that could affect future financial or approval decisions require explicit review before they become authoritative."
+          "title": "D5 keeps high-impact trust changes behind review",
+          "detail": "Trust-tier changes, safe-pattern promotion, and future-facing approval rules still need a Human-in-the-Loop Gate. Memory does not get to promote itself into policy."
         },
         {
-          "title": "Only the approved memory path shapes future actions under D6 observability",
-          "detail": "The workflow completes only when provenance, live cross-checks, governed writes, drift monitoring, and required approvals all pass, while D6 logging keeps the full memory lifecycle visible across sessions."
+          "title": "The outcome box shows memory that stayed governed from read to write",
+          "detail": "Only verified, cross-checked, governed memory shapes future actions. D6 logging keeps the read, write, drift, and rollback lifecycle visible across sessions."
         }
       ]
     }
@@ -6289,7 +6289,7 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI07 : 2026 · OWASP Agentic Security · Shared Defense Flow",
       "heading": "Insecure inter-agent communication — shared defense walkthrough",
       "introTitle": "ASI07 — Shared Defense Flow",
-      "introDetail": "Click Start to reveal the layered architecture that keeps peer-agent messages, replay windows, and discovery services from becoming trusted attack channels.",
+      "introDetail": "Click Start to follow the defended prescription handoff workflow. Each step names the active box, defines the channel-security concept, and shows how peer trust is proven.",
       "zone": "DEFENSE ZONE: VERIFIED PEER IDENTITY STOPS MITM, REPLAY, AND GHOST REGISTRATION",
       "user": {
         "title": "User",
@@ -6304,61 +6304,61 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "sendOrDiscoverAgent()",
         "sub1": "Peer message / discovery path",
-        "sub2": "routes instructions across agent boundaries"
+        "sub2": "routes messages across agent boundaries"
       },
       "store": {
         "title": "Agent channel",
         "sub1": "Messages / registry / logs",
-        "sub2": "peer identity and freshness can be abused"
+        "sub2": "identity and freshness can be abused"
       },
       "patterns": {
-        "title": "Attack patterns",
+        "title": "Threat variants covered",
         "sub1": "MITM tampering: a valid order is modified in transit",
-        "sub2": "Replay reuse: an old signed message is processed again",
-        "sub3": "Ghost registration: a fake specialist is discovered as a peer"
+        "sub2": "Replay reuse: an old signed message runs again",
+        "sub3": "Ghost registration: a fake specialist is discovered"
       },
       "d1": {
         "title": "Mutual TLS (mTLS)",
-        "sub1": "Both peer agents cryptographically verify the channel first.",
-        "sub2": "Handshake failure is a hard stop, not a warning."
+        "sub1": "Both peers verify the channel first.",
+        "sub2": "Handshake failure is a hard stop."
       },
       "d2": {
         "title": "Digital message signing",
-        "sub1": "Every message is signed before the receiver processes content.",
-        "sub2": "Tampered or unsigned payloads are rejected entirely."
+        "sub1": "Every message is signed before processing.",
+        "sub2": "Tampered or unsigned payloads are rejected."
       },
       "d3": {
         "title": "Message freshness controls",
-        "sub1": "Nonces and TTLs make valid messages one-time and time-bound.",
+        "sub1": "Nonces and TTLs make messages one-time and time-bound.",
         "sub2": "Replayed approvals are rejected even with a valid signature."
       },
       "d4": {
         "title": "Authenticated agent registry",
-        "sub1": "Only verified, allowlisted agents can appear in discovery results.",
-        "sub2": "Priority metadata alone cannot create a trusted endpoint."
+        "sub1": "Only verified, allowlisted agents appear in discovery.",
+        "sub2": "Priority metadata cannot create trust."
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "Sensitive data routing to new or unusual endpoints requires review.",
+        "sub1": "Sensitive rerouting requires review.",
         "sub2": "Clinical, financial, and customer data cannot self-reroute."
       },
       "outcome": {
         "title": "Approved inter-agent outcome",
-        "sub1": "Only authenticated, fresh, approved peer exchanges are allowed through.",
+        "sub1": "Only authenticated, fresh, approved exchanges run.",
         "sub2": "Correct sender, correct payload, correct endpoint."
       },
       "audit": {
         "title": "D6 - Strong Observability",
-        "sub1": "Telemetry spans mTLS results, signature checks, nonce use, TTL validation, discovery queries, and routing approvals.",
+        "sub1": "Telemetry records mTLS, signatures, nonces, TTLs, discovery, and routing approvals.",
         "sub2": "MITM attempts, replay events, and ghost registrations become visible in real time."
       },
       "labels": {
         "l0": "① Task enters",
         "l1": "② Send or discover peer",
-        "l2": "③ Reach agent channel",
-        "l3": "④ Channel attack patterns are identified",
-        "l4": "⑤ Verify peer channel",
-        "l5": "⑥ Verify signed payload",
+        "l2": "③ Reach channel",
+        "l3": "④ Cover variants",
+        "l4": "⑤ Verify channel",
+        "l5": "⑥ Verify payload",
         "l6": "⑦ Enforce freshness",
         "l7": "⑧ Authenticate registry",
         "l8": "⑨ Require routing approval",
@@ -6366,44 +6366,44 @@ window.ASI_WALKTHROUGHS = {
       },
       "steps": [
         {
-          "title": "A legitimate multi-agent task begins",
-          "detail": "The workflow starts with one agent needing to send data or discover a downstream specialist as part of normal business logic."
+          "title": "The task is normal, but the peer handoff needs proof",
+          "detail": "The User and Sending agent boxes begin with a standard multi-agent workflow. ASI07 starts when one agent has to trust another over a live channel."
         },
         {
-          "title": "A peer message or discovery request is prepared",
-          "detail": "The sending agent now crosses an inter-agent trust boundary where identity, freshness, and endpoint selection all matter."
+          "title": "The sendOrDiscoverAgent() box is where channel trust becomes active",
+          "detail": "This box either sends a peer message or discovers the next specialist. Identity, freshness, and endpoint selection all matter before the receiver should believe anything."
         },
         {
-          "title": "The channel or registry becomes the attack surface",
-          "detail": "Messages, logs, and discovery results can all be abused if the receiver trusts them based on network position or formatting alone."
+          "title": "The Agent channel box marks the attack surface for trust in transit",
+          "detail": "Messages, logs, and discovery results all become risky if the receiver trusts them because they look internal or arrived on the expected route."
         },
         {
-          "title": "Known channel attack patterns are recognized",
-          "detail": "The architecture anticipates tampering in transit, replay of old approvals, and malicious peer registration before any receiving agent acts."
+          "title": "The Threat variants box narrows the channel abuse patterns",
+          "detail": "It focuses on tampering in transit, replay of old approvals, and ghost registration. All three create traffic that looks believable at first glance."
         },
         {
-          "title": "D1 verifies the peer channel with mTLS",
-          "detail": "Both sides must successfully authenticate the transport first so internal-network assumptions never substitute for cryptographic proof."
+          "title": "D1 Mutual TLS proves both peers before the conversation starts",
+          "detail": "mTLS means each side authenticates the transport channel, not just the sender inside the message. Internal network position is never accepted as proof by itself."
         },
         {
-          "title": "D2 verifies the signed payload",
-          "detail": "Every message is digitally signed and checked before processing, so modified content cannot quietly flow through a trusted sender label."
+          "title": "D2 Digital message signing protects the payload itself",
+          "detail": "A signed payload answers a separate question from mTLS: did the content change after it was sent? This box rejects unsigned or tampered messages before processing."
         },
         {
-          "title": "D3 enforces message freshness",
-          "detail": "Nonce and TTL checks make every valid message time-bound and one-time, blocking replay even when a captured signature remains valid."
+          "title": "D3 Message freshness controls stop old approvals from running again",
+          "detail": "Nonces and TTLs make a message one-time and time-bound. A real signature from yesterday is still rejected if the transaction window has passed."
         },
         {
-          "title": "D4 restricts discovery to authenticated peers",
-          "detail": "The registry accepts only verified, allowlisted agent identities, so malicious lookalikes cannot win discovery through metadata or naming tricks alone."
+          "title": "D4 Authenticated agent registry decides which peers can even be discovered",
+          "detail": "This box keeps discovery to verified, allowlisted agents. Friendly naming, priority metadata, or registry position cannot create trust on their own."
         },
         {
-          "title": "D5 gates sensitive rerouting and unusual endpoints",
-          "detail": "Clinical, financial, and customer data still need explicit approval before they can move to a new peer, a newly discovered specialist, or any route outside the expected trust path."
+          "title": "D5 keeps sensitive rerouting behind approval",
+          "detail": "Clinical, financial, and customer data do not self-reroute just because a new peer appears available. The Human-in-the-Loop Gate protects the unusual or high-risk path."
         },
         {
-          "title": "Only the approved inter-agent exchange proceeds under D6 observability",
-          "detail": "The workflow completes only after the channel, payload, freshness checks, registry trust, and any routing approvals all succeed, while D6 records every handshake and discovery decision for later review."
+          "title": "The outcome box shows a peer exchange that stayed provable end to end",
+          "detail": "Only a channel-authenticated, payload-verified, fresh, registry-approved exchange proceeds. D6 then records the handshakes, nonce checks, discovery events, and routing decisions for review."
         }
       ]
     }
@@ -6415,7 +6415,7 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI08 : 2026 · OWASP Agentic Security · Shared Defense Flow",
       "heading": "Multi-agent decision making & autonomy — shared defense walkthrough",
       "introTitle": "ASI08 — Shared Defense Flow",
-      "introDetail": "Click Start to reveal the layered architecture that keeps one bad feed from cascading through trading, inventory, and clinical agent pipelines.",
+      "introDetail": "Click Start to follow the defended trading cascade workflow. Each step names the active box, defines the containment concept, and shows how one bad signal stops propagating.",
       "zone": "DEFENSE ZONE: CIRCUIT BREAKERS AND BLAST-RADIUS CAPS STOP CASCADE AMPLIFICATION",
       "user": {
         "title": "User",
@@ -6430,7 +6430,7 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "runPipelineStage()",
         "sub1": "Feed / stage / handoff path",
-        "sub2": "propagates outputs across agent boundaries"
+        "sub2": "propagates outputs across agents"
       },
       "store": {
         "title": "Pipeline signal",
@@ -6438,98 +6438,98 @@ window.ASI_WALKTHROUGHS = {
         "sub2": "one bad value can amplify across the chain"
       },
       "patterns": {
-        "title": "Attack patterns",
-        "sub1": "Feed corruption: one implausible input starts the cascade",
-        "sub2": "Demand amplification: each stage multiplies the prior error",
-        "sub3": "Clinical pathway failure: a false result reaches treatment rapidly"
+        "title": "Threat variants covered",
+        "sub1": "Feed corruption: one bad input starts the cascade",
+        "sub2": "Demand amplification: each stage multiplies the error",
+        "sub3": "Clinical pathway failure: a false result reaches treatment fast"
       },
       "d1": {
         "title": "Input plausibility validation",
-        "sub1": "Validate values against historical range and rate-of-change bounds.",
-        "sub2": "Syntactically valid but implausible inputs are halted early."
+        "sub1": "Check values against range and rate-of-change bounds.",
+        "sub2": "Implausible inputs halt early."
       },
       "d2": {
         "title": "Per-agent output circuit breaker",
-        "sub1": "Each stage is capped before its output reaches the next agent.",
-        "sub2": "There is no warning-only pass-through on threshold breaches."
+        "sub1": "Cap each stage before it reaches the next.",
+        "sub2": "Threshold breaches stop the handoff."
       },
       "d3": {
         "title": "Cross-agent plausibility check",
-        "sub1": "Every downstream agent re-validates what it receives upstream.",
-        "sub2": "One weak threshold does not become permission to continue."
+        "sub1": "Each downstream agent re-checks upstream input.",
+        "sub2": "One weak threshold does not grant passage."
       },
       "d4": {
         "title": "Blast-radius cap enforcement",
-        "sub1": "The orchestrator enforces the maximum impact of one full run.",
-        "sub2": "Digital twin testing keeps oversized runs out of production."
+        "sub1": "Enforce the maximum impact of one run.",
+        "sub2": "Digital twin testing blocks oversized runs."
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "High-risk orders, purchases, and treatments require sign-off.",
-        "sub2": "Pipeline speed does not override approval thresholds."
+        "sub1": "High-risk actions require sign-off.",
+        "sub2": "Pipeline speed does not bypass approval."
       },
       "outcome": {
         "title": "Approved pipeline outcome",
-        "sub1": "Only plausible, bounded, reviewed actions pass through the chain.",
+        "sub1": "Only plausible, bounded, reviewed actions pass.",
         "sub2": "Correct feed, correct stage output, correct blast radius."
       },
       "audit": {
         "title": "D6 - Strong Observability",
-        "sub1": "Telemetry spans inputs, outputs, breaker decisions, plausibility checks, blast-radius calculations, and approvals.",
+        "sub1": "Telemetry records inputs, outputs, breakers, plausibility checks, blast radius, and approvals.",
         "sub2": "Cascade amplification stays visible before downstream actions become irreversible."
       },
       "labels": {
         "l0": "① Task enters",
-        "l1": "② Start pipeline stage",
-        "l2": "③ Read live signal",
-        "l3": "④ Cascade patterns are identified",
+        "l1": "② Start stage",
+        "l2": "③ Read signal",
+        "l3": "④ Cover variants",
         "l4": "⑤ Validate plausibility",
-        "l5": "⑥ Break unsafe outputs",
-        "l6": "⑦ Re-check downstream input",
+        "l5": "⑥ Break unsafe output",
+        "l6": "⑦ Re-check downstream",
         "l7": "⑧ Cap blast radius",
         "l8": "⑨ Require sign-off",
         "l9": "⑩ Execute approved run"
       },
       "steps": [
         {
-          "title": "A legitimate multi-agent workflow begins",
-          "detail": "The operator starts a pipeline such as trading, replenishment, or clinical routing that depends on multiple agent stages."
+          "title": "The workflow is legitimate, but the chain can still amplify one bad signal",
+          "detail": "The User and Pipeline orchestrator boxes begin with a normal multi-stage task. ASI08 is the moment one weak signal gains more credibility each time the pipeline repeats it."
         },
         {
-          "title": "The orchestrator starts stage-by-stage execution",
-          "detail": "Each agent prepares to consume the prior signal and produce the next instruction in the chain."
+          "title": "The runPipelineStage() box turns the workflow into a handoff chain",
+          "detail": "This box passes one stage output into the next stage input. Efficiency is useful, but it also means an error can travel farther before anyone notices."
         },
         {
-          "title": "A live signal becomes the control surface",
-          "detail": "External feeds and upstream outputs can all serve as amplification points if the pipeline treats one bad value as trustworthy enough to keep flowing."
+          "title": "The Pipeline signal box marks the value that can start the cascade",
+          "detail": "A feed, upstream output, or handoff becomes the control surface. If the architecture treats that value as trustworthy enough to keep flowing, the cascade has its route."
         },
         {
-          "title": "Known cascade patterns are recognized",
-          "detail": "The architecture anticipates corrupted feed values, amplified demand signals, and bad clinical paths before they can propagate unchecked."
+          "title": "The Threat variants box frames the common cascade shapes",
+          "detail": "It points to corrupted feeds, amplified demand signals, and fast clinical-path failure. Different industries, same pattern of unchecked amplification."
         },
         {
-          "title": "D1 validates plausibility at the input boundary",
-          "detail": "Inputs must make sense statistically and historically, not just syntactically, so obviously wrong but well-formed values halt before the chain begins."
+          "title": "D1 Input plausibility validation asks whether the first signal even makes sense",
+          "detail": "Plausibility means more than valid syntax. This box checks range, history, and rate of change so absurd but well-formed inputs halt before the chain begins."
         },
         {
-          "title": "D2 breaks unsafe outputs at each stage",
-          "detail": "Every agent output is threshold-checked before handoff so oversized positions, forecasts, or prescriptions never flow forward as mere warnings."
+          "title": "D2 Per-agent output circuit breaker stops local excess before it becomes the next assumption",
+          "detail": "A circuit breaker is the hard stop between stages. If a position, forecast, or recommendation exceeds bounds, the handoff breaks instead of passing a warning downstream."
         },
         {
-          "title": "D3 forces each downstream agent to re-check input",
-          "detail": "Receiving agents validate the plausibility of upstream instructions again rather than assuming earlier checks must have been correct."
+          "title": "D3 Cross-agent plausibility check removes the 'someone already checked this' excuse",
+          "detail": "Each downstream agent re-checks what it receives instead of trusting the prior stage. One weak threshold upstream does not grant automatic passage."
         },
         {
-          "title": "D4 enforces the blast-radius cap across the whole run",
-          "detail": "The orchestrator compares the total projected impact against a declared maximum and blocks runs that exceed it before external action proceeds."
+          "title": "D4 Blast-radius cap enforcement measures the full run, not one stage at a time",
+          "detail": "Blast radius is the maximum allowed harm from a single pipeline run. This box blocks runs whose projected impact exceeds the declared limit, even if each stage looks locally plausible."
         },
         {
-          "title": "D5 requires sign-off before high-impact downstream action",
-          "detail": "Large trades, oversized replenishment orders, and treatment-changing clinical actions still need explicit approval, so pipeline speed never becomes permission to bypass judgment."
+          "title": "D5 keeps the high-impact downstream action behind sign-off",
+          "detail": "Large trades, oversized orders, and treatment-changing actions still need a Human-in-the-Loop Gate. Pipeline speed does not turn into permission."
         },
         {
-          "title": "Only the approved run executes under D6 observability",
-          "detail": "The workflow completes only when the input is plausible, every stage output stays bounded, the projected blast radius remains acceptable, and any high-risk action is approved, while D6 records the full cascade path for replay."
+          "title": "The outcome box shows a pipeline that stayed bounded all the way through",
+          "detail": "Only plausible inputs, bounded stage outputs, acceptable blast radius, and approved high-risk actions proceed. D6 observability records the cascade path so amplification can be replayed and explained."
         }
       ]
     }
@@ -6541,7 +6541,7 @@ window.ASI_WALKTHROUGHS = {
       "badge": "ASI09 : 2026 · OWASP Agentic Security · Shared Defense Flow",
       "heading": "Human-agent trust exploitation — shared defense walkthrough",
       "introTitle": "ASI09 — Shared Defense Flow",
-      "introDetail": "Click Start to reveal the layered architecture that turns human approval from a rubber stamp into a real review step across finance, hiring, and medicine.",
+      "introDetail": "Click Start to follow the defended invoice-review workflow. Each step names the active box, defines the review concept, and shows how evidence regains authority over polished output.",
       "zone": "DEFENSE ZONE: GENUINE HUMAN REVIEW STOPS CONFIDENT AI OUTPUT FROM BECOMING AUTHORITY",
       "user": {
         "title": "User",
@@ -6556,61 +6556,61 @@ window.ASI_WALKTHROUGHS = {
       "toolTop": {
         "title": "summarizeOrRecommend()",
         "sub1": "Summary / confidence / recommendation path",
-        "sub2": "produces persuasive approval-ready output"
+        "sub2": "produces polished approval-ready output"
       },
       "store": {
         "title": "Source evidence",
         "sub1": "Invoice / CV / clinical record",
-        "sub2": "AI output can outrun the underlying evidence"
+        "sub2": "AI output can outrun the evidence"
       },
       "patterns": {
-        "title": "Attack patterns",
-        "sub1": "Invoice fraud: structured AI certainty hides a changed bank account",
-        "sub2": "Fabricated recommendation: polished AI summary replaces evidence review",
+        "title": "Threat variants covered",
+        "sub1": "Invoice fraud: polished certainty hides a changed bank account",
+        "sub2": "Fabricated recommendation: the summary replaces evidence review",
         "sub3": "Partial-data overconfidence: certainty is mistaken for completeness"
       },
       "d1": {
-        "title": "Data completeness indicator",
-        "sub1": "Every recommendation must show what evidence is used and missing.",
-        "sub2": "Confidence cannot hide incomplete source data."
+        "title": "Completeness indicator",
+        "sub1": "Show what evidence is used and missing.",
+        "sub2": "Confidence cannot hide missing data."
       },
       "d2": {
-        "title": "Source cross-reference requirement",
-        "sub1": "The reviewer must open the source record before approval is enabled.",
-        "sub2": "AI summary alone is never treated as the evidence."
+        "title": "Source cross-check",
+        "sub1": "The reviewer must open the source record first.",
+        "sub2": "AI summary alone is never evidence."
       },
       "d3": {
         "title": "Independent verification gate",
-        "sub1": "At least one critical check must happen outside the AI output.",
-        "sub2": "Bank details, CV facts, and pending tests need real verification."
+        "sub1": "At least one critical check happens outside the AI.",
+        "sub2": "Bank details, CV facts, and tests need real verification."
       },
       "d4": {
         "title": "Pending data hold",
-        "sub1": "High-stakes recommendations wait when required inputs are missing.",
-        "sub2": "The system surfaces what is outstanding instead of forcing a guess."
+        "sub1": "High-stakes recommendations wait for missing inputs.",
+        "sub2": "The system surfaces gaps instead of forcing a guess."
       },
       "d5": {
         "title": "Human-in-the-Loop Gate",
-        "sub1": "Approval is a documented review event, not a single click.",
-        "sub2": "Source access, completeness, and verification must all be recorded."
+        "sub1": "Approval is a documented review event.",
+        "sub2": "Source access, completeness, and verification are recorded."
       },
       "outcome": {
         "title": "Approved human outcome",
-        "sub1": "Only genuinely reviewed, evidence-backed actions are approved.",
+        "sub1": "Only genuinely reviewed, evidence-backed actions pass.",
         "sub2": "Correct source, correct verification, correct human judgment."
       },
       "audit": {
         "title": "D6 - Strong Observability",
-        "sub1": "Telemetry spans recommendations, confidence displays, source access, independent checks, pending-data holds, and approvals.",
+        "sub1": "Telemetry records recommendations, source access, independent checks, holds, and approvals.",
         "sub2": "Automation-bias patterns become visible across reviewers and workflows."
       },
       "labels": {
         "l0": "① Review begins",
-        "l1": "② Produce AI recommendation",
-        "l2": "③ Reference source evidence",
-        "l3": "④ Trust-exploitation patterns are identified",
+        "l1": "② Produce recommendation",
+        "l2": "③ Reference evidence",
+        "l3": "④ Cover variants",
         "l4": "⑤ Surface completeness",
-        "l5": "⑥ Open source evidence",
+        "l5": "⑥ Open evidence",
         "l6": "⑦ Verify independently",
         "l7": "⑧ Hold on missing data",
         "l8": "⑨ Require genuine review",
@@ -6618,44 +6618,44 @@ window.ASI_WALKTHROUGHS = {
       },
       "steps": [
         {
-          "title": "A legitimate approval workflow begins",
-          "detail": "The human reviewer starts a normal finance, hiring, or clinical decision process that uses AI assistance."
+          "title": "The User and AI assistant boxes begin with a real approval decision",
+          "detail": "These boxes establish a normal review task. In ASI09, the danger is not an obviously malicious request; it is the moment polished AI output starts replacing human judgment."
         },
         {
-          "title": "The assistant produces a polished recommendation",
-          "detail": "The system now crosses the point where confidence, formatting, and apparent specificity can be mistaken for evidence."
+          "title": "The summarizeOrRecommend() box teaches why polished output can become false authority",
+          "detail": "This box produces something that looks approval-ready: clear, fast, and structured. The concept here is that presentation quality can be mistaken for verification quality."
         },
         {
-          "title": "The underlying source remains the real evidence",
-          "detail": "Invoices, CVs, and clinical records still determine whether the action is safe, even when the AI summary feels authoritative."
+          "title": "The Source evidence box re-establishes what the workflow is actually supposed to trust",
+          "detail": "This box is the truth anchor. The invoice, record, or source document is still the real artifact being approved, and the AI output is only an interpretation layer on top of it."
         },
         {
-          "title": "Known trust-exploitation patterns are recognized",
-          "detail": "The architecture anticipates fabricated confidence, source neglect, and partial-data certainty before a human turns them into a real decision."
+          "title": "The Threat variants box names the ways review can become performative",
+          "detail": "This box frames confident summaries, skipped source review, and partial-data certainty. All three failures make the human feel informed without actually restoring evidence-based review."
         },
         {
-          "title": "D1 makes evidence completeness explicit",
-          "detail": "Every recommendation must show which inputs were used and which are still missing so humans never confuse model certainty with evidentiary completeness."
+          "title": "D1 Completeness indicator teaches the difference between confidence and coverage",
+          "detail": "This box shows what evidence the model used and what evidence is still missing. The concept is completeness of evidence, not confidence of language."
         },
         {
-          "title": "D2 requires direct source access",
-          "detail": "Approval stays locked until the reviewer opens the underlying invoice, CV, or record instead of relying on the AI summary alone."
+          "title": "D2 Source cross-check forces contact with the underlying record",
+          "detail": "This box makes the reviewer open the source artifact itself before approval can continue. It restores the rule that the summary can help, but it cannot become the thing being trusted."
         },
         {
-          "title": "D3 forces an independent check",
-          "detail": "At least one category-specific verification step must be completed outside the AI output before approval can proceed."
+          "title": "D3 Independent verification gate adds one check the AI cannot self-certify",
+          "detail": "This box requires at least one critical fact to be checked outside the model output. That is how the workflow turns approval from passive acceptance into real verification."
         },
         {
-          "title": "D4 blocks premature action on missing data",
-          "detail": "When required results or records are still outstanding, the system surfaces a hold state rather than a provisional recommendation for sign-off."
+          "title": "D4 Pending data hold teaches that uncertainty should pause the workflow, not be narrated away",
+          "detail": "This box surfaces a hold when required evidence is missing. The workflow is allowed to wait instead of letting polished language pressure the reviewer into approving around uncertainty."
         },
         {
-          "title": "D5 turns approval into a genuine review event",
-          "detail": "The reviewer must complete the documented evidence check, source access, and required independent verification before approval becomes available, so confidence alone cannot become authority."
+          "title": "D5 Human-in-the-Loop Gate turns approval into a documented review event",
+          "detail": "This box records whether the source was opened, completeness was checked, and independent verification happened. Approval is no longer a single click that merely follows AI confidence."
         },
         {
-          "title": "Only the reviewed action executes under D6 observability",
-          "detail": "The workflow completes only when the recommendation is complete, the source has been opened, the critical fact has been verified independently, and the approval event is real, while D6 records the full review behavior."
+          "title": "The Approved human outcome and D6 boxes show review that became real again",
+          "detail": "Only complete, source-backed, independently checked recommendations pass. D6 observability then tracks recommendations, source access, holds, and approval behavior so automation bias stays visible."
         }
       ]
     }

@@ -34,7 +34,7 @@ a {
 }
 
 .site-shell-scenario {
-  width: min(1360px, calc(100% - 24px));
+  width: min(1680px, calc(100% - 24px));
   padding-top: 22px;
   padding-bottom: 28px;
 }

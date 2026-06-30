@@ -10,6 +10,11 @@
   const WALKTHROUGH_STATE_MESSAGE = "asi:walkthrough-state";
   const WALKTHROUGH_ACTION_MESSAGE = "asi:walkthrough-action";
   const DIAGRAM_TOKENS = {
+    connectorAnimation: {
+      normalDurationMs: 1600,
+      accentDurationMs: 950,
+      dashOffset: -22
+    },
     flowLabelGap: {
       horizontal: 12,
       vertical: 12
@@ -29,6 +34,10 @@
     flowLabelMaxWidth: {
       horizontal: 160,
       vertical: 176
+    },
+    flowLabelHaloWidth: {
+      main: 3.25,
+      note: 2.75
     },
     nodeTextMaxLines: {
       title: 2,
@@ -370,72 +379,72 @@
 
   function buildDefaultDefenseSteps() {
     return [
-      { show: ["g0"], co: [], fl: [], lb: [], atk: false },
+      { show: ["gzone", "g0"], co: [], fl: [], lb: [], atk: false },
       { show: ["gzone", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
-      { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
-      { show: ["g3"], co: ["c2s"], fl: ["c2f"], lb: ["l2"], atk: false },
-      { show: ["g4"], co: ["c3s"], fl: ["c3f"], lb: ["l3"], atk: false },
-      { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["l4", "l5"], atk: false }
+      { show: ["gzone", "g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
+      { show: ["gzone", "g3"], co: ["c2s"], fl: ["c2f"], lb: ["l2"], atk: false },
+      { show: ["gzone", "g4"], co: ["c3s"], fl: ["c3f"], lb: ["l3"], atk: false },
+      { show: ["gzone", "g5"], co: ["c4s"], fl: ["c4f"], lb: ["l4", "l5"], atk: false }
     ];
   }
 
   function buildSharedDefenseSteps() {
     return [
-      { show: ["g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
-      { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
+      { show: ["gzone", "g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
+      { show: ["gzone", "g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
       { show: ["gzone", "g3"], co: ["c2s"], fl: ["c2f", "c3f"], lb: ["l2", "l3"], atk: false },
-      { show: ["g4"], co: ["c3s", "c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
-      { show: ["g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
-      { show: ["g6", "g6ctx"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
-      { show: ["g7"], co: ["c7s"], fl: ["c7f"], lb: ["l7"], atk: false },
-      { show: ["g8"], co: ["c8s"], fl: ["c8f"], lb: ["l8"], atk: false },
-      { show: ["g9", "g10", "g11"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false }
+      { show: ["gzone", "g4"], co: ["c3s", "c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
+      { show: ["gzone", "g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
+      { show: ["gzone", "g6", "g6ctx"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
+      { show: ["gzone", "g7"], co: ["c7s"], fl: ["c7f"], lb: ["l7"], atk: false },
+      { show: ["gzone", "g8"], co: ["c8s"], fl: ["c8f"], lb: ["l8"], atk: false },
+      { show: ["gzone", "g9", "g10", "g11"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false }
     ];
   }
 
   function buildSharedDefenseStepsAsi02() {
     return [
-      { show: ["g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
-      { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
+      { show: ["gzone", "g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
+      { show: ["gzone", "g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
       { show: ["gzone", "g3", "g4"], co: ["c2s", "c3s"], fl: ["c2f", "c3f"], lb: ["l2", "l3"], atk: false },
-      { show: ["g5"], co: ["c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
-      { show: ["g6"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
-      { show: ["g7"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
-      { show: ["g8"], co: ["c7s"], fl: ["c7f"], lb: ["l7"], atk: false },
-      { show: ["g9"], co: ["c8s"], fl: ["c8f"], lb: ["l8"], atk: false },
-      { show: ["g10"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false },
-      { show: ["g11", "g12"], co: ["c10s"], fl: ["c10f"], lb: ["l10"], atk: false }
+      { show: ["gzone", "g5"], co: ["c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
+      { show: ["gzone", "g6"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
+      { show: ["gzone", "g7"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
+      { show: ["gzone", "g8"], co: ["c7s"], fl: ["c7f"], lb: ["l7"], atk: false },
+      { show: ["gzone", "g9"], co: ["c8s"], fl: ["c8f"], lb: ["l8"], atk: false },
+      { show: ["gzone", "g10"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false },
+      { show: ["gzone", "g11", "g12"], co: ["c10s"], fl: ["c10f"], lb: ["l10"], atk: false }
     ];
   }
 
   function buildSharedDefenseStepsCompact() {
     return [
-      { show: ["g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
-      { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
+      { show: ["gzone", "g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
+      { show: ["gzone", "g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
       { show: ["gzone", "g3"], co: ["c2s"], fl: ["c2f", "c3f"], lb: ["l2", "l3"], atk: false },
-      { show: ["g4"], co: ["c3s", "c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
-      { show: ["g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
-      { show: ["g6"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
-      { show: ["g7"], co: ["c7s"], fl: ["c7f"], lb: ["l7"], atk: false },
-      { show: ["g8"], co: ["c8s"], fl: ["c8f"], lb: ["l8"], atk: false },
-      { show: ["g9"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false },
-      { show: ["g10"], co: ["c10s"], fl: ["c10f"], lb: ["l10"], atk: false },
-      { show: ["g11", "g12"], co: [], fl: [], lb: [], atk: false }
+      { show: ["gzone", "g4"], co: ["c3s", "c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
+      { show: ["gzone", "g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
+      { show: ["gzone", "g6"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
+      { show: ["gzone", "g7"], co: ["c7s"], fl: ["c7f"], lb: ["l7"], atk: false },
+      { show: ["gzone", "g8"], co: ["c8s"], fl: ["c8f"], lb: ["l8"], atk: false },
+      { show: ["gzone", "g9"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false },
+      { show: ["gzone", "g10"], co: ["c10s"], fl: ["c10f"], lb: ["l10"], atk: false },
+      { show: ["gzone", "g11", "g12"], co: [], fl: [], lb: [], atk: false }
     ];
   }
 
   function buildSharedDefenseStepsAsi02Compact() {
     return [
-      { show: ["g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
-      { show: ["g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
+      { show: ["gzone", "g0", "g1"], co: ["c0s"], fl: ["c0f"], lb: ["l0"], atk: false },
+      { show: ["gzone", "g2"], co: ["c1s"], fl: ["c1f"], lb: ["l1"], atk: false },
       { show: ["gzone", "g3"], co: ["c2s"], fl: ["c2f", "c3f"], lb: ["l2", "l3"], atk: false },
-      { show: ["g4"], co: ["c3s", "c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
-      { show: ["g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
-      { show: ["g6"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
-      { show: ["g7"], co: ["c6as"], fl: ["c6af"], lb: ["l7"], atk: false },
-      { show: ["g8"], co: ["c8bs"], fl: ["c8bf"], lb: ["l8"], atk: false },
-      { show: ["g9"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false },
-      { show: ["g10", "g11"], co: [], fl: [], lb: [], atk: false }
+      { show: ["gzone", "g4"], co: ["c3s", "c4s"], fl: ["c4f"], lb: ["l4"], atk: false },
+      { show: ["gzone", "g5"], co: ["c5s"], fl: ["c5f"], lb: ["l5"], atk: false },
+      { show: ["gzone", "g6"], co: ["c6s"], fl: ["c6f"], lb: ["l6"], atk: false },
+      { show: ["gzone", "g7"], co: ["c6as"], fl: ["c6af"], lb: ["l7"], atk: false },
+      { show: ["gzone", "g8"], co: ["c8bs"], fl: ["c8bf"], lb: ["l8"], atk: false },
+      { show: ["gzone", "g9"], co: ["c9s"], fl: ["c9f"], lb: ["l9"], atk: false },
+      { show: ["gzone", "g10", "g11"], co: [], fl: [], lb: [], atk: false }
     ];
   }
 
@@ -550,7 +559,7 @@
         <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
             <clipPath id="dc"><rect x="1010" y="326" width="220" height="230" rx="20"/></clipPath>
             <clipPath id="oc"><rect x="1010" y="662" width="220" height="152" rx="20"/></clipPath>
@@ -810,7 +819,7 @@
         <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
             <clipPath id="oc-trust"><rect x="${outcome.x}" y="${outcome.y}" width="${outcome.width}" height="${outcome.height}" rx="20"/></clipPath>
             <clipPath id="entry-payload-clip"><rect x="${entry.x}" y="${entry.y}" width="${entry.width}" height="${entry.height}" rx="20"/></clipPath>
@@ -1068,7 +1077,7 @@
         <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
             <clipPath id="oc-metric"><rect x="${outcome.x}" y="${outcome.y}" width="${outcome.width}" height="${outcome.height}" rx="20"/></clipPath>
             <clipPath id="oc-metric-entry"><rect x="${entry.x}" y="${entry.y}" width="${entry.width}" height="${entry.height}" rx="20"/></clipPath>
@@ -1331,7 +1340,7 @@
         <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
             <clipPath id="oc-repl-entry"><rect x="${entry.x}" y="${entry.y}" width="${entry.width}" height="${entry.height}" rx="20"/></clipPath>
             <clipPath id="oc-repl"><rect x="${outcome.x}" y="${outcome.y}" width="${outcome.width}" height="${outcome.height}" rx="20"/></clipPath>
@@ -1485,7 +1494,7 @@
         <svg viewBox="0 0 1400 920" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
 
@@ -1678,7 +1687,7 @@
         <svg viewBox="0 0 1400 960" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
 
@@ -1856,10 +1865,10 @@
       <h1>${escapeHtml(config.heading)}</h1>
       <div class="dots" id="dots"></div>
       <div class="wrap">
-        <svg viewBox="0 0 1400 1080" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1500 1120" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
 
@@ -2096,7 +2105,7 @@
         <svg viewBox="0 0 ${viewBoxWidth} 930" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
 
@@ -2402,7 +2411,7 @@
         <svg viewBox="0 0 1400 930" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
 
@@ -2528,31 +2537,32 @@
   }
 
   function renderDefenseShared(config) {
+    const sharedCardTitleSize = 13.5;
     const agentGoalLayout = fitSingleLine(config.agent.goal, 176, 12, 10);
-    const payloadTitleLayout = fitSingleLine(config.payload.title, 188, 17, 13);
+    const payloadTitleLayout = fitSingleLine(config.payload.title, 188, 13, 11);
     const payloadVisibleLayout = fitWrappedText(config.payload.visible, 184, 12, 10, 2);
     const payloadHidden1Layout = fitWrappedText(config.payload.hidden1, 190, 12, 10, 2);
     const payloadHidden2Layout = fitWrappedText(config.payload.hidden2, 190, 13, 10, 2);
     const payloadNoteLayout = fitWrappedText(config.payload.hiddenNote, 190, 9, 8, 2);
-    const d1Title = fitSingleLine(config.d1.title, 184, 17, 13);
+    const d1Title = fitSingleLine(config.d1.title, 184, 12.5, 10.5);
     const d1Sub1 = fitWrappedText(config.d1.sub1, 186, 12.5, 10, 2);
     const d1Sub2 = fitWrappedText(config.d1.sub2, 186, 11.5, 10, 2);
-    const d2Title = fitSingleLine(config.d2.title, 184, 17, 13);
+    const d2Title = fitSingleLine(config.d2.title, 184, 12.5, 10.5);
     const d2Sub1 = fitWrappedText(config.d2.sub1, 196, 12, 9, 2);
     const d2Sub2 = fitWrappedText(config.d2.sub2, 196, 11, 9, 2);
     const contextLine1 = fitWrappedText(config.context.line1, 188, 12, 10, 2);
     const contextLine2 = fitWrappedText(config.context.line2, 188, 12, 10, 2);
     const contextLine3 = fitWrappedText(config.context.line3, 188, 12, 10, 2);
-    const d3Title = fitSingleLine(config.d3.title, 184, 17, 13);
+    const d3Title = fitSingleLine(config.d3.title, 184, 12.5, 10.5);
     const d3Sub1 = fitWrappedText(config.d3.sub1, 186, 12.5, 10, 2);
     const d3Sub2 = fitWrappedText(config.d3.sub2, 186, 11.5, 10, 2);
-    const d4Title = fitSingleLine(config.d4.title, 184, 17, 13);
+    const d4Title = fitSingleLine(config.d4.title, 184, 12.5, 10.5);
     const d4Sub1 = fitWrappedText(config.d4.sub1, 186, 12.5, 10, 2);
     const d4Sub2 = fitWrappedText(config.d4.sub2, 186, 11.5, 10, 2);
-    const d5Title = fitSingleLine(config.d5.title, 184, 17, 13);
+    const d5Title = fitSingleLine(config.d5.title, 184, 12.5, 10.5);
     const d5Sub1 = fitWrappedText(config.d5.sub1, 186, 12.5, 10, 2);
     const d5Sub2 = fitWrappedText(config.d5.sub2, 186, 10.5, 9, 2);
-    const outcomeTitle = fitSingleLine(config.outcome.title, 250, 18, 14);
+    const outcomeTitle = fitSingleLine(config.outcome.title, 250, 14, 12);
     const outcomeSub1 = fitWrappedText(config.outcome.sub1, 246, 13, 11, 2);
     const outcomeSub2 = fitWrappedText(config.outcome.sub2, 246, 11, 9, 2);
     const auditTitle = fitSingleLine(config.audit.title, 350, 12, 10);
@@ -2565,27 +2575,27 @@
       <h1>${escapeHtml(config.heading)}</h1>
       <div class="dots" id="dots"></div>
       <div class="wrap">
-        <svg viewBox="0 0 1400 1080" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1500 1120" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
-            <clipPath id="sharedPayloadClip"><rect x="1010" y="336" width="220" height="236" rx="20"/></clipPath>
+            <clipPath id="sharedPayloadClip"><rect x="1110" y="364" width="220" height="236" rx="20"/></clipPath>
           </defs>
 
-          <rect width="1400" height="1080" fill="#fff"/>
-          <text x="700" y="54" text-anchor="middle" font-family="${getFontStack()}" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
-          <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
+          <rect width="1500" height="1120" fill="#fff"/>
+          <text x="750" y="54" text-anchor="middle" font-family="${getFontStack()}" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
+          <line x1="56" y1="76" x2="1444" y2="76" stroke="#ece6dc" stroke-width="1"/>
 
           <g class="az" id="gzone">
-            <rect x="300" y="118" width="970" height="930" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
-            <rect x="470" y="94" width="460" height="28" rx="14" fill="#ffffff"/>
-            <text x="700" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
+            <rect x="300" y="118" width="1110" height="960" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="515" y="94" width="470" height="28" rx="14" fill="#ffffff"/>
+            <text x="750" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".11em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
             <rect x="70" y="170" width="170" height="120" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="155" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
+            <text x="155" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
             <text x="155" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.user.sub1)}</text>
             <text x="155" y="276" text-anchor="middle" font-family="${getFontStack()}" font-size="11" fill="#8a847b">${escapeHtml(config.user.sub2)}</text>
           </g>
@@ -2595,7 +2605,7 @@
 
           <g class="ng" id="g1">
             <rect x="350" y="160" width="220" height="146" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
-            <text x="460" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
+            <text x="460" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
             <text x="460" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#5360be">${escapeHtml(config.agent.sub1)}</text>
             <rect x="372" y="270" width="176" height="32" rx="10" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
             <text x="460" y="292" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoalLayout.fontSize}" font-weight="700" fill="#2d6a4f">${escapeHtml(agentGoalLayout.text)}</text>
@@ -2606,39 +2616,39 @@
 
           <g class="ng" id="g2">
             <rect x="680" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="790" y="222" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.toolTop.title)}</text>
+            <text x="790" y="222" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#38342f">${escapeHtml(config.toolTop.title)}</text>
             <text x="790" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.toolTop.sub1)}</text>
             <text x="790" y="282" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.toolTop.sub2)}</text>
           </g>
 
-          <line class="co" id="c2s" x1="900" y1="225" x2="1010" y2="225" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c2f" x1="900" y1="225" x2="1010" y2="225" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c2s" x1="900" y1="225" x2="1110" y2="225" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="900" y1="225" x2="1110" y2="225" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g3">
-            <rect x="1010" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="1120" y="214" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.store.title)}</text>
-            <text x="1120" y="246" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.store.sub1)}</text>
-            <text x="1120" y="274" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.store.sub2)}</text>
+            <rect x="1110" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="1220" y="214" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#38342f">${escapeHtml(config.store.title)}</text>
+            <text x="1220" y="246" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.store.sub1)}</text>
+            <text x="1220" y="274" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.store.sub2)}</text>
           </g>
 
-          <line class="co" id="c3s" x1="1120" y1="290" x2="1120" y2="336" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c3f" x1="1120" y1="290" x2="1120" y2="336" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c3s" x1="1220" y1="290" x2="1220" y2="376" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c3f" x1="1220" y1="290" x2="1220" y2="376" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g4">
-            <rect x="1010" y="336" width="220" height="82" rx="20" fill="#fcfbf8"/>
-            <rect x="1010" y="388" width="220" height="184" fill="#fdf0f0" clip-path="url(#sharedPayloadClip)"/>
-            <line x1="1014" y1="418" x2="1226" y2="418" stroke="#ddd6cb" stroke-width="1.4"/>
-            <rect x="1010" y="336" width="220" height="236" rx="20" fill="none" stroke="#b87a45" stroke-width="2.3"/>
-            <text x="1120" y="376" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadTitleLayout.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(payloadTitleLayout.text)}</text>
-            <text x="1120" y="404" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadVisibleLayout.fontSize}" fill="#8a847b">${renderTspans(1120, payloadVisibleLayout.lines, payloadVisibleLayout.fontSize * 1.18)}</text>
-            <text x="1120" y="456" text-anchor="middle" font-family="${getFontStack()}" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hiddenTitle)}</text>
-            <text x="1120" y="486" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadHidden1Layout.fontSize}" fill="#ad3535">${renderTspans(1120, payloadHidden1Layout.lines, payloadHidden1Layout.fontSize * 1.18)}</text>
-            <text x="1120" y="528" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadHidden2Layout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1120, payloadHidden2Layout.lines, payloadHidden2Layout.fontSize * 1.16)}</text>
-            <text x="1120" y="556" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadNoteLayout.fontSize}" fill="#b66868">${renderTspans(1120, payloadNoteLayout.lines, payloadNoteLayout.fontSize * 1.14)}</text>
+            <rect x="1110" y="364" width="220" height="82" rx="20" fill="#fcfbf8"/>
+            <rect x="1110" y="416" width="220" height="184" fill="#fdf0f0" clip-path="url(#sharedPayloadClip)"/>
+            <line x1="1114" y1="446" x2="1326" y2="446" stroke="#ddd6cb" stroke-width="1.4"/>
+            <rect x="1110" y="364" width="220" height="236" rx="20" fill="none" stroke="#b87a45" stroke-width="2.3"/>
+            <text x="1220" y="404" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadTitleLayout.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(payloadTitleLayout.text)}</text>
+            <text x="1220" y="432" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadVisibleLayout.fontSize}" fill="#8a847b">${renderTspans(1220, payloadVisibleLayout.lines, payloadVisibleLayout.fontSize * 1.18)}</text>
+            <text x="1220" y="484" text-anchor="middle" font-family="${getFontStack()}" font-size="13" font-weight="800" fill="#ad3535">${escapeHtml(config.payload.hiddenTitle)}</text>
+            <text x="1220" y="514" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadHidden1Layout.fontSize}" fill="#ad3535">${renderTspans(1220, payloadHidden1Layout.lines, payloadHidden1Layout.fontSize * 1.18)}</text>
+            <text x="1220" y="556" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadHidden2Layout.fontSize}" font-weight="800" fill="#ad3535">${renderTspans(1220, payloadHidden2Layout.lines, payloadHidden2Layout.fontSize * 1.16)}</text>
+            <text x="1220" y="584" text-anchor="middle" font-family="${getFontStack()}" font-size="${payloadNoteLayout.fontSize}" fill="#b66868">${renderTspans(1220, payloadNoteLayout.lines, payloadNoteLayout.fontSize * 1.14)}</text>
           </g>
 
-          <line class="co" id="c4s" x1="1010" y1="442" x2="900" y2="442" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c4f" x1="1010" y1="442" x2="900" y2="442" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c4s" x1="1110" y1="470" x2="900" y2="470" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c4f" x1="1110" y1="470" x2="900" y2="470" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g5">
             <rect x="680" y="356" width="220" height="172" rx="20" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
@@ -2704,31 +2714,31 @@
             <text x="1060" y="864" text-anchor="middle" font-family="${getFontStack()}" font-size="${d5Sub2.fontSize}" fill="#56826c">${renderTspans(1060, d5Sub2.lines, d5Sub2.fontSize * 1.16)}</text>
           </g>
 
-          <line class="co" id="c9s" x1="1060" y1="880" x2="1060" y2="910" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c9f" x1="1060" y1="880" x2="1060" y2="910" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c9s" x1="1060" y1="880" x2="1060" y2="952" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c9f" x1="1060" y1="880" x2="1060" y2="952" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g10">
-            <rect x="920" y="910" width="280" height="86" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
-            <text x="1060" y="942" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
-            <text x="1060" y="966" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(1060, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
+            <rect x="920" y="964" width="280" height="86" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="1060" y="996" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
+            <text x="1060" y="1020" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(1060, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
           </g>
 
           <g class="ng" id="g11">
-            <rect x="60" y="1022" width="1280" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
-            <text x="86" y="1039" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
-            <text x="374" y="1039" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
+            <rect x="80" y="1082" width="1340" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
+            <text x="106" y="1099" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
+            <text x="394" y="1099" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(394, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
           </g>
 
           ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11.5, 150)}
           ${flowLabelHorizontalSegment(570, 680, 230, config.labels.l1, "#4452b8", "l1", 10.5, 96)}
-          ${flowLabelHorizontalSegment(900, 1010, 225, config.labels.l2, "#4452b8", "l2", 10.5, 96)}
-          ${flowLabelVertical(1120, 334, config.labels.l3, "#4452b8", "l3", 10.5, 150)}
-          ${flowLabelHorizontal(955, 442, config.labels.l4, "#2d6a4f", "l4", 11, 180)}
+          ${flowLabelHorizontalSegment(900, 1110, 225, config.labels.l2, "#4452b8", "l2", 10.5, 144)}
+          ${flowLabelVertical(1298, 333, config.labels.l3, "#4452b8", "l3", 10.5, 138)}
+          ${flowLabelHorizontal(1005, 470, config.labels.l4, "#2d6a4f", "l4", 11, 190)}
           ${flowLabelHorizontal(625, 442, config.labels.l5, "#2d6a4f", "l5", 10.5, 190)}
           ${flowLabelVertical(460, 700, config.labels.l6, "#2d6a4f", "l6", 10.5, 150)}
           ${flowLabelHorizontal(610, 800, config.labels.l7, "#2d6a4f", "l7", 10.5, 175)}
           ${flowLabelHorizontal(910, 800, config.labels.l8, "#2d6a4f", "l8", 10.5, 170)}
-          ${flowLabelVertical(1060, 918, config.labels.l9, "#2d6a4f", "l9", 10.5, 170)}
+          ${flowLabelVertical(1142, 916, config.labels.l9, "#2d6a4f", "l9", 10.5, 150)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2739,14 +2749,15 @@
   }
 
   function renderDefenseSharedAsi02(config) {
+    const sharedCardTitleSize = 13.5;
     const agentGoalLayout = fitSingleLine(config.agent.goal, 188, 12, 10);
-    const toolTitleLayout = fitSingleLine(config.toolTop.title, 210, 18, 14);
+    const toolTitleLayout = fitSingleLine(config.toolTop.title, 210, 14, 12);
     const toolSub1Layout = fitSingleLine(config.toolTop.sub1, 210, 14, 11);
     const toolSub2Layout = fitWrappedText(config.toolTop.sub2, 212, 12, 10, 2);
-    const storeTitleLayout = fitSingleLine(config.store.title, 210, 18, 14);
+    const storeTitleLayout = fitSingleLine(config.store.title, 210, 14, 12);
     const storeSub1Layout = fitSingleLine(config.store.sub1, 210, 14, 11);
     const storeSub2Layout = fitWrappedText(config.store.sub2, 212, 12, 10, 2);
-    const patternsTitleLayout = fitSingleLine(config.patterns.title, 320, 18, 14);
+    const patternsTitleLayout = fitSingleLine(config.patterns.title, 320, 14, 12);
     const patternsSub1Layout = fitWrappedText(config.patterns.sub1, 320, 12.5, 10, 2);
     const patternsSub2Layout = fitWrappedText(config.patterns.sub2, 320, 12.5, 10, 2);
     const patternsSub3Layout = fitWrappedText(config.patterns.sub3, 320, 12.5, 10, 2);
@@ -2766,7 +2777,7 @@
     const stageMarkup = stageDefs.map((stage) => {
       const card = config[stage.key];
       const stageWidth = 380;
-      const titleLayout = fitNodeTitleText(card.title, stageWidth, 17, 13, "wide");
+      const titleLayout = fitNodeTitleText(card.title, stageWidth, 12.5, 10.5, "wide");
       const sub1Layout = fitNodeBodyText(card.sub1, stageWidth, 12.5, 10, "wide");
       const sub2Layout = fitNodeBodyText(card.sub2, stageWidth, 11.5, 10, "wide");
       return `
@@ -2780,9 +2791,11 @@
       `;
     }).join("");
 
-    const outcomeTitleLayout = fitSingleLine(config.outcome.title, 320, 18, 14);
+    const outcomeTitleLayout = fitSingleLine(config.outcome.title, 320, 14, 12);
     const outcomeSub1Layout = fitWrappedText(config.outcome.sub1, 316, 13, 11, 2);
     const outcomeSub2Layout = fitWrappedText(config.outcome.sub2, 316, 11.5, 10, 2);
+    const outcomeArrowEndY = 1628;
+    const outcomeLabelY = 1610;
 
     return `
       <style>${baseStyles()}</style>
@@ -2793,7 +2806,7 @@
         <svg viewBox="0 0 1400 1780" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
 
@@ -2809,7 +2822,7 @@
 
           <g class="ng" id="g0">
             <rect x="70" y="170" width="180" height="120" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="160" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
+            <text x="160" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
             <text x="160" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.user.sub1)}</text>
             <text x="160" y="276" text-anchor="middle" font-family="${getFontStack()}" font-size="11" fill="#8a847b">${escapeHtml(config.user.sub2)}</text>
           </g>
@@ -2819,7 +2832,7 @@
 
           <g class="ng" id="g1">
             <rect x="340" y="160" width="220" height="146" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
-            <text x="450" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
+            <text x="450" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
             <text x="450" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#5360be">${escapeHtml(config.agent.sub1)}</text>
             <rect x="356" y="270" width="188" height="32" rx="10" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
             <text x="450" y="292" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoalLayout.fontSize}" font-weight="700" fill="#2d6a4f">${escapeHtml(agentGoalLayout.text)}</text>
@@ -2872,8 +2885,8 @@
           <line class="co" id="c9s" x1="700" y1="1418" x2="700" y2="1460" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
           <line class="fl" id="c9f" x1="700" y1="1418" x2="700" y2="1460" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <line class="co" id="c10s" x1="700" y1="1598" x2="700" y2="1640" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c10f" x1="700" y1="1598" x2="700" y2="1640" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c10s" x1="700" y1="1598" x2="700" y2="${outcomeArrowEndY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c10f" x1="700" y1="1598" x2="700" y2="${outcomeArrowEndY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g11">
             <rect x="480" y="1640" width="440" height="90" rx="20" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
@@ -2898,7 +2911,7 @@
           ${flowLabelVertical(700, 1079, config.labels.l7, "#2d6a4f", "l7", 10.5, 170)}
           ${flowLabelVertical(700, 1259, config.labels.l8, "#2d6a4f", "l8", 10.5, 160)}
           ${flowLabelVertical(700, 1439, config.labels.l9, "#2d6a4f", "l9", 10.5, 160)}
-          ${flowLabelVertical(700, 1619, config.labels.l10, "#2d6a4f", "l10", 10.5, 185)}
+          ${flowLabelVertical(806, outcomeLabelY, config.labels.l10, "#2d6a4f", "l10", 10.5, 170)}
         </svg>
       </div>
       ${panelMarkup(
@@ -2909,16 +2922,66 @@
   }
 
   function renderDefenseSharedCompact(config) {
+    const sharedCardTitleSize = 13.5;
     const agentGoalLayout = fitSingleLine(config.agent.goal, 176, 12, 10);
-    const patternTitleLayout = fitSingleLine(config.patterns.title, 188, 17, 13);
-    const patternSub1Layout = fitWrappedText(config.patterns.sub1, 190, 11.5, 9.5, 2);
-    const patternSub2Layout = fitWrappedText(config.patterns.sub2, 190, 11.5, 9.5, 2);
-    const patternSub3Layout = fitWrappedText(config.patterns.sub3, 190, 11.5, 9.5, 2);
+    const agentSub1Layout = fitWrappedText(config.agent.sub1, 184, 13.5, 11, 2);
+    const toolTopTitleLayout = fitSingleLine(config.toolTop.title, 188, 14, 12);
+    const toolTopSub1Layout = fitWrappedText(config.toolTop.sub1, 188, 13, 11, 2);
+    const toolTopSub2Layout = fitWrappedText(config.toolTop.sub2, 188, 11.5, 10, 2);
+    const storeSub1Layout = fitWrappedText(config.store.sub1, 188, 13, 11, 2);
+    const storeSub2Layout = fitWrappedText(config.store.sub2, 188, 11.5, 9.5, 2);
+    const patternTitleLayout = fitSingleLine(config.patterns.title, 196, 13, 11);
+    const patternSub1Layout = fitWrappedText(config.patterns.sub1, 196, 12, 10.5, 2);
+    const patternSub2Layout = fitWrappedText(config.patterns.sub2, 196, 12, 10.5, 2);
+    const patternSub3Layout = fitWrappedText(config.patterns.sub3, 196, 12, 10.5, 2);
     const auditTitle = fitSingleLine(config.audit.title, 350, 12, 10);
     const auditSub1 = fitWrappedText(config.audit.sub1, 900, 10.5, 9, 2);
+    const canvasWidth = 1520;
+    const canvasCenterX = canvasWidth / 2;
+    const zoneX = 300;
+    const zoneWidth = 1170;
+    const zoneCenterX = zoneX + zoneWidth / 2;
+    const zoneLabelX = zoneCenterX - 350;
+    const zoneLabelWidth = 700;
+    const userX = 60;
+    const userWidth = 180;
+    const userCenterX = userX + userWidth / 2;
+    const agentX = 370;
+    const agentWidth = 250;
+    const agentCenterX = agentX + agentWidth / 2;
+    const toolX = 760;
+    const toolWidth = 250;
+    const toolCenterX = toolX + toolWidth / 2;
+    const storeX = 1180;
+    const storeWidth = 250;
+    const storeCenterX = storeX + storeWidth / 2;
+    const stageCardWidth = 250;
+    const stageCardHeight = 176;
+    const d1X = 760;
+    const d2X = 390;
+    const d3X = 340;
+    const d4X = 710;
+    const d5X = 1080;
+    const d6X = 1080;
+    const row2Y = 356;
+    const row2CenterY = row2Y + stageCardHeight / 2;
+    const row2BottomY = row2Y + stageCardHeight;
+    const row3Y = 620;
+    const row3CenterY = row3Y + stageCardHeight / 2;
+    const row3BottomY = row3Y + stageCardHeight;
+    const row4Y = 874;
+    const row4CenterY = row4Y + stageCardHeight / 2;
+    const row4BottomY = row4Y + stageCardHeight;
+    const patternX = 1180;
+    const patternWidth = 250;
+    const patternCenterX = patternX + patternWidth / 2;
+    const patternY = 372;
+    const outcomeX = 1040;
+    const outcomeY = 1148;
+    const outcomeWidth = 330;
 
-    function stageCard(x, y, id, card, tone = "safe", width = 220, height = 158) {
-      const title = fitNodeTitleText(card.title, width, 17, 13, "compact");
+    function stageCard(x, y, id, card, tone = "safe", width = stageCardWidth, height = stageCardHeight) {
+      const title = fitNodeTitleText(card.title, width, 12.5, 10.5, "compact");
       const sub1 = fitNodeBodyText(card.sub1, width, 12.5, 10, "compact");
       const sub2 = fitNodeBodyText(card.sub2, width, 11.5, 9.5, "compact");
       const fill = tone === "primary" ? "#eef1ff" : "#edf7f0";
@@ -2927,18 +2990,43 @@
       const titleFill = tone === "primary" ? "#33429f" : "#24553f";
       const sub1Fill = tone === "primary" ? "#5360be" : "#3d735a";
       const sub2Fill = tone === "primary" ? "#6b77cb" : "#56826c";
+      const titleLineHeight = title.fontSize * 1.14;
+      const sub1LineHeight = sub1.fontSize * 1.15;
+      const sub2LineHeight = sub2.fontSize * 1.15;
+      const titleBlockHeight = Math.max(titleLineHeight, title.lines.length * titleLineHeight);
+      const sub1BlockHeight = Math.max(sub1LineHeight, sub1.lines.length * sub1LineHeight);
+      const sub2BlockHeight = Math.max(sub2LineHeight, sub2.lines.length * sub2LineHeight);
+      const titleY = y + 54;
+      const sub1Y = titleY + titleBlockHeight + 20;
+      const sub2Y = sub1Y + sub1BlockHeight + 18;
       return `
         <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="20" fill="${fill}" stroke="${stroke}" stroke-width="2.8"/>
         <text x="${x + 30}" y="${y + 30}" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="${idFill}">${id}</text>
-        <text x="${x + width / 2}" y="${y + 58}" text-anchor="middle" font-family="${getFontStack()}" font-size="${title.fontSize}" font-weight="700" fill="${titleFill}">${renderTspans(x + width / 2, title.lines, title.fontSize * 1.14)}</text>
-        <text x="${x + width / 2}" y="${y + 98}" text-anchor="middle" font-family="${getFontStack()}" font-size="${sub1.fontSize}" fill="${sub1Fill}">${renderTspans(x + width / 2, sub1.lines, sub1.fontSize * 1.15)}</text>
-        <text x="${x + width / 2}" y="${y + 130}" text-anchor="middle" font-family="${getFontStack()}" font-size="${sub2.fontSize}" fill="${sub2Fill}">${renderTspans(x + width / 2, sub2.lines, sub2.fontSize * 1.15)}</text>
+        <text x="${x + width / 2}" y="${titleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${title.fontSize}" font-weight="700" fill="${titleFill}">${renderTspans(x + width / 2, title.lines, titleLineHeight)}</text>
+        <text x="${x + width / 2}" y="${sub1Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${sub1.fontSize}" fill="${sub1Fill}">${renderTspans(x + width / 2, sub1.lines, sub1LineHeight)}</text>
+        <text x="${x + width / 2}" y="${sub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${sub2.fontSize}" fill="${sub2Fill}">${renderTspans(x + width / 2, sub2.lines, sub2LineHeight)}</text>
       `;
     }
 
-    const outcomeTitle = fitSingleLine(config.outcome.title, 280, 18, 14);
-    const outcomeSub1 = fitWrappedText(config.outcome.sub1, 260, 12.5, 10, 2);
-    const outcomeSub2 = fitWrappedText(config.outcome.sub2, 260, 11.5, 9.5, 2);
+    const outcomeTitle = fitSingleLine(config.outcome.title, 280, 14, 12);
+    const outcomeSub1 = fitWrappedText(config.outcome.sub1, 244, 12.5, 10.5, 2);
+    const outcomeSub2 = fitWrappedText(config.outcome.sub2, 244, 11.5, 10, 2);
+    const outcomeTitleLineHeight = outcomeTitle.fontSize * 1.12;
+    const outcomeSub1LineHeight = outcomeSub1.fontSize * 1.16;
+    const outcomeSub2LineHeight = outcomeSub2.fontSize * 1.14;
+    const outcomeSub1BlockHeight = Math.max(outcomeSub1LineHeight, outcomeSub1.lines.length * outcomeSub1LineHeight);
+    const outcomeSub2BlockHeight = Math.max(outcomeSub2LineHeight, outcomeSub2.lines.length * outcomeSub2LineHeight);
+    const outcomeCenterX = outcomeX + outcomeWidth / 2;
+    const outcomeTitleY = outcomeY + 30;
+    const outcomeSub1Y = outcomeTitleY + outcomeTitleLineHeight + 18;
+    const outcomeSub2Y = outcomeSub1Y + outcomeSub1BlockHeight + 16;
+    const outcomeHeight = Math.ceil(outcomeSub2Y - outcomeY + outcomeSub2BlockHeight + 18);
+    const auditY = 1302;
+    const zoneHeight = 1178;
+    const threatArrowEndY = patternY + 6;
+    const threatLabelY = ((306 + threatArrowEndY) / 2) + 4;
+    const outcomeArrowEndY = outcomeY - 12;
+    const outcomeLabelY = ((row4BottomY + outcomeArrowEndY) / 2) + 6;
 
     return `
       <style>${baseStyles()}</style>
@@ -2946,117 +3034,116 @@
       <h1>${escapeHtml(config.heading)}</h1>
       <div class="dots" id="dots"></div>
       <div class="wrap">
-        <svg viewBox="0 0 1400 1220" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1520 1356" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
-            <clipPath id="compactPatternClip"><rect x="1010" y="336" width="220" height="250" rx="20"/></clipPath>
           </defs>
-          <rect width="1400" height="1220" fill="#fff"/>
-          <text x="700" y="54" text-anchor="middle" font-family="${getFontStack()}" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
-          <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
+          <rect width="1520" height="1280" fill="#fff"/>
+          <text x="${canvasCenterX}" y="54" text-anchor="middle" font-family="${getFontStack()}" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
+          <line x1="56" y1="76" x2="${canvasWidth - 56}" y2="76" stroke="#ece6dc" stroke-width="1"/>
 
           <g class="az" id="gzone">
-            <rect x="300" y="118" width="970" height="1070" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
-            <rect x="390" y="94" width="620" height="28" rx="14" fill="#ffffff"/>
-            <text x="700" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".08em">${escapeHtml(config.zone)}</text>
+            <rect x="${zoneX}" y="118" width="${zoneWidth}" height="${zoneHeight}" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="${zoneLabelX}" y="94" width="${zoneLabelWidth}" height="28" rx="14" fill="#ffffff"/>
+            <text x="${zoneCenterX}" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".08em">${escapeHtml(config.zone)}</text>
           </g>
 
           <g class="ng" id="g0">
-            <rect x="70" y="170" width="170" height="120" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="155" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
-            <text x="155" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.user.sub1)}</text>
-            <text x="155" y="276" text-anchor="middle" font-family="${getFontStack()}" font-size="11" fill="#8a847b">${escapeHtml(config.user.sub2)}</text>
+            <rect x="${userX}" y="170" width="${userWidth}" height="120" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="${userCenterX}" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
+            <text x="${userCenterX}" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.user.sub1)}</text>
+            <text x="${userCenterX}" y="276" text-anchor="middle" font-family="${getFontStack()}" font-size="11" fill="#8a847b">${escapeHtml(config.user.sub2)}</text>
           </g>
-          <line class="co" id="c0s" x1="240" y1="230" x2="350" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c0f" x1="240" y1="230" x2="350" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c0s" x1="${userX + userWidth}" y1="230" x2="${agentX}" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c0f" x1="${userX + userWidth}" y1="230" x2="${agentX}" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g1">
-            <rect x="350" y="160" width="220" height="146" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
-            <text x="460" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
-            <text x="460" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#5360be">${escapeHtml(config.agent.sub1)}</text>
-            <rect x="372" y="270" width="176" height="32" rx="10" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
-            <text x="460" y="292" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoalLayout.fontSize}" font-weight="700" fill="#2d6a4f">${escapeHtml(agentGoalLayout.text)}</text>
+            <rect x="${agentX}" y="160" width="${agentWidth}" height="154" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="${agentCenterX}" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
+            <text x="${agentCenterX}" y="246" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentSub1Layout.fontSize}" fill="#5360be">${renderTspans(agentCenterX, agentSub1Layout.lines, agentSub1Layout.fontSize * 1.15)}</text>
+            <rect x="${agentCenterX - 90}" y="278" width="180" height="32" rx="10" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="${agentCenterX}" y="300" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoalLayout.fontSize}" font-weight="700" fill="#2d6a4f">${escapeHtml(agentGoalLayout.text)}</text>
           </g>
-          <line class="co" id="c1s" x1="570" y1="230" x2="680" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c1f" x1="570" y1="230" x2="680" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c1s" x1="${agentX + agentWidth}" y1="230" x2="${toolX}" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c1f" x1="${agentX + agentWidth}" y1="230" x2="${toolX}" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g2">
-            <rect x="680" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="790" y="222" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.toolTop.title)}</text>
-            <text x="790" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.toolTop.sub1)}</text>
-            <text x="790" y="282" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.toolTop.sub2)}</text>
+            <rect x="${toolX}" y="160" width="${toolWidth}" height="142" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="${toolCenterX}" y="222" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#38342f">${escapeHtml(config.toolTop.title)}</text>
+            <text x="${toolCenterX}" y="248" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolTopSub1Layout.fontSize}" fill="#6b655c">${renderTspans(toolCenterX, toolTopSub1Layout.lines, toolTopSub1Layout.fontSize * 1.14)}</text>
+            <text x="${toolCenterX}" y="282" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolTopSub2Layout.fontSize}" fill="#8a847b">${renderTspans(toolCenterX, toolTopSub2Layout.lines, toolTopSub2Layout.fontSize * 1.12)}</text>
           </g>
-          <line class="co" id="c2s" x1="900" y1="225" x2="1010" y2="225" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c2f" x1="900" y1="225" x2="1010" y2="225" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c2s" x1="${toolX + toolWidth}" y1="225" x2="${storeX}" y2="225" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="${toolX + toolWidth}" y1="225" x2="${storeX}" y2="225" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g3">
-            <rect x="1010" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="1120" y="214" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.store.title)}</text>
-            <text x="1120" y="246" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.store.sub1)}</text>
-            <text x="1120" y="274" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.store.sub2)}</text>
+            <rect x="${storeX}" y="160" width="${storeWidth}" height="146" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="${storeCenterX}" y="214" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#38342f">${escapeHtml(config.store.title)}</text>
+            <text x="${storeCenterX}" y="244" text-anchor="middle" font-family="${getFontStack()}" font-size="${storeSub1Layout.fontSize}" fill="#6b655c">${renderTspans(storeCenterX, storeSub1Layout.lines, storeSub1Layout.fontSize * 1.14)}</text>
+            <text x="${storeCenterX}" y="280" text-anchor="middle" font-family="${getFontStack()}" font-size="${storeSub2Layout.fontSize}" fill="#8a847b">${renderTspans(storeCenterX, storeSub2Layout.lines, storeSub2Layout.fontSize * 1.12)}</text>
           </g>
-          <line class="co" id="c3s" x1="1120" y1="290" x2="1120" y2="336" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c3f" x1="1120" y1="290" x2="1120" y2="336" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c3s" x1="${storeCenterX}" y1="306" x2="${storeCenterX}" y2="${threatArrowEndY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c3f" x1="${storeCenterX}" y1="306" x2="${storeCenterX}" y2="${threatArrowEndY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g4">
-            <rect x="1010" y="336" width="220" height="250" rx="20" fill="#fdf0f0" stroke="#b87a45" stroke-width="2.3"/>
-            <text x="1120" y="378" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternTitleLayout.fontSize}" font-weight="700" fill="#8d3f2f">${escapeHtml(patternTitleLayout.text)}</text>
-            <text x="1120" y="434" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub1Layout.fontSize}" fill="#a04d3a">${renderTspans(1120, patternSub1Layout.lines, patternSub1Layout.fontSize * 1.18)}</text>
-            <text x="1120" y="494" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub2Layout.fontSize}" fill="#a04d3a">${renderTspans(1120, patternSub2Layout.lines, patternSub2Layout.fontSize * 1.18)}</text>
-            <text x="1120" y="554" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub3Layout.fontSize}" fill="#a04d3a">${renderTspans(1120, patternSub3Layout.lines, patternSub3Layout.fontSize * 1.18)}</text>
+            <rect x="${patternX}" y="${patternY}" width="${patternWidth}" height="228" rx="20" fill="#fdf0f0" stroke="#b87a45" stroke-width="2.3"/>
+            <text x="${patternCenterX}" y="${patternY + 42}" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternTitleLayout.fontSize}" font-weight="700" fill="#8d3f2f">${escapeHtml(patternTitleLayout.text)}</text>
+            <text x="${patternCenterX}" y="${patternY + 88}" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub1Layout.fontSize}" fill="#a04d3a">${renderTspans(patternCenterX, patternSub1Layout.lines, patternSub1Layout.fontSize * 1.16)}</text>
+            <text x="${patternCenterX}" y="${patternY + 140}" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub2Layout.fontSize}" fill="#a04d3a">${renderTspans(patternCenterX, patternSub2Layout.lines, patternSub2Layout.fontSize * 1.16)}</text>
+            <text x="${patternCenterX}" y="${patternY + 192}" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub3Layout.fontSize}" fill="#a04d3a">${renderTspans(patternCenterX, patternSub3Layout.lines, patternSub3Layout.fontSize * 1.16)}</text>
           </g>
-          <line class="co" id="c4s" x1="1010" y1="458" x2="900" y2="458" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c4f" x1="1010" y1="458" x2="900" y2="458" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c4s" x1="${patternX}" y1="${row2CenterY}" x2="${d1X + stageCardWidth}" y2="${row2CenterY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c4f" x1="${patternX}" y1="${row2CenterY}" x2="${d1X + stageCardWidth}" y2="${row2CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g5">${stageCard(680, 356, "D1", config.d1)}</g>
-          <line class="co" id="c5s" x1="680" y1="436" x2="570" y2="436" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c5f" x1="680" y1="436" x2="570" y2="436" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g5">${stageCard(d1X, row2Y, "D1", config.d1)}</g>
+          <line class="co" id="c5s" x1="${d1X}" y1="${row2CenterY}" x2="${d2X + stageCardWidth}" y2="${row2CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c5f" x1="${d1X}" y1="${row2CenterY}" x2="${d2X + stageCardWidth}" y2="${row2CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g6">${stageCard(350, 356, "D2", config.d2, "primary")}</g>
-          <line class="co" id="c6s" x1="460" y1="514" x2="460" y2="606" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c6f" x1="460" y1="514" x2="460" y2="606" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g6">${stageCard(d2X, row2Y, "D2", config.d2, "primary")}</g>
+          <line class="co" id="c6s" x1="${d2X + stageCardWidth / 2}" y1="${row2BottomY}" x2="${d2X + stageCardWidth / 2}" y2="${row3Y}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c6f" x1="${d2X + stageCardWidth / 2}" y1="${row2BottomY}" x2="${d2X + stageCardWidth / 2}" y2="${row3Y}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g7">${stageCard(250, 620, "D3", config.d3)}</g>
-          <line class="co" id="c7s" x1="470" y1="700" x2="590" y2="700" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c7f" x1="470" y1="700" x2="590" y2="700" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g7">${stageCard(d3X, row3Y, "D3", config.d3)}</g>
+          <line class="co" id="c7s" x1="${d3X + stageCardWidth}" y1="${row3CenterY}" x2="${d4X}" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c7f" x1="${d3X + stageCardWidth}" y1="${row3CenterY}" x2="${d4X}" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g8">${stageCard(590, 620, "D4", config.d4)}</g>
-          <line class="co" id="c8s" x1="810" y1="700" x2="930" y2="700" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c8f" x1="810" y1="700" x2="930" y2="700" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g8">${stageCard(d4X, row3Y, "D4", config.d4)}</g>
+          <line class="co" id="c8s" x1="${d4X + stageCardWidth}" y1="${row3CenterY}" x2="${d5X}" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c8f" x1="${d4X + stageCardWidth}" y1="${row3CenterY}" x2="${d5X}" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g9">${stageCard(930, 620, "D5", config.d5)}</g>
-          <line class="co" id="c9s" x1="1040" y1="778" x2="1040" y2="864" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c9f" x1="1040" y1="778" x2="1040" y2="864" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g9">${stageCard(d5X, row3Y, "D5", config.d5)}</g>
+          <line class="co" id="c9s" x1="${d5X + stageCardWidth / 2}" y1="${row3BottomY}" x2="${d6X + stageCardWidth / 2}" y2="${row4Y}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c9f" x1="${d5X + stageCardWidth / 2}" y1="${row3BottomY}" x2="${d6X + stageCardWidth / 2}" y2="${row4Y}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g10">${stageCard(920, 874, "D6", config.d6)}</g>
-          <line class="co" id="c10s" x1="1040" y1="1032" x2="1040" y2="1062" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c10f" x1="1040" y1="1032" x2="1040" y2="1062" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g10">${stageCard(d6X, row4Y, "D6", config.d6)}</g>
+          <line class="co" id="c10s" x1="${d6X + stageCardWidth / 2}" y1="${row4BottomY}" x2="${outcomeCenterX}" y2="${outcomeArrowEndY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c10f" x1="${d6X + stageCardWidth / 2}" y1="${row4BottomY}" x2="${outcomeCenterX}" y2="${outcomeArrowEndY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g11">
-            <rect x="900" y="1062" width="280" height="92" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
-            <text x="1040" y="1094" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
-            <text x="1040" y="1122" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(1040, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
-            <text x="1040" y="1146" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(1040, outcomeSub2.lines, outcomeSub2.fontSize * 1.14)}</text>
+            <rect x="${outcomeX}" y="${outcomeY}" width="${outcomeWidth}" height="${outcomeHeight}" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="${outcomeCenterX}" y="${outcomeTitleY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
+            <text x="${outcomeCenterX}" y="${outcomeSub1Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(outcomeCenterX, outcomeSub1.lines, outcomeSub1LineHeight)}</text>
+            <text x="${outcomeCenterX}" y="${outcomeSub2Y}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(outcomeCenterX, outcomeSub2.lines, outcomeSub2LineHeight)}</text>
           </g>
           <g class="ng" id="g12">
-            <rect x="60" y="1170" width="1280" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
-            <text x="86" y="1187" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
-            <text x="374" y="1187" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
+            <rect x="80" y="${auditY}" width="1360" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
+            <text x="106" y="${auditY + 17}" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
+            <text x="394" y="${auditY + 17}" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(394, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
           </g>
 
-          ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11, 150)}
-          ${flowLabelHorizontal(625, 230, config.labels.l1, "#4452b8", "l1", 11, 128)}
-          ${flowLabelHorizontal(955, 225, config.labels.l2, "#4452b8", "l2", 11, 124)}
-          ${flowLabelVertical(1120, 340, config.labels.l3, "#4452b8", "l3", 10.5, 170)}
-          ${flowLabelHorizontal(955, 458, config.labels.l4, "#2d6a4f", "l4", 10.5, 170)}
-          ${flowLabelHorizontal(625, 436, config.labels.l5, "#2d6a4f", "l5", 10.5, 150)}
-          ${flowLabelVertical(460, 560, config.labels.l6, "#2d6a4f", "l6", 10.5, 160)}
-          ${flowLabelHorizontal(530, 700, config.labels.l7, "#2d6a4f", "l7", 10.5, 140)}
-          ${flowLabelHorizontalSegment(810, 930, 700, config.labels.l8, "#2d6a4f", "l8", 10.5, 140)}
-          ${flowLabelVertical(1040, 821, config.labels.l9, "#2d6a4f", "l9", 10.5, 150)}
-          ${flowLabelVertical(1040, 1076, config.labels.l10, "#2d6a4f", "l10", 10.5, 160)}
+          ${flowLabelHorizontalSegment(userX + userWidth, agentX, 230, config.labels.l0, "#4452b8", "l0", 11, 152)}
+          ${flowLabelHorizontalSegment(agentX + agentWidth, toolX, 230, config.labels.l1, "#4452b8", "l1", 11, 148)}
+          ${flowLabelHorizontalSegment(toolX + toolWidth, storeX, 225, config.labels.l2, "#4452b8", "l2", 11, 152)}
+          ${flowLabelVertical(storeCenterX, threatLabelY, config.labels.l3, "#4452b8", "l3", 10.5, 150)}
+          ${flowLabelHorizontalSegment(d1X + stageCardWidth, patternX, row2CenterY, config.labels.l4, "#2d6a4f", "l4", 10.5, 160)}
+          ${flowLabelHorizontalSegment(d2X + stageCardWidth, d1X, row2CenterY, config.labels.l5, "#2d6a4f", "l5", 10.5, 156)}
+          ${flowLabelVertical(d2X + stageCardWidth / 2, 566, config.labels.l6, "#2d6a4f", "l6", 10.5, 132)}
+          ${flowLabelHorizontalSegment(d3X + stageCardWidth, d4X, row3CenterY, config.labels.l7, "#2d6a4f", "l7", 10.5, 148)}
+          ${flowLabelHorizontalSegment(d4X + stageCardWidth, d5X, row3CenterY, config.labels.l8, "#2d6a4f", "l8", 10.5, 148)}
+          ${flowLabelVertical(d5X + stageCardWidth / 2, 838, config.labels.l9, "#2d6a4f", "l9", 10.5, 138)}
+          ${flowLabelVertical(outcomeCenterX, outcomeLabelY, config.labels.l10, "#2d6a4f", "l10", 10.5, 148)}
         </svg>
       </div>
       ${panelMarkup(
@@ -3067,9 +3154,10 @@
   }
 
   function renderDefenseSharedCompactAsi02(config) {
+    const sharedCardTitleSize = 13.5;
     const agentGoalLayout = fitSingleLine(config.agent.goal, 176, 12, 10);
-    const toolTopTitleLayout = fitSingleLine(config.toolTop.title, 188, 18, 14);
-    const patternTitleLayout = fitSingleLine(config.patterns.title, 188, 17, 13);
+    const toolTopTitleLayout = fitSingleLine(config.toolTop.title, 188, 14, 12);
+    const patternTitleLayout = fitSingleLine(config.patterns.title, 188, 13, 11);
     const patternSub1Layout = fitWrappedText(config.patterns.sub1, 190, 11.5, 9.5, 2);
     const patternSub2Layout = fitWrappedText(config.patterns.sub2, 190, 11.5, 9.5, 2);
     const patternSub3Layout = fitWrappedText(config.patterns.sub3, 190, 11.5, 9.5, 2);
@@ -3084,12 +3172,17 @@
     const row3CenterY = row3Y + stageCardHeight / 2;
     const row3BottomY = row3Y + stageCardHeight;
     const outcomeX = 980;
-    const outcomeY = 960;
+    const outcomeY = 992;
     const outcomeCenterX = outcomeX + 140;
     const outcomeBottomY = outcomeY + 92;
+    const patternY = 372;
+    const threatArrowEndY = patternY + 6;
+    const threatLabelY = ((290 + threatArrowEndY) / 2) + 4;
+    const outcomeArrowEndY = outcomeY - 12;
+    const outcomeLabelY = ((row3BottomY + outcomeArrowEndY) / 2) + 4;
 
     function stageCard(x, y, id, card, tone = "safe", width = stageCardWidth, height = stageCardHeight) {
-      const title = fitNodeTitleText(card.title, width, 17, 13, "compact");
+      const title = fitNodeTitleText(card.title, width, 12.5, 10.5, "compact");
       const sub1 = fitNodeBodyText(card.sub1, width, 12.5, 10, "compact");
       const sub2 = fitNodeBodyText(card.sub2, width, 11.5, 9.5, "compact");
       const fill = tone === "primary" ? "#eef1ff" : "#edf7f0";
@@ -3116,7 +3209,7 @@
       `;
     }
 
-    const outcomeTitle = fitSingleLine(config.outcome.title, 280, 18, 14);
+    const outcomeTitle = fitSingleLine(config.outcome.title, 280, 14, 12);
     const outcomeSub1 = fitWrappedText(config.outcome.sub1, 260, 12.5, 10, 2);
     const outcomeSub2 = fitWrappedText(config.outcome.sub2, 260, 11.5, 9.5, 2);
 
@@ -3126,109 +3219,115 @@
       <h1>${escapeHtml(config.heading)}</h1>
       <div class="dots" id="dots"></div>
       <div class="wrap">
-        <svg viewBox="0 0 1400 1180" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 1520 1220" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
-          <rect width="1400" height="1180" fill="#fff"/>
-          <text x="700" y="54" text-anchor="middle" font-family="${getFontStack()}" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
-          <line x1="56" y1="76" x2="1344" y2="76" stroke="#ece6dc" stroke-width="1"/>
+          <rect width="1520" height="1180" fill="#fff"/>
+          <text x="760" y="54" text-anchor="middle" font-family="${getFontStack()}" font-size="14" font-weight="700" fill="#b2aba0" letter-spacing="4">INPUT  ·  AGENT CORE  ·  TOOL LAYER  ·  EXTERNAL DATA</text>
+          <line x1="56" y1="76" x2="1464" y2="76" stroke="#ece6dc" stroke-width="1"/>
+
+          <g class="az" id="gzone">
+            <rect x="300" y="118" width="1170" height="980" rx="28" fill="rgba(45,106,79,0.03)" stroke="#2d6a4f" stroke-width="3.5" stroke-dasharray="12 10"/>
+            <rect x="410" y="94" width="950" height="28" rx="14" fill="#ffffff"/>
+            <text x="885" y="98" text-anchor="middle" font-family="${getFontStack()}" font-size="12" font-weight="800" fill="#2d6a4f" letter-spacing=".08em">${escapeHtml(config.zone)}</text>
+          </g>
 
           <g class="ng" id="g0">
-            <rect x="70" y="170" width="170" height="120" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="155" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
-            <text x="155" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.user.sub1)}</text>
-            <text x="155" y="276" text-anchor="middle" font-family="${getFontStack()}" font-size="11" fill="#8a847b">${escapeHtml(config.user.sub2)}</text>
+            <rect x="80" y="170" width="180" height="120" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="170" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#38342f">${escapeHtml(config.user.title)}</text>
+            <text x="170" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.user.sub1)}</text>
+            <text x="170" y="276" text-anchor="middle" font-family="${getFontStack()}" font-size="11" fill="#8a847b">${escapeHtml(config.user.sub2)}</text>
           </g>
-          <line class="co" id="c0s" x1="240" y1="230" x2="350" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c0f" x1="240" y1="230" x2="350" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c0s" x1="260" y1="230" x2="390" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c0f" x1="260" y1="230" x2="390" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g1">
-            <rect x="350" y="160" width="220" height="146" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
-            <text x="460" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
-            <text x="460" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#5360be">${escapeHtml(config.agent.sub1)}</text>
-            <rect x="372" y="270" width="176" height="32" rx="10" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
-            <text x="460" y="292" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoalLayout.fontSize}" font-weight="700" fill="#2d6a4f">${escapeHtml(agentGoalLayout.text)}</text>
+            <rect x="390" y="160" width="220" height="146" rx="20" fill="#f7f8ff" stroke="#4452b8" stroke-width="2.8"/>
+            <text x="500" y="220" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#33429f">${escapeHtml(config.agent.title)}</text>
+            <text x="500" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#5360be">${escapeHtml(config.agent.sub1)}</text>
+            <rect x="412" y="270" width="176" height="32" rx="10" fill="#edf7f0" stroke="#bdddc8" stroke-width="1.2"/>
+            <text x="500" y="292" text-anchor="middle" font-family="${getFontStack()}" font-size="${agentGoalLayout.fontSize}" font-weight="700" fill="#2d6a4f">${escapeHtml(agentGoalLayout.text)}</text>
           </g>
-          <line class="co" id="c1s" x1="570" y1="230" x2="680" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c1f" x1="570" y1="230" x2="680" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c1s" x1="610" y1="230" x2="770" y2="230" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c1f" x1="610" y1="230" x2="770" y2="230" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g2">
-            <rect x="680" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="790" y="222" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolTopTitleLayout.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(toolTopTitleLayout.text)}</text>
-            <text x="790" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.toolTop.sub1)}</text>
-            <text x="790" y="282" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.toolTop.sub2)}</text>
+            <rect x="770" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="880" y="222" text-anchor="middle" font-family="${getFontStack()}" font-size="${toolTopTitleLayout.fontSize}" font-weight="700" fill="#38342f">${escapeHtml(toolTopTitleLayout.text)}</text>
+            <text x="880" y="252" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.toolTop.sub1)}</text>
+            <text x="880" y="282" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.toolTop.sub2)}</text>
           </g>
-          <line class="co" id="c2s" x1="900" y1="225" x2="1010" y2="225" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c2f" x1="900" y1="225" x2="1010" y2="225" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c2s" x1="990" y1="225" x2="1190" y2="225" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c2f" x1="990" y1="225" x2="1190" y2="225" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g3">
-            <rect x="1010" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
-            <text x="1120" y="214" text-anchor="middle" font-family="${getFontStack()}" font-size="18" font-weight="700" fill="#38342f">${escapeHtml(config.store.title)}</text>
-            <text x="1120" y="246" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.store.sub1)}</text>
-            <text x="1120" y="274" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.store.sub2)}</text>
+            <rect x="1190" y="160" width="220" height="130" rx="20" fill="#fcfbf8" stroke="#aba294" stroke-width="2.5"/>
+            <text x="1300" y="214" text-anchor="middle" font-family="${getFontStack()}" font-size="${sharedCardTitleSize}" font-weight="700" fill="#38342f">${escapeHtml(config.store.title)}</text>
+            <text x="1300" y="246" text-anchor="middle" font-family="${getFontStack()}" font-size="14" fill="#6b655c">${escapeHtml(config.store.sub1)}</text>
+            <text x="1300" y="274" text-anchor="middle" font-family="${getFontStack()}" font-size="12" fill="#8a847b">${escapeHtml(config.store.sub2)}</text>
           </g>
-          <line class="co" id="c3s" x1="1120" y1="290" x2="1120" y2="336" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c3f" x1="1120" y1="290" x2="1120" y2="336" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c3s" x1="1300" y1="290" x2="1300" y2="${threatArrowEndY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c3f" x1="1300" y1="290" x2="1300" y2="${threatArrowEndY}" stroke="#4452b8" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g4">
-            <rect x="1010" y="336" width="220" height="250" rx="20" fill="#fdf0f0" stroke="#b87a45" stroke-width="2.3"/>
-            <text x="1120" y="378" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternTitleLayout.fontSize}" font-weight="700" fill="#8d3f2f">${escapeHtml(patternTitleLayout.text)}</text>
-            <text x="1120" y="434" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub1Layout.fontSize}" fill="#a04d3a">${renderTspans(1120, patternSub1Layout.lines, patternSub1Layout.fontSize * 1.18)}</text>
-            <text x="1120" y="494" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub2Layout.fontSize}" fill="#a04d3a">${renderTspans(1120, patternSub2Layout.lines, patternSub2Layout.fontSize * 1.18)}</text>
-            <text x="1120" y="554" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub3Layout.fontSize}" fill="#a04d3a">${renderTspans(1120, patternSub3Layout.lines, patternSub3Layout.fontSize * 1.18)}</text>
+            <rect x="1190" y="${patternY}" width="220" height="250" rx="20" fill="#fdf0f0" stroke="#b87a45" stroke-width="2.3"/>
+            <text x="1300" y="${patternY + 42}" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternTitleLayout.fontSize}" font-weight="700" fill="#8d3f2f">${escapeHtml(patternTitleLayout.text)}</text>
+            <text x="1300" y="${patternY + 98}" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub1Layout.fontSize}" fill="#a04d3a">${renderTspans(1300, patternSub1Layout.lines, patternSub1Layout.fontSize * 1.18)}</text>
+            <text x="1300" y="${patternY + 158}" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub2Layout.fontSize}" fill="#a04d3a">${renderTspans(1300, patternSub2Layout.lines, patternSub2Layout.fontSize * 1.18)}</text>
+            <text x="1300" y="${patternY + 218}" text-anchor="middle" font-family="${getFontStack()}" font-size="${patternSub3Layout.fontSize}" fill="#a04d3a">${renderTspans(1300, patternSub3Layout.lines, patternSub3Layout.fontSize * 1.18)}</text>
           </g>
-          <line class="co" id="c4s" x1="1010" y1="${row2CenterY}" x2="${680 + stageCardWidth}" y2="${row2CenterY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c4f" x1="1010" y1="${row2CenterY}" x2="${680 + stageCardWidth}" y2="${row2CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c4s" x1="1190" y1="${row2CenterY}" x2="${770 + stageCardWidth}" y2="${row2CenterY}" stroke="rgba(173,53,53,.35)" stroke-width="3.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c4f" x1="1190" y1="${row2CenterY}" x2="${770 + stageCardWidth}" y2="${row2CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g5">${stageCard(680, row2Y, "D1", config.d1)}</g>
-          <line class="co" id="c5s" x1="680" y1="${row2CenterY}" x2="${350 + stageCardWidth}" y2="${row2CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c5f" x1="680" y1="${row2CenterY}" x2="${350 + stageCardWidth}" y2="${row2CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g5">${stageCard(770, row2Y, "D1", config.d1)}</g>
+          <line class="co" id="c5s" x1="770" y1="${row2CenterY}" x2="${390 + stageCardWidth}" y2="${row2CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c5f" x1="770" y1="${row2CenterY}" x2="${390 + stageCardWidth}" y2="${row2CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g6">${stageCard(350, row2Y, "D2", config.d2, "primary")}</g>
-          <line class="co" id="c6s" x1="${350 + stageCardWidth / 2}" y1="${row2BottomY}" x2="${350 + stageCardWidth / 2}" y2="${row3Y}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c6f" x1="${350 + stageCardWidth / 2}" y1="${row2BottomY}" x2="${350 + stageCardWidth / 2}" y2="${row3Y}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g6">${stageCard(390, row2Y, "D2", config.d2, "primary")}</g>
+          <line class="co" id="c6s" x1="${390 + stageCardWidth / 2}" y1="${row2BottomY}" x2="${390 + stageCardWidth / 2}" y2="${row3Y}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c6f" x1="${390 + stageCardWidth / 2}" y1="${row2BottomY}" x2="${390 + stageCardWidth / 2}" y2="${row3Y}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g7">${stageCard(350, row3Y, "D3", config.d3)}</g>
-          <line class="co" id="c6as" x1="${350 + stageCardWidth}" y1="${row3CenterY}" x2="680" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c6af" x1="${350 + stageCardWidth}" y1="${row3CenterY}" x2="680" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g7">${stageCard(390, row3Y, "D3", config.d3)}</g>
+          <line class="co" id="c6as" x1="${390 + stageCardWidth}" y1="${row3CenterY}" x2="770" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c6af" x1="${390 + stageCardWidth}" y1="${row3CenterY}" x2="770" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g8">${stageCard(680, row3Y, "D4", config.d4)}</g>
-          <line class="co" id="c8bs" x1="${680 + stageCardWidth}" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c8bf" x1="${680 + stageCardWidth}" y1="${row3CenterY}" x2="1010" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <g class="ng" id="g8">${stageCard(770, row3Y, "D4", config.d4)}</g>
+          <line class="co" id="c8bs" x1="${770 + stageCardWidth}" y1="${row3CenterY}" x2="1150" y2="${row3CenterY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c8bf" x1="${770 + stageCardWidth}" y1="${row3CenterY}" x2="1150" y2="${row3CenterY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          <g class="ng" id="g9">${stageCard(1010, row3Y, "D5", config.d5)}</g>
+          <g class="ng" id="g9">${stageCard(1150, row3Y, "D5", config.d5)}</g>
 
-          <line class="co" id="c9s" x1="${1010 + stageCardWidth / 2}" y1="${row3BottomY}" x2="${1010 + stageCardWidth / 2}" y2="${outcomeY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c9f" x1="${1010 + stageCardWidth / 2}" y1="${row3BottomY}" x2="${1010 + stageCardWidth / 2}" y2="${outcomeY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c9s" x1="${1150 + stageCardWidth / 2}" y1="${row3BottomY}" x2="${1150 + stageCardWidth / 2}" y2="${outcomeArrowEndY}" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c9f" x1="${1150 + stageCardWidth / 2}" y1="${row3BottomY}" x2="${1150 + stageCardWidth / 2}" y2="${outcomeArrowEndY}" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
           <g class="ng" id="g10">
-            <rect x="${outcomeX}" y="${outcomeY}" width="280" height="92" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
-            <text x="${outcomeCenterX}" y="${outcomeY + 32}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
-            <text x="${outcomeCenterX}" y="${outcomeY + 60}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(outcomeCenterX, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
-            <text x="${outcomeCenterX}" y="${outcomeY + 84}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(outcomeCenterX, outcomeSub2.lines, outcomeSub2.fontSize * 1.14)}</text>
+            <rect x="1135" y="${outcomeY}" width="280" height="92" rx="18" fill="#edf7f0" stroke="#2d6a4f" stroke-width="2.8"/>
+            <text x="1275" y="${outcomeY + 32}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeTitle.fontSize}" font-weight="700" fill="#24553f">${escapeHtml(outcomeTitle.text)}</text>
+            <text x="1275" y="${outcomeY + 60}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub1.fontSize}" fill="#3d735a">${renderTspans(1275, outcomeSub1.lines, outcomeSub1.fontSize * 1.16)}</text>
+            <text x="1275" y="${outcomeY + 84}" text-anchor="middle" font-family="${getFontStack()}" font-size="${outcomeSub2.fontSize}" fill="#56826c">${renderTspans(1275, outcomeSub2.lines, outcomeSub2.fontSize * 1.14)}</text>
           </g>
           <g class="ng" id="g11">
-            <rect x="60" y="1100" width="1280" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
-            <text x="86" y="1117" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
-            <text x="374" y="1117" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(374, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
+            <rect x="80" y="1168" width="1360" height="28" rx="14" fill="#edf7f0" stroke="#9ec1ae" stroke-width="1.8"/>
+            <text x="106" y="1185" font-family="${getFontStack()}" font-size="${auditTitle.fontSize}" font-weight="800" fill="#2d6a4f">${escapeHtml(auditTitle.text)}</text>
+            <text x="394" y="1185" font-family="${getFontStack()}" font-size="${auditSub1.fontSize}" fill="#56826c">${renderTspans(394, auditSub1.lines, auditSub1.fontSize * 1.12)}</text>
           </g>
 
-          <line class="co" id="c10s" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1100" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
-          <line class="fl" id="c10f" x1="${outcomeCenterX}" y1="${outcomeBottomY}" x2="${outcomeCenterX}" y2="1100" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
+          <line class="co" id="c10s" x1="1275" y1="${outcomeBottomY}" x2="1275" y2="1168" stroke="#beb6a9" stroke-width="2.5" marker-end="url(#ar)"/>
+          <line class="fl" id="c10f" x1="1275" y1="${outcomeBottomY}" x2="1275" y2="1168" stroke="#2d6a4f" stroke-width="4.5" marker-end="url(#ar)"/>
 
-          ${flowLabelHorizontal(295, 230, config.labels.l0, "#4452b8", "l0", 11, 148)}
-          ${flowLabelHorizontalSegment(570, 680, 230, config.labels.l1, "#4452b8", "l1", 10.5, 92)}
-          ${flowLabelHorizontalSegment(900, 1010, 225, config.labels.l2, "#4452b8", "l2", 10.5, 92)}
-          ${flowLabelVertical(1120, 337, config.labels.l3, "#4452b8", "l3", 10.5, 154)}
-          ${flowLabelHorizontalSegment(930, 1010, row2CenterY, config.labels.l4, "#2d6a4f", "l4", 10, 128)}
-          ${flowLabelHorizontalSegment(600, 680, row2CenterY, config.labels.l5, "#2d6a4f", "l5", 10, 126)}
-          ${flowLabelVertical(475, row3Y + 42, config.labels.l6, "#2d6a4f", "l6", 10, 140)}
-          ${flowLabelHorizontalSegment(600, 680, row3CenterY, config.labels.l7, "#2d6a4f", "l7", 10, 126)}
-          ${flowLabelHorizontalSegment(930, 1010, row3CenterY, config.labels.l8, "#2d6a4f", "l8", 10, 126)}
-          ${flowLabelVertical(1135, ((row3BottomY + outcomeY) / 2) + 64, config.labels.l9, "#2d6a4f", "l9", 10, 144)}
+          ${flowLabelHorizontalSegment(260, 390, 230, config.labels.l0, "#4452b8", "l0", 11, 148)}
+          ${flowLabelHorizontalSegment(610, 770, 230, config.labels.l1, "#4452b8", "l1", 10.5, 132)}
+          ${flowLabelHorizontalSegment(990, 1190, 225, config.labels.l2, "#4452b8", "l2", 10.5, 144)}
+          ${flowLabelVertical(1300, threatLabelY, config.labels.l3, "#4452b8", "l3", 10.5, 144)}
+          ${flowLabelHorizontalSegment(1020, 1190, row2CenterY, config.labels.l4, "#2d6a4f", "l4", 10, 144)}
+          ${flowLabelHorizontalSegment(640, 770, row2CenterY, config.labels.l5, "#2d6a4f", "l5", 10, 132)}
+          ${flowLabelVertical(515, row3Y + 42, config.labels.l6, "#2d6a4f", "l6", 10, 140)}
+          ${flowLabelHorizontalSegment(640, 770, row3CenterY, config.labels.l7, "#2d6a4f", "l7", 10, 132)}
+          ${flowLabelHorizontalSegment(1020, 1150, row3CenterY, config.labels.l8, "#2d6a4f", "l8", 10, 132)}
+          ${flowLabelVertical(1275, outcomeLabelY, config.labels.l9, "#2d6a4f", "l9", 10, 144)}
         </svg>
       </div>
       ${panelMarkup(
@@ -3248,7 +3347,7 @@
         <svg viewBox="0 0 1400 860" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#6b655c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
           <rect width="1400" height="860" fill="#fff"/>
@@ -3359,11 +3458,13 @@
     const layout = fitWrappedText(text, maxWidth, startSize, minSize, maxLines);
     const lineHeight = layout.fontSize * 1.18;
     const multiLineLift = layout.lines.length > 1 ? ((layout.lines.length - 1) * lineHeight) / 2 : 0;
-    const textY = y - multiLineLift;
+    const textX = x + (options.xOffset || 0);
+    const textY = y + (options.yOffset || 0) - multiLineLift;
+    const haloWidth = options.strokeWidth || DIAGRAM_TOKENS.flowLabelHaloWidth.main;
     return `
       <g class="lb ${className}" id="${id}">
-        <text x="${x}" y="${textY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${layout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
-          ${renderTspans(x, layout.lines, lineHeight)}
+        <text x="${textX}" y="${textY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${layout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="${haloWidth}" paint-order="stroke fill" stroke-linejoin="round">
+          ${renderTspans(textX, layout.lines, lineHeight)}
         </text>
       </g>
     `;
@@ -3409,10 +3510,10 @@
 
     return `
       <g class="lb lb-h" id="${id}">
-        <text x="${x}" y="${mainTextY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${mainLayout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
+        <text x="${x}" y="${mainTextY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${mainLayout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="${DIAGRAM_TOKENS.flowLabelHaloWidth.main}" paint-order="stroke fill" stroke-linejoin="round">
           ${renderTspans(x, mainLayout.lines, mainLineHeight)}
         </text>
-        <text x="${x}" y="${noteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${noteLayout.fontSize}" font-weight="600" fill="#8a847b" stroke="#fffdf8" stroke-width="5" paint-order="stroke fill" stroke-linejoin="round">
+        <text x="${x}" y="${noteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${noteLayout.fontSize}" font-weight="600" fill="#8a847b" stroke="#fffdf8" stroke-width="${DIAGRAM_TOKENS.flowLabelHaloWidth.note}" paint-order="stroke fill" stroke-linejoin="round">
           ${renderTspans(x, noteLayout.lines, noteLineHeight)}
         </text>
       </g>
@@ -3444,10 +3545,10 @@
 
     return `
       <g class="lb lb-v" id="${id}">
-        <text x="${x}" y="${mainTextY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${mainLayout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="6" paint-order="stroke fill" stroke-linejoin="round">
+        <text x="${x}" y="${mainTextY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${mainLayout.fontSize}" font-weight="700" fill="${color}" stroke="#fffdf8" stroke-width="${DIAGRAM_TOKENS.flowLabelHaloWidth.main}" paint-order="stroke fill" stroke-linejoin="round">
           ${renderTspans(x, mainLayout.lines, mainLineHeight)}
         </text>
-        <text x="${x}" y="${noteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${noteLayout.fontSize}" font-weight="600" fill="#8a847b" stroke="#fffdf8" stroke-width="5" paint-order="stroke fill" stroke-linejoin="round">
+        <text x="${x}" y="${noteY}" text-anchor="middle" font-family="${getFontStack()}" font-size="${noteLayout.fontSize}" font-weight="600" fill="#8a847b" stroke="#fffdf8" stroke-width="${DIAGRAM_TOKENS.flowLabelHaloWidth.note}" paint-order="stroke fill" stroke-linejoin="round">
           ${renderTspans(x, noteLayout.lines, noteLineHeight)}
         </text>
       </g>
@@ -3623,8 +3724,8 @@
   function baseStyles() {
     return `
       *{margin:0;padding:0;box-sizing:border-box;}
-      :root{--bg:#f6f4ef;--surface:#ffffff;--line:#d9d2c7;--text:#2d2b27;--muted:#7f7a72;--primary:#4452b8;--safe:#2d6a4f;--danger:#ad3535;--danger-soft:#fff8f8;--safe-soft:#edf7f0;--flow-label-gap-horizontal:${DIAGRAM_TOKENS.flowLabelGap.horizontal};--flow-label-gap-vertical:${DIAGRAM_TOKENS.flowLabelGap.vertical};}
-      body{width:100%;background:var(--bg);font-family:${getFontStack()};display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:6px 16px 14px;overflow-x:hidden;}
+      :root{--bg:#f6f4ef;--surface:#ffffff;--line:#d9d2c7;--text:#2d2b27;--muted:#7f7a72;--primary:#4452b8;--safe:#2d6a4f;--danger:#ad3535;--danger-soft:#fff8f8;--safe-soft:#edf7f0;--flow-label-gap-horizontal:${DIAGRAM_TOKENS.flowLabelGap.horizontal};--flow-label-gap-vertical:${DIAGRAM_TOKENS.flowLabelGap.vertical};--connector-flow-duration:${DIAGRAM_TOKENS.connectorAnimation.normalDurationMs}ms;--connector-flow-duration-accent:${DIAGRAM_TOKENS.connectorAnimation.accentDurationMs}ms;--connector-flow-dashoffset:${DIAGRAM_TOKENS.connectorAnimation.dashOffset};}
+      body{width:100%;background:var(--bg);font-family:${getFontStack()};display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:6px 8px 14px;overflow-x:hidden;}
       .badge{display:none;background:var(--danger-soft);color:#7f2626;border:1px solid #e1a2a2;border-radius:20px;font-size:10px;font-weight:700;padding:3px 12px;margin-bottom:8px;text-align:center;}
       .badge.safe{background:var(--safe-soft);color:var(--safe);border-color:#bdddc8;}
       h1{display:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8c877f;margin-bottom:10px;text-align:center;}
@@ -3634,17 +3735,17 @@
       .dot.done{background:#b8bdf5;border-color:#8490e0;}
       .dot.active{background:var(--primary);border-color:#32408f;box-shadow:0 0 6px rgba(68,82,184,.35);}
       .dot.atk{background:var(--danger)!important;border-color:#7f2626!important;box-shadow:0 0 6px rgba(156,47,47,.35)!important;}
-      .wrap{width:100%;max-width:1360px;background:${frameBare ? "transparent" : "var(--surface)"};border:${frameBare ? "0" : "1px solid var(--line)"};border-radius:${frameBare ? "0" : "20px"};overflow:${frameBare ? "visible" : "hidden"};}
+      .wrap{width:100%;max-width:1680px;background:${frameBare ? "transparent" : "var(--surface)"};border:${frameBare ? "0" : "1px solid var(--line)"};border-radius:${frameBare ? "0" : "20px"};overflow:${frameBare ? "visible" : "hidden"};}
       svg{width:100%;display:block;margin-top:${externalPanel ? "-56px" : "0"};}
       svg > text:first-of-type,svg > line:first-of-type{display:none;}
       .ng{opacity:0;transition:opacity .5s;}
       .ng.v{opacity:1;}
-      .co{opacity:0;transition:opacity .4s;}
-      .co.v{opacity:0;}
-      .fl{stroke-dasharray:14 8;animation:da 1.1s linear infinite;opacity:0;transition:opacity .4s;}
+      .co{opacity:0;transition:opacity .4s;stroke-dasharray:0 9999;}
+      .co.v{opacity:1;}
+      .fl{stroke-dasharray:14 8;animation:da var(--connector-flow-duration) linear infinite;opacity:0;transition:opacity .4s;marker-end:none;}
       .fl.v{opacity:1;}
-      .fl.a{stroke-dasharray:10 6;animation:da .65s linear infinite;}
-      @keyframes da{to{stroke-dashoffset:-22;}}
+      .fl.a{stroke-dasharray:10 6;animation:da var(--connector-flow-duration-accent) linear infinite;}
+      @keyframes da{to{stroke-dashoffset:var(--connector-flow-dashoffset);}}
       @media(prefers-reduced-motion:reduce){.fl{animation:none;}}
       .lb{opacity:0;transition:opacity .3s .15s;}
       .lb.v{opacity:1;}
@@ -3652,7 +3753,7 @@
       .lb.lb-v text{transform:translateY(calc(var(--flow-label-gap-vertical) * -1px));}
       .az{opacity:0;transition:opacity .7s;}
       .az.v{opacity:1;}
-      .panel{margin-top:10px;width:100%;max-width:1360px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;min-height:78px;display:${externalPanel ? "none" : "flex"};align-items:center;gap:12px;transition:background .4s,border-color .4s;}
+      .panel{margin-top:10px;width:100%;max-width:1680px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;min-height:78px;display:${externalPanel ? "none" : "flex"};align-items:center;gap:12px;transition:background .4s,border-color .4s;}
       .panel.atk{background:var(--danger-soft);border-color:#e1a2a2;}
       .pt{flex:1;}
       .ps{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;}
