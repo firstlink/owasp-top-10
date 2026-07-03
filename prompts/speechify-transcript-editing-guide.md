@@ -56,6 +56,7 @@ Edit only what is necessary:
 - obvious grammar mistakes
 - punctuation needed for natural speech
 - sentence boundaries that are clearly missing
+- spoken-format consistency for recurring labels such as ASI names
 
 Safe examples:
 
@@ -92,7 +93,9 @@ Use:
 - `.` for a natural sentence stop
 - a sentence split only when the original meaning clearly supports it
 
-When a block is being edited in serialized form, express pauses as literal text using Speechify's pause syntax, for example: `[Pause 480ms]`. Keep that bracketed text format exact and consistent.
+If a serialized pause form is ever used, express pauses as literal text using Speechify's pause syntax, for example: `[Pause 480ms]`. However, treat this as unsafe in Studio Dubbing unless the UI clearly converts it into a real editable pause chip after saving.
+
+For Speechify transcript editing, prefer only commas and full stops in the text itself. Avoid punctuation such as semicolons, colons, hyphens, em dashes, and similar symbols unless the user explicitly asks for them, because they may not produce reliable text-to-speech behavior in Studio.
 
 Do not use punctuation as decoration. Every punctuation mark should help either correctness, readability, or natural speech flow.
 
@@ -129,6 +132,8 @@ Editing rule:
 - add only clearly missing pauses
 - keep total pause load at or below what the original block can naturally support
 - using fewer pauses is fine when the result sounds more human and less artificial
+- if an extra real pause is needed, prefer copying an existing pause chip and adjusting it rather than typing raw pause text
+- if pasted pause text remains literal text instead of becoming a pause chip, undo it and fall back to native pause chips
 
 ## Block-By-Block Workflow
 
@@ -192,6 +197,8 @@ Listening validation:
 - confirm pauses do not feel awkward
 - confirm sentences do not run together
 - confirm nothing sounds too slow or overly broken up
+- confirm recurring spoken labels are pronounced consistently, for example using the chosen spoken format for ASI identifiers
+- for ASI identifiers, prefer a spoken form such as `ASI zero four` instead of compressed forms like `ASI4`
 
 ## Done Criteria
 
@@ -238,6 +245,8 @@ The operating rule is simple:
 - keep wording close to the original
 - preserve useful pauses
 - add only necessary punctuation
+- in transcript text, prefer only commas and full stops for pacing
+- keep recurring spoken labels consistent, for example `ASI zero four` instead of `ASI4` when that is the chosen spoken form
 - do not inflate pause time
 - do not strip out useful pause time
 - treat the original pause budget as a ceiling, not a target
