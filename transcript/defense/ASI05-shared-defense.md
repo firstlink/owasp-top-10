@@ -9,9 +9,9 @@ The problem is that the architecture is one step away from turning it into a com
 
 We'll use the self-healing disaster as the main frame.
 
-This walkthrough follows one rule all the way through:
+The defense question is:
 
-untrusted data must never cross the data-to-code boundary without being classified, checked, contained, previewed, and approved.
+how does the system stop untrusted text from turning into live code?
 
 ---
 
@@ -19,12 +19,11 @@ untrusted data must never cross the data-to-code boundary without being classifi
 
 SHOW: User + Agent planner
 
-At the User and Agent planner stage, the workflow begins with a useful automation task.
+At the start, the task sounds useful and familiar.
 
 Clean up a system.
 
 That means the defense cannot simply say, "never generate code."
-
 It has to show how code generation stays inside a governed path.
 
 ---
@@ -33,7 +32,7 @@ It has to show how code generation stays inside a governed path.
 
 SHOW: generateOrCompileCode()
 
-The `generateOrCompileCode()` stage is where natural language starts turning into execution drafts.
+This is where natural language starts turning into execution drafts.
 
 A shell command may be proposed.
 A SQL query may be assembled.
@@ -47,7 +46,7 @@ From this point on, the system is handling something that could soon become exec
 
 SHOW: Untrusted input
 
-The untrusted-input stage shows why the boundary matters.
+This untrusted-input stage shows why the boundary matters.
 
 A filename.
 A free-text field.
@@ -56,7 +55,9 @@ A data row.
 
 All of those are still just data.
 
-ASI05 happens when the architecture lets any of them quietly acquire execution meaning through interpolation.
+ASI05 happens when the system lets data slip into code.
+
+That is how ordinary input starts gaining execution meaning.
 
 ---
 
@@ -64,14 +65,14 @@ ASI05 happens when the architecture lets any of them quietly acquire execution m
 
 SHOW: Threat variants covered
 
-The Threat variants step identifies the recurring escape paths:
+Here, the escape usually happens through three familiar paths:
 
 - shell injection
 - SQL injection
 - data-to-code escape
 
 Different interfaces.
-Same mistake.
+Same underlying mistake.
 
 The system forgets to keep data and code in separate trust buckets.
 
@@ -83,15 +84,20 @@ SHOW: Input classification
 
 D1, Input classification, is the first barrier.
 
-It says: everything that comes in is data unless proven otherwise.
+It says: everything that comes in is data, unless proven otherwise.
 
-Shell metacharacters, SQL terminators, subprocess markers, and suspicious interpolated fragments are downgraded, stripped, quarantined, or isolated before draft generation depends on them.
+Shell metacharacters are flagged early.
+SQL terminators are flagged early.
+Subprocess markers are flagged early.
+Suspicious interpolated fragments are flagged early.
+
+They are stripped, quarantined, or isolated before draft generation depends on them.
 
 That is how the architecture keeps raw input from becoming executable too early.
 
-This matters in ASI05 because the attack wins when ordinary text quietly acquires code meaning.
+This matters in ASI05 because the attack wins when ordinary text starts behaving like code.
 
-Without classification, the system starts treating untrusted data as if it were safe to splice directly into execution.
+Without classification, the system starts treating untrusted data as safe input for execution.
 
 ---
 
@@ -112,9 +118,15 @@ This stage looks for:
 
 The point is to evaluate the shape of execution while it is still only a proposal.
 
-That helps because the system can still reject a dangerous cleanup script before it touches the host, the database, or the network.
+That helps because the system can still reject a dangerous cleanup script early.
 
-Without static analysis, the workflow learns what the draft really does only after it has already started doing it.
+It can stop it before it touches the host.
+Before it touches the database.
+And before it touches the network.
+
+Without static analysis, the workflow learns what the draft really does too late.
+
+It learns after the draft has already started running.
 
 ---
 
@@ -126,14 +138,18 @@ D3, Sandbox execution, contains whatever still reaches runtime.
 
 A sandbox is the restricted environment around the draft.
 
-So even if a risky fragment slips through earlier checks, the host, database, and network reach stay tightly bounded.
+So even if a risky fragment slips through earlier checks, the runtime stays tightly bounded.
+
+The host is protected.
+The database reach is limited.
+And the network reach is limited.
 
 The architecture is not betting everything on perfect analysis.
 It is also limiting blast radius at runtime.
 
 That is the runtime backstop for ASI05.
 
-Without sandboxing, one mistaken command or query can jump directly from draft quality problems into production damage.
+Without sandboxing, one mistaken command or query can jump straight into production damage.
 
 ---
 
@@ -151,9 +167,9 @@ Which endpoint would be reached?
 
 If the preview does not match the approved task, the workflow stops before the side effect becomes real.
 
-This is where the user or policy engine can see the real consequence, not just the code text.
+This is where the user, or the policy engine, can see the real consequence, not just the code text.
 
-Without a dry run, a command may look tidy while still targeting the wrong files, rows, or endpoints.
+Without a dry run, a command may look tidy, while still targeting the wrong files, rows, or endpoints.
 
 ---
 
@@ -189,7 +205,7 @@ The run proceeds only after:
 - impact is previewed
 - destructive actions are approved
 
-And D6 Strong Observability records:
+And D6, Strong Observability, records:
 
 - the ingested content
 - the draft
@@ -205,7 +221,7 @@ useful, fast enough, and no longer casually executable.
 
 ## FINAL TAKEAWAY
 
-The strongest defense against ASI05 is not "never let the agent write code."
+The strongest defense against ASI05 is not, "never let the agent write code."
 
 It is:
 

@@ -8,7 +8,9 @@ It only needs to plant something that the system will keep trusting tomorrow.
 
 We'll use the travel pricing ghost as the main frame.
 
-This walkthrough follows how persistent memory is kept useful without letting it quietly become the loudest voice in the room over time.
+The defense question is:
+
+how does the system keep useful memory, without letting poisoned memory steer future decisions?
 
 ---
 
@@ -16,7 +18,7 @@ This walkthrough follows how persistent memory is kept useful without letting it
 
 SHOW: User + Agent planner
 
-At the User and Agent planner stage, the workflow begins with a normal task that benefits from continuity.
+The business need here is reasonable.
 
 The business wants the agent to remember useful state across sessions.
 
@@ -30,9 +32,9 @@ The defense challenge is stopping that usefulness from becoming a quiet corrupti
 
 SHOW: readOrWriteMemory()
 
-The `readOrWriteMemory()` stage is where ASI06 becomes architectural.
+This is the point where ASI06 becomes a system design problem.
 
-The agent either retrieves stored knowledge or proposes a persistent update.
+The agent either retrieves stored knowledge, or proposes a persistent update.
 
 The system is no longer deciding only what seems true right now.
 It is deciding what future workflows may treat as trusted memory.
@@ -43,13 +45,15 @@ It is deciding what future workflows may treat as trusted memory.
 
 SHOW: Memory store
 
-The memory store marks the real trust boundary.
+The memory store is the real trust boundary.
 
 Vector records.
 Belief entries.
 Vendor memory.
 
-These can outlive the original session and quietly steer later business decisions long after the first attack moment is gone.
+These can outlive the original session.
+
+They can keep shaping later business decisions long after the first attack moment is gone.
 
 ---
 
@@ -57,7 +61,7 @@ These can outlive the original session and quietly steer later business decision
 
 SHOW: Threat variants covered
 
-The Threat variants step narrows the long-lived poisoning patterns:
+The poisoning usually shows up in three durable forms:
 
 - retrieval poisoning
 - gradual belief drift
@@ -71,20 +75,25 @@ The system is defending against durable influence, not just one bad prompt.
 
 SHOW: Provenance & integrity
 
-D1 introduces two key ideas: provenance and integrity.
+D1 starts with two key ideas:
+provenance and integrity.
 
 Provenance asks where a memory entry came from.
 Integrity asks whether it changed after it was stored.
 
 Every entry carries source metadata and integrity evidence.
 
-Low-trust, mismatched, or tampered records are downgraded or quarantined before they shape high-stakes decisions.
+Low-trust records are downgraded.
+Mismatched records are downgraded.
+Tampered records are downgraded or quarantined.
+
+They do not get to shape high-stakes decisions.
 
 Similarity is not provenance.
 
-That matters in ASI06 because poisoned memory often looks useful, familiar, and highly relevant.
+That matters in ASI06, because poisoned memory often looks useful, familiar, and highly relevant.
 
-Without provenance and integrity, the system cannot tell the difference between trusted experience and planted influence.
+Without provenance and integrity, the system cannot tell trusted experience from planted influence.
 
 ---
 
@@ -100,11 +109,15 @@ A fare is checked against a live source.
 A fraud pattern is checked against current authority.
 A trust decision is checked against present approval state.
 
-That is how the architecture stops stale or poisoned memory from becoming enterprise truth just because it was retrieved confidently.
+That is how the architecture stops stale memory from becoming enterprise truth.
+
+It also stops poisoned memory from becoming enterprise truth just because it was retrieved confidently.
 
 This layer protects decisions from being governed by memory alone.
 
-Without it, a confident retrieval can overrule the current source of truth long after the original poisoning moment has been forgotten.
+Without this check, a confident retrieval can overrule the current source of truth.
+
+That can happen long after the original poisoning moment has been forgotten.
 
 ---
 
@@ -116,14 +129,18 @@ D3 applies execution-grade governance to persistence.
 
 Persistent memory updates are treated as privileged changes.
 
-This is the same governance instinct we used in earlier categories, but now it protects memory instead of tools or code.
+It is the same governance idea we used earlier.
+
+But here it protects memory, not tools or code.
 
 A document cannot simply announce a new vendor state.
-A repeated chat claim cannot quietly become policy.
+A repeated chat claim cannot slowly turn into policy on its own.
 
 This is the control that protects the write path, not just the read path.
 
-Without governed writes, the system slowly teaches itself the attack and then keeps replaying it later.
+Without governed writes, the system slowly teaches itself the attack.
+
+Then it keeps replaying it later.
 
 ---
 
@@ -148,7 +165,7 @@ And it keeps versioned rollback ready.
 That matters because ASI06 is often cumulative.
 One weak memory entry may do little, but repeated reinforcement can reshape ranking and trust over time.
 
-Without drift detection and versioning, slow poisoning can become the new normal with no clean way back.
+Without drift detection and versioning, slow poisoning can become the new normal, with no clean way back.
 
 ---
 
@@ -165,7 +182,9 @@ Approval rules.
 
 Those still need explicit review before they become authoritative memory.
 
-Without this governance point, the most sensitive memory classes can be rewritten by workflow momentum instead of deliberate approval.
+Without this governance point, the most sensitive memory classes can be rewritten too easily.
+
+Workflow momentum takes over instead of deliberate approval.
 
 ---
 
@@ -177,7 +196,7 @@ The Approved memory outcome shows what governed memory looks like in practice.
 
 Only verified, cross-checked, governed memory shapes future action.
 
-And D6 Strong Observability traces:
+And D6, Strong Observability, traces:
 
 - what was read
 - what source it claimed
@@ -193,7 +212,7 @@ a trustworthy memory lifecycle.
 
 ## FINAL TAKEAWAY
 
-The core defense against ASI06 is not "never store memory."
+The core defense against ASI06 is not, "never store memory."
 
 It is:
 

@@ -2,17 +2,20 @@
 
 ## PREVIEW
 
-ASI02 punishes teams that trust legitimate tools too quickly.
+ASI02 is the category where everything can look legitimate.
 
-The tool may be real.
-The credentials may be real.
-The damage still happens when sequence, scope, or parameters drift away from intent.
+The tool is real.
+The access is real.
+The damage is still real.
+
+So the issue is not fake software.
+The issue is ungoverned execution.
 
 We'll use the refund-loop case as the main frame.
 
-This walkthrough is about one practical question:
+The defense question is:
 
-how does the system make tool use earn trust, step by step, before anything high-impact runs?
+how does the system check, before any tool runs, that the action is still inside the approved task?
 
 ---
 
@@ -20,13 +23,13 @@ how does the system make tool use earn trust, step by step, before anything high
 
 SHOW: User + Agent planner
 
-At the User and Agent planner stage, the workflow begins with an ordinary business task.
+At the top of the flow, the request is completely ordinary.
 
 Refund one case.
 
-Nothing is wrong yet.
+Nothing looks unsafe yet.
 
-ASI02 starts when that simple request is translated into a chain of live tool calls.
+ASI02 begins when that simple request is translated into a chain of live tool calls.
 
 ---
 
@@ -34,7 +37,7 @@ ASI02 starts when that simple request is translated into a chain of live tool ca
 
 SHOW: planToolCalls()
 
-The `planToolCalls()` stage is where execution risk first becomes visible.
+This is the point where execution risk first becomes visible.
 
 The planner decides:
 
@@ -43,7 +46,7 @@ The planner decides:
 - with which arguments
 - whether a retry or follow-on action should happen
 
-That planning layer matters because unsafe orchestration can exist before a single tool executes.
+That matters, because a workflow can become dangerous before a single tool has actually fired.
 
 ---
 
@@ -51,14 +54,18 @@ That planning layer matters because unsafe orchestration can exist before a sing
 
 SHOW: planToolCalls() + Tool layer
 
-The Tool layer marks the real ASI02 boundary.
+This Tool layer is the real ASI02 boundary.
 
 The refund API can be legitimate.
 The file connector can be legitimate.
 The shell wrapper can be legitimate.
 
 The problem is not fake capability.
-It is real capability used with the wrong scope, the wrong target, or the wrong sequence.
+It is a real capability used the wrong way.
+
+The scope may be wrong.
+The target may be wrong.
+The sequence may be wrong.
 
 ---
 
@@ -66,13 +73,16 @@ It is real capability used with the wrong scope, the wrong target, or the wrong 
 
 SHOW: Threat variants covered
 
-The Threat variants step narrows the failure patterns the architecture is designed for:
+In practice, the damage usually appears in three patterns:
 
 - recursive loops
 - unsafe multi-step chains
 - parameter overreach
 
-That framing matters because bounded execution is about controlling these recurring shapes, not about predicting one exact payload.
+That framing matters.
+
+Bounded execution is not about catching one exact bad action.
+It is about controlling the common ways execution goes wrong.
 
 ---
 
@@ -82,15 +92,22 @@ SHOW: Tool call rate limiter
 
 D1, Tool call rate limiter, is the first hard brake.
 
-A rate limiter is the call budget around one workflow.
+A rate limiter is the call budget around one workflow, one case, or one task.
 
-Combined with idempotency keys and one-time locks, it stops the same refund, restart, or transfer path from firing over and over just because the agent is uncertain or persistent.
+Combined with idempotency keys and one-time locks, it stops the same refund path from firing again and again.
 
-This is what keeps a useful automation path from becoming a damage-multiplying loop.
+The same idea also applies to restarts and transfers.
 
-In ASI02, that matters because the tool may be legitimate while the repetition pattern is not.
+That matters when the agent is uncertain.
+It also matters when the agent keeps pushing the same action.
 
-Without this layer, one bad decision can be multiplied into ten bad executions before anyone realizes the agent is stuck in a harmful loop.
+This is how a useful automation path is stopped from turning into a damage-multiplying loop.
+
+That matters here, because the tool may be legitimate while the repetition pattern clearly is not.
+
+If this layer is missing, one bad decision can turn into many bad executions.
+
+By the time someone notices, the agent may already be trapped in a loop.
 
 ---
 
@@ -98,17 +115,30 @@ Without this layer, one bad decision can be multiplied into ten bad executions b
 
 SHOW: Zero-Trust Tooling
 
-D2, Zero-Trust Tooling, explains a new concept for this category.
+D2, Zero-Trust Tooling, deals with the next question:
 
-Zero-Trust Tooling means the system does not trust tool arguments simply because they came from the model or from another tool.
+can this call be trusted at the argument level?
+
+Zero-Trust Tooling means the system does not trust tool arguments by default.
+
+It does not trust them just because they came from the model.
+It does not trust them just because they came from another tool upstream.
 
 Every argument is validated for shape, scope, and target before the live tool sees it.
 
-Wildcards, broad paths, open-ended shell targets, and oversized trade parameters are rejected unless they match a constrained approved form.
+Wildcards are rejected.
+Broad paths are rejected.
+Open-ended shell targets are rejected.
+Oversized trade parameters are rejected.
+
+They only pass if they match a tightly approved form.
 
 That is how the architecture blocks parameter overreach before a real tool turns it into a real side effect.
 
-Without this layer, a valid tool can still be weaponized through over-broad arguments, even though the tool itself was never compromised.
+If you skip this layer, a valid tool can still be misused through over-broad arguments.
+
+The tool itself may be fine.
+The arguments are what make it dangerous.
 
 ---
 
@@ -116,16 +146,18 @@ Without this layer, a valid tool can still be weaponized through over-broad argu
 
 SHOW: Tool chain validator
 
-D3, Tool chain validator, checks the full sequence instead of one call at a time.
+D3, Tool chain validator, looks at the sequence as a whole, not just one call at a time.
 
 A safe read can become unsafe when it is immediately followed by a send.
 A harmless inspect step can become dangerous when it automatically triggers disable or delete.
 
-That is why the chain itself is reviewed against approved business patterns before execution starts.
+So the chain itself is reviewed against approved business patterns before execution starts.
 
-This is important because ASI02 often hides in orchestration, not in one obviously bad command.
+That is important, because ASI02 often hides in orchestration, not in one obviously bad command.
 
-Without a chain-level check, every individual call can look reasonable while the combined sequence still crosses the business boundary.
+Without a chain-level check, each individual call may look reasonable.
+
+But the combined sequence can still cross the business boundary.
 
 ---
 
@@ -133,9 +165,13 @@ Without a chain-level check, every individual call can look reasonable while the
 
 SHOW: Just-in-Time permissions
 
-D4 introduces another term that deserves a quick definition: Just-in-Time permissions.
+D4 narrows authority at the moment of action.
 
-It means the workflow receives the minimum privilege needed for one approved action, for one short window, inside one bounded runtime.
+Just-in-Time permissions mean the workflow gets only the minimum access it needs.
+
+That access is for one approved action.
+It is for one short window.
+And it exists inside one bounded runtime.
 
 The privilege is temporary.
 It is scoped.
@@ -143,9 +179,12 @@ And it is revoked immediately after the call.
 
 So even if an earlier check was imperfect, the live action still has very little room to expand.
 
-That helps ASI02 because a tool chain cannot quietly accumulate broader authority as it moves.
+That helps in ASI02 because a tool chain should not gain more power as it moves.
 
-Without Just-in-Time permissions, one approved action can become a bridge into wider access, wider retries, or wider damage.
+Without Just-in-Time permissions, one approved action can open the door to wider access.
+
+It can also lead to wider retries.
+And then to wider damage.
 
 ---
 
@@ -162,12 +201,13 @@ External post.
 
 Those actions stay behind explicit approval.
 
-This is the point where the architecture says: tool realism is not the same thing as permission.
+This is where the system draws a very important line:
+a real tool is not the same thing as permission.
 
 The tool may technically be able to do it.
 The workflow still has to prove it is appropriate to do it now.
 
-Without this gate, the agent can turn operational confidence into operational authority too easily.
+Without this gate, the agent can turn confidence into authority far too easily.
 
 ---
 
@@ -175,7 +215,7 @@ Without this gate, the agent can turn operational confidence into operational au
 
 SHOW: Approved tool outcome + D6 - Strong Observability
 
-The Approved tool outcome shows what a bounded run looks like.
+The Approved tool outcome shows what bounded execution looks like in practice.
 
 The action proceeds only after:
 
@@ -185,7 +225,7 @@ The action proceeds only after:
 - privilege is temporary and scoped
 - destructive paths are gated
 
-And D6 Strong Observability keeps the full story visible:
+And D6, Strong Observability, keeps the whole run visible:
 
 every call,
 every parameter,
@@ -202,7 +242,7 @@ automation still works, but execution no longer drifts just because the tools ar
 
 The core defense against ASI02 is not removing tools.
 
-It is making tool use prove, step by step, that it remains inside the task:
+It is making tool use prove, call by call, that it remains inside the task:
 
 bounded frequency,
 validated arguments,

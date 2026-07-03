@@ -4,11 +4,13 @@
 
 In ASI09, the final harmful action is often approved by a human.
 
-That is what makes this category uncomfortable and important.
+That is what makes this category uncomfortable, and important.
 
 We'll use the confident invoice fraud scenario as the main frame.
 
-This walkthrough shows how the workflow stops polished AI output from becoming authority before the evidence has actually been reviewed.
+The defense question is:
+
+how does the workflow make sure the human reviews the real evidence, not just the AI summary?
 
 ---
 
@@ -16,7 +18,7 @@ This walkthrough shows how the workflow stops polished AI output from becoming a
 
 SHOW: User + AI assistant
 
-At the User and AI assistant stage, the workflow begins in a very normal place.
+This category starts in a very normal place.
 
 A person needs to approve something.
 
@@ -30,14 +32,14 @@ That is the subtle shift this category is about.
 
 SHOW: summarizeOrRecommend()
 
-The `summarizeOrRecommend()` stage produces the kind of output that is most dangerous in ASI09:
+This is the stage that produces the kind of output that is most dangerous in ASI09:
 
 clear,
 structured,
 fast,
 apparently complete.
 
-That can feel like verification even when it is only presentation.
+That can feel like verification, even when it is only presentation.
 
 ---
 
@@ -47,7 +49,7 @@ SHOW: Source evidence
 
 The source evidence remains the truth anchor.
 
-The invoice.
+The invoice is the artifact that must be trusted.
 
 The AI output is an interpretation layer, not the artifact being approved.
 
@@ -59,11 +61,11 @@ If the workflow forgets that distinction, trust exploitation has already started
 
 SHOW: Threat variants covered
 
-The Threat variants step reminds the learner that review can fail in a few recognizable ways.
+Review can fail in a few recognizable ways.
 
 But in this walkthrough, keep the focus on the invoice case:
 
-a polished summary can make a changed bank account look reviewed when it was never actually verified.
+a polished summary can make a changed bank account look reviewed, when it was never actually verified.
 
 ---
 
@@ -75,15 +77,17 @@ D1 introduces the Completeness indicator.
 
 Its job is simple:
 
-show what evidence the recommendation used and what evidence is still missing.
+show what evidence the recommendation used, and what evidence is still missing.
 
-That matters because confidence can sound high even when coverage is incomplete.
+That matters, because confidence can sound high even when coverage is incomplete.
 
-This makes missing evidence visible instead of letting smooth language hide it.
+This makes missing evidence visible, instead of letting smooth language hide it.
 
 In ASI09, that is the first defense against the illusion of review.
 
-Without it, the assistant can sound complete enough that the reviewer never realizes key evidence was never examined.
+If this indicator is missing, the assistant can sound complete.
+
+The reviewer may never realize that key evidence was never examined.
 
 ---
 
@@ -98,9 +102,11 @@ Approval stays locked until the reviewer opens the invoice itself.
 That reconnects the narration to the workflow:
 the summary may help, but it never replaces the source.
 
-This matters because the attack succeeds when the human approves the summary instead of verifying the artifact.
+This matters because the attack succeeds at a very specific moment.
 
-Without source contact, the AI output quietly becomes the object being trusted.
+It succeeds when the human approves the summary instead of checking the artifact.
+
+If the reviewer never touches the source, the AI output becomes the thing being trusted.
 
 ---
 
@@ -118,7 +124,9 @@ That is where the review stops being performative.
 
 This is the independent proof step in ASI09.
 
-Without it, the same model that created the recommendation also becomes the unchallenged judge of whether the recommendation is safe.
+Otherwise, the same model that created the recommendation also becomes the judge.
+
+And no one independently checks whether that recommendation is safe.
 
 ---
 
@@ -132,13 +140,15 @@ If required data is still missing, the system holds.
 
 No polite guess.
 No provisional certainty.
-No "approve now and fix later."
+No, "approve now and fix later."
 
-This stage surfaces the gap instead of forcing a decision around it.
+This stage surfaces the gap, instead of forcing a decision around it.
 
 That matters because pressured workflows often convert uncertainty into approval momentum.
 
-Without this hold, missing evidence becomes something the human is expected to ignore rather than resolve.
+Take away this hold, and missing evidence becomes easy to ignore.
+
+Instead of resolving the gap, the human is pushed to work around it.
 
 ---
 
@@ -148,7 +158,7 @@ SHOW: Human-in-the-Loop Gate
 
 D5 turns approval into a documented review event.
 
-By this point the reviewer has to show:
+By this point, the reviewer has to show:
 
 - source access
 - completeness review
@@ -156,7 +166,9 @@ By this point the reviewer has to show:
 
 So a single click is no longer standing in for actual judgment.
 
-Without this governance layer, the organization records an approval decision but cannot prove a real review actually happened.
+If this governance layer is absent, the organization may still record an approval decision.
+
+But it cannot prove that a real review actually happened.
 
 ---
 
@@ -164,11 +176,15 @@ Without this governance layer, the organization records an approval decision but
 
 SHOW: Approved human outcome + D6 - Strong Observability
 
-The Approved human outcome shows what genuine review looks like operationally.
+The Approved human outcome shows what genuine review looks like in practice.
 
-The action proceeds only when the evidence, reviewer behavior, and approval structure all support it.
+The action proceeds only when three things line up.
 
-And D6 Strong Observability gives the organization visibility into:
+The evidence supports it.
+The review behavior supports it.
+And the approval structure supports it.
+
+And D6, Strong Observability, gives the organization visibility into:
 
 - recommendation patterns
 - source access

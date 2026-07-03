@@ -8,7 +8,9 @@ One bad upstream signal is allowed to gain credibility every time another stage 
 
 We'll use the financial trading cascade as the main frame.
 
-This walkthrough follows where the architecture interrupts amplification before local correctness turns into systemic damage.
+The defense question is:
+
+how does the pipeline stop one bad signal from turning into a larger chain reaction?
 
 ---
 
@@ -16,13 +18,12 @@ This walkthrough follows where the architecture interrupts amplification before 
 
 SHOW: User + Pipeline orchestrator
 
-At the User and Pipeline orchestrator stage, the workflow begins with a normal multi-agent pipeline.
+At the start, this looks like an efficient multi-agent pipeline.
 
 The business wants speed and specialization across stages.
 
-So the answer cannot be "put a human inside every handoff."
-
-It has to be architectural containment.
+So the answer cannot be, "put a human inside every handoff."
+It has to be built into the design itself.
 
 ---
 
@@ -30,7 +31,7 @@ It has to be architectural containment.
 
 SHOW: runPipelineStage()
 
-The `runPipelineStage()` stage turns the workflow into a stage-by-stage chain.
+This is where the workflow becomes a stage-by-stage chain.
 
 Each agent consumes a prior signal, transforms it, and hands off a result.
 
@@ -50,7 +51,7 @@ An external feed.
 An upstream output.
 A prior-stage instruction.
 
-If the architecture treats that signal as trustworthy enough to keep flowing without challenge, the cascade has already found its route.
+If the architecture lets that signal keep flowing without challenge, the cascade has already found its route.
 
 ---
 
@@ -58,7 +59,7 @@ If the architecture treats that signal as trustworthy enough to keep flowing wit
 
 SHOW: Threat variants covered
 
-The Threat variants step narrows the amplification patterns:
+In practice, the cascade grows through three recognizable patterns:
 
 - corrupted input values
 - progressive amplification at each stage
@@ -83,9 +84,11 @@ Statistically.
 
 A well-formed value can still be absurd, and this is where the pipeline says so early.
 
-That matters because cascades often begin with a signal that is syntactically valid but operationally impossible.
+That matters because cascades often start with a signal that looks valid on the surface.
 
-Without this first check, every later stage starts from a false premise that keeps gaining credibility.
+But in real operations, it makes no sense.
+
+Skip that first check, and every later stage starts from a false premise that keeps gaining credibility.
 
 ---
 
@@ -93,18 +96,21 @@ Without this first check, every later stage starts from a false premise that kee
 
 SHOW: Per-agent output circuit breaker
 
-D2 introduces a key containment concept: the circuit breaker.
+D2 introduces a key containment concept:
+the circuit breaker.
 
 A circuit breaker is the hard stop between stages when an output exceeds policy bounds.
 
-If an exposure is too large, a forecast jumps too far, or a recommendation becomes too consequential, the handoff breaks.
+If an exposure is too large, the handoff breaks.
+If a forecast jumps too far, the handoff breaks.
+If a recommendation becomes too high-impact, the handoff breaks.
 
 Not a warning.
 A stop.
 
 This is what prevents one bad stage from buying momentum from the next stage.
 
-Without a circuit breaker, the pipeline keeps converting local error into wider systemic impact.
+If there is no circuit breaker, the pipeline keeps converting local error into wider systemic impact.
 
 ---
 
@@ -118,11 +124,11 @@ D3 removes one of the most dangerous assumptions in pipelines:
 
 Each downstream agent re-validates what it receives.
 
-That way one weak threshold upstream does not quietly become permission for every later stage.
+That way, one weak threshold upstream does not become permission for every later stage.
 
 This is important because ASI08 is an amplification problem.
 
-Without cross-agent re-checking, upstream confidence is inherited automatically instead of earned repeatedly.
+Remove the re-check, and upstream confidence is inherited automatically, instead of earned repeatedly.
 
 ---
 
@@ -138,9 +144,11 @@ Even if multiple stages remain locally plausible, the overall run can still be t
 
 So the orchestrator blocks runs whose projected impact exceeds the declared cap.
 
-That is how the system limits enterprise-level damage even when several small decisions each looked acceptable on their own.
+That is how the system limits organization-wide damage.
 
-Without a blast-radius cap, locally safe steps can still compose into a globally unsafe outcome.
+That matters because several small decisions can each look acceptable on their own.
+
+Without a blast-radius cap, locally safe steps can still combine into a globally unsafe outcome.
 
 ---
 
@@ -156,7 +164,9 @@ These do not move on autonomous momentum alone.
 
 Pipeline speed never becomes permission.
 
-Without this gate, the last and most consequential step can still execute just because every earlier automation stage kept saying yes.
+If that gate is absent, the last and most consequential step can still execute.
+
+That can happen just because every earlier automation stage kept saying yes.
 
 ---
 
@@ -174,9 +184,9 @@ The workflow proceeds only if:
 - overall blast radius stays acceptable
 - high-impact actions are approved
 
-And D6 Strong Observability records the entire cascade path for monitoring and replay.
+And D6, Strong Observability, records the entire cascade path for monitoring and replay.
 
-That is what turns ASI08 defense into a resilient chain instead of a fast, fragile one.
+That is what turns ASI08 defense into a resilient chain, instead of a fast, fragile one.
 
 ---
 

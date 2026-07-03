@@ -2,22 +2,22 @@
 
 ## PREVIEW
 
-ASI03 looks routine until you ask a harder question:
-
-who is really acting right now?
+ASI03 becomes dangerous the moment we stop asking who is really acting.
 
 The business request may be legitimate.
-The dangerous drift happens in identity, delegation, and inherited authority.
+The drift happens in identity, delegation, and inherited authority.
 
 We'll use the poisoned delegation chain as the main frame.
 
-This walkthrough teaches three core ideas:
+Three ideas matter here:
 
 task-scoped identity,
 trust boundary,
 and privilege drift.
 
-Then it shows how the architecture proves that the acting identity is the right identity, with the right scope, for this task only.
+The defense question is:
+
+how does the system prove that the right identity is acting, with only the access this task should have?
 
 ---
 
@@ -25,13 +25,15 @@ Then it shows how the architecture proves that the acting identity is the right 
 
 SHOW: User + Agent planner
 
-At the User and Agent planner stage, the workflow begins with a normal enterprise request.
+The workflow begins with a normal enterprise request.
 
 Review this deployment.
 
-The request itself is not the risk.
+The request itself is not the danger.
 
-The risk is how far authority is allowed to travel once that request moves through agents, sessions, and downstream systems.
+The danger comes later.
+
+It appears when authority starts traveling through agents, sessions, and downstream systems.
 
 ---
 
@@ -39,7 +41,8 @@ The risk is how far authority is allowed to travel once that request moves throu
 
 SHOW: issueTaskIdentity()
 
-The `issueTaskIdentity()` stage introduces the most important control concept in ASI03: task-scoped identity.
+Here we meet the most important control concept in ASI03:
+task-scoped identity.
 
 Task-scoped identity means the system creates a short-lived credential for this workflow only.
 
@@ -54,14 +57,16 @@ That is the first difference between fragile delegation and governed delegation.
 
 SHOW: Trust boundary
 
-The Trust boundary is where ASI03 becomes real.
+This trust boundary is where ASI03 becomes real.
 
 Delegation.
 Session reuse.
 Peer-agent approval.
 Cross-service trust.
 
-This is the part of the architecture where identity claims can stretch away from the original request unless every hop is made explicit.
+This is where identity claims can drift away from the original request.
+
+That happens when each hop is not made explicit.
 
 ---
 
@@ -69,13 +74,16 @@ This is the part of the architecture where identity claims can stretch away from
 
 SHOW: Threat variants covered
 
-The Threat variants step frames the recurring failures this design is trying to stop:
+The failure usually appears in three forms:
 
 - impersonated higher-trust authority
 - cross-user or cross-session bleed
 - downstream privilege drift
 
-That is the right frame because ASI03 is less about one stolen token and more about authority moving farther than the task should allow.
+That is the right frame.
+
+ASI03 is not only about one stolen token.
+It is about authority traveling farther than the task should allow.
 
 ---
 
@@ -91,14 +99,14 @@ Not just a message that appears to come from the right place.
 
 Signed identity proof is what tells the system who actually issued the action or approval.
 
-Proof is identity.
-
-In plain language, signatures and verified identity claims let the receiver check both origin and integrity:
+In plain terms, signatures and verified identity claims let the receiver check both origin and integrity:
 who issued this, and has it been altered on the way?
 
-That matters in ASI03 because the attack tries to borrow higher-trust authority without truly possessing it.
+That matters in ASI03, because the attack tries to borrow higher-trust authority without truly possessing it.
 
-Without this layer, an approval-shaped message or inherited token can be mistaken for legitimate authority.
+If that proof is missing, an approval-shaped message can be mistaken for real authority.
+
+An inherited token can be mistaken for real authority too.
 
 ---
 
@@ -110,14 +118,17 @@ D2, Minimum privilege enforcement, answers the next question:
 
 even if the identity is real, how much power should it carry?
 
-Least privilege means each task, sub-agent, and peer interaction receives only the smallest authority required.
+Least privilege means each task gets only the access it truly needs.
+
+The same rule applies to sub-agents.
+And it applies to peer interactions.
 
 Research does not silently become inbox access.
 Shared help does not quietly remain consultant-admin by default.
 
 That is what stops a valid identity from becoming an overpowered identity.
 
-Without this layer, the actor may be genuine, but the blast radius of that actor is still far too large for the task.
+If this control is weak, the actor may be genuine, but the blast radius is still far too large for the task.
 
 ---
 
@@ -134,9 +145,11 @@ Mid-task authority expansion.
 
 Those are treated as threat signals, and the workflow pauses before escalation becomes action.
 
-This is the point where the architecture treats privilege growth itself as a security event.
+This is where the system starts treating privilege growth itself as a security event.
 
-Without it, scope expansion can look like ordinary workflow progress until the agent is already acting far beyond the original request.
+Otherwise, scope expansion can look like normal workflow progress.
+
+By the time it is obvious, the agent may already be acting far beyond the original request.
 
 ---
 
@@ -144,17 +157,23 @@ Without it, scope expansion can look like ordinary workflow progress until the a
 
 SHOW: Cross-agent trust validation
 
-D4, Cross-agent trust validation, is how the receiver refuses to trust "approval-shaped" content on appearance alone.
+D4, Cross-agent trust validation, stops the receiver from trusting something just because it looks approved.
 
-Downstream agents verify who really issued an instruction, who signed it, and whether that provenance still matches policy.
+Downstream agents check three things.
+
+Who really issued the instruction.
+Who signed it.
+And whether that provenance still matches policy.
 
 Pipeline position is not proof.
 Message format is not proof.
-The chain must stay provable all the way through.
+The whole chain must stay verifiable from end to end.
 
-That specifically blocks the ASI03 pattern where one compromised or over-trusted hop tries to speak with someone else's authority.
+That blocks a classic ASI03 pattern.
 
-Without this layer, downstream agents can become the amplifiers of a forged delegation chain.
+One compromised, or over-trusted, hop tries to speak with someone else's authority.
+
+If that check is missing, downstream agents can become amplifiers for a forged delegation chain.
 
 ---
 
@@ -162,15 +181,17 @@ Without this layer, downstream agents can become the amplifiers of a forged dele
 
 SHOW: Human-in-the-Loop Gate
 
-If the workflow genuinely needs more authority than the task started with, the D5 Human-in-the-Loop Gate makes that transition explicit.
+If the workflow truly needs more authority than it started with, the D5 Human-in-the-Loop Gate makes that change explicit.
 
 A human reviews the escalation.
 
-That is important here because the approval is protecting privilege, not just money movement or outbound actions.
+That matters here, because the approval is protecting privilege, not just money movement or outbound actions.
 
 The agent does not get to self-authorize its own scope growth.
 
-Without that governance moment, the whole system is relying on the agent to be honest about when it deserves more power.
+Take away that governance moment, and the whole system is relying on the agent to police itself.
+
+That is not a safe design.
 
 ---
 
@@ -184,7 +205,7 @@ the verified actor,
 with the verified scope,
 along the verified trust chain.
 
-And D6 Strong Observability records the full lifecycle:
+And D6, Strong Observability, records the full lifecycle:
 
 - identity issuance
 - token checks
@@ -199,7 +220,7 @@ That gives the enterprise an authority path that stays explainable from start to
 
 ## FINAL TAKEAWAY
 
-The strongest defense against ASI03 is not simply "authenticate harder."
+The strongest defense against ASI03 is not simply, "authenticate harder."
 
 It is:
 

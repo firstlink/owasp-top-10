@@ -2,23 +2,26 @@
 
 ## PREVIEW
 
-ASI04 is the category where the agent can stay obedient and still become unsafe.
+ASI04 is the category where the agent can stay obedient, and still become unsafe.
 
 The reason is simple:
 
-the thing shaping execution is no longer just the prompt or the user request.
+the thing shaping execution is no longer just the prompt, or the user request.
 It is the runtime supply chain.
 
 We'll use the phantom payment processor as the anchor scenario.
 
-This walkthrough teaches what supply chain means in an agent system:
+In an agent system, supply chain means the runtime components the agent is prepared to trust:
 
-the MCPs,
-templates,
-schemas,
-and other runtime components the agent is willing to trust.
+- MCPs
+- templates
+- schemas
+- discovery results
+- and other live dependencies
 
-Then it shows how every runtime component has to prove that it belongs, that it has not changed, and that its live behavior still matches policy.
+The defense question is:
+
+how does the system make sure the discovered component is really the approved one?
 
 ---
 
@@ -26,7 +29,7 @@ Then it shows how every runtime component has to prove that it belongs, that it 
 
 SHOW: User + Agent planner
 
-At the User and Agent planner stage, the workflow still begins with a normal business objective.
+The visible business task is still normal.
 
 Route a payment.
 
@@ -39,11 +42,13 @@ It is anti-blind trust in what discovery returns.
 
 SHOW: discoverOrFetch()
 
-The `discoverOrFetch()` stage is where ASI04 becomes possible.
+This is the moment where ASI04 becomes possible.
 
 In this scenario, the agent discovers a payment service it is willing to use.
 
-The workflow still feels normal, but one runtime component can now quietly reshape execution.
+The workflow still feels normal.
+
+But one runtime component can now start reshaping execution.
 
 That is why discovery itself becomes a security boundary.
 
@@ -53,7 +58,7 @@ That is why discovery itself becomes a security boundary.
 
 SHOW: Supply chain
 
-The supply chain is where the threat moves upstream.
+The threat moves upstream into the supply chain.
 
 Not into the user prompt.
 Not into the final API call.
@@ -67,9 +72,9 @@ Once the wrong dependency is accepted, downstream behavior can still look perfec
 
 SHOW: Threat variants covered
 
-The Threat variants step reminds the learner that runtime trust can fail in more than one way.
+Runtime trust can break in more than one way.
 
-But in this walkthrough, stay with the concrete case in front of us:
+For this walkthrough, stay with the concrete case in front of us:
 
 a lookalike payment component is trying to get trusted as if it were the real one.
 
@@ -79,7 +84,8 @@ a lookalike payment component is trying to get trusted as if it were the real on
 
 SHOW: AI-SBOM & allowlist pinning
 
-D1 introduces a new concept that should be explained plainly: AI-SBOM.
+D1 begins with an important concept:
+AI-SBOM.
 
 An AI-SBOM is the inventory of approved AI-facing components the system is allowed to use.
 
@@ -89,11 +95,14 @@ is this component even allowed to participate?
 
 Unknown registries and floating source paths do not get the benefit of the doubt.
 
-In this payment workflow, that means the agent does not get to trust a newly discovered processor just because it looks plausible.
+In this payment workflow, the agent does not trust a newly discovered processor just because it looks valid.
 
-This layer defends the admission step into the supply chain.
+This layer protects the admission step into the supply chain.
 
-Without it, a lookalike processor can enter the workflow simply by being discoverable and convincing.
+If admission control is missing, a lookalike processor can enter the workflow very easily.
+
+It only has to be discoverable.
+And it only has to look legitimate.
 
 ---
 
@@ -108,16 +117,16 @@ Even if the component is supposed to exist, is this exact copy still trustworthy
 That is what hashes and signatures prove.
 
 A hash lets the system detect whether the component changed.
-A signature helps prove who approved or produced it and that it was not altered afterward.
+A signature helps prove who approved or produced it, and that it was not altered afterward.
 
 The name may be correct.
 The path may be correct.
 Integrity is what proves the content itself still matches what the organization approved.
 
-That matters here because the attack does not need to invent a fake category.
-It only needs to swap or tamper with one trusted-looking dependency.
+That matters here, because the attack does not need to invent a fake category.
+It only needs to swap, or tamper with, one trusted-looking dependency.
 
-Without D2, the agent may fetch the right-looking processor and still execute against the wrong code.
+Miss D2, and the agent may fetch the right-looking processor, and still execute against the wrong code.
 
 ---
 
@@ -125,19 +134,23 @@ Without D2, the agent may fetch the right-looking processor and still execute ag
 
 SHOW: Schema & baseline validation
 
-D3, Schema & baseline validation, connects directly to the runtime problem.
+D3, Schema & baseline validation, deals with the runtime contract.
 
 A compromised dependency does not always announce itself dramatically.
 
 Sometimes it adds one field, one hidden instruction, or one output shape change.
 
-So D3 compares live definitions against approved baselines and halts when drift appears.
+So D3 compares live definitions against approved baselines, and halts when drift appears.
 
 That is how subtle compromise becomes visible.
 
-This protects against the quiet version of ASI04, where execution changes through interface drift rather than obvious malware.
+This protects against the quiet version of ASI04.
 
-Without it, small definition changes can slowly rewrite what the agent believes the component is allowed to do.
+Here, execution changes through interface drift, not obvious malware.
+
+If baseline validation is missing, small definition changes can slowly rewrite the rules.
+
+The agent may start believing the component is allowed to do more than it should.
 
 ---
 
@@ -155,11 +168,15 @@ unexpected writes,
 unexpected destinations.
 
 A bad dependency can still return a normal-looking success response.
-That is why success by itself is not proof.
+That is why success, by itself, is not proof.
 
-This stage is what catches components that passed admission but misbehave at runtime.
+This stage catches components that passed admission, but misbehave at runtime.
 
-Without behavioral monitoring, silent skimming, covert writes, or policy-breaking outbound calls can hide behind apparently successful business results.
+If behavior is not monitored, bad runtime behavior can hide behind successful business results.
+
+That includes silent skimming.
+It includes covert writes.
+And it includes outbound calls that break policy.
 
 ---
 
@@ -175,9 +192,11 @@ Someone reviews it.
 Someone approves it.
 Someone becomes accountable for introducing that change.
 
-That matters because runtime trust is a business decision, not just a technical convenience.
+That matters, because runtime trust is a business decision, not just a technical convenience.
 
-Without this layer, supply-chain drift can become normal background change instead of an explicit governed event.
+Take this control away, and supply-chain drift can start to look normal.
+
+Instead of a governed event, it becomes background change.
 
 ---
 
@@ -195,10 +214,15 @@ It tracks:
 - what outbound behavior occurred
 - what approvals were granted
 
-That is how the architecture catches slow drift, covert writes, and silent skimming that one review would miss.
+That is how the architecture catches slow drift over time.
+
+It also catches covert writes.
+And it catches silent skimming that one review might miss.
 
 D6 does not stop the attack by itself.
-It makes the whole control chain auditable, so repeated compromise attempts become visible patterns instead of isolated surprises.
+It makes the whole control chain auditable.
+
+That way, repeated compromise attempts show up as a pattern, not as isolated surprises.
 
 ---
 
@@ -218,16 +242,3 @@ The workflow completes only with dependencies that are:
 
 The business still gets runtime flexibility.
 But the supply chain is no longer a blind spot.
-
----
-
-## FINAL TAKEAWAY
-
-The core defense against ASI04 is not avoiding all runtime discovery.
-
-It is making every discovered component prove:
-
-I belong here,
-I have not changed,
-I still match the approved definition,
-and my live behavior still matches policy.

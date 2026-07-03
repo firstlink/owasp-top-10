@@ -18,7 +18,7 @@ How do we let the agent read untrusted material, without letting it redefine the
 
 SHOW: User + Agent planner
 
-The workflow begins with a legitimate business objective.
+We start with a legitimate business objective.
 
 Refund the verified customer.
 
