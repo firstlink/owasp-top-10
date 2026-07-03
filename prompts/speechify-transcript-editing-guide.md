@@ -120,6 +120,34 @@ Do not use punctuation as decoration. Every punctuation mark should help either 
 
 Keep pauses that are already doing useful work. Remove only pauses that are clearly excessive or disruptive. Add pauses only when they are clearly missing.
 
+## Calibrated Pause Standard
+
+When a file has already been calibrated and the same narration style continues, reuse a consistent pause standard unless the local sentence clearly needs something different.
+
+Default working values:
+
+- `1ms` means effectively no real pause and is useful when a chip exists but the spoken phrase should stay continuous
+- `220ms` to `320ms` is a light clause pause
+- `420ms` to `560ms` is a normal sentence or idea break
+- `640ms` to `720ms` is a stronger sentence boundary or emphasis stop
+- above `800ms` should be treated as suspicious unless the original delivery clearly needs a larger break
+
+Preferred editing rule:
+
+- first preserve the existing chip positions
+- then reduce overly long pauses before adding any new ones
+- use the smallest pause that still sounds human
+- if two similar sentence structures appear across nearby blocks, keep their pause treatment broadly consistent
+
+For this workflow, a good default pattern for explanatory narration is:
+
+- list separator pause: around `260ms` to `320ms`
+- short sentence break: around `420ms` to `560ms`
+- full explanatory stop: around `560ms` to `720ms`
+- continuous phrase with an unnecessary chip: reduce to `1ms`
+
+This is a calibration guide, not a rigid template. Human delivery always wins. If a block sounds better with less pause time, use less.
+
 ## Timing Rule
 
 Preserve the original pacing budget of each block.
@@ -127,6 +155,8 @@ Preserve the original pacing budget of each block.
 Do not rewrite heavily, do not add unnecessary words, and do not insert extra pauses unless they are clearly needed for natural speech. Also do not remove natural pauses unless they are clearly excessive or disruptive. A block may become rushed if the total pause time added is significantly more than what the block originally supported. A block may also sound unnaturally fast or flat if useful pauses are removed. The goal is to improve accuracy and readability while keeping timing behavior as close as possible to the original.
 
 Treat the original pause total as a ceiling, not a target. It is completely acceptable to use less total pause time than the original block if that produces a more natural, human-sounding delivery. The key constraint is to avoid exceeding what the block can support, not to consume the full original pause budget.
+
+When already-working calibrated pauses exist in a file, prefer matching that local standard instead of inventing a new one block by block.
 
 ## How To Judge Whether A Pause Is Appropriate
 
