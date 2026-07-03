@@ -15,6 +15,7 @@ These rules are mandatory:
 - never split one block into multiple blocks
 - never merge blocks
 - only edit inside the current existing block
+- never replace the whole block or the whole text blob
 - keep audio and video sync as the priority
 - preserve natural human delivery
 - use minimal text edits
@@ -24,6 +25,8 @@ These rules are mandatory:
 - keep recurring labels consistent, for example `ASI04`
 
 If an edit would require changing block structure, stop and do not proceed with that change.
+
+If an edit would require replacing the entire contents of a block, stop and do not proceed with that change.
 
 The objective is to:
 
@@ -90,6 +93,8 @@ Safe examples:
 Avoid:
 
 - heavy rewriting
+- whole-block replacement
+- full-blob replacement
 - adding explanatory words just to improve style
 - removing content unless it is clearly wrong
 - splitting text into too many short sentences
@@ -101,6 +106,7 @@ Most importantly:
 
 - do not increase pause load unnecessarily
 - do not expand the text unless correctness requires it
+- do not use select-all-and-replace on a transcript block
 
 ## Pause Strategy
 
@@ -191,12 +197,21 @@ For each transcript block:
 1. Read the block exactly as Speechify generated it.
 2. Identify only the necessary corrections.
 3. Keep the wording as close as possible to the original.
-4. Add only essential punctuation.
-5. Check whether the block still fits its original pacing.
-6. Watch Speechify's speed and timing indicator.
-7. If Speechify marks it red as slower or faster, regenerate and adjust.
-8. Reduce punctuation or wording if timing became tight.
-9. Move to the next block only after the current block is stable.
+4. Edit only the local words that need correction.
+5. Never replace the whole block, even if the correction seems faster that way.
+6. Add only essential punctuation.
+7. Check whether the block still fits its original pacing.
+8. Watch Speechify's speed and timing indicator.
+9. If Speechify marks it red as slower or faster, regenerate and adjust.
+10. Reduce punctuation or wording if timing became tight.
+11. Move to the next block only after the current block is stable.
+
+Special safety rule for paused blocks:
+
+- if a block contains pause chips, do not replace the full text of that block
+- do not use a whole-block paste, whole-block retype, or any full-blob replacement method
+- preserve the native pause chip structure
+- if a local correction cannot be made safely without replacing the whole block, stop and use a safer recovery path instead of forcing the edit
 
 Important cross-block rule:
 
@@ -302,6 +317,7 @@ The operating rule is simple:
 - optimize for human-sounding delivery first
 - fix accuracy
 - keep wording close to the original
+- never replace a full transcript block or blob just to make a quick correction
 - preserve useful pauses
 - add only necessary punctuation
 - in transcript text, prefer only commas and full stops for pacing
