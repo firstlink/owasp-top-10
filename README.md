@@ -25,3 +25,4 @@ The test suite starts the local server on an ephemeral port and checks the home 
 - Defense transcripts: [transcript/defense/README.md](/Users/firstlink/Documents/owasp/transcript/defense/README.md)
 - Attack storytelling prompt: [prompts/story-telling-attack.md](/Users/firstlink/Documents/owasp/prompts/story-telling-attack.md)
 - Speechify transcript editing guide: [prompts/speechify-transcript-editing-guide.md](/Users/firstlink/Documents/owasp/prompts/speechify-transcript-editing-guide.md)
+  Rule: always switch the translation dropdown to `English (American)` before editing; never edit `English Original`.

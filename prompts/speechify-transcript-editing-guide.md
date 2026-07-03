@@ -14,6 +14,19 @@ The objective is to:
 - avoid adding too many words
 - keep the timeline and user experience stable
 
+## Required Track Selection
+
+Before editing any transcript in Speechify Studio:
+
+- open the `Translate` panel
+- open the translation dropdown
+- select `English (American)`
+- edit only on the `English (American)` translation track
+
+Never edit `English Original` for this workflow.
+
+If the editor is showing `English Original`, switch away from it before making any transcript changes.
+
 ## Core Principle
 
 Each transcript block has an implied timing budget based on:
@@ -171,10 +184,13 @@ Recommended process:
 
 1. Open Speechify Studio.
 2. Open one video project.
-3. Review transcript blocks in order.
-4. Apply minimal timing-safe edits.
-5. Regenerate when timing flags appear.
-6. Do a quick pacing check before moving on.
+3. Open the `Translate` panel.
+4. Select `English (American)` from the translation dropdown.
+5. Confirm you are not editing `English Original`.
+6. Review transcript blocks in order.
+7. Apply minimal timing-safe edits.
+8. Regenerate when timing flags appear.
+9. Do a quick pacing check before moving on.
 
 ## Recommended Rollout
 
@@ -196,5 +212,6 @@ The operating rule is simple:
 - add only necessary punctuation
 - do not inflate pause time
 - do not expand content unnecessarily
+- never edit `English Original`; always switch to `English (American)` first
 - regenerate whenever Speechify warns about timing
 - optimize for natural pacing without changing timeline behavior
