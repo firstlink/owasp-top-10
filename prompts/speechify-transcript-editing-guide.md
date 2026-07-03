@@ -1,0 +1,200 @@
+# Speechify Transcript Editing Guide
+
+## Goal
+
+This workflow is for editing Speechify Studio transcripts without materially changing the video timeline.
+
+The objective is to:
+
+- fix transcription mistakes
+- fix spelling, typos, capitalization, and obvious grammar issues
+- add only necessary punctuation
+- preserve the original pacing budget of each block
+- avoid adding too many pauses
+- avoid adding too many words
+- keep the timeline and user experience stable
+
+## Core Principle
+
+Each transcript block has an implied timing budget based on:
+
+- the original spoken words
+- the natural pauses already detected by Speechify
+- the block's existing start and end timing
+
+Treat every block as timing-sensitive. Do not assume a short block needs to be expanded. Do not assume a rushed result means the content needs to change. In many cases, rushed playback happens because too much pause time or too much extra text was introduced during editing.
+
+## What To Edit
+
+Edit only what is necessary:
+
+- incorrect transcription words
+- spelling mistakes
+- typos
+- capitalization issues
+- obvious grammar mistakes
+- punctuation needed for natural speech
+- sentence boundaries that are clearly missing
+
+Safe examples:
+
+- fix a clearly wrong word
+- add a period where one sentence ends
+- add a comma where a real short pause is needed
+- remove an accidental duplicate word
+- correct machine transcription that changes meaning
+
+## What To Avoid
+
+Avoid:
+
+- heavy rewriting
+- adding explanatory words just to improve style
+- removing content unless it is clearly wrong
+- splitting text into too many short sentences
+- adding commas everywhere
+- adding pauses that are not needed
+- making delivery more dramatic than the original
+
+Most importantly:
+
+- do not increase pause load unnecessarily
+- do not expand the text unless correctness requires it
+
+## Pause Strategy
+
+Pauses must be intentional and minimal.
+
+Use:
+
+- `,` for a light pause only when needed
+- `.` for a natural sentence stop
+- a sentence split only when the original meaning clearly supports it
+
+Do not use punctuation as decoration. Every punctuation mark should help either correctness, readability, or natural speech flow.
+
+## Timing Rule
+
+Preserve the original pacing budget of each block.
+
+Do not rewrite heavily, do not add unnecessary words, and do not insert extra pauses unless they are clearly needed for natural speech. A block may become rushed if the total pause time added is significantly more than what the block originally supported. The goal is to improve accuracy and readability while keeping timing behavior as close as possible to the original.
+
+## How To Judge Whether A Pause Is Appropriate
+
+Add or keep a pause only if one of these is true:
+
+- there is a natural spoken break between two ideas
+- a list or sequence needs separation
+- a clause needs a short breath to sound natural
+- the sentence ending needs a clean stop
+
+Avoid pauses when:
+
+- they only make the text look nicer on screen
+- they break momentum unnecessarily
+- they create timing pressure inside a short block
+- the same meaning works fine without them
+
+## Block-By-Block Workflow
+
+For each transcript block:
+
+1. Read the block exactly as Speechify generated it.
+2. Identify only the necessary corrections.
+3. Keep the wording as close as possible to the original.
+4. Add only essential punctuation.
+5. Check whether the block still fits its original pacing.
+6. Watch Speechify's speed and timing indicator.
+7. If Speechify marks it red as slower or faster, regenerate and adjust.
+8. Reduce punctuation or wording if timing became tight.
+9. Move to the next block only after the current block is stable.
+
+## How To Handle Red Speed Warnings
+
+If Speechify shows a red indicator:
+
+- do not immediately rewrite the block
+- first check whether too much punctuation was added
+- then check whether too many words were added
+- simplify the edit while preserving correctness
+- regenerate transcript or timing
+- re-check until the warning clears or becomes acceptable
+
+Red warning usually means the edit exceeded the original timing budget. The most common fixes are:
+
+- fewer added pauses
+- fewer extra words
+- tighter punctuation
+
+## Split Sentences Across Blocks
+
+Sometimes one spoken sentence continues into the next block. That is acceptable.
+
+In those cases:
+
+- edit for sentence continuity, not block appearance
+- do not force a full stop just because the UI split the text
+- make sure the sentence still reads naturally across the boundary
+- still respect each block's timing budget
+
+## Validation Method
+
+Validate at two levels.
+
+Technical validation:
+
+- check for red slower or faster warnings
+- regenerate when needed
+- confirm the block still fits timing
+
+Listening validation:
+
+- confirm the speech does not sound rushed
+- confirm pauses do not feel awkward
+- confirm sentences do not run together
+- confirm nothing sounds too slow or overly broken up
+
+## Done Criteria
+
+A block is done when:
+
+- the transcript is accurate
+- obvious errors are fixed
+- punctuation is clean but minimal
+- pauses sound natural
+- timing remains stable
+- Speechify does not show a problematic red warning after regeneration
+
+## Working Method In Speechify Studio
+
+Recommended process:
+
+1. Open Speechify Studio.
+2. Open one video project.
+3. Review transcript blocks in order.
+4. Apply minimal timing-safe edits.
+5. Regenerate when timing flags appear.
+6. Do a quick pacing check before moving on.
+
+## Recommended Rollout
+
+Start with one video first. This helps calibrate:
+
+- preferred pause style
+- how minimal punctuation should be
+- how sensitive Speechify is to timing changes
+- which edits trigger red warnings
+
+Once that style is stable, reuse the same standard for the rest of the videos.
+
+## Summary Rule
+
+The operating rule is simple:
+
+- fix accuracy
+- keep wording close to the original
+- add only necessary punctuation
+- do not inflate pause time
+- do not expand content unnecessarily
+- regenerate whenever Speechify warns about timing
+- optimize for natural pacing without changing timeline behavior
