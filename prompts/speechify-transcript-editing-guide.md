@@ -198,7 +198,7 @@ Listening validation:
 - confirm sentences do not run together
 - confirm nothing sounds too slow or overly broken up
 - confirm recurring spoken labels are pronounced consistently, for example using the chosen spoken format for ASI identifiers
-- for ASI identifiers, prefer a spoken form such as `ASI zero four` instead of compressed forms like `ASI4`
+- for ASI identifiers, prefer forms such as `ASI O4` and `ASI O1` instead of compressed forms like `ASI4`
 
 ## Done Criteria
 
@@ -246,7 +246,7 @@ The operating rule is simple:
 - preserve useful pauses
 - add only necessary punctuation
 - in transcript text, prefer only commas and full stops for pacing
-- keep recurring spoken labels consistent, for example `ASI zero four` instead of `ASI4` when that is the chosen spoken form
+- keep recurring spoken labels consistent, for example `ASI O4` instead of `ASI4` when that is the chosen spoken form
 - do not inflate pause time
 - do not strip out useful pause time
 - treat the original pause budget as a ceiling, not a target
