@@ -9,6 +9,7 @@ The objective is to:
 - fix transcription mistakes
 - fix spelling, typos, capitalization, and obvious grammar issues
 - add only necessary punctuation
+- preserve natural sentence and clause pauses
 - preserve the original pacing budget of each block
 - avoid adding too many pauses
 - avoid adding too many words
@@ -36,6 +37,8 @@ Each transcript block has an implied timing budget based on:
 - the block's existing start and end timing
 
 Treat every block as timing-sensitive. Do not assume a short block needs to be expanded. Do not assume a rushed result means the content needs to change. In many cases, rushed playback happens because too much pause time or too much extra text was introduced during editing.
+
+Do not strip out natural pauses. The goal is not to remove pauses globally. The goal is to preserve useful pauses between sentences and within sentences while keeping the total pause load close to what the original block already supported.
 
 ## What To Edit
 
@@ -76,7 +79,7 @@ Most importantly:
 
 ## Pause Strategy
 
-Pauses must be intentional and minimal.
+Pauses must be intentional, natural, and timing-aware.
 
 Use:
 
@@ -86,11 +89,13 @@ Use:
 
 Do not use punctuation as decoration. Every punctuation mark should help either correctness, readability, or natural speech flow.
 
+Keep pauses that are already doing useful work. Remove only pauses that are clearly excessive or disruptive. Add pauses only when they are clearly missing.
+
 ## Timing Rule
 
 Preserve the original pacing budget of each block.
 
-Do not rewrite heavily, do not add unnecessary words, and do not insert extra pauses unless they are clearly needed for natural speech. A block may become rushed if the total pause time added is significantly more than what the block originally supported. The goal is to improve accuracy and readability while keeping timing behavior as close as possible to the original.
+Do not rewrite heavily, do not add unnecessary words, and do not insert extra pauses unless they are clearly needed for natural speech. Also do not remove natural pauses unless they are clearly excessive or disruptive. A block may become rushed if the total pause time added is significantly more than what the block originally supported. A block may also sound unnaturally fast or flat if useful pauses are removed. The goal is to improve accuracy and readability while keeping timing behavior as close as possible to the original.
 
 ## How To Judge Whether A Pause Is Appropriate
 
@@ -107,6 +112,13 @@ Avoid pauses when:
 - they break momentum unnecessarily
 - they create timing pressure inside a short block
 - the same meaning works fine without them
+
+Editing rule:
+
+- preserve useful existing pauses
+- remove only clearly excessive pauses
+- add only clearly missing pauses
+- keep total pause load close to the original block
 
 ## Block-By-Block Workflow
 
@@ -129,6 +141,7 @@ If Speechify shows a red indicator:
 - do not immediately rewrite the block
 - first check whether too much punctuation was added
 - then check whether too many words were added
+- also check whether useful pauses were removed or moved in a way that made delivery feel too flat or too fast
 - simplify the edit while preserving correctness
 - regenerate transcript or timing
 - re-check until the warning clears or becomes acceptable
@@ -138,6 +151,7 @@ Red warning usually means the edit exceeded the original timing budget. The most
 - fewer added pauses
 - fewer extra words
 - tighter punctuation
+- restoring a more balanced pause pattern instead of eliminating pauses
 
 ## Split Sentences Across Blocks
 
@@ -209,8 +223,10 @@ The operating rule is simple:
 
 - fix accuracy
 - keep wording close to the original
+- preserve useful pauses
 - add only necessary punctuation
 - do not inflate pause time
+- do not strip out useful pause time
 - do not expand content unnecessarily
 - never edit `English Original`; always switch to `English (American)` first
 - regenerate whenever Speechify warns about timing
