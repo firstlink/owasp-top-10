@@ -199,6 +199,7 @@ Listening validation:
 - confirm nothing sounds too slow or overly broken up
 - confirm recurring spoken labels are pronounced consistently, for example using the chosen spoken format for ASI identifiers
 - for ASI identifiers, prefer forms such as `ASI O4` and `ASI O1` instead of compressed forms like `ASI4`
+- keep `O4` and `O1` as single tokens, not split as `O 4` or `O 1`
 
 ## Done Criteria
 
