@@ -92,6 +92,8 @@ Use:
 - `.` for a natural sentence stop
 - a sentence split only when the original meaning clearly supports it
 
+When a block is being edited in serialized form, express pauses as literal text using Speechify's pause syntax, for example: `[Pause 480ms]`. Keep that bracketed text format exact and consistent.
+
 Do not use punctuation as decoration. Every punctuation mark should help either correctness, readability, or natural speech flow.
 
 Keep pauses that are already doing useful work. Remove only pauses that are clearly excessive or disruptive. Add pauses only when they are clearly missing.
