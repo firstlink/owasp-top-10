@@ -102,6 +102,8 @@ Preserve the original pacing budget of each block.
 
 Do not rewrite heavily, do not add unnecessary words, and do not insert extra pauses unless they are clearly needed for natural speech. Also do not remove natural pauses unless they are clearly excessive or disruptive. A block may become rushed if the total pause time added is significantly more than what the block originally supported. A block may also sound unnaturally fast or flat if useful pauses are removed. The goal is to improve accuracy and readability while keeping timing behavior as close as possible to the original.
 
+Treat the original pause total as a ceiling, not a target. It is completely acceptable to use less total pause time than the original block if that produces a more natural, human-sounding delivery. The key constraint is to avoid exceeding what the block can support, not to consume the full original pause budget.
+
 ## How To Judge Whether A Pause Is Appropriate
 
 Add or keep a pause only if one of these is true:
@@ -123,7 +125,8 @@ Editing rule:
 - preserve useful existing pauses
 - remove only clearly excessive pauses
 - add only clearly missing pauses
-- keep total pause load close to the original block
+- keep total pause load at or below what the original block can naturally support
+- using fewer pauses is fine when the result sounds more human and less artificial
 
 ## Block-By-Block Workflow
 
@@ -157,6 +160,8 @@ Red warning usually means the edit exceeded the original timing budget. The most
 - fewer extra words
 - tighter punctuation
 - restoring a more balanced pause pattern instead of eliminating pauses
+
+Even without a red warning, reduce pauses when they make the narration feel padded, mechanical, or overly deliberate. Human delivery matters more than preserving pause quantity.
 
 ## Split Sentences Across Blocks
 
@@ -233,6 +238,8 @@ The operating rule is simple:
 - add only necessary punctuation
 - do not inflate pause time
 - do not strip out useful pause time
+- treat the original pause budget as a ceiling, not a target
+- use fewer pauses when that improves natural delivery
 - do not expand content unnecessarily
 - never edit `English Original`; always switch to `English (American)` first
 - regenerate whenever Speechify warns about timing
