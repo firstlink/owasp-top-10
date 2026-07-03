@@ -168,6 +168,14 @@ For each transcript block:
 8. Reduce punctuation or wording if timing became tight.
 9. Move to the next block only after the current block is stable.
 
+Important cross-block rule:
+
+- a sentence may start in one block and end in the next block
+- do not force the full sentence to fit inside a single block
+- treat neighboring blocks as one logical sentence when the transcript clearly continues across the boundary
+- optimize each block in place while respecting the continuation into the next block
+- do not change block structure just to complete a sentence inside one block
+
 ## How To Handle Red Speed Warnings
 
 If Speechify shows a red indicator:
@@ -199,6 +207,7 @@ In those cases:
 - do not force a full stop just because the UI split the text
 - make sure the sentence still reads naturally across the boundary
 - still respect each block's timing budget
+- it is fine for one block to end mid-sentence if the next existing block completes it
 
 ## Validation Method
 
