@@ -135,8 +135,11 @@ The objective is to:
 Before editing any transcript in Speechify Studio:
 
 - open the `Translate` panel
-- open the translation dropdown
-- select `English (American)`
+- go to the `Translations:` section
+- find the `English Original` control
+- use the dropdown arrow beside the `English Original` button
+- open that dropdown from the control beside `Original`, not by guessing elsewhere in the UI
+- select `English (American)` from that dropdown
 - edit only on the `English (American)` translation track
 
 Never edit `English Original` for this workflow.
@@ -146,6 +149,8 @@ If the editor is showing `English Original`, switch away from it before making a
 This is mandatory, not optional:
 
 - do not inspect the original track and then accidentally edit there
+- do not confuse the main `English Original` button with the dropdown arrow beside it
+- the expected switch path is: `Translate` panel -> `Translations:` -> dropdown arrow beside `English Original` -> `English (American)`
 - do not begin the English cleanup until `English (American)` is visibly selected
 - do not begin the pause pass until the English cleanup is complete
 
@@ -572,20 +577,22 @@ Recommended process:
 3. Open the correct folder.
 4. Open one file inside that folder.
 5. Open the `Translate` panel.
-6. Select `English (American)` from the translation dropdown.
-7. Confirm you are not editing `English Original`.
-8. Review transcript blocks in order.
-9. Complete the English correction pass first, one block at a time.
-10. After each English block edit, wait for processing to finish and re-read that same block.
-11. Validate the English correction pass.
-12. Complete the pause correction pass second, one block at a time.
-13. After each pause block edit, wait for processing to finish and re-read that same block.
-14. Regenerate when timing flags appear.
-15. Re-read the full file from start to finish.
-16. Fix any remaining issue found in that final read.
-17. Repeat the full-file validation until no issue remains.
-18. Do a final pacing and structure check before moving on.
-19. Return to the folder and repeat for the next file.
+6. In the `Translations:` section, locate `English Original`.
+7. Use the dropdown arrow beside `English Original`.
+8. Select `English (American)` from that dropdown.
+9. Confirm you are not editing `English Original`.
+10. Review transcript blocks in order.
+11. Complete the English correction pass first, one block at a time.
+12. After each English block edit, wait for processing to finish and re-read that same block.
+13. Validate the English correction pass.
+14. Complete the pause correction pass second, one block at a time.
+15. After each pause block edit, wait for processing to finish and re-read that same block.
+16. Regenerate when timing flags appear.
+17. Re-read the full file from start to finish.
+18. Fix any remaining issue found in that final read.
+19. Repeat the full-file validation until no issue remains.
+20. Do a final pacing and structure check before moving on.
+21. Return to the folder and repeat for the next file.
 
 ## Recommended Rollout
 
