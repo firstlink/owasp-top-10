@@ -137,6 +137,57 @@ This is mandatory, not optional:
 - do not begin the English cleanup until `English (American)` is visibly selected
 - do not begin the pause pass until the English cleanup is complete
 
+## Framework Limitations
+
+Speechify Studio has important editing limitations. These are operational constraints, not optional preferences.
+
+What Speechify reliably supports in this workflow:
+
+- editing text inside an existing block
+- fixing spelling, grammar, capitalization, and light punctuation
+- keeping and adjusting existing native pause chips
+- duplicating an existing native pause chip when a truly necessary additional pause is required
+- using commas and full stops for most pacing control
+- regenerating timing when the platform shows slower or faster warnings
+
+What Speechify does not reliably support in this workflow:
+
+- raw typed pause text behaving like a real pause chip every time
+- semicolons, colons, hyphens, em dashes, and similar punctuation producing consistent TTS pacing
+- aggressive full-block rewrites in paused blocks without risking chip corruption
+- visually perfect transcript formatting as a proxy for natural audio delivery
+- long internal pause stacks that still sound natural after export
+
+What must never be done:
+
+- never edit `English Original`
+- never add a block
+- never remove a block
+- never split a block
+- never merge blocks
+- never replace the whole block or whole blob as a normal editing method
+- never type raw pause text and assume it will safely convert into a native pause chip
+- never keep a long pause just because the original transcript created one
+- never preserve an awkward pause pattern if it harms listener experience
+- never force a risky edit when a block is likely to corrupt
+
+What to do when the framework pushes back:
+
+- if a typed pause remains literal text, undo it
+- if a local edit corrupts the block, stop and use a safer recovery path
+- if a pause chip cannot be adjusted safely, prefer punctuation and shorter existing pauses
+- if a correction would require full-block replacement, do not proceed with that method
+- if timing becomes unstable, reduce punctuation, reduce pause load, regenerate, and re-check
+
+The practical rule is simple:
+
+- work within existing blocks
+- work within the `English (American)` track
+- prefer local edits
+- prefer native pause chips over raw pause text
+- prefer punctuation over long internal pauses
+- prefer safe recovery over risky editing
+
 ## Core Principle
 
 Each transcript block has an implied timing budget based on:
