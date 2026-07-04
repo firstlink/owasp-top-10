@@ -37,16 +37,14 @@ The sequence always begins like this:
 5. Switch from `English Original` to `English (American)`.
 6. Confirm you are editing `English (American)` and not `English Original`.
 7. Review the entire file before editing.
-8. Complete the English pass first, one block at a time.
-9. Validate each English block before moving to the next block.
-10. Validate the full English pass.
-11. Complete the pause pass second, one block at a time.
-12. Validate each pause-edited block before moving to the next block.
-13. Validate the full pause pass.
-14. Do a full-file final validation review.
-15. Fix any remaining issue found during final validation.
-16. Repeat final validation until the file is fully clean.
-17. Return to the folder and continue with the next file.
+8. Work block by block in order.
+9. For each block, fix the English, punctuation, and pauses needed for that block.
+10. Validate that same block before moving to the next block.
+11. Continue until all blocks are complete.
+12. Do a full-file final validation review.
+13. Fix any remaining issue found during final validation.
+14. Repeat final validation until the file is fully clean.
+15. Return to the folder and continue with the next file.
 
 ## Required Sequence
 
@@ -59,42 +57,51 @@ Follow this exact sequence every time.
 5. Switch from `English Original` to `English (American)`.
 6. Confirm you are editing `English (American)` and not `English Original`.
 7. Review the entire file block by block before making broad assumptions.
-8. Fix English first, one block at a time:
+8. Complete each block fully before moving on.
+9. Within the current block, fix the English first:
    - spelling mistakes
    - grammar mistakes
    - transcription mistakes
    - capitalization
    - minimal punctuation
    - recurring labels such as `ASI04`
-9. After each English block edit:
+10. After the English correction inside that block:
    - wait for Speechify processing to settle
    - do not edit while a spinner or processing state is active
    - re-read the same block
    - confirm the edit landed correctly
-10. Validate the English pass:
+11. Then, before leaving that same block, fix punctuation and pauses together as needed for natural delivery:
+   - reduce, remove, keep, or minimize pauses only as needed
+   - add only punctuation that helps natural speech
+   - preserve the pacing budget of that block
+12. After each pause or punctuation edit in that block:
+   - wait for Speechify processing to settle
+   - do not edit while a spinner or processing state is active
+   - re-read the same block
+   - confirm the pause values and sentence flow are correct
+13. Validate the completed block before moving on:
    - no block added
    - no block removed
    - no block merged
    - no block split
    - no whole-block replacement
-11. Only after the English pass is stable, do the pause pass.
-12. During the pause pass, reduce, remove, keep, or minimize pauses only as needed for natural human delivery, one block at a time.
-13. After each pause block edit:
-   - wait for Speechify processing to settle
-   - do not edit while a spinner or processing state is active
-   - re-read the same block
-   - confirm the pause values and sentence flow are correct
-14. Validate again after the pause pass:
    - delivery sounds natural
    - timing remains stable
    - no red warning unless acceptable
    - no structural damage
-15. Perform a full-file final review from the first block to the last block.
-16. If any issue is still present, fix it and re-run the full-file final review.
-17. Declare the file done only when the full-file final review passes cleanly.
-18. Move to the next file and repeat the exact same order.
+14. Perform a full-file final review from the first block to the last block.
+15. If any issue is still present, fix it and re-run the full-file final review.
+16. Declare the file done only when the full-file final review passes cleanly.
+17. Move to the next file and repeat the exact same order.
 
 Never skip the language-track switch. Never start editing while still on `English Original`.
+
+Important default behavior:
+
+- in normal execution, do not do a file-wide grammar-only pass and postpone pauses until later
+- when you enter a block, the goal is to leave that block fully improved before moving on
+- that includes wording accuracy, spelling, grammar, punctuation, and pause treatment
+- a temporary English-only stabilization step is allowed only as a recovery tactic when the UI becomes unstable, not as the normal workflow
 
 ## Hard Boundaries
 
@@ -463,10 +470,11 @@ Special safety rule for paused blocks:
 
 Operational order inside each file:
 
-- first complete the English correction pass across the file, one verified block at a time
-- then validate the English correction pass
-- only then begin the pause correction pass, one verified block at a time
-- then validate the pause correction pass
+- complete one block at a time from start to finish
+- inside that block, do the English correction first
+- then do the punctuation and pause correction for that same block
+- validate that same block completely before moving on
+- after all blocks are complete, run the full-file validation
 
 Important cross-block rule:
 
@@ -655,18 +663,17 @@ Recommended process:
 8. Select `English (American)` from that dropdown.
 9. Confirm you are not editing `English Original`.
 10. Review transcript blocks in order.
-11. Complete the English correction pass first, one block at a time.
-12. After each English block edit, wait for processing to finish and re-read that same block.
-13. Validate the English correction pass.
-14. Complete the pause correction pass second, one block at a time.
-15. After each pause block edit, wait for processing to finish and re-read that same block.
-16. Regenerate when timing flags appear.
-17. Re-read the full file from start to finish.
-18. Fix any remaining issue found in that final read.
-19. Repeat the full-file validation until no issue remains.
-20. Close temporary panels such as Find and Replace if they are still open.
-21. Do a final pacing and structure check before moving on.
-22. Return to the folder and repeat for the next file.
+11. Open block 1 and complete it fully before moving to block 2.
+12. In each block, fix wording, spelling, grammar, punctuation, and pauses in that order.
+13. After each local edit, wait for processing to finish and re-read that same block.
+14. Regenerate when timing flags appear.
+15. Move to the next block only after the current block is stable.
+16. Re-read the full file from start to finish.
+17. Fix any remaining issue found in that final read.
+18. Repeat the full-file validation until no issue remains.
+19. Close temporary panels such as Find and Replace if they are still open.
+20. Do a final pacing and structure check before moving on.
+21. Return to the folder and repeat for the next file.
 
 ## Recommended Rollout
 
@@ -688,6 +695,7 @@ The operating rule is simple:
 - optimize for student listening experience before trying to preserve every detected pause
 - fix accuracy
 - keep wording close to the original
+- complete each block fully before moving to the next block
 - never replace a full transcript block or blob just to make a quick correction
 - preserve useful pauses
 - add only necessary punctuation
