@@ -37,14 +37,16 @@ The sequence always begins like this:
 5. Switch from `English Original` to `English (American)`.
 6. Confirm you are editing `English (American)` and not `English Original`.
 7. Review the entire file before editing.
-8. Complete the English pass first.
-9. Validate the English pass.
-10. Complete the pause pass second.
-11. Validate the pause pass.
-12. Do a full-file final validation review.
-13. Fix any remaining issue found during final validation.
-14. Repeat final validation until the file is fully clean.
-15. Return to the folder and continue with the next file.
+8. Complete the English pass first, one block at a time.
+9. Validate each English block before moving to the next block.
+10. Validate the full English pass.
+11. Complete the pause pass second, one block at a time.
+12. Validate each pause-edited block before moving to the next block.
+13. Validate the full pause pass.
+14. Do a full-file final validation review.
+15. Fix any remaining issue found during final validation.
+16. Repeat final validation until the file is fully clean.
+17. Return to the folder and continue with the next file.
 
 ## Required Sequence
 
@@ -57,30 +59,40 @@ Follow this exact sequence every time.
 5. Switch from `English Original` to `English (American)`.
 6. Confirm you are editing `English (American)` and not `English Original`.
 7. Review the entire file block by block before making broad assumptions.
-8. Fix English first:
+8. Fix English first, one block at a time:
    - spelling mistakes
    - grammar mistakes
    - transcription mistakes
    - capitalization
    - minimal punctuation
    - recurring labels such as `ASI04`
-9. Validate the English pass:
+9. After each English block edit:
+   - wait for Speechify processing to settle
+   - do not edit while a spinner or processing state is active
+   - re-read the same block
+   - confirm the edit landed correctly
+10. Validate the English pass:
    - no block added
    - no block removed
    - no block merged
    - no block split
    - no whole-block replacement
-10. Only after the English pass is stable, do the pause pass.
-11. During the pause pass, reduce, remove, keep, or minimize pauses only as needed for natural human delivery.
-12. Validate again after the pause pass:
+11. Only after the English pass is stable, do the pause pass.
+12. During the pause pass, reduce, remove, keep, or minimize pauses only as needed for natural human delivery, one block at a time.
+13. After each pause block edit:
+   - wait for Speechify processing to settle
+   - do not edit while a spinner or processing state is active
+   - re-read the same block
+   - confirm the pause values and sentence flow are correct
+14. Validate again after the pause pass:
    - delivery sounds natural
    - timing remains stable
    - no red warning unless acceptable
    - no structural damage
-13. Perform a full-file final review from the first block to the last block.
-14. If any issue is still present, fix it and re-run the full-file final review.
-15. Declare the file done only when the full-file final review passes cleanly.
-16. Move to the next file and repeat the exact same order.
+15. Perform a full-file final review from the first block to the last block.
+16. If any issue is still present, fix it and re-run the full-file final review.
+17. Declare the file done only when the full-file final review passes cleanly.
+18. Move to the next file and repeat the exact same order.
 
 Never skip the language-track switch. Never start editing while still on `English Original`.
 
@@ -187,6 +199,8 @@ The practical rule is simple:
 - prefer native pause chips over raw pause text
 - prefer punctuation over long internal pauses
 - prefer safe recovery over risky editing
+- prefer one verified block at a time over batching multiple edits
+- never continue editing while Speechify is still processing the previous change
 
 ## Core Principle
 
@@ -414,13 +428,25 @@ For each transcript block:
 4. Edit only the local words that need correction.
 5. Never replace the whole block, even if the correction seems faster that way.
 6. Add only essential punctuation.
-7. Read the sentence as a listener would hear it, not as a block would look on screen.
-8. Reduce or remove long internal pauses before adding new pauses.
-9. Check whether the block still fits its original pacing.
-10. Watch Speechify's speed and timing indicator.
-11. If Speechify marks it red as slower or faster, regenerate and adjust.
-12. Reduce punctuation, wording, or pause load if timing became tight.
-13. Move to the next block only after the current block is stable.
+7. Wait for Speechify to finish reflecting the change.
+8. If a spinner, processing state, or timing refresh is visible, wait and do not continue editing.
+9. Re-read the same block immediately after the edit.
+10. Read the sentence as a listener would hear it, not as a block would look on screen.
+11. Reduce or remove long internal pauses before adding new pauses.
+12. Check whether the block still fits its original pacing.
+13. Watch Speechify's speed and timing indicator.
+14. If Speechify marks it red as slower or faster, regenerate and adjust.
+15. Reduce punctuation, wording, or pause load if timing became tight.
+16. Move to the next block only after the current block is stable.
+
+Never batch several risky edits and only review later. In this workflow, the correct pattern is:
+
+1. read one block
+2. make one local edit or one small group of tightly related edits
+3. wait
+4. re-read the same block
+5. confirm correctness
+6. only then continue
 
 Special safety rule for paused blocks:
 
@@ -431,9 +457,9 @@ Special safety rule for paused blocks:
 
 Operational order inside each file:
 
-- first complete the English correction pass across the file
+- first complete the English correction pass across the file, one verified block at a time
 - then validate the English correction pass
-- only then begin the pause correction pass
+- only then begin the pause correction pass, one verified block at a time
 - then validate the pause correction pass
 
 Important cross-block rule:
@@ -486,6 +512,7 @@ Technical validation:
 - check for red slower or faster warnings
 - regenerate when needed
 - confirm the block still fits timing
+- confirm Speechify finished processing the latest edit before making the next edit
 
 Listening validation:
 
@@ -512,9 +539,10 @@ File-level validation order:
 8. Confirm `1ms` is used only where a chip should behave like no real pause.
 9. Confirm the student delivery sounds human, polished, and intentional.
 10. Confirm long internal pauses have been reduced where punctuation or a shorter pause would sound better.
-11. Re-read the entire file from block 1 through the final block after all edits.
-12. Confirm no residual text corruption remains, including partial words, broken endings, duplicated fragments, or accidental pasted text.
-13. If any issue is found during this final read, fix it and restart the full-file validation.
+11. Confirm no block was edited while a spinner or processing state was still active.
+12. Re-read the entire file from block 1 through the final block after all edits.
+13. Confirm no residual text corruption remains, including partial words, broken endings, duplicated fragments, or accidental pasted text.
+14. If any issue is found during this final read, fix it and restart the full-file validation.
 
 ## Done Criteria
 
@@ -547,15 +575,17 @@ Recommended process:
 6. Select `English (American)` from the translation dropdown.
 7. Confirm you are not editing `English Original`.
 8. Review transcript blocks in order.
-9. Complete the English correction pass first.
-10. Validate the English correction pass.
-11. Complete the pause correction pass second.
-12. Regenerate when timing flags appear.
-13. Re-read the full file from start to finish.
-14. Fix any remaining issue found in that final read.
-15. Repeat the full-file validation until no issue remains.
-16. Do a final pacing and structure check before moving on.
-17. Return to the folder and repeat for the next file.
+9. Complete the English correction pass first, one block at a time.
+10. After each English block edit, wait for processing to finish and re-read that same block.
+11. Validate the English correction pass.
+12. Complete the pause correction pass second, one block at a time.
+13. After each pause block edit, wait for processing to finish and re-read that same block.
+14. Regenerate when timing flags appear.
+15. Re-read the full file from start to finish.
+16. Fix any remaining issue found in that final read.
+17. Repeat the full-file validation until no issue remains.
+18. Do a final pacing and structure check before moving on.
+19. Return to the folder and repeat for the next file.
 
 ## Recommended Rollout
 
@@ -592,3 +622,5 @@ The operating rule is simple:
 - regenerate whenever Speechify warns about timing
 - never declare a file done until a full-file final validation review passes cleanly
 - optimize for natural pacing without changing timeline behavior
+- treat each block as read, edit, wait, re-read, verify, then continue
+- do not edit through a spinner, processing state, or timing refresh
