@@ -117,6 +117,9 @@ These rules are mandatory:
 - preserve natural human delivery
 - use minimal text edits
 - use only punctuation that Speechify handles reliably
+- use only commas and full stops for speech pacing in transcript text
+- do not use semicolons, colons, hyphens, em dashes, or similar punctuation for pacing
+- add commas wherever a natural spoken pause is needed inside a sentence
 - adjust existing pause chips in place
 - if an extra pause is truly needed, only duplicate or copy an existing pause inside the same block structure
 - keep recurring labels consistent, for example `ASI04`
@@ -131,6 +134,7 @@ The objective is to:
 - fix transcription mistakes
 - fix spelling, typos, capitalization, and obvious grammar issues
 - add only necessary punctuation
+- add commas where the listener needs a natural internal pause
 - preserve natural sentence and clause pauses
 - preserve the original pacing budget of each block
 - avoid adding too many pauses
@@ -298,6 +302,14 @@ Use:
 If a serialized pause form is ever used, express pauses as literal text using Speechify's pause syntax, for example: `[Pause 480ms]`. However, treat this as unsafe in Studio Dubbing unless the UI clearly converts it into a real editable pause chip after saving.
 
 For Speechify transcript editing, prefer only commas and full stops in the text itself. Avoid punctuation such as semicolons, colons, hyphens, em dashes, and similar symbols unless the user explicitly asks for them, because they may not produce reliable text-to-speech behavior in Studio.
+
+Mandatory punctuation rule:
+
+- if the sentence needs punctuation for natural delivery, use only a comma or a full stop
+- if a clause needs a short spoken break, add a comma
+- if a sentence needs a full stop, add a period
+- do not leave a sentence under-punctuated when a missing comma makes the delivery sound rushed or flat
+- do not use any other punctuation marks as pacing tools
 
 Do not use punctuation as decoration. Every punctuation mark should help either correctness, readability, or natural speech flow.
 
@@ -716,3 +728,4 @@ The operating rule is simple:
 - close temporary panels when they are no longer helping the current edit
 - if the UI drifts away from the editor, actively recover and continue instead of waiting indefinitely
 - treat popups, stale buttons, and page detours as recovery events, not stop signals
+- when Speechify resists a broader phrase replacement, fall back to the smallest reliable in-place edit instead of forcing a larger rewrite
