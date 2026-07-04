@@ -23,7 +23,10 @@ The sequence always begins like this:
 9. Validate the English pass.
 10. Complete the pause pass second.
 11. Validate the pause pass.
-12. Return to the folder and continue with the next file.
+12. Do a full-file final validation review.
+13. Fix any remaining issue found during final validation.
+14. Repeat final validation until the file is fully clean.
+15. Return to the folder and continue with the next file.
 
 ## Required Sequence
 
@@ -56,7 +59,10 @@ Follow this exact sequence every time.
    - timing remains stable
    - no red warning unless acceptable
    - no structural damage
-13. Move to the next file and repeat the exact same order.
+13. Perform a full-file final review from the first block to the last block.
+14. If any issue is still present, fix it and re-run the full-file final review.
+15. Declare the file done only when the full-file final review passes cleanly.
+16. Move to the next file and repeat the exact same order.
 
 Never skip the language-track switch. Never start editing while still on `English Original`.
 
@@ -367,6 +373,9 @@ File-level validation order:
 7. Confirm pause values do not exceed what the block can support.
 8. Confirm `1ms` is used only where a chip should behave like no real pause.
 9. Confirm the student delivery sounds human, polished, and intentional.
+10. Re-read the entire file from block 1 through the final block after all edits.
+11. Confirm no residual text corruption remains, including partial words, broken endings, duplicated fragments, or accidental pasted text.
+12. If any issue is found during this final read, fix it and restart the full-file validation.
 
 ## Done Criteria
 
@@ -378,6 +387,14 @@ A block is done when:
 - pauses sound natural
 - timing remains stable
 - Speechify does not show a problematic red warning after regeneration
+
+A file is done only when:
+
+- every block has been reviewed again after editing
+- the final full-file validation pass is clean
+- no unresolved correctness issue remains anywhere in the file
+- no residual corruption remains from prior edits
+- the file would be safe to hand off without another repair pass
 
 ## Working Method In Speechify Studio
 
@@ -395,8 +412,11 @@ Recommended process:
 10. Validate the English correction pass.
 11. Complete the pause correction pass second.
 12. Regenerate when timing flags appear.
-13. Do a final pacing and structure check before moving on.
-14. Return to the folder and repeat for the next file.
+13. Re-read the full file from start to finish.
+14. Fix any remaining issue found in that final read.
+15. Repeat the full-file validation until no issue remains.
+16. Do a final pacing and structure check before moving on.
+17. Return to the folder and repeat for the next file.
 
 ## Recommended Rollout
 
@@ -429,4 +449,5 @@ The operating rule is simple:
 - do not expand content unnecessarily
 - never edit `English Original`; always switch to `English (American)` first
 - regenerate whenever Speechify warns about timing
+- never declare a file done until a full-file final validation review passes cleanly
 - optimize for natural pacing without changing timeline behavior
