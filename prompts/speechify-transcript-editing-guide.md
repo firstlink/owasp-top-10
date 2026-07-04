@@ -442,7 +442,8 @@ For each transcript block:
 13. Watch Speechify's speed and timing indicator.
 14. If Speechify marks it red as slower or faster, regenerate and adjust.
 15. Reduce punctuation, wording, or pause load if timing became tight.
-16. Move to the next block only after the current block is stable.
+16. Close temporary editing UI such as Find and Replace when that tool is no longer needed.
+17. Move to the next block only after the current block is stable.
 
 Never batch several risky edits and only review later. In this workflow, the correct pattern is:
 
@@ -474,6 +475,77 @@ Important cross-block rule:
 - treat neighboring blocks as one logical sentence when the transcript clearly continues across the boundary
 - optimize each block in place while respecting the continuation into the next block
 - do not change block structure just to complete a sentence inside one block
+
+## Resilience And Recovery
+
+The workflow must be persistent. The default behavior is not to stop when the UI drifts, when a panel remains open, or when Speechify temporarily moves focus away from the editor. The goal is to recover and continue until the file is actually complete.
+
+Primary resilience rule:
+
+- do not wait forever for control to return by itself
+- if the current UI state is not useful, actively recover to a useful editor state
+- if one edit method stalls, close it, reset locally, and continue with a safer method
+- keep progressing unless a true hard blocker remains
+
+Use this recovery order whenever the current state becomes unproductive:
+
+1. confirm whether you are still in the correct file editor
+2. confirm whether `English (American)` is still selected
+3. close temporary UI that is no longer needed
+4. return focus to the current transcript block
+5. re-read the current block
+6. continue editing with the safest available local method
+
+Panel handling rules:
+
+- if Find and Replace is no longer needed for the current edit, close it
+- do not leave Find and Replace open across unrelated edits
+- if Find and Replace stops exposing the correct action button, close it and reopen it cleanly
+- if a panel captures focus and prevents local block editing, dismiss the panel before continuing
+
+Popup and modal recovery rules:
+
+- if a popup, modal, or side panel appears and is not required for the current step, close it
+- use the safest available dismissal path such as close button, Escape, or clicking back into the editor area when appropriate
+- after dismissing any popup, confirm the editor is active again before making the next edit
+
+Editor recovery rules:
+
+- if the page is no longer showing transcript editors, do not sit idle
+- check whether Speechify navigated back to the library or another non-editor page
+- if that happened, immediately navigate back to the active file editor
+- after returning, confirm the file name and translation track again
+- then resume from the last verified block instead of restarting blindly
+
+Method fallback rules:
+
+- prefer the least risky method that works for the current block
+- if Find and Replace finds text but does not commit the replacement, stop repeating the same failed action
+- if button-click replacement does not commit, try Enter from the replace field
+- if replace-panel editing remains unreliable, switch to a local in-block edit
+- if a local drag selection behaves badly, undo immediately and retry with a more precise word-level selection
+- if a correction would require risky whole-block replacement, do not escalate to that method
+
+Stall prevention rules:
+
+- never keep retrying the same failing interaction without changing strategy
+- after one failed method, reassess
+- after two failed attempts on the same correction path, switch to a different safe method
+- after any visible corruption, undo first, verify recovery, and only then continue
+- the workflow should spend time editing and recovering, not waiting passively
+
+State revalidation rules:
+
+- after any recovery action, re-check the current file name
+- re-check that the page still shows transcript editors
+- re-check that `English (American)` is still selected
+- re-check the current block text before continuing
+
+Persistence rule:
+
+- the task is not complete until the file is complete
+- temporary UI errors, stale buttons, hidden controls, panels staying open, or navigation drift are recovery events, not stop conditions
+- only stop when a true blocker prevents safe continuation even after recovery steps
 
 ## How To Handle Red Speed Warnings
 
@@ -548,6 +620,7 @@ File-level validation order:
 12. Re-read the entire file from block 1 through the final block after all edits.
 13. Confirm no residual text corruption remains, including partial words, broken endings, duplicated fragments, or accidental pasted text.
 14. If any issue is found during this final read, fix it and restart the full-file validation.
+15. Confirm no temporary UI such as Find and Replace was left open in a way that could interfere with the next edit cycle.
 
 ## Done Criteria
 
@@ -591,8 +664,9 @@ Recommended process:
 17. Re-read the full file from start to finish.
 18. Fix any remaining issue found in that final read.
 19. Repeat the full-file validation until no issue remains.
-20. Do a final pacing and structure check before moving on.
-21. Return to the folder and repeat for the next file.
+20. Close temporary panels such as Find and Replace if they are still open.
+21. Do a final pacing and structure check before moving on.
+22. Return to the folder and repeat for the next file.
 
 ## Recommended Rollout
 
@@ -631,3 +705,6 @@ The operating rule is simple:
 - optimize for natural pacing without changing timeline behavior
 - treat each block as read, edit, wait, re-read, verify, then continue
 - do not edit through a spinner, processing state, or timing refresh
+- close temporary panels when they are no longer helping the current edit
+- if the UI drifts away from the editor, actively recover and continue instead of waiting indefinitely
+- treat popups, stale buttons, and page detours as recovery events, not stop signals
